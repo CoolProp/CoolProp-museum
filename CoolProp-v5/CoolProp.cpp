@@ -1,5 +1,20 @@
 
 #include "CoolProp.h"
+#include "CoolPropTools.h"
+#include <assert.h>     /* assert */
+
+long HashableObject::getHash(const std::vector<std::string>& components, const std::vector<double>& massFractions)
+{
+	assert(components.size() == massFractions.size());
+	// Join the components by a '|'
+	std::string components_joined = strjoin(components,"|");
+	std::string massFractions_joined;
+	for (unsigned int i = 0; i < massFractions_joined.size(); i++)
+	{
+		massFractions_joined += format("%0.12e",massFractions_joined[i]);
+	}
+	return getHash(components_joined + massFractions_joined);
+}
 
 static long HashableObject::getHash(std::string hash_string){
 	int summer = 0;
