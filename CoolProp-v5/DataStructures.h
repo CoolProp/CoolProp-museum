@@ -8,6 +8,9 @@
 #ifndef DATASTRUCTURES_H_
 #define DATASTRUCTURES_H_
 
+//TODO: Remove this dummy entry.
+#define _HUGE 1e13
+
 namespace CoolProp {
 
 struct SimpleState
@@ -18,10 +21,6 @@ struct SimpleState
 // --------------------------------------------------
 // Define some constants that will be used throughout
 // --------------------------------------------------
-
-//TODO: Remove this dummy entry.
-#define _HUGE 1e13
-
 // These are constants for the input and output parameters
 // The structure is taken directly from the AbstractState class.
 const enum params {

@@ -8,11 +8,11 @@
 #ifndef ABSTRACTFLUID_H_
 #define ABSTRACTFLUID_H_
 
-#include "AbstractCalculator.h"
+#include "AbstractBackend.h"
 
 namespace CoolProp {
 
-class AbstractFluid: public CoolProp::AbstractCalculator {
+class AbstractFluid: public CoolProp::AbstractBackend {
 public:
 	AbstractFluid();
 	virtual ~AbstractFluid();

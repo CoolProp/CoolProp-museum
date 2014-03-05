@@ -1,20 +1,20 @@
 /*
- * AbstractCalculator.cpp
+ * AbstractBackend.cpp
  *
  *  Created on: 20 Dec 2013
  *      Author: jowr
  */
 
-#include "AbstractCalculator.h"
+#include "AbstractBackend.h"
 
 namespace CoolProp {
 
-AbstractCalculator::AbstractCalculator() {
+AbstractBackend::AbstractBackend() {
 	// TODO Auto-generated constructor stub
 
 }
 
-AbstractCalculator::~AbstractCalculator() {
+AbstractBackend::~AbstractBackend() {
 	// TODO Auto-generated destructor stub
 }
 
