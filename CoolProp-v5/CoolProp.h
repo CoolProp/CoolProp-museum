@@ -9,11 +9,11 @@
 
 class HashableObject {
 
-	static long getHash(const std::vector<std::string>* components, const std::vector<double>* massFractions);
+	static long getHash(const std::vector<std::string> &components, const std::vector<double> &massFractions);
 
 protected:
-	long getHash(std::string);
-	std::string getHashString(const std::string components, const std::vector<double>* massFractions);
+	long getHash(std::string &hashstring);
+	std::string getHashString(const std::vector<std::string> &components, const std::vector<double> &massFractions);
 
 public:
 	~HashableObject();
