@@ -4,9 +4,19 @@
 
 #include <iostream>
 #include <map>
+#include <string>
+#include <vector>
 
 class HashableObject {
-	static int getHash();
+
+	static long getHash(const std::string components, const std::vector<double>* massFractions);
+
+protected:
+	long getHash(std::string);
+	std::string getHashString(const std::string components, const std::vector<double>* massFractions);
+
+public:
+	~HashableObject();
 };
 
 class StateObject : public HashableObject{
