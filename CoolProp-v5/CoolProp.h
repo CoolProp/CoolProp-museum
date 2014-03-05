@@ -12,7 +12,7 @@ class HashableObject {
 	static long getHash(const std::vector<std::string> &components, const std::vector<double> &massFractions);
 
 protected:
-	long getHash(std::string &hashstring);
+	long getHash(const std::string &hashstring);
 	std::string getHashString(const std::vector<std::string> &components, const std::vector<double> &massFractions);
 
 public:
