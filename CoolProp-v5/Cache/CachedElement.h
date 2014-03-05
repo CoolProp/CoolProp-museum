@@ -40,20 +40,28 @@ public:
 	CachedElement() {
 		this->clear();
 	};
-	/// Assignment operator - sets the value and sets the flag
-	void operator=(const double& value) {
+
+	/// Function to carry out the caching
+	void _do_cache(double value)
+	{
 		this->value = value;
 		this->is_cached = true;
+	}
+
+	/// Assignment operator - sets the value and sets the flag
+	void operator=(const double& value) {
+		_do_cache(value);
 	};
+
 	/// Cast to boolean, for checking if cached
-	operator bool() const {return is_cached;};
+	operator bool() {return is_cached;};
 
 	/// Cast to double, for returning value
-	operator double() const {
+	operator double() {
 		if (is_cached) {return value; }
 		else {
-			this = this->function;
-			return (double) this;
+			this->_do_cache(this->function);
+			return this->value;
 		}
 	}
 	/// Clear the flag and the value
