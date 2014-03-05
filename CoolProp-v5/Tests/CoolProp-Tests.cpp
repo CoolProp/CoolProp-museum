@@ -37,6 +37,12 @@ TEST_CASE("State Class Instantiation","")
 	SECTION("REFPROP Mixture")
 	{
 	}
+	SECTION("Component names and fractions not the same length")
+	{
+	}
+	SECTION("Component names and fractions ARE the same length")
+	{
+	}
 }
 
 #endif
