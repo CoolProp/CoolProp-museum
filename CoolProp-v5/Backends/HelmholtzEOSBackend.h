@@ -23,7 +23,6 @@ public:
 	/// @param value1 First input value
 	/// @param name2 Second input index for state variable
 	/// @param value2 Second input value
-	/// @param State The state class to be updated by this call
 	void update(int name1,
 				double value1,
 				int name2,
