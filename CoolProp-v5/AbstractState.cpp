@@ -22,39 +22,39 @@ AbstractState::~AbstractState() {
 bool AbstractState::clear() {
 	// Reset all instances of CachedElement and overwrite
 	// the internal double values with -_HUGE
-	this->fluid_type = FLUID_TYPE_UNDEFINED;
-	this->phase = iUnknown;
-	this->forceSinglePhase = false;
-	this->forceTwoPhase = false;
+	this->_fluid_type = FLUID_TYPE_UNDEFINED;
+	this->_phase = iUnknown;
+	this->_forceSinglePhase = false;
+	this->_forceTwoPhase = false;
 
-	this->critical.T = -_HUGE;
-	this->critical.h = -_HUGE;
-	this->critical.p = -_HUGE;
-	this->critical.rho = -_HUGE;
-	this->critical.s = -_HUGE;
+	this->_critical.T = -_HUGE;
+	this->_critical.h = -_HUGE;
+	this->_critical.p = -_HUGE;
+	this->_critical.rho = -_HUGE;
+	this->_critical.s = -_HUGE;
 
-	this->reducing.T = -_HUGE;
-	this->reducing.h = -_HUGE;
-	this->reducing.p = -_HUGE;
-	this->reducing.rho = -_HUGE;
-	this->reducing.s = -_HUGE;
+	this->_reducing.T = -_HUGE;
+	this->_reducing.h = -_HUGE;
+	this->_reducing.p = -_HUGE;
+	this->_reducing.rho = -_HUGE;
+	this->_reducing.s = -_HUGE;
 
 	/// Bulk values
 	this->_rho = -_HUGE;
 	this->_T = -_HUGE;
 	this->_p = -_HUGE;
 	this->_Q = -_HUGE;
-	this->tau = -_HUGE;
-	this->delta = -_HUGE;
+	this->_tau = -_HUGE;
+	this->_delta = -_HUGE;
 	this->_h.clear();
 	this->_s.clear();
 	this->_logp.clear();
 	this->_logrho.clear();
 
-	/// Smoothing values
-	this->rhospline = -_HUGE;
-	this->dsplinedp = -_HUGE;
-	this->dsplinedh = -_HUGE;
+	///// Smoothing values
+	//this->rhospline = -_HUGE;
+	//this->dsplinedp = -_HUGE;
+	//this->dsplinedh = -_HUGE;
 
 	/// Cached low-level elements for in-place calculation of other properties
 	this->_alpha0.clear();
@@ -235,13 +235,13 @@ bool AbstractState::clear() {
 		return dhdrho_constT() - dhdT_constrho()*dpdrho_constT()/dpdT_constrho();
 	}
 	virtual double AbstractState::dhdrho_constT(void){
-		return _T*_R/_rho*(tau*delta*d2alphar_dDelta_dTau()+delta*dalphar_dDelta()+delta*delta*d2alphar_dDelta2());
+		return _T*_R/_rho*(_tau*_delta*d2alphar_dDelta_dTau()+delta*dalphar_dDelta()+delta*delta*d2alphar_dDelta2());
 	}
 	virtual double AbstractState::dhdT_constp(void){
 		return dhdT_constrho() - dhdrho_constT()*dpdT_constrho()/dpdrho_constT();
 	}
 	virtual double AbstractState::dhdT_constrho(void){
-		return _R*(-tau*tau*(d2alpha0_dTau2()+d2alphar_dTau2())+1+delta*dalphar_dDelta()-delta*tau*d2alphar_dDelta_dTau());
+		return _R*(-tau*tau*(d2alpha0_dTau2()+d2alphar_dTau2())+1+_delta*dalphar_dDelta()-delta*tau*d2alphar_dDelta_dTau());
 	}
 	virtual double AbstractState::d2hdp2_constT(void){
 		return (d2hdrho2_constT()-dhdp_constT()*d2pdrho2_constT())/pow(dpdrho_constT(),2);
@@ -250,7 +250,7 @@ bool AbstractState::clear() {
 		return _T*_R/_rho*(tau*delta*d3alphar_dDelta2_dTau()+tau*d2alphar_dDelta_dTau()+delta*d2alphar_dDelta2()+dalphar_dDelta()+delta*delta*d3alphar_dDelta3()+2*delta*d2alphar_dDelta2())/reducing.rho - dhdrho_constT()/_rho;
 	}
 	virtual double AbstractState::d2hdrhodT(void){
-		return _R*(-tau*tau*d3alphar_dDelta_dTau2()+delta*d2alphar_dDelta2()+dalphar_dDelta()-delta*tau*d3phir_dDelta2_dTau()-tau*d2alphar_dDelta_dTau())/reducing.rho;
+		return _R*(-tau*tau*d3alphar_dDelta_dTau2()+delta*d2alphar_dDelta2()+dalphar_dDelta()-delta*tau*d3alphar_dDelta2_dTau()-tau*d2alphar_dDelta_dTau())/reducing.rho;
 	}
 	virtual double AbstractState::d2hdT2_constp(void){
 		double ddT_dhdT = d2hdT2_constrho()-1/pow(dpdrho_constT(),2)*(dpdrho_constT()*(dhdrho_constT()*d2pdT2_constrho()+d2hdrhodT()*dpdT_constrho())-dhdrho_constT()*dpdT_constrho()*d2pdrhodT());
@@ -258,7 +258,7 @@ bool AbstractState::clear() {
 		return ddT_dhdT-drho_dhdT*dpdT_constrho()/dpdrho_constT();
 	}
 	virtual double AbstractState::d2hdT2_constrho(void){
-		return _R*(-tau*tau*(d3alpha0_dTau3()+d3alphar_dTau3())-2*tau*(d2alpha0_dTau2()+d2alphar_dTau2())-delta*tau*d3alphar_dDelta_dTau2())*(-tau/_T);
+		return _R*(-_tau*_tau*(d3alpha0_dTau3()+d3alphar_dTau3())-2*_tau*(d2alpha0_dTau2()+d2alphar_dTau2())-_delta*tau*d3alphar_dDelta_dTau2())*(-tau/_T);
 	}
 	virtual double AbstractState::d2hdTdp(void){
 		return 1.0/dpdrho_constT()*(d2hdrhodT()-dhdp_constT()*(drhodT_constp()*d2pdrho2_constT()+d2pdrhodT())+d2hdrho2_constT()*drhodT_constp());

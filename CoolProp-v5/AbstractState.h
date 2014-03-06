@@ -37,6 +37,8 @@ protected:
 	long _phase;
 	bool _forceSinglePhase, _forceTwoPhase;
 
+	
+
 	bool isCompressibleFluid(void){
 		return !(_fluid_type == FLUID_TYPE_INCOMPRESSIBLE_LIQUID
 			  || _fluid_type == FLUID_TYPE_INCOMPRESSIBLE_SOLUTION);
