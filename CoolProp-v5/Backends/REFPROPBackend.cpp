@@ -19,7 +19,7 @@
 
 #include "REFPROPBackend.h"
 
-namespace CoolProp {
+namespace CoolProp::Backends {
 
 REFPROPBackend::REFPROPBackend(std::string fluid_name) {
 	// Do the REFPROP instantiation for this fluid
@@ -287,4 +287,4 @@ void REFPROPBackend::update(int input_pair, double value1, double value2)
 	}
 }
 
-} /* namespace CoolProp */
+} /* namespace CoolProp::Backends */

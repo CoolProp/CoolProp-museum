@@ -10,7 +10,7 @@
 
 #include "REFPROPMixtureBackend.h"
 
-namespace CoolProp {
+namespace CoolProp::Backends {
 
 class REFPROPBackend : public REFPROPMixtureBackend  {
 public:
@@ -32,5 +32,5 @@ public:
 	void set_REFPROP_fluid(std::string fluid_name);
 };
 
-} /* namespace CoolProp */
-#endif /* ABSTRACTBACKEND_H_ */
+} /* namespace CoolProp::Backends */
+#endif /* REFPROPBACKEND_H_ */

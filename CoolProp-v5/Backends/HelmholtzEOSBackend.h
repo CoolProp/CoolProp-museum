@@ -5,18 +5,18 @@
  *      Author: jowr
  */
 
-#ifndef REFPROPMIXTUREBACKEND_H_
-#define REFPROPMIXTUREBACKEND_H_
+#ifndef HELMHOLTZEOSMIXTUREBACKEND_H_
+#define HELMHOLTZEOSMIXTUREBACKEND_H_
 
-#include "../AbstractState.h"
+#include "HelmholtzEOSMixtureBackend.h"
 #include <vector>
 
 namespace CoolProp::Backends {
 
-class REFPROPMixtureBackend : public AbstractState  {
+class HelmholtzEOSBackend : public HelmholtzEOSMixtureBackend  {
 public:
-	REFPROPMixtureBackend();
-	virtual ~REFPROPMixtureBackend();
+	HelmholtzEOSBackend();
+	virtual ~HelmholtzEOSBackend();
 
 	/// Updating function for pure and pseudo-pure fluids for REFPROP
 	/// @param name1 First input index for state variable
@@ -34,4 +34,4 @@ public:
 };
 
 } /* namespace CoolProp::Backends */
-#endif /* REFPROPMIXTUREBACKEND_H_ */
+#endif /* HELMHOLTZEOSMIXTUREBACKEND_H_ */
