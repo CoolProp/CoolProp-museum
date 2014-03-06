@@ -80,14 +80,14 @@ protected:
 	/// Cached low-level elements for in-place calculation of other properties
 	/// These values cannot be reconstructed from the TTSE data and therefore
 	/// always require a call to the EOS, hence the caching mechanism here.
-	CachedElement _phi0, _dphi0_dTau, _dphi0_dDelta, _d2phi0_dTau2, _d2phi0_dDelta_dTau,
-			_d2phi0_dDelta2, _d3phi0_dTau3, _d3phi0_dDelta_dTau2, _d3phi0_dDelta2_dTau,
-			_d3phi0_dDelta3, _phir, _dphir_dTau, _dphir_dDelta, _d2phir_dTau2, _d2phir_dDelta_dTau,
-			_d2phir_dDelta2, _d3phir_dTau3, _d3phir_dDelta_dTau2, _d3phir_dDelta2_dTau,
-			_d3phir_dDelta3;
+	CachedElement _alpha0, _dalpha0_dTau, _dalpha0_dDelta, _d2alpha0_dTau2, _d2alpha0_dDelta_dTau,
+			_d2alpha0_dDelta2, _d3alpha0_dTau3, _d3alpha0_dDelta_dTau2, _d3alpha0_dDelta2_dTau,
+			_d3alpha0_dDelta3, _alphar, _dalphar_dTau, _dalphar_dDelta, _d2alphar_dTau2, _d2alphar_dDelta_dTau,
+			_d2alphar_dDelta2, _d3alphar_dTau3, _d3alphar_dDelta_dTau2, _d3alphar_dDelta2_dTau,
+			_d3alphar_dDelta3;
 
-	CachedElement _dphir_dDelta_lim, _d2phir_dDelta2_lim,
-			_d2phir_dDelta_dTau_lim, _d3phir_dDelta2_dTau_lim;
+	CachedElement _dalphar_dDelta_lim, _d2alphar_dDelta2_lim,
+			_d2alphar_dDelta_dTau_lim, _d3alphar_dDelta2_dTau_lim;
 
 public:
 	virtual AbstractState();
@@ -119,9 +119,7 @@ public:
 	// ----------------------------------------
 	virtual double viscosity(void) = 0;
 	virtual double conductivity(void) = 0;
-
 	virtual double surface_tension(void) = 0;
-
 
 	// ----------------------------------------
 	// Derivatives of properties
@@ -200,33 +198,32 @@ public:
 	// ----------------------------------------
 	// Helmholtz energy and derivatives
 	// ----------------------------------------
-	virtual double phi0(void) = 0;
-	virtual double dphi0_dDelta(void) = 0;
-	virtual double dphi0_dTau(void) = 0;
-	virtual double d2phi0_dDelta2(void) = 0;
-	virtual double d2phi0_dDelta_dTau(void) = 0;
-	virtual double d2phi0_dTau2(void) = 0;
-	virtual double d3phi0_dDelta3(void) = 0;
-	virtual double d3phi0_dDelta2_dTau(void) = 0;
-	virtual double d3phi0_dDelta_dTau2(void) = 0;
-	virtual double d3phi0_dTau3(void) = 0;
+	virtual double alpha0(void) = 0;
+	virtual double dalpha0_dDelta(void) = 0;
+	virtual double dalpha0_dTau(void) = 0;
+	virtual double d2alpha0_dDelta2(void) = 0;
+	virtual double d2alpha0_dDelta_dTau(void) = 0;
+	virtual double d2alpha0_dTau2(void) = 0;
+	virtual double d3alpha0_dDelta3(void) = 0;
+	virtual double d3alpha0_dDelta2_dTau(void) = 0;
+	virtual double d3alpha0_dDelta_dTau2(void) = 0;
+	virtual double d3alpha0_dTau3(void) = 0;
 
-	virtual double phir(void) = 0;
-	virtual double dphir_dDelta(void) = 0;
-	virtual double dphir_dTau(void) = 0;
-	virtual double d2phir_dDelta2(void) = 0;
-	virtual double d2phir_dDelta_dTau(void) = 0;
-	virtual double d2phir_dTau2(void) = 0;
-	virtual double d3phir_dDelta3(void) = 0;
-	virtual double d3phir_dDelta2_dTau(void) = 0;
-	virtual double d3phir_dDelta_dTau2(void) = 0;
-	virtual double d3phir_dTau3(void) = 0;
+	virtual double alphar(void) = 0;
+	virtual double dalphar_dDelta(void) = 0;
+	virtual double dalphar_dTau(void) = 0;
+	virtual double d2alphar_dDelta2(void) = 0;
+	virtual double d2alphar_dDelta_dTau(void) = 0;
+	virtual double d2alphar_dTau2(void) = 0;
+	virtual double d3alphar_dDelta3(void) = 0;
+	virtual double d3alphar_dDelta2_dTau(void) = 0;
+	virtual double d3alphar_dDelta_dTau2(void) = 0;
+	virtual double d3alphar_dTau3(void) = 0;
 
-	// TODO: Add call back to calculator;
-	virtual double dphir_dDelta_lim(void) = 0;
-	virtual double d2phir_dDelta2_lim(void) = 0;
-	virtual double d2phir_dDelta_dTau_lim(void) = 0;
-	virtual double d3phir_dDelta2_dTau_lim(void) = 0;
+	virtual double dalphar_dDelta_lim(void) = 0;
+	virtual double d2alphar_dDelta2_lim(void) = 0;
+	virtual double d2alphar_dDelta_dTau_lim(void) = 0;
+	virtual double d3alphar_dDelta2_dTau_lim(void) = 0;
 };
 
 } /* namespace CoolProp */
