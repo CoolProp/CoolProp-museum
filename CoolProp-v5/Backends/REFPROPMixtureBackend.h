@@ -19,10 +19,10 @@ public:
 	virtual ~REFPROPMixtureBackend();
 
 	/// Updating function for pure and pseudo-pure fluids for REFPROP
-	/// @param name1 First input index for state variable
+	/// @param input_pair Integer key corresponding to the two inputs that will be passed to the function
 	/// @param value1 First input value
 	/// @param value2 Second input value
-	void update(int name1,
+	void update(int input_pair,
 				double value1,
 				double value2
 				);

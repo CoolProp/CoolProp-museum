@@ -5,8 +5,8 @@
  *      Author: jowr
  */
 
-#ifndef HELMHOLTZEOSBACKEND_H_
-#define HELMHOLTZEOSBACKEND_H_
+#ifndef HELMHOLTZEOSMIXTUREBACKEND_H_
+#define HELMHOLTZEOSMIXTUREBACKEND_H_
 
 #include "../AbstractState.h"
 #include <vector>
@@ -19,14 +19,12 @@ public:
 	HelmholtzEOSMixtureBackend(std::vector<std::string> component_names, std::vector<double> mole_fractions);
 	virtual ~HelmholtzEOSMixtureBackend();
 
-	/// Updating function for pure and pseudo-pure fluids for REFPROP
-	/// @param name1 First input index for state variable
+	/// Updating function for pure and pseudo-pure fluids
+	/// @param input_pair Integer key corresponding to the two inputs that will be passed to the function
 	/// @param value1 First input value
-	/// @param name2 Second input index for state variable
 	/// @param value2 Second input value
-	void update(int name1,
+	void update(int input_pair,
 				double value1,
-				int name2,
 				double value2
 				);
 
@@ -34,4 +32,4 @@ public:
 };
 
 } /* namespace CoolProp */
-#endif /* HELMHOLTZEOSBACKEND_H_ */
+#endif /* HELMHOLTZEOSMIXTUREBACKEND_H_ */

@@ -164,7 +164,7 @@ bool load_REFPROP()
 
 namespace CoolProp {
 
-REFPROPBackend::REFPROPBackend(std::string fluid_name) {
+REFPROPMixtureBackend::REFPROPMixtureBackend(std::string fluid_name) {
 	// Do the REFPROP instantiation for this fluid
 
 	// Try to add this fluid to REFPROP - might want to think about making array of 
@@ -175,11 +175,11 @@ REFPROPBackend::REFPROPBackend(std::string fluid_name) {
 	// Tcrit, pcrit, accentric...
 }
 
-REFPROPBackend::~REFPROPBackend() {
+REFPROPMixtureBackend::~REFPROPMixtureBackend() {
 	// TODO Auto-generated destructor stub
 }
 
-void REFPROPBackend::set_REFPROP_fluid(std::string fluid_name)
+void REFPROPMixtureBackend::set_REFPROP_fluid(std::string fluid_name)
 {
 	long ierr=0;
 	char hf[refpropcharlength*ncmax], herr[errormessagelength+1];
@@ -395,13 +395,13 @@ void REFPROPBackend::set_REFPROP_fluid(std::string fluid_name)
 }
 	
 }
-void REFPROPBackend::update(int input_pair, double value1, double value2)
+void REFPROPMixtureBackend::update(int input_pair, double value1, double value2)
 {
-	switch( input_pair)
+	switch(input_pair)
 	{
 		case PT_INPUTS:
 		{
-			T = value1; p = value2/1000.0; // Want p in [kPa]
+			p = value2/1000.0; T = value1; // Want p in [kPa]
 
 			// Use flash routine to find properties
 			TPFLSHdll(&_T,&_p,&(x[0]),&d,&dl,&dv,xliq,xvap,&q,&e,&h,&s,&cv,&cp,&w,&ierr,herr,errormessagelength); 
@@ -423,7 +423,7 @@ void REFPROPMixtureBackend::update(int input_pair, double value1, double value2)
 	double T,p=0,d,dl,dv,q,e,h,s,cv,cp,w,MW,hl,hv,sl,sv,ul,
 		uv,pl,pv,hjt,eta,tcx,Q,Tcrit,pcrit,dcrit,sigma;
 
-	switch( input_pair)
+	switch(input_pair)
 	{
 		case PT_INPUTS:
 		{

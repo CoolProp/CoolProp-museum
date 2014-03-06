@@ -39,4 +39,4 @@ REFPROPBackend::~REFPROPBackend() {
 	// TODO Auto-generated destructor stub
 }
 
-} /* namespace CoolProp::Backends */
+} /* namespace CoolProp */
