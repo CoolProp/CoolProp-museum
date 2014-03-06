@@ -92,7 +92,6 @@ bool load_REFPROP()
 				// INCREASE ROBUSTNESS. ALWAYS THROW AN ERROR ON THE ELSE.
 				#error "Must define either ENV32BIT or ENV64BIT"
 			#endif
-
 			
 		#elif defined(__ISLINUX__)
 			RefpropdllInstance = dlopen ("librefprop.so", RTLD_LAZY);
@@ -163,7 +162,7 @@ bool load_REFPROP()
 	return true;
 }
 
-namespace CoolProp::Backends {
+namespace CoolProp {
 
 REFPROPBackend::REFPROPBackend(std::string fluid_name) {
 	// Do the REFPROP instantiation for this fluid
@@ -174,8 +173,6 @@ REFPROPBackend::REFPROPBackend(std::string fluid_name) {
 
 	// Set all constants that can be accessed from REFPROP
 	// Tcrit, pcrit, accentric...
-
-
 }
 
 REFPROPBackend::~REFPROPBackend() {
@@ -312,16 +309,6 @@ void REFPROPBackend::set_REFPROP_fluid(std::string fluid_name)
 		}
 
 		ierr=999;
-		// Set path to fluid files
-//		// std::string rpPath (refpropfluidpath);
-//		if (rpPath.length()>0)
-//		{
-//			printf("Setting REFPROP path to: %s\n",rpPath.c_str());
-//			char refproppath[refpropcharlength+1];
-//			strcpy(refproppath,rpPath.c_str());
-//			SETPATHdll(refproppath);
-//			free(refproppath);
-//		}
 
 		char* hfm = (char*) calloc(refpropcharlength+8, sizeof(char));
 		strcpy(hfm,fdPath.c_str());
@@ -431,4 +418,30 @@ void REFPROPBackend::update(int input_pair, double value1, double value2)
 	}
 }
 
-} /* namespace CoolProp::Backends */
+void REFPROPMixtureBackend::update(int input_pair, double value1, double value2)
+{
+	double T,p=0,d,dl,dv,q,e,h,s,cv,cp,w,MW,hl,hv,sl,sv,ul,
+		uv,pl,pv,hjt,eta,tcx,Q,Tcrit,pcrit,dcrit,sigma;
+
+	switch( input_pair)
+	{
+		case PT_INPUTS:
+		{
+			T = value1; p = value2/1000.0; // Want p in [kPa]
+
+			// Use flash routine to find properties
+			TPFLSHdll(&_T,&_p,&(x[0]),&d,&dl,&dv,xliq,xvap,&q,&e,&h,&s,&cv,&cp,&w,&ierr,herr,errormessagelength); 
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+			// Set all cache values that can be set
+			break;
+		}
+	default:
+	{
+		throw ValueError(format("This set of inputs [%d,%d] is not yet supported",iName1,iName2));
+	}
+	throw NotImplementedError("REFPROPBackend is not yet implemented");
+	}
+}
+
+} /* namespace CoolProp */

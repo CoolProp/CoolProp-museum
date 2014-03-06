@@ -10,27 +10,13 @@
 
 #include "REFPROPMixtureBackend.h"
 
-namespace CoolProp::Backends {
+namespace CoolProp {
 
 class REFPROPBackend : public REFPROPMixtureBackend  {
 public:
-	REFPROPBackend();
+	REFPROPBackend(std::string fluid_name);
 	virtual ~REFPROPBackend();
-
-	/// Updating function for pure and pseudo-pure fluids for REFPROP
-	/// @param name1 First input index for state variable
-	/// @param value1 First input value
-	/// @param name2 Second input index for state variable
-	/// @param value2 Second input value
-	/// @param State The state class to be updated by this call
-	void update(int name1,
-				double value1,
-				int name2,
-				double value2
-				);
-
-	void set_REFPROP_fluid(std::string fluid_name);
 };
 
-} /* namespace CoolProp::Backends */
+} /* namespace CoolProp */
 #endif /* REFPROPBACKEND_H_ */

@@ -19,9 +19,9 @@
 
 #include "HelmholtzEOSMixtureBackend.h"
 
-namespace CoolProp::Backends {
+namespace CoolProp {
 
-HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::string fluid_name) {
+HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<std::string> component_names, std::vector<double> mole_fractions) {
 	// TODO Auto-generated constructor stub
 }
 

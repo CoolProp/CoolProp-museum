@@ -19,7 +19,7 @@
 
 #include "HelmholtzEOSBackend.h"
 
-namespace CoolProp::Backends {
+namespace CoolProp {
 
 HelmholtzEOSBackend::HelmholtzEOSBackend(std::string fluid_name) {
 	// TODO Auto-generated constructor stub

@@ -11,11 +11,12 @@
 #include "HelmholtzEOSMixtureBackend.h"
 #include <vector>
 
-namespace CoolProp::Backends {
+namespace CoolProp {
 
 class HelmholtzEOSBackend : public HelmholtzEOSMixtureBackend  {
 public:
 	HelmholtzEOSBackend();
+	HelmholtzEOSBackend(std::string fluid_name);
 	virtual ~HelmholtzEOSBackend();
 
 	/// Updating function for pure and pseudo-pure fluids for REFPROP
@@ -32,5 +33,5 @@ public:
 	void set_REFPROP_fluid(std::vector<std::string> fluid_names, std::vector<double> &mole_fractions);
 };
 
-} /* namespace CoolProp::Backends */
+} /* namespace CoolProp */
 #endif /* HELMHOLTZEOSMIXTUREBACKEND_H_ */
