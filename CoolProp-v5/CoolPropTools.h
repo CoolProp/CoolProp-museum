@@ -157,7 +157,7 @@
 	// Thanks to http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
 	std::string get_file_contents(const char *filename);
 
-    //missing string printf
+    // Missing string printf
     std::string format(const char* fmt, ...);
 	// Missing string split - like in Python
 	std::vector<std::string> strsplit(std::string s, char del);
@@ -180,8 +180,6 @@
 	double CubicInterp( double x0, double x1, double x2, double x3, double f0, double f1, double f2, double f3, double x);
 
 	void solve_cubic(double a, double b, double c, double d, double *x0, double *x1, double *x2);
-
-	
 	
 	inline double min3(double x1, double x2, double x3){return std::min(std::min(x1, x2), x3);};
 	inline double max3(double x1, double x2, double x3){return std::max(std::max(x1, x2), x3);};
