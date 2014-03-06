@@ -90,7 +90,7 @@ protected:
 			_d2alphar_dDelta_dTau_lim, _d3alphar_dDelta2_dTau_lim;
 
 public:
-	virtual AbstractState();
+	AbstractState();
 	virtual ~AbstractState();
 
 	bool clear();
