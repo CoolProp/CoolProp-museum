@@ -66,8 +66,6 @@ protected:
 		return true;
 	}
 
-
-
 	/// Two important points
 	SimpleState _critical, _reducing;
 

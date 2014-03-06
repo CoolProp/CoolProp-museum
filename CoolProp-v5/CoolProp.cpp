@@ -44,11 +44,3 @@ FluidObject::FluidObject() {
 FluidObject::~FluidObject(){
 	CoolPropClass::fluidList.erase(this->getHash());
 }
-
-class CoolPropClass {
-
-  public:
-	static std::map<int, StateObject*> stateList;
-	static std::map<int, FluidObject*> fluidList;
-
-};
