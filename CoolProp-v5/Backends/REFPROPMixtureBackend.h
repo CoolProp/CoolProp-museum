@@ -39,8 +39,10 @@ public:
 	/// Returns true if REFPROP is supported on this platform
 	bool REFPROP_supported(void);
 
-	/// Set the fluids in REFPROP DLL
-	/// @param fluid_names The vector of strings of the fluid components, without file ending
+	/** Set the fluids in REFPROP DLL
+	*
+	*   @param fluid_names The vector of strings of the fluid components, without file ending
+	*/
 	void set_REFPROP_fluids(const std::vector<std::string> &fluid_names);
 
 	/// Set the mole fractions
