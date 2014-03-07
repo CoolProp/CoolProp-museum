@@ -578,7 +578,7 @@ double REFPROPMixtureBackend::calc_conductivity(void)
 }
 double REFPROPMixtureBackend::calc_surface_tension(void)
 {
-	double eta, sigma, rho_mol_L = 0.001*_rhomolar;
+	double sigma, rho_mol_L = 0.001*_rhomolar;
 	long ierr;
 	char herr[255];
 	SURFTdll(&_T, &rho_mol_L, &(mole_fractions[0]),  // Inputs
