@@ -55,6 +55,8 @@ public:
 	double calc_viscosity(void);
 	/// Get the thermal conductivity [W/m/K] for given temperature and density
 	double calc_conductivity(void);
+	/// Get the surface tension [N/m] for given temperature
+	double calc_surface_tension(void);
 
 };
 

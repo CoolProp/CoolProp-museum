@@ -112,6 +112,7 @@ protected:
 	virtual double calc_isobaric_expansion_coefficient(void){throw NotImplementedError("calc_isobaric_expansion_coefficient is not implemented for this backend");};
 	virtual double calc_viscosity(void){throw NotImplementedError("calc_viscosity is not implemented for this backend");};
 	virtual double calc_conductivity(void){throw NotImplementedError("calc_conductivity is not implemented for this backend");};
+	virtual double calc_surface_tension(void){throw NotImplementedError("calc_surface_tension is not implemented for this backend");};
 
 public:
 	AbstractState();
@@ -144,7 +145,7 @@ public:
 	// ----------------------------------------
 	double viscosity(void);
 	double conductivity(void);
-	//double surface_tension(void);
+	double surface_tension(void);
 
 	//// ----------------------------------------
 	//// Derivatives of properties

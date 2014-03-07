@@ -113,6 +113,10 @@ double AbstractState::conductivity(void){
 	if (!_conductivity) _conductivity = calc_conductivity();
 	return _conductivity;
 }
+double AbstractState::surface_tension(void){
+	if (!_surface_tension) _surface_tension = calc_surface_tension();
+	return _surface_tension;
+}
 
 //virtual double AbstractState::isothermal_compressibility(void){
 //	return 1.0/(_rho*dpdrho_constT());
@@ -120,7 +124,7 @@ double AbstractState::conductivity(void){
 //virtual double AbstractState::isobaric_expansion_coefficient(void){
 //	return -1.0/(_rho*_rho)*drhodT_constp();
 //}
-//
+
 //	// ----------------------------------------
 //	// Smoothing functions for density
 //	// ----------------------------------------

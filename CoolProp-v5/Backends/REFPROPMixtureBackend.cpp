@@ -576,6 +576,19 @@ double REFPROPMixtureBackend::calc_conductivity(void)
 	calc_viscosity();
 	return _conductivity;
 }
+double REFPROPMixtureBackend::calc_surface_tension(void)
+{
+	double eta, sigma, rho_mol_L = 0.001*_rhomolar;
+	long ierr;
+	char herr[255];
+	SURFTdll(&_T, &rho_mol_L, &(mole_fractions[0]),  // Inputs
+			 &sigma,                                 // Outputs
+			 &ierr, herr, errormessagelength);       // Error message
+
+	_surface_tension = sigma;
+	return _surface_tension;
+}
+
 	
 void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)
 {
@@ -654,7 +667,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		case DmolarP_INPUTS:
 		{
 			// Unit conversion for REFPROP
-			_rhomolar = value1; rho_mol_L = 0.001*value1; p_kPa = 0.001*value1; // Want p in [kPa] in REFPROP
+			rho_mol_L = 0.001*value1; p_kPa = 0.001*value1; // Want p in [kPa] in REFPROP
 
 			// Use flash routine to find properties
 			// from REFPROP: subroutine PDFLSH (p,D,z,t,Dl,Dv,x,y,q,e,h,s,cv,cp,w,ierr,herr)
@@ -665,6 +678,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
 
 			// Set all cache values that can be set with unit conversion to SI
+			_rhomolar = value1; 
 			_p = value2;
 			_hmolar = hmol;
 			_smolar = smol;
@@ -698,6 +712,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 
 			// Set all cache values that can be set with unit conversion to SI
 			_p = value2;
+			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
 			_hmolar = hmol;
 			_smolar = smol;
 			_cvmolar = cvmol;
@@ -731,6 +746,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 
 			// Set all cache values that can be set with unit conversion to SI
 			_p = value1;
+			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
 			_hmolar = hmol;
 			_smolar = smol;
 			_cvmolar = cvmol;
