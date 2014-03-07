@@ -65,8 +65,11 @@ const enum unit_systems{UNIT_SYSTEM_SI, UNIT_SYSTEM_KSI, UNIT_SYSTEM_KSI_MOLAR, 
 // These are unit types for the fluid
 const enum fluid_types{FLUID_TYPE_PURE, FLUID_TYPE_PSEUDOPURE, FLUID_TYPE_REFPROP, FLUID_TYPE_INCOMPRESSIBLE_LIQUID, FLUID_TYPE_INCOMPRESSIBLE_SOLUTION, FLUID_TYPE_UNDEFINED};
 
-// These are input pairs that can be used (sorted alphabetically)
-const enum input_pairs{PT_INPUTS, DmassT_INPUTS, DmolarT_INPUTS, DmassP_INPUTS, DmolarP_INPUTS};
+// These are input pairs that can be used (in each pair, input keys are sorted alphabetically)
+const enum input_pairs{PT_INPUTS, 
+	                   DmassT_INPUTS, DmolarT_INPUTS, DmassP_INPUTS, DmolarP_INPUTS,
+	                   HmassP_INPUTS, HmolarP_INPUTS, PSmass_INPUTS, PSmolar_INPUTS, 
+					   HmolarSmolar_INPUTS, HmassSmass_INPUTS};
 
 } /* namespace CoolProp */
 #endif /* DATASTRUCTURES_H_ */

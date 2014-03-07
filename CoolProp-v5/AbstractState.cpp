@@ -105,7 +105,6 @@ double AbstractState::speed_sound(void){
 	if (!_speed_sound) _speed_sound = calc_speed_sound();
 	return _speed_sound;
 }
-
 double AbstractState::viscosity(void){
 	if (!_viscosity) _viscosity = calc_viscosity();
 	return _viscosity;
@@ -115,13 +114,12 @@ double AbstractState::conductivity(void){
 	return _conductivity;
 }
 
-	//virtual double AbstractState::isothermal_compressibility(void){
-	//	return 1.0/(_rho*dpdrho_constT());
-	//}
-	//virtual double AbstractState::isobaric_expansion_coefficient(void){
-	//	return -1.0/(_rho*_rho)*drhodT_constp();
-	//}
-//
+//virtual double AbstractState::isothermal_compressibility(void){
+//	return 1.0/(_rho*dpdrho_constT());
+//}
+//virtual double AbstractState::isobaric_expansion_coefficient(void){
+//	return -1.0/(_rho*_rho)*drhodT_constp();
+//}
 //
 //	// ----------------------------------------
 //	// Smoothing functions for density
@@ -137,8 +135,6 @@ double AbstractState::conductivity(void){
 //	// ----------------------------------------
 //	// Transport properties // TODO: Fix it!
 //	// ----------------------------------------
-//	virtual double AbstractState::viscosity(void);
-//	virtual double AbstractState::conductivity(void);
 //
 //	virtual double AbstractState::surface_tension(void);
 //

@@ -572,13 +572,14 @@ double REFPROPMixtureBackend::calc_viscosity(void)
 }
 double REFPROPMixtureBackend::calc_conductivity(void)
 {
+	// Calling viscosity also caches conductivity, use that to save calls
 	calc_viscosity();
 	return _conductivity;
 }
 	
 void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)
 {
-	double T,rhomol_L,rhoLmol_L,rhoVmol_L,hmol,emol,smol,cvmol,cpmol,w,q,mm,p_kPa;
+	double T,rho_mol_L,rhoLmol_L,rhoVmol_L,hmol,emol,smol,cvmol,cpmol,w,q,mm,p_kPa;
 	long ierr;
 	char herr[255];
 
@@ -597,7 +598,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			p_kPa = 0.001*value1; _T = value2; // Want p in [kPa] in REFPROP
 
 			// Use flash routine to find properties
-			TPFLSHdll(&T,&p_kPa,&(mole_fractions[0]),&rhomol_L,
+			TPFLSHdll(&T,&p_kPa,&(mole_fractions[0]),&rho_mol_L,
 				      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
 				      &q,&emol,&hmol,&smol,&cvmol,&cpmol,&w,
 					  &ierr,herr,errormessagelength); //
@@ -605,7 +606,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 
 			// Set all cache values that can be set with unit conversion to SI
 			_p = value1;
-			_rhomolar = rhomol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
 			_hmolar = hmol;
 			_smolar = smol;
 			_cvmolar = cvmol;
@@ -621,10 +622,10 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		case DmolarT_INPUTS:
 		{
 			// Unit conversion for REFPROP
-			_rhomolar = value1; rhomol_L = 0.001*value1; _T = value2; // Want rho in [mol/L] in REFPROP
+			_rhomolar = value1; rho_mol_L = 0.001*value1; _T = value2; // Want rho in [mol/L] in REFPROP
 
 			// Use flash routine to find properties
-			TDFLSHdll(&_T,&rhomol_L,&(mole_fractions[0]),&p_kPa,
+			TDFLSHdll(&_T,&rho_mol_L,&(mole_fractions[0]),&p_kPa,
 				      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
 				      &q,&emol,&hmol,&smol,&cvmol,&cpmol,&w,
 					  &ierr,herr,errormessagelength); 
@@ -646,23 +647,21 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		}
 		case DmassT_INPUTS:
 		{
-			// Convert to molar units for the density
-			double rhomolar = value1 * _molar_mass;  // [kg/m^3] * [mol/kg]
-			// Call again, but this time with molar units
-			update(DmolarT_INPUTS, rhomolar, value2);
+			// Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
+			update(DmolarT_INPUTS, value1 * _molar_mass, value2);
 			break;
 		}
 		case DmolarP_INPUTS:
 		{
 			// Unit conversion for REFPROP
-			_rhomolar = value1; rhomol_L = 0.001*value1; p_kPa = 0.001*value1; // Want p in [kPa] in REFPROP
+			_rhomolar = value1; rho_mol_L = 0.001*value1; p_kPa = 0.001*value1; // Want p in [kPa] in REFPROP
 
 			// Use flash routine to find properties
 			// from REFPROP: subroutine PDFLSH (p,D,z,t,Dl,Dv,x,y,q,e,h,s,cv,cp,w,ierr,herr)
-			PDFLSHdll(&p_kPa,&rhomol_L,&(mole_fractions[0]),&_T,
+			PDFLSHdll(&p_kPa,&rho_mol_L,&(mole_fractions[0]),&_T,
 				&rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
-				&q,&emol,&hmol,&smol,&cvmol,&cpmol,&w,
-				&ierr,herr,errormessagelength); 
+				&q,&emol,&hmol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+				&ierr,herr,errormessagelength);  // Error terms
 			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
 
 			// Set all cache values that can be set with unit conversion to SI
@@ -681,15 +680,111 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		}
 		case DmassP_INPUTS:
 		{
-			// Convert to molar units for the density
-			double rhomolar = value1 * _molar_mass;  // [kg/m^3] * [mol/kg]
-			// Call again, but this time with molar units
-			update(DmolarP_INPUTS, rhomolar, value2);
+			// Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
+			update(DmolarP_INPUTS, value1 * _molar_mass, value2);
+			break;
+		}
+		case HmolarP_INPUTS:
+		{
+			// Unit conversion for REFPROP
+			hmol = value1; p_kPa = 0.001*value2; // Want p in [kPa] in REFPROP
+
+			// Use flash routine to find properties
+			PHFLSHdll(&p_kPa,&hmol,&(mole_fractions[0]),&_T,&rho_mol_L,
+				&rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+				&q,&emol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+				&ierr,herr,errormessagelength); // Error terms
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+			// Set all cache values that can be set with unit conversion to SI
+			_p = value2;
+			_hmolar = hmol;
+			_smolar = smol;
+			_cvmolar = cvmol;
+			_cpmolar = cpmol;
+			_speed_sound = w;
+			if (0)
+			{
+				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+				_rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			}
+			break;
+		}
+		case HmassP_INPUTS:
+		{
+			// Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
+			update(HmolarP_INPUTS, value1 * _molar_mass, value2); 
+			break;
+		}
+		case PSmolar_INPUTS:
+		{
+			// Unit conversion for REFPROP
+			p_kPa = 0.001*value1; smol = value2; // Want p in [kPa] in REFPROP
+
+			// Use flash routine to find properties
+			PSFLSHdll(&p_kPa,&smol,&(mole_fractions[0]),&_T,&rho_mol_L,
+				&rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+				&q,&emol,&hmol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+				&ierr,herr,errormessagelength); // Error terms
+
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+			// Set all cache values that can be set with unit conversion to SI
+			_p = value1;
+			_hmolar = hmol;
+			_smolar = smol;
+			_cvmolar = cvmol;
+			_cpmolar = cpmol;
+			_speed_sound = w;
+			if (0)
+			{
+				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+				_rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			}
+			break;
+		}
+		case PSmass_INPUTS:
+		{
+			// Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K]
+			update(PSmolar_INPUTS, value1, value2*_molar_mass); 
+			break;
+		}
+		case HmolarSmolar_INPUTS:
+		{
+			// Unit conversion for REFPROP
+			hmol = value1; smol = value2;
+
+			HSFLSHdll(&hmol,&smol,&(mole_fractions[0]),&_T,&p_kPa,&rho_mol_L,
+				&rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+				&q,&emol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+				&ierr,herr,errormessagelength); // Error terms
+
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+			// Set all cache values that can be set with unit conversion to SI
+			_p = p_kPa*1000; // 1000 for conversion from kPa to Pa
+			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			_hmolar = hmol;
+			_smolar = smol;
+			_cvmolar = cvmol;
+			_cpmolar = cpmol;
+			_speed_sound = w;
+			if (0)
+			{
+				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+				_rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			}
+			break;
+		}
+		case HmassSmass_INPUTS:
+		{
+			// Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K], same for enthalpy
+			update(HmolarSmolar_INPUTS, value1 * _molar_mass, value2 * _molar_mass); 
 			break;
 		}
 		default:
 		{
-			throw ValueError(format("This set of inputs [%d] is not yet supported",input_pair));
+			throw ValueError(format("This pair of inputs [%d] is not yet supported",input_pair));
 		}
 	};
 }
