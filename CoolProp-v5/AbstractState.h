@@ -37,8 +37,6 @@ protected:
 	long _phase;
 	bool _forceSinglePhase, _forceTwoPhase;
 
-	
-
 	bool isCompressibleFluid(void){
 		return !(_fluid_type == FLUID_TYPE_INCOMPRESSIBLE_LIQUID
 			  || _fluid_type == FLUID_TYPE_INCOMPRESSIBLE_SOLUTION);
@@ -77,6 +75,9 @@ protected:
 	/// Bulk values
 	double _rhomolar, _T, _p, _Q, _R, _tau, _delta;
 
+	/// Transport properties
+	CachedElement _viscosity, _conductivity, _surface_tension;
+
 	CachedElement _hmolar, _smolar, _logp, _logrhomolar, _cpmolar,_cvmolar,_speed_sound;
 
 	/// Smoothing values
@@ -109,6 +110,8 @@ protected:
 	virtual double calc_speed_sound(void){throw NotImplementedError("calc_speed_sound is not implemented for this backend");};
 	virtual double calc_isothermal_compressibility(void){throw NotImplementedError("calc_isothermal_compressibility is not implemented for this backend");};
 	virtual double calc_isobaric_expansion_coefficient(void){throw NotImplementedError("calc_isobaric_expansion_coefficient is not implemented for this backend");};
+	virtual double calc_viscosity(void){throw NotImplementedError("calc_viscosity is not implemented for this backend");};
+	virtual double calc_conductivity(void){throw NotImplementedError("calc_conductivity is not implemented for this backend");};
 
 public:
 	AbstractState();
@@ -139,9 +142,9 @@ public:
 	// ----------------------------------------
 	// Transport properties
 	// ----------------------------------------
-	//virtual double viscosity(void) = 0;
-	//virtual double conductivity(void) = 0;
-	//virtual double surface_tension(void) = 0;
+	double viscosity(void);
+	double conductivity(void);
+	//double surface_tension(void);
 
 	//// ----------------------------------------
 	//// Derivatives of properties

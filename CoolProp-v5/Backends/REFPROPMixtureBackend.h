@@ -51,11 +51,11 @@ public:
 	/// Check if the mole fractions have been set, etc.
 	void check_status();
 
-	/// Get the enthalpy
-	double get_h(void)
-	{
+	/// Get the viscosity [Pa-s] for given temperature and density
+	double calc_viscosity(void);
+	/// Get the thermal conductivity [W/m/K] for given temperature and density
+	double calc_conductivity(void);
 
-	}
 };
 
 } /* namespace CoolProp */

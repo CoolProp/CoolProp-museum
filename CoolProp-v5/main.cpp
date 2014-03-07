@@ -12,6 +12,7 @@ int main()
 	State->set_mole_fractions(x);
 	State->update(CoolProp::DmassT_INPUTS,1,500);
 	double hh = State->hmolar();
+	double mu = State->viscosity();
 	delete State;
 	
 }

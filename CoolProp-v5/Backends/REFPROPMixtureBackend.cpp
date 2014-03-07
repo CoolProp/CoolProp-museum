@@ -555,6 +555,26 @@ void REFPROPMixtureBackend::check_status(void)
 {
 	if (!_mole_fractions_set){ throw ValueError("Mole fractions not yet set");}
 }
+double REFPROPMixtureBackend::calc_viscosity(void)
+{
+	double eta, tcx, rhomol_L = 0.001*_rhomolar;
+	long ierr;
+	char herr[255];
+
+	TRNPRPdll(&_T,&rhomol_L,&(mole_fractions[0]),  // Inputs
+		      &eta,&tcx,                           // Outputs
+		      &ierr,herr,errormessagelength);      // Error message
+	if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } 
+	//else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+	_viscosity = 1e-6*eta;
+	_conductivity = tcx;
+	return _viscosity;
+}
+double REFPROPMixtureBackend::calc_conductivity(void)
+{
+	calc_viscosity();
+	return _conductivity;
+}
 	
 void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)
 {
@@ -630,6 +650,41 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			double rhomolar = value1 * _molar_mass;  // [kg/m^3] * [mol/kg]
 			// Call again, but this time with molar units
 			update(DmolarT_INPUTS, rhomolar, value2);
+			break;
+		}
+		case DmolarP_INPUTS:
+		{
+			// Unit conversion for REFPROP
+			_rhomolar = value1; rhomol_L = 0.001*value1; p_kPa = 0.001*value1; // Want p in [kPa] in REFPROP
+
+			// Use flash routine to find properties
+			// from REFPROP: subroutine PDFLSH (p,D,z,t,Dl,Dv,x,y,q,e,h,s,cv,cp,w,ierr,herr)
+			PDFLSHdll(&p_kPa,&rhomol_L,&(mole_fractions[0]),&_T,
+				&rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+				&q,&emol,&hmol,&smol,&cvmol,&cpmol,&w,
+				&ierr,herr,errormessagelength); 
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+			// Set all cache values that can be set with unit conversion to SI
+			_p = value2;
+			_hmolar = hmol;
+			_smolar = smol;
+			_cvmolar = cvmol;
+			_cpmolar = cpmol;
+			_speed_sound = w;
+			if (0)
+			{
+				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+				_rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			}
+			break;
+		}
+		case DmassP_INPUTS:
+		{
+			// Convert to molar units for the density
+			double rhomolar = value1 * _molar_mass;  // [kg/m^3] * [mol/kg]
+			// Call again, but this time with molar units
+			update(DmolarP_INPUTS, rhomolar, value2);
 			break;
 		}
 		default:

@@ -8,7 +8,6 @@
 #include "math.h"
 #include "AbstractState.h"
 
-
 namespace CoolProp {
 
 AbstractState::AbstractState() {
@@ -106,6 +105,16 @@ double AbstractState::speed_sound(void){
 	if (!_speed_sound) _speed_sound = calc_speed_sound();
 	return _speed_sound;
 }
+
+double AbstractState::viscosity(void){
+	if (!_viscosity) _viscosity = calc_viscosity();
+	return _viscosity;
+}
+double AbstractState::conductivity(void){
+	if (!_conductivity) _conductivity = calc_conductivity();
+	return _conductivity;
+}
+
 	//virtual double AbstractState::isothermal_compressibility(void){
 	//	return 1.0/(_rho*dpdrho_constT());
 	//}
