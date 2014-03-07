@@ -8,10 +8,10 @@ int main (int argc, char *argv[])
 {
   if (argc < 2)
     {
-    fprintf(stdout,"%s Version %d.%d\n",
+    fprintf(stdout,"%s Version %s (%s)\n",
             argv[0],
-            CoolProp_VERSION_MAJOR,
-            CoolProp_VERSION_MINOR);
+            CoolProp_VERSION,
+            CoolProp_REVISION);
     fprintf(stdout,"Usage: %s number\n",argv[0]);
     return 1;
     }

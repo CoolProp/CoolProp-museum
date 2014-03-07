@@ -77,7 +77,7 @@ if __name__=='__main__':
             except subprocess.CalledProcessError:
                 print('git was not found')
                 return
-            subprocess.call('git fetch', shell = True)
+            #subprocess.call('git fetch', shell = True)            
             p = subprocess.Popen('git rev-parse HEAD', 
                                  stdout=subprocess.PIPE, 
                                  stderr=subprocess.PIPE,

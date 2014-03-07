@@ -1,3 +1,0 @@
-// the configured options and settings for CoolProp
-#define CoolProp_VERSION_MAJOR @CoolProp_VERSION_MAJOR@
-#define CoolProp_VERSION_MINOR @CoolProp_VERSION_MINOR@
