@@ -27,10 +27,17 @@ public:
 	REFPROPMixtureBackend(const std::vector<std::string>& fluid_names);
 	virtual ~REFPROPMixtureBackend();
 
-	/// Updating function for pure and pseudo-pure fluids for REFPROP
-	/// @param input_pair Integer key corresponding to the two inputs that will be passed to the function
-	/// @param value1 First input value
-	/// @param value2 Second input value
+	/// Updating function for REFPROP
+	/** 
+	In this function we take a pair of thermodynamic states, those defined in the input_pairs
+	enumeration and update all the internal variables that we can.  REFPROP calculates
+	a lot of other state variables each time you use a flash routine so we cache all the 
+	outputs that we can, which saves on computational time.
+
+	@param input_pair Integer key from CoolProp::input_pairs to the two inputs that will be passed to the function
+	@param value1 First input value
+	@param value2 Second input value
+	*/
 	void update(long input_pair,
 				double value1,
 				double value2
@@ -39,18 +46,22 @@ public:
 	/// Returns true if REFPROP is supported on this platform
 	bool REFPROP_supported(void);
 
-	/** Set the fluids in REFPROP DLL
-	*
-	*   @param fluid_names The vector of strings of the fluid components, without file ending
+	/// Set the fluids in REFPROP DLL by calling the SETUPdll function
+	/**
+	@param fluid_names The vector of strings of the fluid components, without file ending
 	*/
 	void set_REFPROP_fluids(const std::vector<std::string> &fluid_names);
 
 	/// Set the mole fractions
-	/// @param mole_fractions The vector of mole fractions of the components
+	/** 
+	@param mole_fractions The vector of mole fractions of the components
+	*/
 	void set_mole_fractions(const std::vector<double> &mole_fractions);
 	
 	/// Set the mass fractions
-	/// @param mass_fractions The vector of mass fractions of the components
+	/** 
+	@param mass_fractions The vector of mass fractions of the components
+	*/
 	void set_mass_fractions(const std::vector<double> &mass_fractions);
 
 	/// Check if the mole fractions have been set, etc.
@@ -60,7 +71,7 @@ public:
 	double calc_viscosity(void);
 	/// Get the thermal conductivity [W/m/K] (based on the temperature and density in the state class)
 	double calc_conductivity(void);
-	/// Get the surface tension [N/m] (based on the saturation temperature in the state class).  Invalid for temperatures above critical point or below triple point temperature
+	/// Get the surface tension [N/m] (based on the temperature in the state class).  Invalid for temperatures above critical point or below triple point temperature
 	double calc_surface_tension(void);
 
 };
