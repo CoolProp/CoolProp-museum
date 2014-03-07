@@ -71,10 +71,13 @@ protected:
 	/// Two important points
 	SimpleState _critical, _reducing;
 
-	/// Bulk values
-	double _rho, _T, _p, _Q, _R, _tau, _delta;
+	/// Molar mass [mol/kg]
+	double _molar_mass;
 
-	CachedElement _h, _s, _logp, _logrho;
+	/// Bulk values
+	double _rhomolar, _T, _p, _Q, _R, _tau, _delta;
+
+	CachedElement _hmolar, _smolar, _logp, _logrhomolar, _cpmolar,_cvmolar,_speed_sound;
 
 	/// Smoothing values
 	double _rhospline, _dsplinedp, _dsplinedh;
@@ -91,116 +94,133 @@ protected:
 	CachedElement _dalphar_dDelta_lim, _d2alphar_dDelta2_lim,
 			_d2alphar_dDelta_dTau_lim, _d3alphar_dDelta2_dTau_lim;
 
+	/// Two-Phase variables
+	CachedElement _rhoLmolar, _rhoVmolar;
+
+	// ----------------------------------------
+	// Property accessors to be implemented by the backend
+	// for properties that are not always calculated (T,p,rho,Q)
+	// ----------------------------------------
+
+	virtual double calc_hmolar(void){throw NotImplementedError("calc_hmolar is not implemented for this backend");};
+	virtual double calc_smolar(void){throw NotImplementedError("calc_smolar is not implemented for this backend");};
+	virtual double calc_cpmolar(void){throw NotImplementedError("calc_cpmolar is not implemented for this backend");};
+	virtual double calc_cvmolar(void){throw NotImplementedError("calc_cvmolar is not implemented for this backend");};
+	virtual double calc_speed_sound(void){throw NotImplementedError("calc_speed_sound is not implemented for this backend");};
+	virtual double calc_isothermal_compressibility(void){throw NotImplementedError("calc_isothermal_compressibility is not implemented for this backend");};
+	virtual double calc_isobaric_expansion_coefficient(void){throw NotImplementedError("calc_isobaric_expansion_coefficient is not implemented for this backend");};
+
 public:
 	AbstractState();
 	virtual ~AbstractState();
 
 	bool clear();
-	virtual bool update(long iInput1, double Value1, long iInput2, double Value2);
+	virtual void update(long input_pair, double Value1, double Value2) = 0;
+	virtual void set_mole_fractions(const std::vector<double> &mole_fractions) = 0;
+	virtual void set_mass_fractions(const std::vector<double> &mass_fractions) = 0;
 
 	// ----------------------------------------
 	// Bulk properties - temperature and density are directly calculated every time
 	// All other parameters are calculated on an as-needed basis
 	// ----------------------------------------
 	double T(void)  {return _T;};
-	double rho(void){return _rho;};
+	double rhomolar(void){return _rhomolar;};
 	double p(void)  {return _p;};
 	double Q(void)  {return _Q;};
 
-	double h(void);
-	double s(void);
-	double cp(void);
-	double cv(void);
+	double hmolar(void);
+	double smolar(void);
+	double cpmolar(void);
+	double cvmolar(void);
 	double speed_sound(void);
 	double isothermal_compressibility(void);
 	double isobaric_expansion_coefficient(void);
 
-
 	// ----------------------------------------
 	// Transport properties
 	// ----------------------------------------
-	virtual double viscosity(void) = 0;
-	virtual double conductivity(void) = 0;
-	virtual double surface_tension(void) = 0;
+	//virtual double viscosity(void) = 0;
+	//virtual double conductivity(void) = 0;
+	//virtual double surface_tension(void) = 0;
 
-	// ----------------------------------------
-	// Derivatives of properties
-	// ----------------------------------------
-	virtual double dvdp_constT(void);
-	virtual double dvdT_constp(void);
+	//// ----------------------------------------
+	//// Derivatives of properties
+	//// ----------------------------------------
+	//virtual double dvdp_constT(void);
+	//virtual double dvdT_constp(void);
 
-	// Density
-	virtual double drhodh_constp(void);
-	virtual double drhodp_consth(void);
-	virtual double drhodp_constT(void);
-	virtual double drhodT_constp(void);
-	virtual double d2rhodh2_constp(void);
-	virtual double d2rhodhdp(void);
-	virtual double d2rhodhdQ(void);
-	virtual double d2rhodp2_constT(void);
-	virtual double d2rhodpdQ(void);
-	virtual double d2rhodT2_constp(void);
-	virtual double d2rhodTdp(void);
+	//// Density
+	//virtual double drhodh_constp(void);
+	//virtual double drhodp_consth(void);
+	//virtual double drhodp_constT(void);
+	//virtual double drhodT_constp(void);
+	//virtual double d2rhodh2_constp(void);
+	//virtual double d2rhodhdp(void);
+	//virtual double d2rhodhdQ(void);
+	//virtual double d2rhodp2_constT(void);
+	//virtual double d2rhodpdQ(void);
+	//virtual double d2rhodT2_constp(void);
+	//virtual double d2rhodTdp(void);
 
-	// Pressure
-	virtual double dpdrho_consth(void);
-	virtual double dpdrho_constT(void);
-	virtual double dpdT_consth(void);
-	virtual double dpdT_constrho(void);
-	virtual double d2pdrho2_constT(void);
-	virtual double d2pdrhodT(void);
-	virtual double d2pdT2_constrho(void);
+	//// Pressure
+	//virtual double dpdrho_consth(void);
+	//virtual double dpdrho_constT(void);
+	//virtual double dpdT_consth(void);
+	//virtual double dpdT_constrho(void);
+	//virtual double d2pdrho2_constT(void);
+	//virtual double d2pdrhodT(void);
+	//virtual double d2pdT2_constrho(void);
 
-	// Enthalpy
-	virtual double dhdp_constrho(void);
-	virtual double dhdp_constT(void);
-	virtual double dhdrho_constp(void);
-	virtual double dhdrho_constT(void);
-	virtual double dhdT_constp(void);
-	virtual double dhdT_constrho(void);
-	virtual double d2hdp2_constT(void);
-	virtual double d2hdrho2_constT(void);
-	virtual double d2hdrhodT(void);
-	virtual double d2hdT2_constp(void);
-	virtual double d2hdT2_constrho(void);
-	virtual double d2hdTdp(void);
+	//// Enthalpy
+	//virtual double dhdp_constrho(void);
+	//virtual double dhdp_constT(void);
+	//virtual double dhdrho_constp(void);
+	//virtual double dhdrho_constT(void);
+	//virtual double dhdT_constp(void);
+	//virtual double dhdT_constrho(void);
+	//virtual double d2hdp2_constT(void);
+	//virtual double d2hdrho2_constT(void);
+	//virtual double d2hdrhodT(void);
+	//virtual double d2hdT2_constp(void);
+	//virtual double d2hdT2_constrho(void);
+	//virtual double d2hdTdp(void);
 
-	// Entropy
-	virtual double dsdp_constT(void);
-	virtual double dsdrho_constp(void);
-	virtual double dsdrho_constT(void);
-	virtual double dsdT_constp(void);
-	virtual double dsdT_constrho(void);
-	virtual double d2sdp2_constT(void);
-	virtual double d2sdrho2_constT(void);
-	virtual double d2sdrhodT(void);
-	virtual double d2sdT2_constp(void);
-	virtual double d2sdT2_constrho(void);
-	virtual double d2sdTdp(void);
+	//// Entropy
+	//virtual double dsdp_constT(void);
+	//virtual double dsdrho_constp(void);
+	//virtual double dsdrho_constT(void);
+	//virtual double dsdT_constp(void);
+	//virtual double dsdT_constrho(void);
+	//virtual double d2sdp2_constT(void);
+	//virtual double d2sdrho2_constT(void);
+	//virtual double d2sdrhodT(void);
+	//virtual double d2sdT2_constp(void);
+	//virtual double d2sdT2_constrho(void);
+	//virtual double d2sdTdp(void);
 
-	// Fundamental derivative of gas dynamics
-	virtual double fundamental_derivative_of_gas_dynamics(void);
-	virtual double d2pdv2_consts(void);
+	//// Fundamental derivative of gas dynamics
+	//virtual double fundamental_derivative_of_gas_dynamics(void);
+	//virtual double d2pdv2_consts(void);
 
-	// Other functions and derivatives
-	virtual double A(void);
-	virtual double B(void);
-	virtual double C(void);
-	virtual double Z(void);
+	//// Other functions and derivatives
+	//virtual double A(void);
+	//virtual double B(void);
+	//virtual double C(void);
+	//virtual double Z(void);
 
-	virtual double dAdT_constrho(void);
-	virtual double dAdrho_constT(void);
-	// TODO: Add constXX qualifier
-	virtual double dBdT(void);
-	virtual double dCdT(void);
-	virtual double dZdDelta(void);
-	virtual double dZdTau(void);
+	//virtual double dAdT_constrho(void);
+	//virtual double dAdrho_constT(void);
+	//// TODO: Add constXX qualifier
+	//virtual double dBdT(void);
+	//virtual double dCdT(void);
+	//virtual double dZdDelta(void);
+	//virtual double dZdTau(void);
 
 
 	// ----------------------------------------
 	// Helmholtz energy and derivatives
 	// ----------------------------------------
-	virtual double alpha0(void) = 0;
+	/*virtual double alpha0(void) = 0;
 	virtual double dalpha0_dDelta(void) = 0;
 	virtual double dalpha0_dTau(void) = 0;
 	virtual double d2alpha0_dDelta2(void) = 0;
@@ -225,7 +245,7 @@ public:
 	virtual double dalphar_dDelta_lim(void) = 0;
 	virtual double d2alphar_dDelta2_lim(void) = 0;
 	virtual double d2alphar_dDelta_dTau_lim(void) = 0;
-	virtual double d3alphar_dDelta2_dTau_lim(void) = 0;
+	virtual double d3alphar_dDelta2_dTau_lim(void) = 0;*/
 };
 
 } /* namespace CoolProp */

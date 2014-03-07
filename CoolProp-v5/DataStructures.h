@@ -8,9 +8,6 @@
 #ifndef DATASTRUCTURES_H_
 #define DATASTRUCTURES_H_
 
-//TODO: Remove this dummy entry.
-#define _HUGE 1e13
-
 namespace CoolProp {
 
 struct SimpleState
@@ -67,6 +64,9 @@ const enum unit_systems{UNIT_SYSTEM_SI, UNIT_SYSTEM_KSI, UNIT_SYSTEM_KSI_MOLAR, 
 
 // These are unit types for the fluid
 const enum fluid_types{FLUID_TYPE_PURE, FLUID_TYPE_PSEUDOPURE, FLUID_TYPE_REFPROP, FLUID_TYPE_INCOMPRESSIBLE_LIQUID, FLUID_TYPE_INCOMPRESSIBLE_SOLUTION, FLUID_TYPE_UNDEFINED};
+
+// These are input pairs that can be used (sorted alphabetically)
+const enum input_pairs{PT_INPUTS, DmassT_INPUTS, DmolarT_INPUTS, DmassP_INPUTS, DmolarP_INPUTS};
 
 } /* namespace CoolProp */
 #endif /* DATASTRUCTURES_H_ */

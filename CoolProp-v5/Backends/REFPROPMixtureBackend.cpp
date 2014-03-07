@@ -5,6 +5,26 @@
  *      Author: jowr
  */
 
+/*!
+From REFPROP:
+temperature                     K
+pressure, fugacity              kPa
+density                         mol/L
+composition                     mole fraction
+quality                         mole basis (moles vapor/total moles)
+enthalpy, internal energy       J/mol
+Gibbs, Helmholtz free energy    J/mol
+entropy, heat capacity          J/(mol.K)
+speed of sound                  m/s
+Joule-Thomson coefficient       K/kPa
+d(p)/d(rho)                     kPa.L/mol
+d2(p)/d(rho)2                   kPa.(L/mol)^2
+viscosity                       microPa.s (10^-6 Pa.s)
+thermal conductivity            W/(m.K)
+dipole moment                   debye
+surface tension                 N/m
+*/
+
 #if defined(_MSC_VER)
 #define _CRTDBG_MAP_ALLOC
 #define _CRT_SECURE_NO_WARNINGS
@@ -14,25 +34,43 @@
 #include <sys/stat.h>
 #endif
 
-#include <string>
-//#include "CoolProp.h"
-
-#if defined(__ISWINDOWS__)
-#include <windows.h>
-#elif defined(__ISLINUX__)
-#include <dlfcn.h>
-#elif defined(__ISAPPLE__)
-#include <dlfcn.h>
-#endif
-
-#include "REFPROP_lib.h"
-#include "REFPROP.h"
-#include "CoolPropTools.h"
-
 #include <stdlib.h>
-#include "string.h"
+#include <string>
 #include <stdio.h>
 #include <iostream>
+#include <assert.h>
+
+#include "../CoolPropTools.h"
+
+#if defined(__ISWINDOWS__)
+	#include <windows.h>
+	HINSTANCE RefpropdllInstance=NULL;
+	char refpropPath[] = "";
+#elif defined(__ISLINUX__)
+	#include <dlfcn.h>
+	void *RefpropdllInstance=NULL;
+	char refpropPath[] = "/opt/refprop";
+#elif defined(__ISAPPLE__)
+	#include <dlfcn.h>
+	void *RefpropdllInstance=NULL;
+	char refpropPath[] = "/opt/refprop";
+#else
+	#pragma error
+#endif
+
+#include "REFPROPMixtureBackend.h"
+#include "REFPROP_lib.h"
+
+// Some constants for REFPROP... defined by macros for ease of use 
+#define refpropcharlength 255
+#define filepathlength 255
+#define lengthofreference 3
+#define errormessagelength 255
+#define ncmax 20		// Note: ncmax is the max number of components
+#define numparams 72 
+#define maxcoefs 50
+
+std::string LoadedREFPROPRef;
 
 // Some constants for REFPROP... defined by macros for ease of use 
 #define refpropcharlength 255
@@ -61,18 +99,249 @@
   #endif
 #endif
 
-#include "REFPROPBackend.h"
+static char rel_path_HMC_BNC[] = "HMX.BNC";
+static char default_reference_state[] = "DEF";
 
-#if defined(__ISWINDOWS__)
-HINSTANCE RefpropdllInstance=NULL;
-#elif defined(__ISLINUX__)
-void *RefpropdllInstance=NULL;
-#elif defined(__ISAPPLE__)
-void *RefpropdllInstance=NULL;
-#else
-void *RefpropdllInstance=NULL;
-#endif
+// Define functions as pointers and initialise them to NULL
+// Declare the functions for direct access
+ RPVersion_POINTER RPVersion;
+ SETPATHdll_POINTER SETPATHdll;
+ ABFL1dll_POINTER ABFL1dll;
+ ABFL2dll_POINTER ABFL2dll;
+ ACTVYdll_POINTER ACTVYdll;
+ AGdll_POINTER AGdll;
+ CCRITdll_POINTER CCRITdll;
+ CP0dll_POINTER CP0dll;
+ CRITPdll_POINTER CRITPdll;
+ CSATKdll_POINTER CSATKdll;
+ CV2PKdll_POINTER CV2PKdll;
+ CVCPKdll_POINTER CVCPKdll;
+ CVCPdll_POINTER CVCPdll;
+ DBDTdll_POINTER DBDTdll;
+ DBFL1dll_POINTER DBFL1dll;
+ DBFL2dll_POINTER DBFL2dll;
+ DDDPdll_POINTER DDDPdll;
+ DDDTdll_POINTER DDDTdll;
+ DEFLSHdll_POINTER DEFLSHdll;
+ DHD1dll_POINTER DHD1dll;
+ DHFLSHdll_POINTER DHFLSHdll;
+ DHFL1dll_POINTER DHFL1dll;
+ DHFL2dll_POINTER DHFL2dll;
+ DIELECdll_POINTER DIELECdll;
+ DOTFILLdll_POINTER DOTFILLdll;
+ DPDD2dll_POINTER DPDD2dll;
+ DPDDKdll_POINTER DPDDKdll;
+ DPDDdll_POINTER DPDDdll;
+ DPDTKdll_POINTER DPDTKdll;
+ DPDTdll_POINTER DPDTdll;
+ DPTSATKdll_POINTER DPTSATKdll;
+ DSFLSHdll_POINTER DSFLSHdll;
+ DSFL1dll_POINTER DSFL1dll;
+ DSFL2dll_POINTER DSFL2dll;
+ ENTHALdll_POINTER ENTHALdll;
+ ENTROdll_POINTER ENTROdll;
+ ESFLSHdll_POINTER ESFLSHdll;
+ FGCTYdll_POINTER FGCTYdll;
+ FPVdll_POINTER FPVdll;
+ GERG04dll_POINTER GERG04dll;
+ GETFIJdll_POINTER GETFIJdll;
+ GETKTVdll_POINTER GETKTVdll;
+ GIBBSdll_POINTER GIBBSdll;
+ HSFLSHdll_POINTER HSFLSHdll;
+ INFOdll_POINTER INFOdll;
+ LIMITKdll_POINTER LIMITKdll;
+ LIMITSdll_POINTER LIMITSdll;
+ LIMITXdll_POINTER LIMITXdll;
+ MELTPdll_POINTER MELTPdll;
+ MELTTdll_POINTER MELTTdll;
+ MLTH2Odll_POINTER MLTH2Odll;
+ NAMEdll_POINTER NAMEdll;
+ PDFL1dll_POINTER PDFL1dll;
+ PDFLSHdll_POINTER PDFLSHdll;
+ PEFLSHdll_POINTER PEFLSHdll;
+ PHFL1dll_POINTER PHFL1dll;
+ PHFLSHdll_POINTER PHFLSHdll;
+ PQFLSHdll_POINTER PQFLSHdll;
+ PREOSdll_POINTER PREOSdll;
+ PRESSdll_POINTER PRESSdll;
+ PSFL1dll_POINTER PSFL1dll;
+ PSFLSHdll_POINTER PSFLSHdll;
+ PUREFLDdll_POINTER PUREFLDdll;
+ QMASSdll_POINTER QMASSdll;
+ QMOLEdll_POINTER QMOLEdll;
+ RESIDUALdll_POINTER RESIDUALdll;
+ SATDdll_POINTER SATDdll;
+ SATEdll_POINTER SATEdll;
+ SATHdll_POINTER SATHdll;
+ SATPdll_POINTER SATPdll;
+ SATSdll_POINTER SATSdll;
+ SATTdll_POINTER SATTdll;
+ SETAGAdll_POINTER SETAGAdll;
+ SETKTVdll_POINTER SETKTVdll;
+ SETMIXdll_POINTER SETMIXdll;
+ SETMODdll_POINTER SETMODdll;
+ SETREFdll_POINTER SETREFdll;
+ SETUPdll_POINTER SETUPdll;
+//  SPECGRdll_POINTER SPECGRdll; // not found in library
+ SUBLPdll_POINTER SUBLPdll;
+ SUBLTdll_POINTER SUBLTdll;
+ SURFTdll_POINTER SURFTdll;
+ SURTENdll_POINTER SURTENdll;
+ TDFLSHdll_POINTER TDFLSHdll;
+ TEFLSHdll_POINTER TEFLSHdll;
+ THERM0dll_POINTER THERM0dll;
+ THERM2dll_POINTER THERM2dll;
+ THERM3dll_POINTER THERM3dll;
+ THERMdll_POINTER THERMdll;
+ THFLSHdll_POINTER THFLSHdll;
+ TPFLSHdll_POINTER TPFLSHdll;
+ TPFL2dll_POINTER TPFL2dll;
+ TPRHOdll_POINTER TPRHOdll;
+ TQFLSHdll_POINTER TQFLSHdll;
+ TRNPRPdll_POINTER TRNPRPdll;
+ TSFLSHdll_POINTER TSFLSHdll;
+ VIRBdll_POINTER VIRBdll;
+ VIRCdll_POINTER VIRCdll;
+ WMOLdll_POINTER WMOLdll;
+ XMASSdll_POINTER XMASSdll;
+ XMOLEdll_POINTER XMOLEdll;
 
+void *getFunctionPointer(char * name)
+{
+	#if defined(__ISWINDOWS__)
+		return (void *) GetProcAddress(RefpropdllInstance,name);
+	#elif defined(__ISLINUX__)
+		return dlsym(RefpropdllInstance,name);
+	#elif defined(__ISAPPLE__)
+		return dlsym(RefpropdllInstance,name);
+	#else
+		throw NotImplementedError("This function should not be called.");
+		return NULL;
+    #endif
+}
+
+//Moved pointer handling to a function, helps to maintain
+//an overview and structures OS dependent parts
+double setFunctionPointers()
+{
+	if (RefpropdllInstance==NULL)
+	{
+		printf("REFPROP is not loaded, make sure you call this function after loading the library.\n");
+		return -_HUGE;
+	}
+	// set the pointers, platform independent
+	RPVersion = (RPVersion_POINTER) getFunctionPointer((char *)RPVersion_NAME);
+	ABFL1dll = (ABFL1dll_POINTER) getFunctionPointer((char *)ABFL1dll_NAME);
+	ABFL2dll = (ABFL2dll_POINTER) getFunctionPointer((char *)ABFL2dll_NAME);
+	ACTVYdll = (ACTVYdll_POINTER) getFunctionPointer((char *)ACTVYdll_NAME);
+	AGdll = (AGdll_POINTER) getFunctionPointer((char *)AGdll_NAME);
+	CCRITdll = (CCRITdll_POINTER) getFunctionPointer((char *)CCRITdll_NAME);
+	CP0dll = (CP0dll_POINTER) getFunctionPointer((char *)CP0dll_NAME);
+	CRITPdll = (CRITPdll_POINTER) getFunctionPointer((char *)CRITPdll_NAME);
+	CSATKdll = (CSATKdll_POINTER) getFunctionPointer((char *)CSATKdll_NAME);
+	CV2PKdll = (CV2PKdll_POINTER) getFunctionPointer((char *)CV2PKdll_NAME);
+	CVCPKdll = (CVCPKdll_POINTER) getFunctionPointer((char *)CVCPKdll_NAME);
+	CVCPdll = (CVCPdll_POINTER) getFunctionPointer((char *)CVCPdll_NAME);
+	DBDTdll = (DBDTdll_POINTER) getFunctionPointer((char *)DBDTdll_NAME);
+	DBFL1dll = (DBFL1dll_POINTER) getFunctionPointer((char *)DBFL1dll_NAME);
+	DBFL2dll = (DBFL2dll_POINTER) getFunctionPointer((char *)DBFL2dll_NAME);
+	DDDPdll = (DDDPdll_POINTER) getFunctionPointer((char *)DDDPdll_NAME);
+	DDDTdll = (DDDTdll_POINTER) getFunctionPointer((char *)DDDTdll_NAME);
+	DEFLSHdll = (DEFLSHdll_POINTER) getFunctionPointer((char *)DEFLSHdll_NAME);
+	DHD1dll = (DHD1dll_POINTER) getFunctionPointer((char *)DHD1dll_NAME);
+	DHFLSHdll = (DHFLSHdll_POINTER) getFunctionPointer((char *)DHFLSHdll_NAME);
+	DIELECdll = (DIELECdll_POINTER) getFunctionPointer((char *)DIELECdll_NAME);
+	DOTFILLdll = (DOTFILLdll_POINTER) getFunctionPointer((char *)DOTFILLdll_NAME);
+	DPDD2dll = (DPDD2dll_POINTER) getFunctionPointer((char *)DPDD2dll_NAME);
+	DPDDKdll = (DPDDKdll_POINTER) getFunctionPointer((char *)DPDDKdll_NAME);
+	DPDDdll = (DPDDdll_POINTER) getFunctionPointer((char *)DPDDdll_NAME);
+	DPDTKdll = (DPDTKdll_POINTER) getFunctionPointer((char *)DPDTKdll_NAME);
+	DPDTdll = (DPDTdll_POINTER) getFunctionPointer((char *)DPDTdll_NAME);
+	DPTSATKdll = (DPTSATKdll_POINTER) getFunctionPointer((char *)DPTSATKdll_NAME);
+	DSFLSHdll = (DSFLSHdll_POINTER) getFunctionPointer((char *)DSFLSHdll_NAME);
+	ENTHALdll = (ENTHALdll_POINTER) getFunctionPointer((char *)ENTHALdll_NAME);
+	ENTROdll = (ENTROdll_POINTER) getFunctionPointer((char *)ENTROdll_NAME);
+	ESFLSHdll = (ESFLSHdll_POINTER) getFunctionPointer((char *)ESFLSHdll_NAME);
+	FGCTYdll = (FGCTYdll_POINTER) getFunctionPointer((char *)FGCTYdll_NAME);
+	FPVdll = (FPVdll_POINTER) getFunctionPointer((char *)FPVdll_NAME);
+	GERG04dll = (GERG04dll_POINTER) getFunctionPointer((char *)GERG04dll_NAME);
+	GETFIJdll = (GETFIJdll_POINTER) getFunctionPointer((char *)GETFIJdll_NAME);
+	GETKTVdll = (GETKTVdll_POINTER) getFunctionPointer((char *)GETKTVdll_NAME);
+	GIBBSdll = (GIBBSdll_POINTER) getFunctionPointer((char *)GIBBSdll_NAME);
+	HSFLSHdll = (HSFLSHdll_POINTER) getFunctionPointer((char *)HSFLSHdll_NAME);
+	INFOdll = (INFOdll_POINTER) getFunctionPointer((char *)INFOdll_NAME);
+	LIMITKdll = (LIMITKdll_POINTER) getFunctionPointer((char *)LIMITKdll_NAME);
+	LIMITSdll = (LIMITSdll_POINTER) getFunctionPointer((char *)LIMITSdll_NAME);
+	LIMITXdll = (LIMITXdll_POINTER) getFunctionPointer((char *)LIMITXdll_NAME);
+	MELTPdll = (MELTPdll_POINTER) getFunctionPointer((char *)MELTPdll_NAME);
+	MELTTdll = (MELTTdll_POINTER) getFunctionPointer((char *)MELTTdll_NAME);
+	MLTH2Odll = (MLTH2Odll_POINTER) getFunctionPointer((char *)MLTH2Odll_NAME);
+	NAMEdll = (NAMEdll_POINTER) getFunctionPointer((char *)NAMEdll_NAME);
+	PDFL1dll = (PDFL1dll_POINTER) getFunctionPointer((char *)PDFL1dll_NAME);
+	PDFLSHdll = (PDFLSHdll_POINTER) getFunctionPointer((char *)PDFLSHdll_NAME);
+	PEFLSHdll = (PEFLSHdll_POINTER) getFunctionPointer((char *)PEFLSHdll_NAME);
+	PHFL1dll = (PHFL1dll_POINTER) getFunctionPointer((char *)PHFL1dll_NAME);
+	PHFLSHdll = (PHFLSHdll_POINTER) getFunctionPointer((char *)PHFLSHdll_NAME);
+	PQFLSHdll = (PQFLSHdll_POINTER) getFunctionPointer((char *)PQFLSHdll_NAME);
+	PREOSdll = (PREOSdll_POINTER) getFunctionPointer((char *)PREOSdll_NAME);
+	PRESSdll = (PRESSdll_POINTER) getFunctionPointer((char *)PRESSdll_NAME);
+	PSFL1dll = (PSFL1dll_POINTER) getFunctionPointer((char *)PSFL1dll_NAME);
+	PSFLSHdll = (PSFLSHdll_POINTER) getFunctionPointer((char *)PSFLSHdll_NAME);
+	PUREFLDdll = (PUREFLDdll_POINTER) getFunctionPointer((char *)PUREFLDdll_NAME);
+	RESIDUALdll = (RESIDUALdll_POINTER) getFunctionPointer((char *)RESIDUALdll_NAME);
+	QMASSdll = (QMASSdll_POINTER) getFunctionPointer((char *)QMASSdll_NAME);
+	QMOLEdll = (QMOLEdll_POINTER) getFunctionPointer((char *)QMOLEdll_NAME);
+	SATDdll = (SATDdll_POINTER) getFunctionPointer((char *)SATDdll_NAME);
+	SATEdll = (SATEdll_POINTER) getFunctionPointer((char *)SATEdll_NAME);
+	SATHdll = (SATHdll_POINTER) getFunctionPointer((char *)SATHdll_NAME);
+	SATPdll = (SATPdll_POINTER) getFunctionPointer((char *)SATPdll_NAME);
+	SATSdll = (SATSdll_POINTER) getFunctionPointer((char *)SATSdll_NAME);
+	SATTdll = (SATTdll_POINTER) getFunctionPointer((char *)SATTdll_NAME);
+	SETAGAdll = (SETAGAdll_POINTER) getFunctionPointer((char *)SETAGAdll_NAME);
+	SETKTVdll = (SETKTVdll_POINTER) getFunctionPointer((char *)SETKTVdll_NAME);
+	SETMIXdll = (SETMIXdll_POINTER) getFunctionPointer((char *)SETMIXdll_NAME);
+	SETMODdll = (SETMODdll_POINTER) getFunctionPointer((char *)SETMODdll_NAME);
+	SETREFdll = (SETREFdll_POINTER) getFunctionPointer((char *)SETREFdll_NAME);
+	SETUPdll = (SETUPdll_POINTER) getFunctionPointer((char *)SETUPdll_NAME);
+//		SPECGRdll = (SPECGRdll_POINTER) getFunctionPointer((char *)SPECGRdll_NAME); // not in library
+	SUBLPdll = (SUBLPdll_POINTER) getFunctionPointer((char *)SUBLPdll_NAME);
+	SUBLTdll = (SUBLTdll_POINTER) getFunctionPointer((char *)SUBLTdll_NAME);
+	SURFTdll = (SURFTdll_POINTER) getFunctionPointer((char *)SURFTdll_NAME);
+	SURTENdll = (SURTENdll_POINTER) getFunctionPointer((char *)SURTENdll_NAME);
+	TDFLSHdll = (TDFLSHdll_POINTER) getFunctionPointer((char *)TDFLSHdll_NAME);
+	TEFLSHdll = (TEFLSHdll_POINTER) getFunctionPointer((char *)TEFLSHdll_NAME);
+	THERM0dll = (THERM0dll_POINTER) getFunctionPointer((char *)THERM0dll_NAME);
+	THERM2dll = (THERM2dll_POINTER) getFunctionPointer((char *)THERM2dll_NAME);
+	THERM3dll = (THERM3dll_POINTER) getFunctionPointer((char *)THERM3dll_NAME);
+	THERMdll = (THERMdll_POINTER) getFunctionPointer((char *)THERMdll_NAME);
+	THFLSHdll = (THFLSHdll_POINTER) getFunctionPointer((char *)THFLSHdll_NAME);
+	TPFLSHdll = (TPFLSHdll_POINTER) getFunctionPointer((char *)TPFLSHdll_NAME);
+	TPRHOdll = (TPRHOdll_POINTER) getFunctionPointer((char *)TPRHOdll_NAME);
+	TQFLSHdll = (TQFLSHdll_POINTER) getFunctionPointer((char *)TQFLSHdll_NAME);
+	TRNPRPdll = (TRNPRPdll_POINTER) getFunctionPointer((char *)TRNPRPdll_NAME);
+	TSFLSHdll = (TSFLSHdll_POINTER) getFunctionPointer((char *)TSFLSHdll_NAME);
+	VIRBdll = (VIRBdll_POINTER) getFunctionPointer((char *)VIRBdll_NAME);
+	VIRCdll = (VIRCdll_POINTER) getFunctionPointer((char *)VIRCdll_NAME);
+	WMOLdll = (WMOLdll_POINTER) getFunctionPointer((char *)WMOLdll_NAME);
+	XMASSdll = (XMASSdll_POINTER) getFunctionPointer((char *)XMASSdll_NAME);
+	XMOLEdll = (XMOLEdll_POINTER) getFunctionPointer((char *)XMOLEdll_NAME);
+	return COOLPROP_OK;
+}
+
+std::string get_REFPROP_fluid_path()
+{
+	std::string rpPath (refpropPath);
+	#if defined(__ISWINDOWS__)
+		return rpPath;
+	#elif defined(__ISLINUX__)
+		return rpPath + std::string("/fluids/");
+	#elif defined(__ISAPPLE__)
+		return rpPath + std::string("/fluids/");
+	#else
+		throw NotImplementedError("This function should not be called.");
+		return rpPath;
+	#endif
+}
 bool load_REFPROP()
 {
 	// If REFPROP is not loaded
@@ -105,19 +374,6 @@ bool load_REFPROP()
 		if (RefpropdllInstance==NULL)
 		{
 			#if defined(__ISWINDOWS__)
-//				int  dw            = ::GetLastError();
-//				char lpBuffer[256] = _T("?");
-//				if(dwLastError != 0) {
-//				    ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,       // Has to be a system error
-//				                     NULL,                            // No formatter
-//				                     dw,                              // Get error message for this int
-//				                     MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),  // Use system language
-//				                     lpBuffer,                        // Write output
-//				                     STR_ELEMS(lpBuffer)-1,           // Length of output
-//				                     NULL);
-//				}
-//				printf(lpBuffer);
-//				printf("\n");
 				              printf("Could not load refprop.dll \n\n");
 				throw AttributeError("Could not load refprop.dll, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.");
 			#elif defined(__ISLINUX__)
@@ -164,32 +420,89 @@ bool load_REFPROP()
 
 namespace CoolProp {
 
-REFPROPMixtureBackend::REFPROPMixtureBackend(std::string fluid_name) {
+REFPROPMixtureBackend::REFPROPMixtureBackend(const std::vector<std::string>& fluid_names) {
 	// Do the REFPROP instantiation for this fluid
+	_mole_fractions_set = false;
 
 	// Try to add this fluid to REFPROP - might want to think about making array of 
 	// components and setting mole fractions if they change a lot.
-	this->set_REFPROP_fluid(fluid_name);
+	this->set_REFPROP_fluids(fluid_names);
 
-	// Set all constants that can be accessed from REFPROP
-	// Tcrit, pcrit, accentric...
 }
 
 REFPROPMixtureBackend::~REFPROPMixtureBackend() {
 	// TODO Auto-generated destructor stub
 }
 
-void REFPROPMixtureBackend::set_REFPROP_fluid(std::string fluid_name)
+bool REFPROPMixtureBackend::_REFPROP_supported = true; // initialise with true
+bool REFPROPMixtureBackend::REFPROP_supported () {
+	/*
+	 * Here we build the bridge from macro definitions
+	 * into the actual code. This is also going to be
+	 * the central place to handle error messages on
+	 * unsupported platforms.
+	 */
+
+	// Abort check if Refprop has been loaded.
+	if (RefpropdllInstance!=NULL) return true;
+
+	// Store result of previous check.
+	if (_REFPROP_supported) {
+		// Either Refprop is supported or it is the first check.
+		std::string rpv(RPVersion_NAME);
+		if (rpv.compare("NOTAVAILABLE")!=0) {
+			// Function names were defined in "REFPROP_lib.h",
+			// This platform theoretically supports Refprop.
+			if (load_REFPROP()) {
+				return true;
+			}
+			else {
+				printf("Good news: It is possible to use REFPROP on your system! However, the library \n");
+				printf("could not be loaded. Please make sure that REFPROP is available on your system.\n\n");
+				printf("Neither found in current location nor found in system PATH.\n");
+				printf("If you already obtained a copy of REFPROP from http://www.nist.gov/srd/, \n");
+				printf("add location of REFPROP to the PATH environment variable or your library path.\n\n");
+				printf("In case you do not use Windows, have a look at https://github.com/jowr/librefprop.so \n");
+				printf("to find instructions on how to compile your own version of the REFPROP library.\n\n");
+				_REFPROP_supported = false;
+				return false;
+			}
+		} else {
+			// No definition of function names, we do not expect
+			// the Refprop library to be available.
+			_REFPROP_supported = false;
+			return false;
+		}
+	} else {
+		return false;
+	}
+	return false;
+}
+
+void REFPROPMixtureBackend::set_REFPROP_fluids(const std::vector<std::string> &fluid_names)
 {
 	long ierr=0;
-	char hf[refpropcharlength*ncmax], herr[errormessagelength+1];
-	std::string sRef, components_joined;
-	std::string RefString;
+	char component_string[10000], herr[errormessagelength];
+	std::string components_joined = strjoin(fluid_names,"|");
 	std::string fdPath = get_REFPROP_fluid_path();
+	long N = fluid_names.size();
+
+	assert(N < 20);
 
 	// Check platform support
-	if(!REFPROPFluidClass::refpropSupported()){
-		throw NotImplementedError("You cannot use the REFPROPFluidClass.");
+	if(!REFPROP_supported()){
+		throw NotImplementedError("You cannot use the REFPROPMixtureBackend.");
+	}
+
+	// Build the mixture string
+	for (unsigned int j = 0; j < (unsigned int)N; j++)
+	{
+		if (j == 0){
+			components_joined = fdPath + fluid_names[j]+".fld";
+		}
+		else{
+			components_joined += "|" + fdPath + fluid_names[j]+".fld";
+		}
 	}
 
 	// Load REFPROP if it isn't loaded yet
@@ -197,251 +510,133 @@ void REFPROPMixtureBackend::set_REFPROP_fluid(std::string fluid_name)
 	
 	// If the name of the refrigerant doesn't match 
 	// that of the currently loaded refrigerant
-	if (LoadedREFPROPRef.compare(Ref))
+	if (LoadedREFPROPRef.compare(components_joined))
 	{
-		// If the fluid name starts with the string "REFPROP-MIX:"
-		if (Ref.find("REFPROP-MIX:") == 0)
-		{
-			// Keep everything after the "REFPROP-MIX:"
-			components_joined = Ref.substr(12,Ref.size()-12);
-		
-			// Sample sRef is "R32[0.697615]&R125[0.302385]" -  this is R410A
-			// Or you could do "R410A.mix" to use the full mixture model for this predefined mixture
-			
-			// Try to process predefined mixtures with .mix or .MIX in the file name
-			if (components_joined.find(".mix") != std::string::npos || components_joined.find(".MIX") != std::string::npos)
-			{
-				char hf[255];
-				char hfiles[10000];
-				char herr[255];
-				double xx[ncmax];
-				strcpy(hf,components_joined.c_str());
-
-				SETMIXdll(hf, hfmix, hrf, 
-						  &i, hfiles, xx,
-						  &ierr, herr,
-						  255,
-						  255,
-						  3, // lengthofreference
-						  10000,
-						  255);
-				// c-string needs to be 0-terminated
-				for (unsigned int j = 0; j < 255*ncmax; j++)
-				{
-					if (hfiles[j] == 32) // empty char
-					{
-						hfiles[j] = 0;
-						break;
-					}
-				}
-                // Resize the vector of mole fractions
-				x.resize(i);
-
-				RefString = std::string(hfiles,strlen(hfiles)+1);
-				for (int j = 0; j < i; j++)
-				{
-					x[j] = xx[j];
-				}
-			}
-			else
-			{
-				// Split the components_joined into the components
-				std::vector<std::string> components_split = strsplit(components_joined,'&');
-
-				if (components_split.size() == 1)
-				{
-					throw ValueError(format("REFPROP mixture specified composition desired [%s], but only one component found",components_joined.c_str()).c_str());
-				}
-
-				// Flush out the refrigerant string for REFPROP
-				RefString.clear();
-
-				// Resize the vector of mole fractions
-				x.resize(components_split.size());
-
-				for (unsigned int j=0;j<components_split.size();j++)
-				{	
-					// Get component name and mole fraction (as strings)
-					std::vector<std::string> comp_fraction = strsplit(components_split[j],'[');
-
-					if (comp_fraction.size() != 2)
-					{
-						throw ValueError(format("Could not parse name[molefraction] [%s]",components_split[j].c_str()).c_str());
-					}
-					
-					// Build the refrigerant string
-					if (j == 0){
-						RefString = fdPath + comp_fraction[0]+".fld";
-					}
-					else{
-						RefString += "|" + fdPath + comp_fraction[0]+".fld";
-					}
-					// Convert the mole fraction (as string) to a number
-					x[j] = strtod(comp_fraction[1].c_str(),NULL);
-
-					// Update the number of components
-					i = j+1;
-				}
-			}
-		}
-		// Name starts with REFPROP-
-		else if (Ref.find("REFPROP-") == 0)
-		{
-			// Keep everything after the "REFPROP-"
-			sRef = Ref.substr(8,Ref.size()-8);
-
-			if (!sRef.compare("Air") || !sRef.compare("R507A") || !sRef.compare("R404A") || !sRef.compare("R410A") || !sRef.compare("R407C") || !sRef.compare("SES36"))
-			{
-				i=1;
-				RefString = fdPath + std::string(sRef)+std::string(".ppf");
-				x[0]=1.0;     //Pseudo-Pure fluid
-			}
-			else
-			{
-				i=1;
-				RefString = fdPath + std::string(sRef)+std::string(".fld");
-				x[0]=1.0;     //Pure fluid
-			}
-		}
-		else
-		{
-			throw ValueError(format("REFPROP fluid string [%s] is invalid", Ref.c_str()));
-		}
-
-		ierr=999;
-
-		char* hfm = (char*) calloc(refpropcharlength+8, sizeof(char));
-		strcpy(hfm,fdPath.c_str());
-		strcat(hfm,hfmix);
-		strcpy(hf,RefString.c_str());
+		char path_HMX_BNC[refpropcharlength];
+		//strcpy(path_HMX_BNC,fdPath.c_str());
+		strcpy(path_HMX_BNC, rel_path_HMC_BNC);
+		strcpy(component_string, components_joined.c_str());
 
 		//...Call SETUP to initialize the program
-		SETUPdll(&i, hf, hfm, hrf, &ierr, herr,
-		  refpropcharlength*ncmax,refpropcharlength,
-		  lengthofreference,errormessagelength);
+		SETUPdll(&N, component_string, path_HMX_BNC, default_reference_state,
+				 &ierr, herr,
+				 10000, // Length of component_string (see PASS_FTN.for from REFPROP)
+				 refpropcharlength, // Length of path_HMX_BNC
+				 lengthofreference, // Length of reference
+				 errormessagelength // Length of error message
+				 );
 
-		if (ierr > 0){
-			//...Call SETUP with capital letters
-			for(int i = 0; i < strlen(hrf); i++)
-			{
-				hrf[i] = toupper(hrf[i]);
-			}
-			for(int i = 0; i < strlen(hfm); i++)
-			{
-				hfm[i] = toupper(hfm[i]);
-			}
-			for(int i = 0; i < strlen(hf); i++)
-			{
-				hf[i] = toupper(hf[i]);
-			}
-			SETUPdll(&i, hf, hfm, hrf, &ierr, herr,
-			  refpropcharlength*ncmax,refpropcharlength,
-			  lengthofreference,errormessagelength);
-		}
-
-		if (ierr > 0){
-			//...Call SETUP with lower case letters
-			for(int i = 0; i < strlen(hrf); i++)
-			{
-				hrf[i] = tolower(hrf[i]);
-			}
-			for(int i = 0; i < strlen(hfm); i++)
-			{
-				hfm[i] = tolower(hfm[i]);
-			}
-			for(int i = 0; i < strlen(hf); i++)
-			{
-				hf[i] = tolower(hf[i]);
-			}
-			SETUPdll(&i, hf, hfm, hrf, &ierr, herr,
-			  refpropcharlength*ncmax,refpropcharlength,
-			  lengthofreference,errormessagelength);
-		}
-
-		free (hfm);
-
-		if (ierr > 0){
-			throw ValueError(format("REFPROP: %s",herr).c_str());
-			return false;
-		}
-		else if (ierr < 0)
+		if (ierr == 0) // Success
 		{
-			set_warning(herr);
+			mole_fractions.resize(N);
+			mole_fractions_liq.resize(N);
+			mole_fractions_vap.resize(N);
 		}
-		//Copy the name of the loaded refrigerant back into the temporary holder
-		LoadedREFPROPRef = std::string(Ref);
-		
-		unsigned int jmax;
-		for (jmax = 0; jmax < ncmax; jmax++)
+		else if (ierr > 0) // Error
 		{
-			if (jmax == x.size())
-			{
-				break;
-			}
-			if (x[jmax] < 1e-13)
-			{
-				break;
-			}
+			throw ValueError(format("%s",herr));
 		}
-		x.resize(jmax);
-		LoadedREFPROPx = x;
-		return true;
+		else // Warning
+		{
+			throw ValueError(format("%s",herr));
+		}
 	}
-	else
-	{
-		x = LoadedREFPROPx;
-	}
-	return true;
+}
+void REFPROPMixtureBackend::set_mole_fractions(const std::vector<double> &mole_fractions)
+{
+	_mole_fractions_set = true;
+	this->mole_fractions = mole_fractions;
+}
+void REFPROPMixtureBackend::set_mass_fractions(const std::vector<double> &mole_fractions)
+{
+	throw NotImplementedError("Mass fractions not currently supported");
+}
+void REFPROPMixtureBackend::check_status(void)
+{
+	if (!_mole_fractions_set){ throw ValueError("Mole fractions not yet set");}
 }
 	
-}
-void REFPROPMixtureBackend::update(int input_pair, double value1, double value2)
+void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)
 {
+	double T,rhomol_L,rhoLmol_L,rhoVmol_L,hmol,emol,smol,cvmol,cpmol,w,q,mm,p_kPa;
+	long ierr;
+	char herr[255];
+
+	// Get the molar mass of the fluid for the given composition
+	WMOLdll(&(mole_fractions[0]), &mm); // returns mole mass in kg/kmol
+	_molar_mass = 0.001*mm; // [kg/mol]
+
+	// Check that mole fractions have been set, etc.
+	check_status();
+	
 	switch(input_pair)
 	{
 		case PT_INPUTS:
 		{
-			p = value2/1000.0; T = value1; // Want p in [kPa]
+			// Unit conversion for REFPROP
+			p_kPa = 0.001*value1; _T = value2; // Want p in [kPa] in REFPROP
 
 			// Use flash routine to find properties
-			TPFLSHdll(&_T,&_p,&(x[0]),&d,&dl,&dv,xliq,xvap,&q,&e,&h,&s,&cv,&cp,&w,&ierr,herr,errormessagelength); 
-			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+			TPFLSHdll(&T,&p_kPa,&(mole_fractions[0]),&rhomol_L,
+				      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+				      &q,&emol,&hmol,&smol,&cvmol,&cpmol,&w,
+					  &ierr,herr,errormessagelength); //
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
 
-			// Set all cache values that can be set
+			// Set all cache values that can be set with unit conversion to SI
+			_p = value1;
+			_rhomolar = rhomol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			_hmolar = hmol;
+			_smolar = smol;
+			_cvmolar = cvmol;
+			_cpmolar = cpmol;
+			_speed_sound = w;
+			if (0)
+			{
+				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+				_rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			}
 			break;
 		}
-	default:
-	{
-		throw ValueError(format("This set of inputs [%d,%d] is not yet supported",iName1,iName2));
-	}
-	throw NotImplementedError("REFPROPBackend is not yet implemented");
-	}
-}
-
-void REFPROPMixtureBackend::update(int input_pair, double value1, double value2)
-{
-	double T,p=0,d,dl,dv,q,e,h,s,cv,cp,w,MW,hl,hv,sl,sv,ul,
-		uv,pl,pv,hjt,eta,tcx,Q,Tcrit,pcrit,dcrit,sigma;
-
-	switch(input_pair)
-	{
-		case PT_INPUTS:
+		case DmolarT_INPUTS:
 		{
-			T = value1; p = value2/1000.0; // Want p in [kPa]
+			// Unit conversion for REFPROP
+			_rhomolar = value1; rhomol_L = 0.001*value1; _T = value2; // Want rho in [mol/L] in REFPROP
 
 			// Use flash routine to find properties
-			TPFLSHdll(&_T,&_p,&(x[0]),&d,&dl,&dv,xliq,xvap,&q,&e,&h,&s,&cv,&cp,&w,&ierr,herr,errormessagelength); 
-			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
-
-			// Set all cache values that can be set
+			TDFLSHdll(&_T,&rhomol_L,&(mole_fractions[0]),&p_kPa,
+				      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+				      &q,&emol,&hmol,&smol,&cvmol,&cpmol,&w,
+					  &ierr,herr,errormessagelength); 
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+			
+			// Set all cache values that can be set with unit conversion to SI
+			_p = p_kPa*1000;
+			_hmolar = hmol;
+			_smolar = smol;
+			_cvmolar = cvmol;
+			_cpmolar = cpmol;
+			_speed_sound = w;
+			if (0)
+			{
+				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+				_rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			}
 			break;
 		}
-	default:
-	{
-		throw ValueError(format("This set of inputs [%d,%d] is not yet supported",iName1,iName2));
-	}
-	throw NotImplementedError("REFPROPBackend is not yet implemented");
-	}
+		case DmassT_INPUTS:
+		{
+			// Convert to molar units for the density
+			double rhomolar = value1 * _molar_mass;  // [kg/m^3] * [mol/kg]
+			// Call again, but this time with molar units
+			update(DmolarT_INPUTS, rhomolar, value2);
+			break;
+		}
+		default:
+		{
+			throw ValueError(format("This set of inputs [%d] is not yet supported",input_pair));
+		}
+	};
 }
 
 } /* namespace CoolProp */

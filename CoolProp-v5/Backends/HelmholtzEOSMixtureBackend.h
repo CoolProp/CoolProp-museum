@@ -15,7 +15,7 @@ namespace CoolProp {
 
 class HelmholtzEOSMixtureBackend : public AbstractState  {
 public:
-	HelmholtzEOSMixtureBackend();
+	HelmholtzEOSMixtureBackend(){};
 	HelmholtzEOSMixtureBackend(std::vector<std::string> component_names, std::vector<double> mole_fractions);
 	virtual ~HelmholtzEOSMixtureBackend();
 
@@ -23,10 +23,10 @@ public:
 	/// @param input_pair Integer key corresponding to the two inputs that will be passed to the function
 	/// @param value1 First input value
 	/// @param value2 Second input value
-	void update(int input_pair,
+	void update(long input_pair,
 				double value1,
 				double value2
-				);
+				){throw std::exception();};
 
 	void set_REFPROP_fluid(std::vector<std::string> fluid_names, std::vector<double> &mole_fractions);
 };

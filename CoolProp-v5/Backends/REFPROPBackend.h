@@ -14,7 +14,8 @@ namespace CoolProp {
 
 class REFPROPBackend : public REFPROPMixtureBackend  {
 public:
-	REFPROPBackend(std::string fluid_name);
+	REFPROPBackend();
+	REFPROPBackend(const std::string &fluid_name);
 	virtual ~REFPROPBackend();
 };
 
