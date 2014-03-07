@@ -584,7 +584,8 @@ double REFPROPMixtureBackend::calc_surface_tension(void)
 	SURFTdll(&_T, &rho_mol_L, &(mole_fractions[0]),  // Inputs
 			 &sigma,                                 // Outputs
 			 &ierr, herr, errormessagelength);       // Error message
-
+	if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } 
+	//else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
 	_surface_tension = sigma;
 	return _surface_tension;
 }

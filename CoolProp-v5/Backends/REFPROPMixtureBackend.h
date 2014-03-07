@@ -21,6 +21,9 @@ protected:
 	std::vector<double> mole_fractions_liq, mole_fractions_vap;
 public:
 	REFPROPMixtureBackend(){};
+	
+	/// The instantiator
+	/// @param fluid_names The vector of strings of the fluid components, without file ending
 	REFPROPMixtureBackend(const std::vector<std::string>& fluid_names);
 	virtual ~REFPROPMixtureBackend();
 
@@ -51,11 +54,11 @@ public:
 	/// Check if the mole fractions have been set, etc.
 	void check_status();
 
-	/// Get the viscosity [Pa-s] for given temperature and density
+	/// Get the viscosity [Pa-s] (based on the temperature and density in the state class)
 	double calc_viscosity(void);
-	/// Get the thermal conductivity [W/m/K] for given temperature and density
+	/// Get the thermal conductivity [W/m/K] (based on the temperature and density in the state class)
 	double calc_conductivity(void);
-	/// Get the surface tension [N/m] for given temperature
+	/// Get the surface tension [N/m] (based on the saturation temperature in the state class).  Invalid for temperatures above critical point or below triple point temperature
 	double calc_surface_tension(void);
 
 };
