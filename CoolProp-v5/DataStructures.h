@@ -15,11 +15,11 @@ struct SimpleState
 	double rho, T, p, h, s;
 };
 
-// --------------------------------------------------
-// Define some constants that will be used throughout
-// --------------------------------------------------
-// These are constants for the input and output parameters
-// The structure is taken directly from the AbstractState class.
+/// --------------------------------------------------
+/// Define some constants that will be used throughout
+/// --------------------------------------------------
+/// These are constants for the input and output parameters
+/// The structure is taken directly from the AbstractState class.
 const enum params {
 	// Bulk properties
 	iT, irho, ip, iQ, ih, is, icp, icv, ispeed_sound, iisothermal_compressibility, iisobaric_expansion_coefficient,
@@ -53,19 +53,19 @@ const enum params {
 	iB, iC, iZ, idBdT, idCdT, idZdDelta, idZdTau
 };
 
-// These are constants for the phases of the fluid
+/// These are constants for the phases of the fluid
 const enum phases {iLiquid, iSupercritical, iGas, iTwoPhase, iUnknown};
 
-// These are constants for the units
+/// These are constants for the units
 const enum unit_constants{UNIT_KPA, UNIT_PA, UNIT_BAR, UNIT_KG_M3, UNIT_KG_L};
 
-// These are constants for the unit systems (currently only SI and KSI are supported)
+/// These are constants for the unit systems (currently only SI and KSI are supported)
 const enum unit_systems{UNIT_SYSTEM_SI, UNIT_SYSTEM_KSI, UNIT_SYSTEM_KSI_MOLAR, UNIT_SYSTEM_SI_MOLAR};
 
-// These are unit types for the fluid
+/// These are unit types for the fluid
 const enum fluid_types{FLUID_TYPE_PURE, FLUID_TYPE_PSEUDOPURE, FLUID_TYPE_REFPROP, FLUID_TYPE_INCOMPRESSIBLE_LIQUID, FLUID_TYPE_INCOMPRESSIBLE_SOLUTION, FLUID_TYPE_UNDEFINED};
 
-// These are input pairs that can be used (in each pair, input keys are sorted alphabetically)
+/// These are input pairs that can be used (in each pair, input keys are sorted alphabetically)
 const enum input_pairs{PT_INPUTS, ///< Pressure in Pa, Temperature in K
 	                   QT_INPUTS, ///< Molar quality, Temperature in K
 					   PQ_INPUTS, ///< Pressure in Pa, Molar quality

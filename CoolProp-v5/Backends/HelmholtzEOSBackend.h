@@ -18,7 +18,6 @@ public:
 	HelmholtzEOSBackend();
 	HelmholtzEOSBackend(std::string fluid_name);
 	virtual ~HelmholtzEOSBackend();
-	void set_REFPROP_fluid(std::vector<std::string> fluid_names, std::vector<double> &mole_fractions);
 };
 
 } /* namespace CoolProp */

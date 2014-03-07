@@ -27,8 +27,6 @@ public:
 				double value1,
 				double value2
 				){throw std::exception();};
-
-	void set_REFPROP_fluid(std::vector<std::string> fluid_names, std::vector<double> &mole_fractions);
 };
 
 } /* namespace CoolProp */

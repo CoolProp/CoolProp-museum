@@ -1,7 +1,7 @@
 
 #include "Backends/REFPROPMixtureBackend.h"
 #include "Backends/REFPROPBackend.h"
-
+#include <time.h>
 #include "AbstractState.h"
 #include "DataStructures.h"
 using namespace CoolProp;
@@ -31,9 +31,16 @@ int main()
 		double hh = State->hmolar();
 		double mu = State->viscosity();
 
+		time_t t1,t2;
+		t1 = clock();
+		for (long ii = 0; ii < 1000000; ii++)
+		{
 		State->update(QT_INPUTS,1,180);
 		double hh1 = State->hmolar();
 		double mu2 = State->viscosity();
+		}
+		t2 = clock();
+		double elap = ((double)(t2-t1))/CLOCKS_PER_SEC;
 
 		//double sigma = State->surface_tension();
 		delete State;

@@ -100,9 +100,8 @@ protected:
 
 	// ----------------------------------------
 	// Property accessors to be implemented by the backend
-	// for properties that are not always calculated (T,p,rho,Q)
+	// for properties that are not always calculated
 	// ----------------------------------------
-
 	virtual double calc_hmolar(void){throw NotImplementedError("calc_hmolar is not implemented for this backend");};
 	virtual double calc_smolar(void){throw NotImplementedError("calc_smolar is not implemented for this backend");};
 	virtual double calc_cpmolar(void){throw NotImplementedError("calc_cpmolar is not implemented for this backend");};
