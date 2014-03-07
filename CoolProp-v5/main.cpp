@@ -30,6 +30,11 @@ int main()
 		State->update(DmassT_INPUTS,1,300);
 		double hh = State->hmolar();
 		double mu = State->viscosity();
+
+		State->update(QT_INPUTS,1,180);
+		double hh1 = State->hmolar();
+		double mu2 = State->viscosity();
+
 		//double sigma = State->surface_tension();
 		delete State;
 	}

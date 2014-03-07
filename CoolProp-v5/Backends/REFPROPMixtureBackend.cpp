@@ -589,7 +589,6 @@ double REFPROPMixtureBackend::calc_surface_tension(void)
 	_surface_tension = sigma;
 	return _surface_tension;
 }
-
 	
 void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)
 {
@@ -797,6 +796,78 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		{
 			// Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K], same for enthalpy
 			update(HmolarSmolar_INPUTS, value1 * _molar_mass, value2 * _molar_mass); 
+			break;
+		}
+		case PQ_INPUTS:
+		{
+			/* From REFPROP:
+			additional input--only for TQFLSH and PQFLSH
+			     kq--flag specifying units for input quality
+			         kq = 1 quality on MOLAR basis [moles vapor/total moles]
+			         kq = 2 quality on MASS basis [mass vapor/total mass]
+			*/
+			long kq = 1;
+
+			// Unit conversion for REFPROP
+			p_kPa = 0.001*value1; _Q = value2; // Want p in [kPa] in REFPROP
+
+			// Use flash routine to find properties
+			PQFLSHdll(&p_kPa,&_Q,&(mole_fractions[0]),&kq,&_T,&rho_mol_L,
+				&rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+				&emol,&hmol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+				&ierr,herr,errormessagelength); // Error terms
+
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+			// Set all cache values that can be set with unit conversion to SI
+			_p = value1;
+			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			_hmolar = hmol;
+			_smolar = smol;
+			_cvmolar = cvmol;
+			_cpmolar = cpmol;
+			_speed_sound = w;
+			if (0)
+			{
+				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+				_rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			}
+			break;
+		}
+		case QT_INPUTS:
+		{
+			/* From REFPROP:
+			additional input--only for TQFLSH and PQFLSH
+			     kq--flag specifying units for input quality
+			         kq = 1 quality on MOLAR basis [moles vapor/total moles]
+			         kq = 2 quality on MASS basis [mass vapor/total mass]
+			*/
+			long kq = 1;
+
+			// Unit conversion for REFPROP
+			_Q = value1; _T = value2;
+
+			// Use flash routine to find properties
+			TQFLSHdll(&_T,&_Q,&(mole_fractions[0]),&kq,&p_kPa,&rho_mol_L,
+				&rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+				&emol,&hmol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+				&ierr,herr,errormessagelength); // Error terms
+
+			if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+			// Set all cache values that can be set with unit conversion to SI
+			_p = p_kPa*1000; // 1000 for conversion from kPa to Pa
+			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			_hmolar = hmol;
+			_smolar = smol;
+			_cvmolar = cvmol;
+			_cpmolar = cpmol;
+			_speed_sound = w;
+			if (0)
+			{
+				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+				_rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+			}
 			break;
 		}
 		default:
