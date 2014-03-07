@@ -16,8 +16,6 @@ namespace CoolProp {
 This backend is used for pure and pseudo-pure fluids powered by 
 REFPROP.  It hides all the implementation of mixture properties
 and exposes just the pure fluid interface.
-
-
 */
 class REFPROPBackend : public REFPROPMixtureBackend  {
 public:
