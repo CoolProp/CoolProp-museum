@@ -125,7 +125,7 @@ public:
 	
 	1. If it starts with "REFPROP-", the REFPROP backend will be used.  The remaining part of the string should then 
 	   either be
-	   1. A pure or pseudo-pure fluid name (eg. "PROPANE" or "R410A") -> yielding a REFPROPBackend instance.
+	   1. A pure or pseudo-pure fluid name (eg. "PROPANE" or "R410A"), yielding a REFPROPBackend instance.
 	   2. A string that encodes the components of the mixture with a vertical bar between them (e.g. "R32|R125"), yielding a REFPROPMixtureBackend instance.
 	2. If it starts with "TTSE", the TTSE backend will be used, yielding a TTSEBackend instance
 	3. If it starts with "BICUBIC", the BICUBIC backend will be used, yielding a BICUBICBackend instance
