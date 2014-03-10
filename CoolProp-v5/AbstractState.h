@@ -116,7 +116,23 @@ protected:
 public:
 	AbstractState();
 	virtual ~AbstractState();
+	
+	/// A factory function to return a pointer to a new-allocated instance of one of the backends.
+	/**
+	Very Important!! : You must ensure to delete the backend instance that is created, otherwise there will be a memory leak
 
+	The backend that is selected is based on the string passed in:
+	
+	1. If it starts with "REFPROP-", the REFPROP backend will be used.  The remaining part of the string should then 
+	   either be
+	   1. A pure or pseudo-pure fluid name (eg. "PROPANE" or "R410A") -> yielding a REFPROPBackend instance.
+	   2. A string that encodes the components of the mixture with a vertical bar between them (e.g. "R32|R125"), yielding a REFPROPMixtureBackend instance.
+	2. If it starts with "TTSE", the TTSE backend will be used, yielding a TTSEBackend instance
+	3. If it starts with "BICUBIC", the BICUBIC backend will be used, yielding a BICUBICBackend instance
+
+	*/
+	static AbstractState * factory(std::string fluid_string);
+	
 	bool clear();
 	virtual void update(long input_pair, double Value1, double Value2) = 0;
 	virtual void set_mole_fractions(const std::vector<double> &mole_fractions) = 0;

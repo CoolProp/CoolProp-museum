@@ -7,6 +7,7 @@
 
 #include "math.h"
 #include "AbstractState.h"
+#include "Backends\REFPROPBackend.h"
 
 namespace CoolProp {
 
@@ -16,6 +17,31 @@ AbstractState::AbstractState() {
 
 AbstractState::~AbstractState() {
 	// TODO Auto-generated destructor stub
+}
+
+AbstractState * AbstractState::factory(std::string fluid_string)
+{
+	if (fluid_string.find("REFPROP-") == 0) // fluid_string starts with "REFPROP-"
+	{
+		// Remove the "REFPROP-"
+		std::string fluids = fluid_string.substr(8,fluid_string.size()-8);
+
+		if (fluids.find('|') == -1)
+		{
+			return new REFPROPBackend(fluids);
+		}
+		else
+		{
+			// Split at the '|'
+			std::vector<std::string> components = strsplit(fluids,'|');
+
+			return new REFPROPMixtureBackend(components);
+		}
+	}
+	else
+	{
+		throw ValueError("Invalid input to factory function");
+	}
 }
 
 bool AbstractState::clear() {
