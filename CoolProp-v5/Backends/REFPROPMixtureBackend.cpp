@@ -592,7 +592,9 @@ double REFPROPMixtureBackend::calc_surface_tension(void)
 	
 void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)
 {
-	double T,rho_mol_L,rhoLmol_L,rhoVmol_L,hmol,emol,smol,cvmol,cpmol,w,q,mm,p_kPa;
+	double T=_HUGE, rho_mol_L=_HUGE, rhoLmol_L=_HUGE, rhoVmol_L=_HUGE,
+		hmol=_HUGE,emol=_HUGE,smol=_HUGE,cvmol=_HUGE,cpmol=_HUGE,
+		w=_HUGE,q=_HUGE,mm=_HUGE,p_kPa = _HUGE;
 	long ierr;
 	char herr[255];
 
@@ -620,11 +622,6 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			// Set all cache values that can be set with unit conversion to SI
 			_p = value1;
 			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
-			_hmolar = hmol;
-			_smolar = smol;
-			_cvmolar = cvmol;
-			_cpmolar = cpmol;
-			_speed_sound = w;
 			if (0)
 			{
 				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
@@ -646,11 +643,6 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			
 			// Set all cache values that can be set with unit conversion to SI
 			_p = p_kPa*1000;
-			_hmolar = hmol;
-			_smolar = smol;
-			_cvmolar = cvmol;
-			_cpmolar = cpmol;
-			_speed_sound = w;
 			if (0)
 			{
 				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
@@ -662,7 +654,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		{
 			// Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
 			update(DmolarT_INPUTS, value1 * _molar_mass, value2);
-			break;
+			return;
 		}
 		case DmolarP_INPUTS:
 		{
@@ -680,11 +672,6 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			// Set all cache values that can be set with unit conversion to SI
 			_rhomolar = value1; 
 			_p = value2;
-			_hmolar = hmol;
-			_smolar = smol;
-			_cvmolar = cvmol;
-			_cpmolar = cpmol;
-			_speed_sound = w;
 			if (0)
 			{
 				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
@@ -696,7 +683,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		{
 			// Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
 			update(DmolarP_INPUTS, value1 * _molar_mass, value2);
-			break;
+			return;
 		}
 		case HmolarP_INPUTS:
 		{
@@ -713,11 +700,6 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			// Set all cache values that can be set with unit conversion to SI
 			_p = value2;
 			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
-			_hmolar = hmol;
-			_smolar = smol;
-			_cvmolar = cvmol;
-			_cpmolar = cpmol;
-			_speed_sound = w;
 			if (0)
 			{
 				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
@@ -729,7 +711,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		{
 			// Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
 			update(HmolarP_INPUTS, value1 * _molar_mass, value2); 
-			break;
+			return;
 		}
 		case PSmolar_INPUTS:
 		{
@@ -747,11 +729,6 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			// Set all cache values that can be set with unit conversion to SI
 			_p = value1;
 			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
-			_hmolar = hmol;
-			_smolar = smol;
-			_cvmolar = cvmol;
-			_cpmolar = cpmol;
-			_speed_sound = w;
 			if (0)
 			{
 				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
@@ -763,7 +740,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		{
 			// Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K]
 			update(PSmolar_INPUTS, value1, value2*_molar_mass); 
-			break;
+			return;
 		}
 		case HmolarSmolar_INPUTS:
 		{
@@ -780,11 +757,6 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			// Set all cache values that can be set with unit conversion to SI
 			_p = p_kPa*1000; // 1000 for conversion from kPa to Pa
 			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
-			_hmolar = hmol;
-			_smolar = smol;
-			_cvmolar = cvmol;
-			_cpmolar = cpmol;
-			_speed_sound = w;
 			if (0)
 			{
 				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
@@ -796,7 +768,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		{
 			// Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K], same for enthalpy
 			update(HmolarSmolar_INPUTS, value1 * _molar_mass, value2 * _molar_mass); 
-			break;
+			return;
 		}
 		case PQ_INPUTS:
 		{
@@ -822,11 +794,6 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			// Set all cache values that can be set with unit conversion to SI
 			_p = value1;
 			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
-			_hmolar = hmol;
-			_smolar = smol;
-			_cvmolar = cvmol;
-			_cpmolar = cpmol;
-			_speed_sound = w;
 			if (0)
 			{
 				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
@@ -858,11 +825,6 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 			// Set all cache values that can be set with unit conversion to SI
 			_p = p_kPa*1000; // 1000 for conversion from kPa to Pa
 			_rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
-			_hmolar = hmol;
-			_smolar = smol;
-			_cvmolar = cvmol;
-			_cpmolar = cpmol;
-			_speed_sound = w;
 			if (0)
 			{
 				_rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
@@ -874,7 +836,14 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		{
 			throw ValueError(format("This pair of inputs [%d] is not yet supported",input_pair));
 		}
+		
 	};
+	// Set these common variables that are used in every flash calculation
+	_hmolar = hmol;
+	_smolar = smol;
+	_cvmolar = cvmol;
+	_cpmolar = cpmol;
+	_speed_sound = w;
 }
 
 } /* namespace CoolProp */
