@@ -15,18 +15,5 @@
 #endif
 
 #include <string>
-//#include "CoolProp.h"
 
 #include "HelmholtzEOSBackend.h"
-
-namespace CoolProp {
-
-HelmholtzEOSBackend::HelmholtzEOSBackend(std::string fluid_name) {
-	// TODO Auto-generated constructor stub
-}
-
-HelmholtzEOSBackend::~HelmholtzEOSBackend() {
-	// TODO Auto-generated destructor stub
-}
-
-} /* namespace CoolProp */

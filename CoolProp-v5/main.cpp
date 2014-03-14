@@ -4,100 +4,40 @@
 #include <time.h>
 #include "AbstractState.h"
 #include "DataStructures.h"
+#include <deque>
 #include <cstdio>
 using namespace CoolProp;
 
-#include "jsoncons/json.hpp"
 
-class JSONFluidParser
-{
-protected:
-
-	/// Parse the contributions to the residual Helmholtz energy
-	void parse_alphar(jsoncons::json& alphar)
-	{
-		for (size_t i = 0; i < alphar.size(); ++i)
-		{
-			// Reference to this contribution entry
-			jsoncons::json& contribution = alphar[i];
-			
-			// Get the type (required!)
-			std::string type = contribution["type"].as<std::string>();
-
-			if (!type.compare("alphar_power"))
-			{
-				std::vector<double> n = contribution["n"].as<std::vector<double> >();
-				std::vector<double> d = contribution["d"].as<std::vector<double> >();
-				std::vector<double> t = contribution["t"].as<std::vector<double> >();
-				std::vector<double> l = contribution["l"].as<std::vector<double> >();
-			}
-			else
-			{
-				throw ValueError("Unsupported alphar type");
-			}
-		}
-	};
-
-	/// Parse the contributions to the ideal-gas Helmholtz energy
-	void parse_alpha0(const jsoncons::json& alpha0)
-	{
-	};
-
-	/// Parse the Equation of state JSON
-	void parse_EOS(jsoncons::json& EOS)
-	{
-		parse_alphar(EOS["alphar"]);
-	}
-
-	/// Parse the list of possible equations of state
-	void parse_EOS_listing(jsoncons::json& EOS_array)
-	{
-		for (size_t i = 0; i < EOS_array.size(); ++i)
-		{
-			parse_EOS(EOS_array[i]);
-		}
-	};
-
-	/// Parse the reducing state for the given EOS
-	void parse_reducing_state(jsoncons::json& alphar)
-	{
-	};
-
-	/// Parse the critical state for the given EOS
-	void parse_crit_state(jsoncons::json& alphar)
-	{
-	};
-
-public:
-	JSONFluidParser(jsoncons::json& fluid)
-	{
-		std::string name                 = fluid["name"].as<std::string>();
-		std::vector<std::string> aliases = fluid["aliases"].as<std::vector<std::string> >();
-		
-		parse_EOS_listing(fluid["EOS"]);
-		double rr;
-	}
-};
+#include "rapidjson/rapidjson_include.h"
+#include "Fluids\FluidLibrary.h"
 
 int main()
 {
-	if(0)
+	if(1)
 	{
-		jsoncons::json fluids = jsoncons::json::parse_file("fluids.json");
-
-		for (size_t i = 0; i < fluids.size(); ++i)
+		JSONFluidLibrary JFL;
+		
 		{
-			try
-			{
-				JSONFluidParser JFP(fluids[i]);
-				double rr = 0;
-			}
-			catch (const std::exception& e)
-			{
-				std::cerr << e.what() << std::endl;
-			}
+		rapidjson::Document dd;
+		dd.Parse<0>(get_file_contents("../../../CoolProp/Water.json").c_str());
+		if (dd.HasParseError()){throw ValueError();} else{JFL.add_one(dd);}		
 		}
-        double rr = 0;
+
+		time_t t1,t2;
+		t1 = clock();
+		long N = 10000;
+		for (long ii = 0; ii < N; ii++)
+		{
+			AbstractState *State = AbstractState::factory("CORE-Water");
+			//AbstractState *State = new REFPROPBackend("Methane");
+			delete State;
+		}
+		t2 = clock();
+		double elap = ((double)(t2-t1))/CLOCKS_PER_SEC/((double)N)*1e6;
+		printf("%g\n",elap);
+		double eee = 0;
+
 	}
 	if (0)
 	{
@@ -148,9 +88,5 @@ int main()
 
 		//double sigma = State->surface_tension();
 		delete State;
-	}
-
-	
-	
-	
+	}	
 }

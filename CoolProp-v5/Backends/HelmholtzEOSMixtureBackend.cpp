@@ -21,12 +21,23 @@
 
 namespace CoolProp {
 
-HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<std::string> component_names, std::vector<double> mole_fractions) {
-	// TODO Auto-generated constructor stub
+HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components) {
+	
+	/// Set the components and associated flags
+	set_components(components);
 }
 
-HelmholtzEOSMixtureBackend::~HelmholtzEOSMixtureBackend() {
-	// TODO Auto-generated destructor stub
+void HelmholtzEOSMixtureBackend::set_components(std::vector<CoolPropFluid*> components) {
+
+	/// Copy the components
+	this->components = components;
+
+	if (components.size() == 1){
+		is_pure_or_pseudopure = true;
+	}
+	else{
+		is_pure_or_pseudopure = false;
+	}
 }
 
 } /* namespace CoolProp */
