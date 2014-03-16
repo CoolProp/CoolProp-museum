@@ -27,6 +27,7 @@ Term                                        | Helmholtz Energy Contribution
 ----------                                  | ------------------------------
 IdealHelmholtzLead                          | \f$ \alpha_0 = a_1 + a_2\tau + \ln\delta \f$
 IdealHelmholtzEnthalpyEntropyOffset         | \f$ \alpha_0 = \displaystyle\frac{\Delta s}{R_u/M}+\frac{\Delta h}{(R_u/M)T}\tau \f$
+IdealHelmholtzLogTau                        | \f$ \alpha_0 = a_1\log\tau \f$
 */
 class BaseHelmholtzTerm{
 public:
@@ -94,7 +95,7 @@ class ResidualHelmholtzTerm : public BaseHelmholtzTerm
 public:
     std::vector<double> n; ///< The coefficients multiplying each term
 
-    enum parameters {iA, idA_dDelta, idA_dTau, id2A_dDelta2, id2A_dTau2, id2A_dDelta_dTau, id3A_dDelta3, id3A_dDelta2_dTau, id3A_dDelta_dTau2, id3A_dTau3};
+    enum parameters {iHEA, iHEdA_dDelta, iHEdA_dTau, iHEd2A_dDelta2, iHEd2A_dTau2, iHEd2A_dDelta_dTau, iHEd3A_dDelta3, iHEd3A_dDelta2_dTau, iHEd3A_dDelta_dTau2, iHEd3A_dTau3};
 
     std::vector<double> dDelta(std::vector<double> tau, std::vector<double> delta);
     std::vector<double> dDelta2(std::vector<double> tau, std::vector<double> delta);
@@ -105,16 +106,16 @@ public:
     /// An evaluation function that will evaluate the desired derivative of the A function, where alphar_i = n_i*A_i
     double eval(int key, double tau, double delta);
 
-    double base(double tau, double delta){return eval(iA, tau, delta);};
-    double dDelta(double tau, double delta){return eval(idA_dDelta, tau, delta);};
-    double dTau(double tau, double delta){return eval(idA_dTau, tau, delta);};
-    double dDelta2(double tau, double delta){return eval(id2A_dDelta2, tau, delta);};
-    double dDelta_dTau(double tau, double delta){return eval(id2A_dDelta_dTau, tau, delta);};
-    double dTau2(double tau, double delta){return eval(id2A_dTau2, tau, delta);};
-    double dDelta3(double tau, double delta){return eval(id3A_dDelta3, tau, delta);};
-    double dDelta2_dTau(double tau, double delta){return eval(id3A_dDelta2_dTau, tau, delta);};
-    double dDelta_dTau2(double tau, double delta){return eval(id3A_dDelta_dTau2, tau, delta);};
-    double dTau3(double tau, double delta){return eval(id3A_dTau3, tau, delta);};
+    double base(double tau, double delta){return eval(iHEA, tau, delta);};
+    double dDelta(double tau, double delta){return eval(iHEdA_dDelta, tau, delta);};
+    double dTau(double tau, double delta){return eval(iHEdA_dTau, tau, delta);};
+    double dDelta2(double tau, double delta){return eval(iHEd2A_dDelta2, tau, delta);};
+    double dDelta_dTau(double tau, double delta){return eval(iHEd2A_dDelta_dTau, tau, delta);};
+    double dTau2(double tau, double delta){return eval(iHEd2A_dTau2, tau, delta);};
+    double dDelta3(double tau, double delta){return eval(iHEd3A_dDelta3, tau, delta);};
+    double dDelta2_dTau(double tau, double delta){return eval(iHEd3A_dDelta2_dTau, tau, delta);};
+    double dDelta_dTau2(double tau, double delta){return eval(iHEd3A_dDelta_dTau2, tau, delta);};
+    double dTau3(double tau, double delta){return eval(iHEd3A_dTau3, tau, delta);};
 
     // Derivatives for a single term for use in fitter
     /// Returns the base A_i value where alphar = sum(n_i*A_i)
@@ -209,9 +210,18 @@ public:
     virtual double d3A_dTau3(double log_tau, double tau, double log_delta, double delta, int i) = 0;
 };
 
+// #############################################################################
+// #############################################################################
+// #############################################################################
+//                                RESIDUAL TERMS
+// #############################################################################
+// #############################################################################
+// #############################################################################
+
+/// Power term
 /*!
 
-Term of the form 
+Term are of the form 
 \f[ \alpha_r=\left\lbrace\begin{array}{cc}\displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} & l_i=0\\ \displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} \exp(-\delta^{l_i}) & l_i\neq 0\end{array}\right.\f]
 
 */
@@ -590,6 +600,40 @@ public:
     double dDelta3(double tau, double delta){return 0.0;};
 };
 
+
+/**
+\f[
+\alpha_0 = a_1\ln\tau
+\f]
+*/
+class IdealHelmholtzLogTau : public BaseHelmholtzTerm
+{
+private:
+    double a1;
+public:
+    // Constructor
+    IdealHelmholtzLogTau(double a1){this->a1=a1;};
+
+    //Destructor
+    ~IdealHelmholtzLogTau(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc){
+        el.AddMember("type","IdealHelmholtzLogTau",doc.GetAllocator());
+        el.AddMember("a1",a1,doc.GetAllocator());
+    };
+
+    // Term and its derivatives
+    double base(double tau, double delta){return a1*log(tau);};
+    double dTau(double tau, double delta){return a1/tau;};
+    double dTau2(double tau, double delta){return -a1/tau/tau;};
+    double dTau3(double tau, double delta){return 2*a1/tau/tau/tau;};
+    double dDelta(double tau, double delta){return 0.0;};
+    double dDelta2(double tau, double delta){return 0.0;};
+    double dDelta2_dTau(double tau, double delta){return 0.0;};
+    double dDelta_dTau(double tau, double delta){return 0.0;};
+    double dDelta_dTau2(double tau, double delta){return 0.0;};
+    double dDelta3(double tau, double delta){return 0.0;};
+};
 
 
 #endif

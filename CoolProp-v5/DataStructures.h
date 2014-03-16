@@ -12,7 +12,7 @@ namespace CoolProp {
 
 struct SimpleState
 {
-	double rho, T, p, h, s;
+	double rhomolar, T, p, hmolar, smolar;
 };
 
 /// --------------------------------------------------

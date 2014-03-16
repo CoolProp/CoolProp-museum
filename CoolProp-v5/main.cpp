@@ -31,6 +31,7 @@ int main()
 		{
 			AbstractState *State = AbstractState::factory("CORE-Water");
 			//AbstractState *State = new REFPROPBackend("Methane");
+			State->update(DmassT_INPUTS,1e-3,300);
 			delete State;
 		}
 		t2 = clock();

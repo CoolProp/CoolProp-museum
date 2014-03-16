@@ -42,7 +42,7 @@ std::vector<double> ResidualHelmholtzTerm::dDelta_dTau(std::vector<double> tau, 
 
 void ResidualHelmholtzPower::to_json(rapidjson::Value &el, rapidjson::Document &doc)
 {
-    el.AddMember("type","alphar_power",doc.GetAllocator());
+    el.AddMember("type","ResidualHelmholtzPower",doc.GetAllocator());
     rapidjson::Value _n(rapidjson::kArrayType), _d(rapidjson::kArrayType), _t(rapidjson::kArrayType), _l(rapidjson::kArrayType);
     for (unsigned int i = 0; i <= n.size(); ++i)
     {
@@ -62,24 +62,26 @@ double ResidualHelmholtzTerm::eval(int key, double tau, double delta)
     double summer=0, log_tau = log(tau), log_delta = log(delta);
     switch (key)
     {
-    case idA_dDelta:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*dA_dDelta(log_tau, tau, log_delta, delta, i); } break; }
-    case idA_dTau:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*dA_dTau(log_tau, tau, log_delta, delta, i); } break; }
-    case id2A_dDelta2:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*d2A_dDelta2(log_tau, tau, log_delta, delta, i); } break; }
-    case id2A_dDelta_dTau:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*d2A_dDelta_dTau(log_tau, tau, log_delta, delta, i); } break; }
-    case id2A_dTau2:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*d2A_dTau2(log_tau, tau, log_delta, delta, i); } break; }
-    case id3A_dDelta3:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*d3A_dDelta3(log_tau, tau, log_delta, delta, i); } break; }
-    case id3A_dDelta_dTau2:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*d3A_dDelta_dTau2(log_tau, tau, log_delta, delta, i); } break; }
-    case id3A_dDelta2_dTau:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*d3A_dDelta2_dTau(log_tau, tau, log_delta, delta, i); } break; }
-    case id3A_dTau3:
-        { for (unsigned int i = 0; i <= n.size(); ++i) { summer += n[i]*d3A_dTau3(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEA:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*A(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEdA_dDelta:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*dA_dDelta(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEdA_dTau:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*dA_dTau(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEd2A_dDelta2:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*d2A_dDelta2(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEd2A_dDelta_dTau:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*d2A_dDelta_dTau(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEd2A_dTau2:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*d2A_dTau2(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEd3A_dDelta3:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*d3A_dDelta3(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEd3A_dDelta_dTau2:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*d3A_dDelta_dTau2(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEd3A_dDelta2_dTau:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*d3A_dDelta2_dTau(log_tau, tau, log_delta, delta, i); } break; }
+    case iHEd3A_dTau3:
+        { for (unsigned int i = 0; i < n.size(); ++i) { summer += n[i]*d3A_dTau3(log_tau, tau, log_delta, delta, i); } break; }
     default:
         { throw ValueError(format("This index[%d] is invalid to eval function",key)); }
     };

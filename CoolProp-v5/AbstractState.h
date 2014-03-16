@@ -28,6 +28,10 @@ This base class does not perform any checks on the two-phase conditions and
 alike. Most of the functions defined here only apply to compressible single
 state substances. Make sure you are aware of all the assumptions we made
 when using this class.
+
+Add build table function to Abstract State
+Interpolator inherit AS implemented by TTSE BICUBIC
+
 */
 class AbstractState {
 protected:
@@ -70,7 +74,10 @@ protected:
 	SimpleState _critical, _reducing;
 
 	/// Molar mass [mol/kg]
-	double _molar_mass;
+	CachedElement _molar_mass;
+    
+    /// Universal gas constant [J/mol/K]
+    CachedElement _gas_constant;
 
 	/// Bulk values
 	double _rhomolar, _T, _p, _Q, _R, _tau, _delta;
@@ -78,14 +85,12 @@ protected:
 	/// Transport properties
 	CachedElement _viscosity, _conductivity, _surface_tension;
 
-	CachedElement _hmolar, _smolar, _logp, _logrhomolar, _cpmolar,_cvmolar,_speed_sound;
+	CachedElement _hmolar, _smolar, _logp, _logrhomolar, _cpmolar, _cvmolar, _speed_sound;
 
 	/// Smoothing values
 	double _rhospline, _dsplinedp, _dsplinedh;
 
 	/// Cached low-level elements for in-place calculation of other properties
-	/// These values cannot be reconstructed from the TTSE data and therefore
-	/// always require a call to the EOS, hence the caching mechanism here.
 	CachedElement _alpha0, _dalpha0_dTau, _dalpha0_dDelta, _d2alpha0_dTau2, _d2alpha0_dDelta_dTau,
 			_d2alpha0_dDelta2, _d3alpha0_dTau3, _d3alpha0_dDelta_dTau2, _d3alpha0_dDelta2_dTau,
 			_d3alpha0_dDelta3, _alphar, _dalphar_dTau, _dalphar_dDelta, _d2alphar_dTau2, _d2alphar_dDelta_dTau,
@@ -99,7 +104,7 @@ protected:
 	CachedElement _rhoLmolar, _rhoVmolar;
 
 	// ----------------------------------------
-	// Property accessors to be implemented by the backend
+	// Property accessors to be optionally implemented by the backend
 	// for properties that are not always calculated
 	// ----------------------------------------
 	virtual double calc_hmolar(void){throw NotImplementedError("calc_hmolar is not implemented for this backend");};
@@ -112,7 +117,10 @@ protected:
 	virtual double calc_viscosity(void){throw NotImplementedError("calc_viscosity is not implemented for this backend");};
 	virtual double calc_conductivity(void){throw NotImplementedError("calc_conductivity is not implemented for this backend");};
 	virtual double calc_surface_tension(void){throw NotImplementedError("calc_surface_tension is not implemented for this backend");};
-
+	virtual double calc_molar_mass(void){throw NotImplementedError("calc_molar_mass is not implemented for this backend");};
+    virtual double calc_gas_constant(void){throw NotImplementedError("calc_gas_constant is not implemented for this backend");};
+    virtual double calc_dalphar_dDelta(void){throw NotImplementedError("calc_dalphar_dDelta is not implemented for this backend");};
+    virtual void calc_reducing_state(void){throw NotImplementedError("calc_reducing_state is not implemented for this backend");};
 public:
 	AbstractState();
 	virtual ~AbstractState();
@@ -146,6 +154,9 @@ public:
 	double rhomolar(void){return _rhomolar;};
 	double p(void)  {return _p;};
 	double Q(void)  {return _Q;};
+
+    double molar_mass(void);
+    double gas_constant(void);
 
 	double hmolar(void);
 	double smolar(void);
@@ -250,9 +261,9 @@ public:
 	virtual double d3alpha0_dDelta_dTau2(void) = 0;
 	virtual double d3alpha0_dTau3(void) = 0;
 
-	virtual double alphar(void) = 0;
-	virtual double dalphar_dDelta(void) = 0;
-	virtual double dalphar_dTau(void) = 0;
+	virtual double alphar(void) = 0;*/
+	double dalphar_dDelta(void);
+	/*virtual double dalphar_dTau(void) = 0;
 	virtual double d2alphar_dDelta2(void) = 0;
 	virtual double d2alphar_dDelta_dTau(void) = 0;
 	virtual double d2alphar_dTau2(void) = 0;

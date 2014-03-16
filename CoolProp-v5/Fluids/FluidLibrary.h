@@ -35,15 +35,15 @@ protected:
 			// Get the type (required!)
 			std::string type = contribution["type"].GetString();
 
-			if (!type.compare("alphar_power"))
+			if (!type.compare("ResidualHelmholtzPower"))
 			{
 				std::vector<double> n = cpjson::get_double_array(contribution["n"]);
 				std::vector<double> d = cpjson::get_double_array(contribution["d"]);
 				std::vector<double> t = cpjson::get_double_array(contribution["t"]);
 				std::vector<double> l = cpjson::get_double_array(contribution["l"]);
-				EOS.alphar.push_back(new ResidualHelmholtzPower(n,d,t,l));
+				EOS.alphar_vector.push_back(new ResidualHelmholtzPower(n,d,t,l));
 			}
-			else if (!type.compare("alphar_gaussian"))
+			else if (!type.compare("ResidualHelmholtzGaussian"))
 			{
 				std::vector<double> n = cpjson::get_double_array(contribution["n"]);
 				std::vector<double> d = cpjson::get_double_array(contribution["d"]);
@@ -52,9 +52,9 @@ protected:
 				std::vector<double> epsilon = cpjson::get_double_array(contribution["epsilon"]);
 				std::vector<double> beta = cpjson::get_double_array(contribution["beta"]);
 				std::vector<double> gamma = cpjson::get_double_array(contribution["gamma"]);
-				EOS.alphar.push_back(new ResidualHelmholtzGaussian(n,d,t,eta,epsilon,beta,gamma));
+				EOS.alphar_vector.push_back(new ResidualHelmholtzGaussian(n,d,t,eta,epsilon,beta,gamma));
 			}
-			else if (!type.compare("alphar_critical"))
+			else if (!type.compare("ResidualHelmholtzNonAnalytic"))
 			{
 				std::vector<double> n = cpjson::get_double_array(contribution["n"]);
 				std::vector<double> a = cpjson::get_double_array(contribution["a"]);
@@ -64,7 +64,7 @@ protected:
 				std::vector<double> B = cpjson::get_double_array(contribution["B"]);
 				std::vector<double> C = cpjson::get_double_array(contribution["C"]);
 				std::vector<double> D = cpjson::get_double_array(contribution["D"]);
-				EOS.alphar.push_back(new ResidualHelmholtzNonAnalytic(n,a,b,beta,A,B,C,D));
+				EOS.alphar_vector.push_back(new ResidualHelmholtzNonAnalytic(n,a,b,beta,A,B,C,D));
 			}
 			else
 			{
@@ -76,7 +76,7 @@ protected:
 	/// Parse the contributions to the ideal-gas Helmholtz energy
 	void parse_alpha0(rapidjson::Value &alpha0, EquationOfState &EOS)
 	{
-		EOS.alpha0.push_back(new ResidualHelmholtzPower());
+		EOS.alpha0_vector.push_back(new ResidualHelmholtzPower());
 	};
 
 	/// Parse the Equation of state JSON entry
@@ -85,7 +85,14 @@ protected:
 		EquationOfState EOS;
 
 		// Universal gas constant [J/mol/K]
-		EOS.R_u = cpjson::get_double(EOS_json,"R_u");
+		EOS.R_u = cpjson::get_double(EOS_json,"gas_constant");
+        EOS.molar_mass = cpjson::get_double(EOS_json,"molar_mass");
+
+        rapidjson::Value &reducing_state = EOS_json["reducing_state"];
+        // Reducing state
+        EOS.reduce.T = reducing_state["T"].GetDouble();
+        EOS.reduce.rhomolar = reducing_state["rhomolar"].GetDouble();
+        EOS.reduce.p = reducing_state["p"].GetDouble();
 		
 		parse_alphar(EOS_json["alphar"], EOS);
 		parse_alpha0(EOS_json["alpha0"], EOS);

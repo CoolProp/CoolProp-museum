@@ -76,16 +76,16 @@ bool AbstractState::clear() {
 	this->_forceTwoPhase = false;
 
 	this->_critical.T = -_HUGE;
-	this->_critical.h = -_HUGE;
+	this->_critical.hmolar = -_HUGE;
 	this->_critical.p = -_HUGE;
-	this->_critical.rho = -_HUGE;
-	this->_critical.s = -_HUGE;
+	this->_critical.rhomolar = -_HUGE;
+	this->_critical.smolar = -_HUGE;
 
 	this->_reducing.T = -_HUGE;
-	this->_reducing.h = -_HUGE;
+	this->_reducing.hmolar = -_HUGE;
 	this->_reducing.p = -_HUGE;
-	this->_reducing.rho = -_HUGE;
-	this->_reducing.s = -_HUGE;
+	this->_reducing.rhomolar = -_HUGE;
+	this->_reducing.smolar = -_HUGE;
 
 	/// Bulk values
 	this->_rhomolar = -_HUGE;
@@ -166,6 +166,19 @@ double AbstractState::surface_tension(void){
 	if (!_surface_tension) _surface_tension = calc_surface_tension();
 	return _surface_tension;
 }
+double AbstractState::molar_mass(void){
+	if (!_molar_mass) _molar_mass = calc_molar_mass();
+	return _molar_mass;
+}
+double AbstractState::gas_constant(void){
+	if (!_gas_constant) _gas_constant = calc_gas_constant();
+	return _gas_constant;
+}
+double AbstractState::dalphar_dDelta(void){
+	if (!_dalphar_dDelta) _dalphar_dDelta = calc_dalphar_dDelta();
+	return _dalphar_dDelta;
+}
+
 
 //virtual double AbstractState::isothermal_compressibility(void){
 //	return 1.0/(_rho*dpdrho_constT());
