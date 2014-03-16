@@ -34,8 +34,6 @@ class CachedElement {
 private:
 	bool is_cached;
 	double value;
-	double function;
-
 public:
 	/// Default constructor
 	CachedElement() {
@@ -61,8 +59,7 @@ public:
 	operator double() {
 		if (is_cached) {return value; }
 		else {
-			this->_do_cache(this->function);
-			return this->value;
+			throw std::exception();
 		}
 	}
 	/// Clear the flag and the value
