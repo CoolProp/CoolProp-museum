@@ -14,169 +14,169 @@
 namespace CoolProp {
 
 AbstractState::AbstractState() {
-	// TODO Auto-generated constructor stub
+    // TODO Auto-generated constructor stub
 }
 
 AbstractState::~AbstractState() {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 
 AbstractState * AbstractState::factory(std::string fluid_string)
 {
-	if (fluid_string.find("CORE-") == 0)
-	{
-		// Remove the "CORE-"
-		std::string fluids = fluid_string.substr(5,fluid_string.size()-5);
+    if (fluid_string.find("CORE-") == 0)
+    {
+        // Remove the "CORE-"
+        std::string fluids = fluid_string.substr(5,fluid_string.size()-5);
 
-		if (fluids.find('|') == -1)
-		{	
-			return new HelmholtzEOSBackend(&(get_library().get("Water")));
-		}
-		else
-		{
-			// Split at the '|'
-			std::vector<std::string> components = strsplit(fluids,'|');
+        if (fluids.find('|') == -1)
+        {	
+            return new HelmholtzEOSBackend(&(get_library().get("Water")));
+        }
+        else
+        {
+            // Split at the '|'
+            std::vector<std::string> components = strsplit(fluids,'|');
 
-			return new REFPROPMixtureBackend(components);
-		}
-	}
-	else if (fluid_string.find("REFPROP-") == 0) // fluid_string starts with "REFPROP-" - more specificically, the first place that "REFPROP-" is found is at index 0
-	{
-		// Remove the "REFPROP-"
-		std::string fluids = fluid_string.substr(8,fluid_string.size()-8);
+            return new REFPROPMixtureBackend(components);
+        }
+    }
+    else if (fluid_string.find("REFPROP-") == 0) // fluid_string starts with "REFPROP-" - more specificically, the first place that "REFPROP-" is found is at index 0
+    {
+        // Remove the "REFPROP-"
+        std::string fluids = fluid_string.substr(8,fluid_string.size()-8);
 
-		if (fluids.find('|') == -1)
-		{
-			return new REFPROPBackend(fluids);
-		}
-		else
-		{
-			// Split at the '|'
-			std::vector<std::string> components = strsplit(fluids,'|');
+        if (fluids.find('|') == -1)
+        {
+            return new REFPROPBackend(fluids);
+        }
+        else
+        {
+            // Split at the '|'
+            std::vector<std::string> components = strsplit(fluids,'|');
 
-			return new REFPROPMixtureBackend(components);
-		}
-	}
-	else if (fluid_string.find("BRINE-") == 0)
-	{
-		throw ValueError("BRINE backend not yet implemented");
-	}
-	else
-	{
-		throw ValueError("Invalid input to factory function");
-	}
+            return new REFPROPMixtureBackend(components);
+        }
+    }
+    else if (fluid_string.find("BRINE-") == 0)
+    {
+        throw ValueError("BRINE backend not yet implemented");
+    }
+    else
+    {
+        throw ValueError("Invalid input to factory function");
+    }
 }
 
 bool AbstractState::clear() {
-	// Reset all instances of CachedElement and overwrite
-	// the internal double values with -_HUGE
-	this->_fluid_type = FLUID_TYPE_UNDEFINED;
-	this->_phase = iUnknown;
-	this->_forceSinglePhase = false;
-	this->_forceTwoPhase = false;
+    // Reset all instances of CachedElement and overwrite
+    // the internal double values with -_HUGE
+    this->_fluid_type = FLUID_TYPE_UNDEFINED;
+    this->_phase = iUnknown;
+    this->_forceSinglePhase = false;
+    this->_forceTwoPhase = false;
 
-	this->_critical.T = -_HUGE;
-	this->_critical.hmolar = -_HUGE;
-	this->_critical.p = -_HUGE;
-	this->_critical.rhomolar = -_HUGE;
-	this->_critical.smolar = -_HUGE;
+    this->_critical.T = -_HUGE;
+    this->_critical.hmolar = -_HUGE;
+    this->_critical.p = -_HUGE;
+    this->_critical.rhomolar = -_HUGE;
+    this->_critical.smolar = -_HUGE;
 
-	this->_reducing.T = -_HUGE;
-	this->_reducing.hmolar = -_HUGE;
-	this->_reducing.p = -_HUGE;
-	this->_reducing.rhomolar = -_HUGE;
-	this->_reducing.smolar = -_HUGE;
+    this->_reducing.T = -_HUGE;
+    this->_reducing.hmolar = -_HUGE;
+    this->_reducing.p = -_HUGE;
+    this->_reducing.rhomolar = -_HUGE;
+    this->_reducing.smolar = -_HUGE;
 
-	/// Bulk values
-	this->_rhomolar = -_HUGE;
-	this->_T = -_HUGE;
-	this->_p = -_HUGE;
-	this->_Q = -_HUGE;
-	this->_tau = -_HUGE;
-	this->_delta = -_HUGE;
-	this->_hmolar.clear();
-	this->_smolar.clear();
-	this->_logp.clear();
-	this->_logrhomolar.clear();
+    /// Bulk values
+    this->_rhomolar = -_HUGE;
+    this->_T = -_HUGE;
+    this->_p = -_HUGE;
+    this->_Q = -_HUGE;
+    this->_tau = -_HUGE;
+    this->_delta = -_HUGE;
+    this->_hmolar.clear();
+    this->_smolar.clear();
+    this->_logp.clear();
+    this->_logrhomolar.clear();
 
-	///// Smoothing values
-	//this->rhospline = -_HUGE;
-	//this->dsplinedp = -_HUGE;
-	//this->dsplinedh = -_HUGE;
+    ///// Smoothing values
+    //this->rhospline = -_HUGE;
+    //this->dsplinedp = -_HUGE;
+    //this->dsplinedh = -_HUGE;
 
-	/// Cached low-level elements for in-place calculation of other properties
-	this->_alpha0.clear();
-	this->_dalpha0_dTau.clear();
-	this->_dalpha0_dDelta.clear();
-	this->_d2alpha0_dTau2.clear();
-	this->_d2alpha0_dDelta_dTau.clear();
-	this->_d2alpha0_dDelta2.clear();
-	this->_d3alpha0_dTau3.clear();
-	this->_d3alpha0_dDelta_dTau2.clear();
-	this->_d3alpha0_dDelta2_dTau.clear();
-	this->_d3alpha0_dDelta3.clear();
-	this->_alphar.clear();
-	this->_dalphar_dTau.clear();
-	this->_dalphar_dDelta.clear();
-	this->_d2alphar_dTau2.clear();
-	this->_d2alphar_dDelta_dTau.clear();
-	this->_d2alphar_dDelta2.clear();
-	this->_d3alphar_dTau3.clear();
-	this->_d3alphar_dDelta_dTau2.clear();
-	this->_d3alphar_dDelta2_dTau.clear();
-	this->_d3alphar_dDelta3.clear();
+    /// Cached low-level elements for in-place calculation of other properties
+    this->_alpha0.clear();
+    this->_dalpha0_dTau.clear();
+    this->_dalpha0_dDelta.clear();
+    this->_d2alpha0_dTau2.clear();
+    this->_d2alpha0_dDelta_dTau.clear();
+    this->_d2alpha0_dDelta2.clear();
+    this->_d3alpha0_dTau3.clear();
+    this->_d3alpha0_dDelta_dTau2.clear();
+    this->_d3alpha0_dDelta2_dTau.clear();
+    this->_d3alpha0_dDelta3.clear();
+    this->_alphar.clear();
+    this->_dalphar_dTau.clear();
+    this->_dalphar_dDelta.clear();
+    this->_d2alphar_dTau2.clear();
+    this->_d2alphar_dDelta_dTau.clear();
+    this->_d2alphar_dDelta2.clear();
+    this->_d3alphar_dTau3.clear();
+    this->_d3alphar_dDelta_dTau2.clear();
+    this->_d3alphar_dDelta2_dTau.clear();
+    this->_d3alphar_dDelta3.clear();
 
-	this->_dalphar_dDelta_lim.clear();
-	this->_d2alphar_dDelta2_lim.clear();
-	this->_d2alphar_dDelta_dTau_lim.clear();
-	this->_d3alphar_dDelta2_dTau_lim.clear();
+    this->_dalphar_dDelta_lim.clear();
+    this->_d2alphar_dDelta2_lim.clear();
+    this->_d2alphar_dDelta_dTau_lim.clear();
+    this->_d3alphar_dDelta2_dTau_lim.clear();
 
-	return true;
+    return true;
 }
 
 double AbstractState::hmolar(void){
-	if (!_hmolar) _hmolar = calc_hmolar();
-	return _hmolar;
+    if (!_hmolar) _hmolar = calc_hmolar();
+    return _hmolar;
 }
 double AbstractState::smolar(void){
-	if (!_smolar) _smolar = calc_smolar();
-	return _smolar;
+    if (!_smolar) _smolar = calc_smolar();
+    return _smolar;
 }
 double AbstractState::cpmolar(void){
-	if (!_cpmolar) _cpmolar = calc_cpmolar();
-	return _cpmolar;
+    if (!_cpmolar) _cpmolar = calc_cpmolar();
+    return _cpmolar;
 }
 double AbstractState::cvmolar(void){
-	if (!_cvmolar) _cvmolar = calc_cvmolar();
-	return _cvmolar;
+    if (!_cvmolar) _cvmolar = calc_cvmolar();
+    return _cvmolar;
 }
 double AbstractState::speed_sound(void){
-	if (!_speed_sound) _speed_sound = calc_speed_sound();
-	return _speed_sound;
+    if (!_speed_sound) _speed_sound = calc_speed_sound();
+    return _speed_sound;
 }
 double AbstractState::viscosity(void){
-	if (!_viscosity) _viscosity = calc_viscosity();
-	return _viscosity;
+    if (!_viscosity) _viscosity = calc_viscosity();
+    return _viscosity;
 }
 double AbstractState::conductivity(void){
-	if (!_conductivity) _conductivity = calc_conductivity();
-	return _conductivity;
+    if (!_conductivity) _conductivity = calc_conductivity();
+    return _conductivity;
 }
 double AbstractState::surface_tension(void){
-	if (!_surface_tension) _surface_tension = calc_surface_tension();
-	return _surface_tension;
+    if (!_surface_tension) _surface_tension = calc_surface_tension();
+    return _surface_tension;
 }
 double AbstractState::molar_mass(void){
-	if (!_molar_mass) _molar_mass = calc_molar_mass();
-	return _molar_mass;
+    if (!_molar_mass) _molar_mass = calc_molar_mass();
+    return _molar_mass;
 }
 double AbstractState::gas_constant(void){
-	if (!_gas_constant) _gas_constant = calc_gas_constant();
-	return _gas_constant;
+    if (!_gas_constant) _gas_constant = calc_gas_constant();
+    return _gas_constant;
 }
 double AbstractState::dalphar_dDelta(void){
-	if (!_dalphar_dDelta) _dalphar_dDelta = calc_dalphar_dDelta();
-	return _dalphar_dDelta;
+    if (!_dalphar_dDelta) _dalphar_dDelta = calc_dalphar_dDelta();
+    return _dalphar_dDelta;
 }
 
 
@@ -205,9 +205,9 @@ double AbstractState::dalphar_dDelta(void){
 //	virtual double AbstractState::surface_tension(void);
 //
 //
-	// ----------------------------------------
-	// Derivatives of properties
-	// ----------------------------------------
+    // ----------------------------------------
+    // Derivatives of properties
+    // ----------------------------------------
 //	virtual double AbstractState::dvdp_constT(void){
 //		return -1/(_rho*_rho)/dpdrho_constT();
 //	}
