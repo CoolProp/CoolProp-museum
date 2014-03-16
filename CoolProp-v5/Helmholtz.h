@@ -406,7 +406,7 @@ public:
     // Constructor
     ResidualHelmholtzSAFTAssociating(double a, double m, double epsilonbar, double vbarn, double kappabar)
         : a(a), m(m), epsilonbar(epsilonbar), vbarn(vbarn), kappabar(kappabar)
-        {};
+        {n = std::vector<double>(1,1);};
 
     //Destructor
     ~ResidualHelmholtzSAFTAssociating(){};
@@ -426,5 +426,15 @@ public:
     double d3A_dDelta_dTau2(double log_tau, double tau, double log_delta, double delta, int i);
     double d3A_dTau3(double log_tau, double tau, double log_delta, double delta, int i);
 };
+
+// #############################################################################
+// #############################################################################
+// #############################################################################
+//                                 IDEAL GAS TERMS
+// #############################################################################
+// #############################################################################
+// #############################################################################
+
+
 
 #endif
