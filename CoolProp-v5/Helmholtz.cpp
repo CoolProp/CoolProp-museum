@@ -391,7 +391,7 @@ double ResidualHelmholtzLemmon2005::d2A_dTau2(double log_tau, double tau, double
         return t[i]*(t[i]-1)*exp((t[i]-2)*log_tau+d[i]*log_delta);
 }
 
-/*!
+/**
 
 \f[
 \frac{{{\partial ^2}{\alpha ^r}}}{{\partial {\tau ^2}}} = {N_k}{\delta ^{{d_k}}}{\tau ^{{t_k} - 2}}\exp \left( { - {\delta ^{{l_k}}}} \right)\exp \left( { - {\tau ^{{m_k}}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
