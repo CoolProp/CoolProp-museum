@@ -653,7 +653,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		case DmassT_INPUTS:
 		{
 			// Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
-			update(DmolarT_INPUTS, value1 * _molar_mass, value2);
+			update(DmolarT_INPUTS, value1 / (double)_molar_mass, value2);
 			return;
 		}
 		case DmolarP_INPUTS:
@@ -682,7 +682,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		case DmassP_INPUTS:
 		{
 			// Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
-			update(DmolarP_INPUTS, value1 * _molar_mass, value2);
+			update(DmolarP_INPUTS, value1 / (double)_molar_mass, value2);
 			return;
 		}
 		case HmolarP_INPUTS:
@@ -710,7 +710,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		case HmassP_INPUTS:
 		{
 			// Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
-			update(HmolarP_INPUTS, value1 * _molar_mass, value2); 
+			update(HmolarP_INPUTS, value1 * (double)_molar_mass, value2); 
 			return;
 		}
 		case PSmolar_INPUTS:
@@ -739,7 +739,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		case PSmass_INPUTS:
 		{
 			// Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K]
-			update(PSmolar_INPUTS, value1, value2*_molar_mass); 
+			update(PSmolar_INPUTS, value1, value2*(double)_molar_mass); 
 			return;
 		}
 		case HmolarSmolar_INPUTS:
@@ -767,7 +767,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 		case HmassSmass_INPUTS:
 		{
 			// Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K], same for enthalpy
-			update(HmolarSmolar_INPUTS, value1 * _molar_mass, value2 * _molar_mass); 
+			update(HmolarSmolar_INPUTS, value1 * (double)_molar_mass, value2 * (double)_molar_mass); 
 			return;
 		}
 		case PQ_INPUTS:
