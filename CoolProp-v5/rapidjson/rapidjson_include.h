@@ -32,6 +32,28 @@ namespace cpjson
 			return el.GetDouble();
 		}
 	};
+    /// A convenience function to get a bool from a JSON value, including error checking
+	inline bool get_bool(rapidjson::Value &v, std::string m)
+	{
+		if (!v.HasMember(m.c_str())){ throw ValueError(format("Does not have member [%s]",m.c_str())); }
+		rapidjson::Value &el = v[m.c_str()];
+        if (!el.IsBool()){  throw ValueError(format("Member [%s] is not a boolean",m.c_str())); }
+		else
+		{
+            return el.GetBool();
+		}
+	};
+     /// A convenience function to get a string from a JSON value, including error checking
+	inline std::string get_string(rapidjson::Value &v, std::string m)
+	{
+		if (!v.HasMember(m.c_str())){ throw ValueError(format("Does not have member [%s]",m.c_str())); }
+		rapidjson::Value &el = v[m.c_str()];
+        if (!el.IsString()){  throw ValueError(format("Member [%s] is not a string",m.c_str())); }
+		else
+		{
+            return el.GetString();
+		}
+	};
 
 	/// A convenience function to get a double array compactly
 	inline std::vector<double> get_double_array(rapidjson::Value &v)

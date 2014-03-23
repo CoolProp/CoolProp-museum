@@ -54,7 +54,7 @@ const enum params {
 };
 
 /// These are constants for the phases of the fluid
-const enum phases {iLiquid, iSupercritical, iGas, iTwoPhase, iUnknown};
+const enum phases {iphase_liquid, iphase_supercritical, iphase_gas, iphase_twophase, iphase_unknown};
 
 /// These are unit types for the fluid
 const enum fluid_types{FLUID_TYPE_PURE, FLUID_TYPE_PSEUDOPURE, FLUID_TYPE_REFPROP, FLUID_TYPE_INCOMPRESSIBLE_LIQUID, FLUID_TYPE_INCOMPRESSIBLE_SOLUTION, FLUID_TYPE_UNDEFINED};

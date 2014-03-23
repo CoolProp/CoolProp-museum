@@ -56,22 +56,74 @@ public:
     double residual(double T, double rhomolar);
     double critical(double T, double rhomolar);
 };
+
 class SurfaceTensionCorrelation
 {
 
 };
+/**
+*/
+class AncillaryFunction
+{
+private:
+    std::vector<double> n, t;
+    bool using_tau_r;
+    double Tmax, Tmin, reducing_value, T_r;
+    int type;
+    enum ancillaryfunctiontypes{TYPE_NOT_EXPONENTIAL = 0, TYPE_EXPONENTIAL = 1};
+    std::size_t N;
+public:
+    
+    AncillaryFunction(){};
+    AncillaryFunction(rapidjson::Value &json_code)
+    {
+        n = cpjson::get_double_array(json_code["n"]);
+        t = cpjson::get_double_array(json_code["t"]);
+        Tmin = cpjson::get_double(json_code,"Tmin");
+        Tmax = cpjson::get_double(json_code,"Tmax");
+        reducing_value = cpjson::get_double(json_code,"reducing_value");
+        using_tau_r = cpjson::get_bool(json_code,"using_tau_r");
+        T_r = cpjson::get_double(json_code,"T_r");
+        std::string type = cpjson::get_string(json_code,"type");
+        if (!type.compare("rhoLnoexp"))
+            this->type = TYPE_NOT_EXPONENTIAL;
+        else
+            this->type = TYPE_EXPONENTIAL;
+        this->N = n.size();
+        
+    };
+    double evaluate(double T)
+    {
+        double summer = 0;
+        double THETA = 1-T/T_r;
+        if (type == TYPE_NOT_EXPONENTIAL)
+        {
+            for (std::size_t i = 0; i < N; ++i)
+            {
+                summer += n[i]*pow(THETA,t[i]);
+            }
+            return reducing_value*(1+summer);
+        }
+        else
+        {
+            double tau_r_value;
+            if (using_tau_r)
+                tau_r_value = T_r/T;
+            else
+                tau_r_value = 1.0;
 
-/// A wrapper around the HE vector in order to be able to cleanly handle the 
-/// copying and destruction without requiring a full deep copy of EquationOfState
-struct HelmholtzVector{
-    std::vector<BaseHelmholtzTerm*> v;
-    /// Default constructor
-    HelmholtzVector(){};
+            for (std::size_t i = 0; i < N; ++i)
+            {
+                summer += n[i]*pow(THETA, t[i]);
+            }
+            return reducing_value*exp(tau_r_value*summer);
+        }
+    }
+};
 
-    void push_back(BaseHelmholtzTerm* alpha){ v.push_back(alpha); };
-    unsigned int size(){ return v.size(); };
-    std::vector<BaseHelmholtzTerm*>::iterator begin(){ return v.begin();};
-    std::vector<BaseHelmholtzTerm*>::iterator end(){ return v.end();};
+struct Ancillaries
+{
+    AncillaryFunction p,rhoL,rhoV;
 };
 
 /// The core class for an equation of state
@@ -85,20 +137,28 @@ struct HelmholtzVector{
 class EquationOfState{
 public:
     EquationOfState(){};
+    ~EquationOfState()
+    {
+	    while (!alpha0_vector.empty()){ 
+            delete alpha0_vector.back();  alpha0_vector.pop_back(); 
+        }
+    };
     SimpleState reduce; ///< Reducing state used for the EOS (usually, but not always, the critical point)
     EOSLimits limits; ///< Limits on the EOS
     double R_u; ///< The universal gas constant used for this EOS (usually, but not always, 8.314472 J/mol/K)
     double molar_mass;
-    HelmholtzVector alphar_vector, ///< The residual Helmholtz energy
-                    alpha0_vector; ///< The ideal-gas Helmholtz energy
+    ResidualHelmholtzContainer alphar; ///< The residual Helmholtz energy
+    std::vector<BaseHelmholtzTerm*> alpha0_vector; ///< The ideal-gas Helmholtz energy
 
     /// Validate the EOS that was just constructed
     void validate()
     {
         assert(R_u < 9 && R_u > 8);
         assert(molar_mass > 0.001 && molar_mass < 1);
-        assert(alphar_vector.size() > 0);
-        assert(alpha0_vector.size() > 0);
+    };
+    long double dalphar_dDelta(const double tau, const double delta) throw()
+    {
+        return alphar.dDelta(tau, delta);
     };
 };
 
@@ -114,49 +174,23 @@ class CoolPropFluid {
     public:
         CoolPropFluid(){};
         virtual ~CoolPropFluid(){};
+        std::vector<EquationOfState> EOSVector; ///< The equations of state that could be used for this fluid
 
         std::string name; ///< The name of the fluid
         std::string REFPROPname; ///< The REFPROP-compliant name if REFPROP-"name" is not a compatible fluid name.  If not included, "name" is assumed to be a valid name for REFPROP
         std::string CAS; ///< The CAS number of the fluid
         std::vector <std::string> aliases; ///< A vector of aliases of names for the fluid
 
-        std::vector<EquationOfState> EOSVector; ///< The equations of state that could be used for this fluid
-        std::vector<ViscosityCorrelation*> ViscosityVector; ///< The viscosity correlations that could be used for this fluid
-        std::vector<ThermalConductivityCorrelation*> ThermalConductivityVector; ///< The thermal conductivity correlations that could be used for this fluid
-        std::vector<SurfaceTensionCorrelation*> SurfaceTensionVector; ///< The surface tension correlations that could be used for this fluid
+        std::vector<ViscosityCorrelation*> viscosity_vector; ///< The viscosity correlations that could be used for this fluid
+        std::vector<ThermalConductivityCorrelation*> thermal_conductivity_vector; ///< The thermal conductivity correlations that could be used for this fluid
+        std::vector<SurfaceTensionCorrelation*> surface_tension_vector; ///< The surface tension correlations that could be used for this fluid
 
         BibTeXKeysStruct BibTeXKeys;
         EnvironmentalFactorsStruct environment;
+        Ancillaries ancillaries;
 
         double gas_constant(){ return EOSVector[0].R_u; };
         double molar_mass(){ return EOSVector[0].molar_mass; };
-
-        /// The derivative of the residual Helmholtz energy
-        double alphar(double tau, double delta)
-        {
-            double summer = 0;
-            for (std::vector<BaseHelmholtzTerm*>::iterator it = EOSVector[0].alphar_vector.begin(); it != EOSVector[0].alphar_vector.end(); ++it)
-                summer += (*it)->base(tau,delta);
-            return summer;
-        }
-        // First derivative
-        double dalphar_dDelta(double tau, double delta)
-        {
-            double summer = 0;
-            for (std::vector<BaseHelmholtzTerm*>::iterator it = EOSVector[0].alphar_vector.begin(); it != EOSVector[0].alphar_vector.end(); ++it)
-                summer += (*it)->dDelta(tau,delta);
-            return summer;
-        };
-        double dalphar_dTau(double tau, double delta);
-        // Second derivative
-        double dalphar_dDelta2(double tau, double delta);
-        double d2alphar_dDelta_dTau(double tau, double delta);
-        double d2alphar_dTau2(double tau, double delta);
-        // Third derivative
-        double d3alphar_dDelta3(double tau, double delta);
-        double d3alphar_dDelta2_dTau(double tau, double delta);
-        double d3alphar_dDelta_dTau2(double tau, double delta);
-        double d3alphar_dTau3(double tau, double delta);
 };
 
 //#include "../Backends/HelmholtzEOSBackend.h"

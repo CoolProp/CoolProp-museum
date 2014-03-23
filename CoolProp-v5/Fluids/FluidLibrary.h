@@ -18,9 +18,9 @@ a rapidjson array of fluids to the add_many function.
 class JSONFluidLibrary
 {
 	/// Map from CAS code to JSON instance.  For pseudo-pure fluids, use name in place of CAS code since no CASE number is defined for mixtures
-	std::map<long, CoolPropFluid> fluid_map;
+    std::map<std::size_t, CoolPropFluid> fluid_map;
 
-	std::map<std::string, long> string_to_index_map;
+	std::map<std::string, std::size_t> string_to_index_map;
 	bool _is_empty;
 protected:
 
@@ -41,7 +41,7 @@ protected:
 				std::vector<double> d = cpjson::get_double_array(contribution["d"]);
 				std::vector<double> t = cpjson::get_double_array(contribution["t"]);
 				std::vector<double> l = cpjson::get_double_array(contribution["l"]);
-				EOS.alphar_vector.push_back(new ResidualHelmholtzPower(n,d,t,l));
+				EOS.alphar.Power = ResidualHelmholtzPower(n,d,t,l);
 			}
 			else if (!type.compare("ResidualHelmholtzGaussian"))
 			{
@@ -52,7 +52,7 @@ protected:
 				std::vector<double> epsilon = cpjson::get_double_array(contribution["epsilon"]);
 				std::vector<double> beta = cpjson::get_double_array(contribution["beta"]);
 				std::vector<double> gamma = cpjson::get_double_array(contribution["gamma"]);
-				EOS.alphar_vector.push_back(new ResidualHelmholtzGaussian(n,d,t,eta,epsilon,beta,gamma));
+				EOS.alphar.Gaussian = ResidualHelmholtzGaussian(n,d,t,eta,epsilon,beta,gamma);
 			}
 			else if (!type.compare("ResidualHelmholtzNonAnalytic"))
 			{
@@ -64,11 +64,11 @@ protected:
 				std::vector<double> B = cpjson::get_double_array(contribution["B"]);
 				std::vector<double> C = cpjson::get_double_array(contribution["C"]);
 				std::vector<double> D = cpjson::get_double_array(contribution["D"]);
-				EOS.alphar_vector.push_back(new ResidualHelmholtzNonAnalytic(n,a,b,beta,A,B,C,D));
+				EOS.alphar.NonAnalytic = ResidualHelmholtzNonAnalytic(n,a,b,beta,A,B,C,D);
 			}
 			else
 			{
-				throw ValueError("Unsupported alphar type");
+				throw ValueError(format("Unsupported Residual helmholtz type: ",type.c_str()));
 			}
 		}
 	};
@@ -76,32 +76,34 @@ protected:
 	/// Parse the contributions to the ideal-gas Helmholtz energy
 	void parse_alpha0(rapidjson::Value &alpha0, EquationOfState &EOS)
 	{
-		EOS.alpha0_vector.push_back(new ResidualHelmholtzPower());
+		//EOS.alpha0_vector.push_back(new ResidualHelmholtzPower());
 	};
 
 	/// Parse the Equation of state JSON entry
 	void parse_EOS(rapidjson::Value &EOS_json, CoolPropFluid &fluid)
 	{
-		EquationOfState EOS;
+        EquationOfState E;
+        fluid.EOSVector.push_back(E);
+
+        EquationOfState &EOS = fluid.EOSVector.at(fluid.EOSVector.size()-1);
 
 		// Universal gas constant [J/mol/K]
 		EOS.R_u = cpjson::get_double(EOS_json,"gas_constant");
         EOS.molar_mass = cpjson::get_double(EOS_json,"molar_mass");
 
         rapidjson::Value &reducing_state = EOS_json["reducing_state"];
+        
         // Reducing state
-        EOS.reduce.T = reducing_state["T"].GetDouble();
-        EOS.reduce.rhomolar = reducing_state["rhomolar"].GetDouble();
-        EOS.reduce.p = reducing_state["p"].GetDouble();
+        EOS.reduce.T = cpjson::get_double(reducing_state,"T");
+        EOS.reduce.rhomolar = cpjson::get_double(reducing_state,"rhomolar");
+        EOS.reduce.p = cpjson::get_double(reducing_state,"p");
 		
 		parse_alphar(EOS_json["alphar"], EOS);
 		parse_alpha0(EOS_json["alpha0"], EOS);
 		
 		// Validate the equation of state that was just created
 		EOS.validate();
-
-		// TODO: Get reducing state
-		fluid.EOSVector.push_back(EOS);
+		
 	}
 
 	/// Parse the list of possible equations of state
@@ -123,6 +125,15 @@ protected:
 	{
 	};
 
+    /// Parse the critical state for the given EOS
+	void parse_ancillaries(rapidjson::Value &ancillaries, CoolPropFluid & fluid)
+	{
+        if (!ancillaries.HasMember("p") || !ancillaries.HasMember("rhoL") || !ancillaries.HasMember("rhoV")){throw ValueError("Ancillary curves are missing");};
+        fluid.ancillaries.p = AncillaryFunction(ancillaries["p"]);
+        fluid.ancillaries.rhoL = AncillaryFunction(ancillaries["rhoL"]);
+        fluid.ancillaries.rhoV = AncillaryFunction(ancillaries["rhoV"]);
+	};
+
 	/// Validate the fluid file that was just constructed
 	void validate(CoolPropFluid & fluid)
 	{
@@ -131,6 +142,7 @@ protected:
 		assert(fluid.name.length() > 0);
 	}
 public:
+    
 	// Default constructor;
 	JSONFluidLibrary(){
 		_is_empty = true;
@@ -148,8 +160,15 @@ public:
 	void add_one(rapidjson::Value &fluid_json)
 	{
 		_is_empty = false;
+        
+        // Get the next index for this fluid
+        std::size_t index = fluid_map.size();
+
+        // Add index->fluid mapping
+		fluid_map[index] = CoolPropFluid();
+
 		// Create an instance of the fluid
-		CoolPropFluid fluid;
+		CoolPropFluid &fluid = fluid_map[index];
 
 		// Fluid name
 		fluid.name = fluid_json["NAME"].GetString();
@@ -164,14 +183,12 @@ public:
 
 		// Validate the fluid
 		validate(fluid);
+
+        // Ancillaries
+        if (!fluid_json.HasMember("ANCILLARIES")){throw ValueError(format("Ancillary curves are missing for fluid [%s]",fluid.name.c_str()));};
+        parse_ancillaries(fluid_json["ANCILLARIES"],fluid);
 		
 		// If the fluid is ok...
-
-		// Get the next index for this fluid
-		long index = fluid_map.size();
-
-		// Add index->fluid mapping
-		fluid_map[index] = fluid;
 
 		// Add CAS->index mapping
 		string_to_index_map[fluid.CAS] = index;
@@ -186,7 +203,7 @@ public:
 	*/
 	CoolPropFluid& get(std::string key)
 	{
-		std::map<std::string, long>::iterator it;
+		std::map<std::string, std::size_t>::iterator it;
 		// Try to find it
 		it = string_to_index_map.find(key);
 		// If it is found
@@ -201,9 +218,9 @@ public:
 	/**
 	@param key The index of the fluid in the map
 	*/
-	CoolPropFluid& get(long key)
+	CoolPropFluid& get(std::size_t key)
 	{
-		std::map<long,CoolPropFluid>::iterator it;
+		std::map<std::size_t,CoolPropFluid>::iterator it;
 		// Try to find it
 		it = fluid_map.find(key);
 		// If it is found
@@ -214,6 +231,7 @@ public:
 			throw ValueError(format("key [%d] was not found in JSONFluidLibrary",key));
 		}
 	};
+    //std::vector<BaseHelmholtzTerm*> *ar;
 };
 
 /// Get a reference to the library instance

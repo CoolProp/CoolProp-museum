@@ -485,7 +485,7 @@ void REFPROPMixtureBackend::set_REFPROP_fluids(const std::vector<std::string> &f
 	char component_string[10000], herr[errormessagelength];
 	std::string components_joined = strjoin(fluid_names,"|");
 	std::string fdPath = get_REFPROP_fluid_path();
-	long N = fluid_names.size();
+	long N = static_cast<long>(fluid_names.size());
 
 	assert(N < 20);
 

@@ -29,7 +29,7 @@ AbstractState * AbstractState::factory(std::string fluid_string)
         std::string fluids = fluid_string.substr(5,fluid_string.size()-5);
 
         if (fluids.find('|') == -1)
-        {	
+        {
             return new HelmholtzEOSBackend(&(get_library().get("Water")));
         }
         else
@@ -71,7 +71,7 @@ bool AbstractState::clear() {
     // Reset all instances of CachedElement and overwrite
     // the internal double values with -_HUGE
     this->_fluid_type = FLUID_TYPE_UNDEFINED;
-    this->_phase = iUnknown;
+    this->_phase = iphase_unknown;
     this->_forceSinglePhase = false;
     this->_forceTwoPhase = false;
 

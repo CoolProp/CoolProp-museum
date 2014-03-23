@@ -17,10 +17,12 @@ namespace CoolProp {
 class HelmholtzEOSMixtureBackend : public AbstractState  {
 protected:
     std::vector<CoolPropFluid*> components; ///< The components that are in use
+    
     bool is_pure_or_pseudopure; ///< A flag for whether the substance is a pure or pseudo-pure fluid (true) or a mixture (false)
     std::vector<double> mole_fractions; ///< The mole fractions of the components
     std::vector<double> mole_fractions_liq, ///< The mole fractions of the saturated liquid 
                         mole_fractions_vap; ///< The mole fractions of the saturated vapor
+    SimpleState _crit;
 public:
     HelmholtzEOSMixtureBackend(){};
     HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components);
@@ -50,6 +52,18 @@ public:
     double calc_molar_mass(void);
     double calc_gas_constant(void);
     void calc_reducing_state(void);
+    void calc_pressure(void);
+
+    // ***************************************************************
+    // *************  PHASE DETERMINATION ROUTINES  ******************
+    // ***************************************************************
+    void DmolarT_phase_determination();
+
+    // ***************************************************************
+    // *******************  FLASH ROUTINES  **************************
+    // ***************************************************************
+    void DmolarT_flash();
+    
 };
 
 } /* namespace CoolProp */

@@ -35,20 +35,12 @@ void HelmholtzEOSMixtureBackend::set_components(std::vector<CoolPropFluid*> comp
     if (components.size() == 1){
         is_pure_or_pseudopure = true;
         mole_fractions = std::vector<double>(1,1);
+        c = components[0];
     }
     else{
         is_pure_or_pseudopure = false;
     }
-
-    // Set the mole-fraction weighted gas constant for the mixture 
-    // (or the pure/pseudo-pure fluid) if it hasn't been set yet
-    gas_constant();
-
-    // Set the cache value for the molar mass if it hasn't been set yet
-    molar_mass();
-
-    // Reducing state
-    calc_reducing_state();
+    
 }
 double HelmholtzEOSMixtureBackend::calc_gas_constant(void)
 {
@@ -72,21 +64,24 @@ double HelmholtzEOSMixtureBackend::calc_molar_mass(void)
 
 void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double value2 )
 {
+    clear();
+
+    // Set the mole-fraction weighted gas constant for the mixture 
+    // (or the pure/pseudo-pure fluid) if it hasn't been set yet
+    gas_constant();
+
+    // Set the cache value for the molar mass if it hasn't been set yet
+    molar_mass();
+
+    // Reducing state
+    calc_reducing_state();
+    
     switch(input_pair)
     {
         case DmolarT_INPUTS:
         {
             _rhomolar = value1; _T = value2;
-
-            _delta = _rhomolar/_reducing.rhomolar;
-            _tau = _reducing.T/_T;
-
-            // Calculate derivative if needed
-            dalphar_dDelta();
-
-            // Get pressure
-            _p = _rhomolar*(double)_gas_constant*_T*(1+_delta*(double)_dalphar_dDelta);
-
+            DmolarT_flash();
             break;
         }
         case DmassT_INPUTS:
@@ -96,10 +91,94 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
             return;
         }
     }
-    
-    throw std::exception();
+    // Check the values that must always be set
+    if (!ValidNumber(_p)){ throw ValueError("p is not a valid number");}
+    if (!ValidNumber(_T)){ throw ValueError("T is not a valid number");}
+    if (!ValidNumber(_rhomolar)){ throw ValueError("rhomolar is not a valid number");}
+    if (!ValidNumber(_Q)){ throw ValueError("Q is not a valid number");}
 }
+void HelmholtzEOSMixtureBackend::DmolarT_phase_determination()
+{
+    if (_T < _crit.T)
+	{
+		// Start to think about the saturation stuff
+		// First try to use the ancillary equations if you are far enough away
+		// Ancillary equations are good to within 1% in pressure in general
+		// Some industrial fluids might not be within 3%
+        if (_rhomolar < 0.95*c->ancillaries.rhoV.evaluate(_T)){
+            this->_phase = iphase_gas; return;
+		}
+        else if (_rhomolar > 1.05*c->ancillaries.rhoL.evaluate(_T)){
+			this->_phase = iphase_liquid; return;
+		}
+		else{
+			//// Actually have to use saturation information sadly
+			//// For the given temperature, find the saturation state
+			//// Run the saturation routines to determine the saturation densities and pressures
+			//// Use the passed in variables to save calls to the saturation routine so the values can be re-used again
+			//saturation_T(T, enabled_TTSE_LUT, pL, pV, rhoL, rhoV);
+			//double Q = (1/rho-1/rhoL)/(1/rhoV-1/rhoL);
+			//if (Q < -100*DBL_EPSILON){
+			//	return iLiquid;
+			//}
+			//else if (Q > 1+100*DBL_EPSILON){
+			//	return iGas;
+			//}
+			//else{
+			//	return iTwoPhase;
+			//}
+		}
+	}
+	// Now check the states above the critical temperature.
 
+    // Calculate the pressure if it is not already cached.
+	calc_pressure();
+
+    if (_T > _crit.T && _p > _crit.p){
+        this->_phase = iphase_supercritical; return;
+	}
+	else if (_T > _crit.T && _p < _crit.p){
+		this->_phase = iphase_gas; return;
+	}
+	else if (_T < _crit.T && _p > _crit.p){
+		this->_phase = iphase_liquid; return;
+	}
+	/*else if (p < params.ptriple){
+		return iphase_gas;
+	}*/
+	else{
+		throw ValueError(format("phase cannot be determined"));
+	}
+}
+void HelmholtzEOSMixtureBackend::DmolarT_flash()
+{
+    // Find the phase, while updating all internal variables possible
+    DmolarT_phase_determination();
+
+    if (!isHomogeneousPhase())
+    {
+        throw ValueError("twophase not implemented yet");
+    }
+    else
+    {
+        if (!ValidNumber(_p))
+        {
+            calc_pressure();
+            _Q = -1;
+        }
+    }
+}
+void HelmholtzEOSMixtureBackend::calc_pressure(void)
+{
+    _delta = _rhomolar/_reducing.rhomolar;
+    _tau = _reducing.T/_T;
+    
+    // Calculate derivative if needed
+    dalphar_dDelta();
+
+    // Get pressure
+    _p = _rhomolar*(double)_gas_constant*_T*(1+_delta*(double)_dalphar_dDelta);
+}
 void HelmholtzEOSMixtureBackend::calc_reducing_state(void)
 {
     if (is_pure_or_pseudopure){
@@ -108,16 +187,12 @@ void HelmholtzEOSMixtureBackend::calc_reducing_state(void)
     else{
         throw ValueError();
     }
+    _crit = _reducing;
 }
 
 double HelmholtzEOSMixtureBackend::calc_dalphar_dDelta(void)
 {
-    if (is_pure_or_pseudopure){
-        return components[0]->dalphar_dDelta(_tau, _delta);
-    }
-    else{
-        throw ValueError();
-    }
+    return c->EOSVector[0].dalphar_dDelta(_tau, _delta);
 }
 
 } /* namespace CoolProp */

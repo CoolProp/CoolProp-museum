@@ -13,6 +13,8 @@
 #include "DataStructures.h"
 #include "l10n/english.h"
 
+#include "Fluids/CoolPropFluid.h"
+
 namespace CoolProp {
 
 //! The mother of all state classes
@@ -51,12 +53,12 @@ protected:
         return true;
     }
 
-    bool isSinglePhase(void){
-        return (this->_phase==iLiquid || this->_phase==iGas);
+    bool isHomogeneousPhase(void){
+        return (this->_phase==iphase_liquid || this->_phase==iphase_gas || this->_phase == iphase_supercritical);
     }
 
     bool isTwoPhase(void){
-        return (this->_phase==iTwoPhase);
+        return (this->_phase==iphase_twophase);
     }
 
     bool checkTwoPhase(void){
@@ -66,7 +68,7 @@ protected:
     }
 
     bool checkSinglePhase(void){
-        if (!this->isSinglePhase()||!_forceSinglePhase){throw ValueError(ERR_NOT_A_TWO_PHASE_FUNCTION);}
+        if (!this->isHomogeneousPhase()||!_forceSinglePhase){throw ValueError(ERR_NOT_A_TWO_PHASE_FUNCTION);}
         return true;
     }
 
@@ -80,7 +82,7 @@ protected:
     CachedElement _gas_constant;
 
     /// Bulk values
-    double _rhomolar, _T, _p, _Q, _R, _tau, _delta;
+    double _rhomolar, _T, _p, _Q, _R;
 
     /// Transport properties
     CachedElement _viscosity, _conductivity, _surface_tension;
@@ -121,9 +123,14 @@ protected:
     virtual double calc_gas_constant(void){throw NotImplementedError("calc_gas_constant is not implemented for this backend");};
     virtual double calc_dalphar_dDelta(void){throw NotImplementedError("calc_dalphar_dDelta is not implemented for this backend");};
     virtual void calc_reducing_state(void){throw NotImplementedError("calc_reducing_state is not implemented for this backend");};
+    virtual void calc_pressure(void){throw NotImplementedError("calc_pressure is not implemented for this backend");};
 public:
     AbstractState();
     virtual ~AbstractState();
+
+    CoolPropFluid * c;
+    double _tau, _delta;
+    
     
     /// A factory function to return a pointer to a new-allocated instance of one of the backends.
     /**
