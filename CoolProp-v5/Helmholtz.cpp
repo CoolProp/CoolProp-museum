@@ -2,43 +2,6 @@
 #include "Helmholtz.h"
 
 namespace CoolProp{
-////std::vector<double> ResidualHelmholtzTerm::dDelta(std::vector<double> tau, std::vector<double> delta)
-////{
-////    std::vector<double> out = tau;
-////    for (int i = 0; i < (int)tau.size(); i++)
-////    {
-////        out[i] = dDelta(tau[i],delta[i]);
-////    }
-////    return out;
-////}
-////std::vector<double> ResidualHelmholtzTerm::dDelta2(std::vector<double> tau, std::vector<double> delta)
-////{
-////    std::vector<double> out = tau;
-////    for (int i = 0; i < (int)tau.size(); i++)
-////    {
-////        out[i] = dDelta2(tau[i],delta[i]);
-////    }
-////    return out;
-////}
-////std::vector<double> ResidualHelmholtzTerm::dTau2(std::vector<double> tau, std::vector<double> delta)
-////{
-////    std::vector<double> out = tau;
-////    for (int i = 0; i < (int)tau.size(); i++)
-////    {
-////        out[i] = dTau2(tau[i],delta[i]);
-////    }
-////    return out;
-////}
-////std::vector<double> ResidualHelmholtzTerm::dDelta_dTau(std::vector<double> tau, std::vector<double> delta)
-////{
-////    std::vector<double> out = tau;
-////    for (int i = 0; i < (int)tau.size(); i++)
-////    {
-////        out[i] = dDelta_dTau(tau[i],delta[i]);
-////    }
-////    return out;
-////}
-//
 
 void ResidualHelmholtzPower::to_json(rapidjson::Value &el, rapidjson::Document &doc)
 {
@@ -60,7 +23,7 @@ void ResidualHelmholtzPower::to_json(rapidjson::Value &el, rapidjson::Document &
 long double ResidualHelmholtzPower::base(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta);
+    long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -78,7 +41,7 @@ long double ResidualHelmholtzPower::base(const long double &tau, const long doub
 long double ResidualHelmholtzPower::dDelta(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta);
+    long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -97,7 +60,7 @@ long double ResidualHelmholtzPower::dDelta(const long double &tau, const long do
 long double ResidualHelmholtzPower::dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta);
+    long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -116,7 +79,7 @@ long double ResidualHelmholtzPower::dTau(const long double &tau, const long doub
 long double ResidualHelmholtzPower::dDelta2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -135,7 +98,7 @@ long double ResidualHelmholtzPower::dDelta2(const long double &tau, const long d
 long double ResidualHelmholtzPower::dDelta_dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -154,7 +117,7 @@ long double ResidualHelmholtzPower::dDelta_dTau(const long double &tau, const lo
 long double ResidualHelmholtzPower::dTau2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -173,7 +136,7 @@ long double ResidualHelmholtzPower::dTau2(const long double &tau, const long dou
 long double ResidualHelmholtzPower::dDelta3(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -182,7 +145,7 @@ long double ResidualHelmholtzPower::dDelta3(const long double &tau, const long d
         if (li>0)
         {
             pow_delta_li = pow(delta, li);
-            double bracket = (di*(di-1)*(di-2)+pow_delta_li*(-2*li+6*di*li-3*di*di*li-3*di*li*li+3*li*li-li*li*li)+pow_delta_li*pow_delta_li*(3*di*li*li-3*li*li+3*li*li*li)-li*li*li*pow_delta_li*pow_delta_li*pow_delta_li);
+            long double bracket = (di*(di-1)*(di-2)+pow_delta_li*(-2*li+6*di*li-3*di*di*li-3*di*li*li+3*li*li-li*li*li)+pow_delta_li*pow_delta_li*(3*di*li*li-3*li*li+3*li*li*li)-li*li*li*pow_delta_li*pow_delta_li*pow_delta_li);
             s[i] = ni*bracket*exp(ti*log_tau+(di-3)*log_delta-pow_delta_li);
         }
         else
@@ -193,7 +156,7 @@ long double ResidualHelmholtzPower::dDelta3(const long double &tau, const long d
 long double ResidualHelmholtzPower::dDelta2_dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -212,7 +175,7 @@ long double ResidualHelmholtzPower::dDelta2_dTau(const long double &tau, const l
 long double ResidualHelmholtzPower::dDelta_dTau2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -231,7 +194,7 @@ long double ResidualHelmholtzPower::dDelta_dTau2(const long double &tau, const l
 long double ResidualHelmholtzPower::dTau3(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta);
+    long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzPowerElement &el = elements[i];
@@ -269,7 +232,7 @@ void ResidualHelmholtzExponential::to_json(rapidjson::Value &el, rapidjson::Docu
 long double ResidualHelmholtzExponential::base(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta);
+    long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -281,7 +244,7 @@ long double ResidualHelmholtzExponential::base(const long double &tau, const lon
 long double ResidualHelmholtzExponential::dDelta(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -294,7 +257,7 @@ long double ResidualHelmholtzExponential::dDelta(const long double &tau, const l
 long double ResidualHelmholtzExponential::dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -308,7 +271,7 @@ long double ResidualHelmholtzExponential::dTau(const long double &tau, const lon
 long double ResidualHelmholtzExponential::dDelta2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -323,7 +286,7 @@ long double ResidualHelmholtzExponential::dDelta2(const long double &tau, const 
 long double ResidualHelmholtzExponential::dDelta_dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -336,7 +299,7 @@ long double ResidualHelmholtzExponential::dDelta_dTau(const long double &tau, co
 long double ResidualHelmholtzExponential::dTau2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -349,7 +312,7 @@ long double ResidualHelmholtzExponential::dTau2(const long double &tau, const lo
 long double ResidualHelmholtzExponential::dDelta3(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -368,7 +331,7 @@ long double ResidualHelmholtzExponential::dDelta3(const long double &tau, const 
 long double ResidualHelmholtzExponential::dDelta2_dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -383,7 +346,7 @@ long double ResidualHelmholtzExponential::dDelta2_dTau(const long double &tau, c
 long double ResidualHelmholtzExponential::dDelta_dTau2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -396,7 +359,7 @@ long double ResidualHelmholtzExponential::dDelta_dTau2(const long double &tau, c
 long double ResidualHelmholtzExponential::dTau3(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
         ResidualHelmholtzExponentialElement &el = elements[i];
@@ -436,11 +399,11 @@ void ResidualHelmholtzGaussian::to_json(rapidjson::Value &el, rapidjson::Documen
 long double ResidualHelmholtzGaussian::base(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(delta,el.d)*pow(tau,el.t)*psi;
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -448,11 +411,11 @@ long double ResidualHelmholtzGaussian::base(const long double &tau, const long d
 long double ResidualHelmholtzGaussian::dDelta(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(delta,el.d)*pow(tau,el.t)*psi*(el.d/delta-2.0*el.eta*(delta-el.epsilon));
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -460,11 +423,11 @@ long double ResidualHelmholtzGaussian::dDelta(const long double &tau, const long
 long double ResidualHelmholtzGaussian::dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(delta,el.d)*pow(tau,el.t)*psi*(el.t/tau-2.0*el.beta*(tau-el.gamma));
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -472,11 +435,11 @@ long double ResidualHelmholtzGaussian::dTau(const long double &tau, const long d
 long double ResidualHelmholtzGaussian::dDelta2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(tau,el.t)*psi*(-2.0*el.eta*pow(delta,el.d)+4.0*pow(el.eta,2)*pow(delta,el.d)*pow(delta-el.epsilon,2)-4.0*el.d*el.eta*pow(delta,el.d-1)*(delta-el.epsilon)+el.d*(el.d-1.0)*pow(delta,el.d-2));
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -484,11 +447,11 @@ long double ResidualHelmholtzGaussian::dDelta2(const long double &tau, const lon
 long double ResidualHelmholtzGaussian::dDelta_dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(delta,el.d)*pow(tau,el.t)*psi*(el.d/delta-2.0*el.eta*(delta-el.epsilon))*(el.t/tau-2.0*el.beta*(tau-el.gamma));
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -496,11 +459,11 @@ long double ResidualHelmholtzGaussian::dDelta_dTau(const long double &tau, const
 long double ResidualHelmholtzGaussian::dTau2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(delta,el.d)*pow(tau,el.t)*psi*(pow(el.t/tau-2.0*el.beta*(tau-el.gamma),2)-el.t/pow(tau,2)-2.0*el.beta);
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -508,12 +471,12 @@ long double ResidualHelmholtzGaussian::dTau2(const long double &tau, const long 
 long double ResidualHelmholtzGaussian::dDelta3(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
-        double bracket = pow(el.t/tau-2.0*el.beta*(tau-el.gamma),2)-el.t/pow(tau,2)-2.0*el.beta;
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double bracket = pow(el.t/tau-2.0*el.beta*(tau-el.gamma),2)-el.t/pow(tau,2)-2.0*el.beta;
         s[i] = el.n*pow(tau,el.t)*pow(delta,el.d-3)*psi*bracket;
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -521,11 +484,11 @@ long double ResidualHelmholtzGaussian::dDelta3(const long double &tau, const lon
 long double ResidualHelmholtzGaussian::dDelta2_dTau(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(tau,el.t)*psi*(el.t/tau-2.0*el.beta*(tau-el.gamma))*(-2.0*el.eta*pow(delta,el.d)+4.0*pow(el.eta,2)*pow(delta,el.d)*pow(delta-el.epsilon,2)-4.0*el.d*el.eta*pow(delta,el.d-1)*(delta-el.epsilon)+el.d*(el.d-1.0)*pow(delta,el.d-2));
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -533,11 +496,11 @@ long double ResidualHelmholtzGaussian::dDelta2_dTau(const long double &tau, cons
 long double ResidualHelmholtzGaussian::dDelta_dTau2(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(delta,el.d)*pow(tau,el.t)*psi*(el.d/delta-2.0*el.eta*(delta-el.epsilon))*(pow(el.t-2.0*el.beta*tau*(tau-el.gamma),2)-el.t-2*el.beta*tau*tau)/tau/tau;
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -545,15 +508,15 @@ long double ResidualHelmholtzGaussian::dDelta_dTau2(const long double &tau, cons
 long double ResidualHelmholtzGaussian::dTau3(const long double &tau, const long double &delta)
 {
     if (N==0){return 0.0;}
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
-        double dpsi_dTau = exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2))*(-2*el.beta*(tau-el.gamma));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double dpsi_dTau = exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2))*(-2*el.beta*(tau-el.gamma));
 
-        double bracket = pow(el.t/tau-2.0*el.beta*(tau-el.gamma),2)-el.t/pow(tau,2)-2.0*el.beta;
-        double dbracket_dTau = 2*(el.t/tau-2.0*el.beta*(tau-el.gamma))*(-el.t/tau/tau-2*el.beta)+2*el.t/pow(tau,3);
+        long double bracket = pow(el.t/tau-2.0*el.beta*(tau-el.gamma),2)-el.t/pow(tau,2)-2.0*el.beta;
+        long double dbracket_dTau = 2*(el.t/tau-2.0*el.beta*(tau-el.gamma))*(-el.t/tau/tau-2*el.beta)+2*el.t/pow(tau,3);
         s[i] = el.n*pow(delta,el.d)*(el.t*pow(tau,el.t-1)*psi*bracket+pow(tau,el.t)*dpsi_dTau*bracket+pow(tau,el.t)*psi*dbracket_dTau);
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -586,66 +549,66 @@ void ResidualHelmholtzGERG2008Gaussian::to_json(rapidjson::Value &el, rapidjson:
 }
 long double ResidualHelmholtzGERG2008Gaussian::base(const long double &tau, const long double &delta)
 {
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(tau,el.t)*pow(delta,el.d)*psi;
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
 };
 long double ResidualHelmholtzGERG2008Gaussian::dDelta(const long double &tau, const long double &delta)
 {
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(tau,el.t)*pow(delta,el.d)*psi*(el.d/delta-2*el.eta*(delta-el.epsilon)-el.beta);
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
 };
 long double ResidualHelmholtzGERG2008Gaussian::dTau(const long double &tau, const long double &delta)
 {
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*el.t*pow(tau,el.t-1)*pow(delta,el.d)*psi;
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
 };
 long double ResidualHelmholtzGERG2008Gaussian::dDelta2(const long double &tau, const long double &delta)
 {
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*pow(tau,el.t)*pow(delta,el.d)*psi*(pow(el.d/delta-2*el.eta*(delta-el.epsilon)-el.beta,2)-el.d/delta/delta-2*el.eta);
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
 };
 long double ResidualHelmholtzGERG2008Gaussian::dDelta_dTau(const long double &tau, const long double &delta)
 {
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*el.t*pow(tau,el.t-1)*pow(delta,el.d)*psi*(el.d/delta-2*el.eta*(delta-el.epsilon)-el.beta);
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
 };
 long double ResidualHelmholtzGERG2008Gaussian::dTau2(const long double &tau, const long double &delta)
 {
-	double log_tau = log(tau), log_delta = log(delta);
+	long double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
         ResidualHelmholtzGaussianElement &el = elements[i];
-        double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
         s[i] = el.n*el.t*(el.t-1)*pow(tau,el.t-2)*pow(delta,el.d)*psi;
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
@@ -1369,66 +1332,66 @@ long double ResidualHelmholtzSAFTAssociating::X(const long double &delta, const 
 }
 long double ResidualHelmholtzSAFTAssociating::dX_dDeltabar__constdelta(const long double &delta, const long double &Deltabar)
 {
-    double X = this->X(delta,Deltabar);
+    long double X = this->X(delta,Deltabar);
     return -delta*X*X/(2*Deltabar*delta*X+1);
 }
 long double ResidualHelmholtzSAFTAssociating::dX_ddelta__constDeltabar(const long double &delta, const long double &Deltabar)
 {
-    double X = this->X(delta,Deltabar);
+    long double X = this->X(delta,Deltabar);
     return -Deltabar*X*X/(2*Deltabar*delta*X+1);
 }
 long double ResidualHelmholtzSAFTAssociating::dX_dtau(const long double &tau, const long double &delta)
 {
-    double Deltabar = this->Deltabar(tau, delta);
+    long double Deltabar = this->Deltabar(tau, delta);
     return this->dX_dDeltabar__constdelta(delta, Deltabar)*this->dDeltabar_dtau__constdelta(tau, delta);
 }
 long double ResidualHelmholtzSAFTAssociating::dX_ddelta(const long double &tau, const long double &delta)
 {
-    double Deltabar = this->Deltabar(tau, delta);
+    long double Deltabar = this->Deltabar(tau, delta);
     return (this->dX_ddelta__constDeltabar(delta, Deltabar)
            + this->dX_dDeltabar__constdelta(delta, Deltabar)*this->dDeltabar_ddelta__consttau(tau, delta));
 }
 long double ResidualHelmholtzSAFTAssociating::d2X_dtau2(const long double &tau, const long double &delta)
 {
-    double Deltabar = this->Deltabar(tau, delta);
-    double X = this->X(delta, Deltabar);
-    double beta = this->dDeltabar_dtau__constdelta(tau, delta);
-    double d_dXdtau_dbeta = -delta*X*X/(2*Deltabar*delta*X+1);
-    double d_dXdtau_dDeltabar = 2*delta*delta*X*X*X/pow(2*Deltabar*delta*X+1,2)*beta;
-    double d_dXdtau_dX = -2*beta*delta*X*(Deltabar*delta*X+1)/pow(2*Deltabar*delta*X+1,2);
-    double dbeta_dtau = this->d2Deltabar_dtau2__constdelta(tau, delta);
-    double dX_dDeltabar = this->dX_dDeltabar__constdelta(delta, Deltabar);
+    long double Deltabar = this->Deltabar(tau, delta);
+    long double X = this->X(delta, Deltabar);
+    long double beta = this->dDeltabar_dtau__constdelta(tau, delta);
+    long double d_dXdtau_dbeta = -delta*X*X/(2*Deltabar*delta*X+1);
+    long double d_dXdtau_dDeltabar = 2*delta*delta*X*X*X/pow(2*Deltabar*delta*X+1,2)*beta;
+    long double d_dXdtau_dX = -2*beta*delta*X*(Deltabar*delta*X+1)/pow(2*Deltabar*delta*X+1,2);
+    long double dbeta_dtau = this->d2Deltabar_dtau2__constdelta(tau, delta);
+    long double dX_dDeltabar = this->dX_dDeltabar__constdelta(delta, Deltabar);
     return d_dXdtau_dX*dX_dDeltabar*beta+d_dXdtau_dDeltabar*beta+d_dXdtau_dbeta*dbeta_dtau;
 }
 long double ResidualHelmholtzSAFTAssociating::d2X_ddeltadtau(const long double &tau, const long double &delta)
 {
-    double Deltabar = this->Deltabar(tau, delta);
-    double X = this->X(delta, Deltabar);
-    double alpha = this->dDeltabar_ddelta__consttau(tau, delta);
-    double beta = this->dDeltabar_dtau__constdelta(tau, delta);
-    double dalpha_dtau = this->d2Deltabar_ddelta_dtau(tau, delta);
-    double d_dXddelta_dDeltabar = X*X*(2*delta*delta*X*alpha-1)/pow(2*Deltabar*delta*X+1,2);
-    double d_dXddelta_dalpha = -delta*X*X/(2*Deltabar*delta*X+1);
-    double d_dXddelta_dX = -(Deltabar+delta*alpha)*2*(Deltabar*delta*X*X+X)/pow(2*Deltabar*delta*X+1,2);
-    double dX_dDeltabar = this->dX_dDeltabar__constdelta(delta, Deltabar);
+    long double Deltabar = this->Deltabar(tau, delta);
+    long double X = this->X(delta, Deltabar);
+    long double alpha = this->dDeltabar_ddelta__consttau(tau, delta);
+    long double beta = this->dDeltabar_dtau__constdelta(tau, delta);
+    long double dalpha_dtau = this->d2Deltabar_ddelta_dtau(tau, delta);
+    long double d_dXddelta_dDeltabar = X*X*(2*delta*delta*X*alpha-1)/pow(2*Deltabar*delta*X+1,2);
+    long double d_dXddelta_dalpha = -delta*X*X/(2*Deltabar*delta*X+1);
+    long double d_dXddelta_dX = -(Deltabar+delta*alpha)*2*(Deltabar*delta*X*X+X)/pow(2*Deltabar*delta*X+1,2);
+    long double dX_dDeltabar = this->dX_dDeltabar__constdelta(delta, Deltabar);
     return d_dXddelta_dX*dX_dDeltabar*beta+d_dXddelta_dDeltabar*beta+d_dXddelta_dalpha*dalpha_dtau;
 }
 long double ResidualHelmholtzSAFTAssociating::d2X_ddelta2(const long double &tau, const long double &delta)
 {
-    double Deltabar = this->Deltabar(tau, delta);
-    double X = this->X(delta, Deltabar);
-    double alpha = this->dDeltabar_ddelta__consttau(tau, delta);
-    double dalpha_ddelta = this->d2Deltabar_ddelta2__consttau(tau, delta);
+    long double Deltabar = this->Deltabar(tau, delta);
+    long double X = this->X(delta, Deltabar);
+    long double alpha = this->dDeltabar_ddelta__consttau(tau, delta);
+    long double dalpha_ddelta = this->d2Deltabar_ddelta2__consttau(tau, delta);
     
-    double dX_ddelta_constall = X*X*(2*Deltabar*Deltabar*X-alpha)/pow(2*Deltabar*delta*X+1,2);
-    double d_dXddelta_dX = -(Deltabar+delta*alpha)*2*(Deltabar*delta*X*X+X)/pow(2*Deltabar*delta*X+1,2);
-    double d_dXddelta_dDeltabar = X*X*(2*delta*delta*X*alpha-1)/pow(2*Deltabar*delta*X+1,2);
-    double d_dXddelta_dalpha = -delta*X*X/(2*Deltabar*delta*X+1);
+    long double dX_ddelta_constall = X*X*(2*Deltabar*Deltabar*X-alpha)/pow(2*Deltabar*delta*X+1,2);
+    long double d_dXddelta_dX = -(Deltabar+delta*alpha)*2*(Deltabar*delta*X*X+X)/pow(2*Deltabar*delta*X+1,2);
+    long double d_dXddelta_dDeltabar = X*X*(2*delta*delta*X*alpha-1)/pow(2*Deltabar*delta*X+1,2);
+    long double d_dXddelta_dalpha = -delta*X*X/(2*Deltabar*delta*X+1);
     
-    double dX_dDeltabar = this->dX_dDeltabar__constdelta(delta, Deltabar);
-    double dX_ddelta = this->dX_ddelta__constDeltabar(delta, Deltabar);
+    long double dX_dDeltabar = this->dX_dDeltabar__constdelta(delta, Deltabar);
+    long double dX_ddelta = this->dX_ddelta__constDeltabar(delta, Deltabar);
 
-    double val = (dX_ddelta_constall
+    long double val = (dX_ddelta_constall
             + d_dXddelta_dX*dX_ddelta
             + d_dXddelta_dX*dX_dDeltabar*alpha
             + d_dXddelta_dDeltabar*alpha
@@ -1437,54 +1400,54 @@ long double ResidualHelmholtzSAFTAssociating::d2X_ddelta2(const long double &tau
 }   
 long double ResidualHelmholtzSAFTAssociating::d3X_dtau3(const long double &tau, const long double &delta)
 {
-    double Delta = this->Deltabar(tau, delta);
-    double X = this->X(delta, Delta);
-    double dX_dDelta = this->dX_dDeltabar__constdelta(delta, Delta);
-    double Delta_t = this->dDeltabar_dtau__constdelta(tau, delta);
-    double Delta_tt = this->d2Deltabar_dtau2__constdelta(tau, delta);
-    double Delta_ttt = this->d3Deltabar_dtau3__constdelta(tau, delta);
-    double dXtt_dX = 2*X*delta*(-6*Delta*pow(Delta_t, 2)*pow(X, 2)*pow(delta, 2)*(Delta*X*delta + 1) + 3*pow(Delta_t, 2)*X*delta*(2*Delta*X*delta + 1) - Delta_tt*pow(2*Delta*X*delta + 1, 3) + X*delta*(Delta*Delta_tt + 3*pow(Delta_t, 2))*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
-    double dXtt_dDelta = 2*pow(X, 3)*pow(delta, 2)*(-6*pow(Delta_t, 2)*X*delta*(Delta*X*delta + 1) - 3*pow(Delta_t, 2)*X*delta*(2*Delta*X*delta + 1) + Delta_tt*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
-    double dXtt_dDelta_t = 4*Delta_t*pow(X, 3)*pow(delta, 2)*(3*Delta*X*delta + 2)/pow(2*Delta*X*delta + 1, 3);
-    double dXtt_dDelta_tt = -pow(X, 2)*delta/(2*Delta*X*delta + 1);
+    long double Delta = this->Deltabar(tau, delta);
+    long double X = this->X(delta, Delta);
+    long double dX_dDelta = this->dX_dDeltabar__constdelta(delta, Delta);
+    long double Delta_t = this->dDeltabar_dtau__constdelta(tau, delta);
+    long double Delta_tt = this->d2Deltabar_dtau2__constdelta(tau, delta);
+    long double Delta_ttt = this->d3Deltabar_dtau3__constdelta(tau, delta);
+    long double dXtt_dX = 2*X*delta*(-6*Delta*pow(Delta_t, 2)*pow(X, 2)*pow(delta, 2)*(Delta*X*delta + 1) + 3*pow(Delta_t, 2)*X*delta*(2*Delta*X*delta + 1) - Delta_tt*pow(2*Delta*X*delta + 1, 3) + X*delta*(Delta*Delta_tt + 3*pow(Delta_t, 2))*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
+    long double dXtt_dDelta = 2*pow(X, 3)*pow(delta, 2)*(-6*pow(Delta_t, 2)*X*delta*(Delta*X*delta + 1) - 3*pow(Delta_t, 2)*X*delta*(2*Delta*X*delta + 1) + Delta_tt*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
+    long double dXtt_dDelta_t = 4*Delta_t*pow(X, 3)*pow(delta, 2)*(3*Delta*X*delta + 2)/pow(2*Delta*X*delta + 1, 3);
+    long double dXtt_dDelta_tt = -pow(X, 2)*delta/(2*Delta*X*delta + 1);
     return dXtt_dX*dX_dDelta*Delta_t+dXtt_dDelta*Delta_t + dXtt_dDelta_t*Delta_tt + dXtt_dDelta_tt*Delta_ttt;
 }
 long double ResidualHelmholtzSAFTAssociating::d3X_ddeltadtau2(const long double &tau, const long double &delta)
 {
-    double Delta = this->Deltabar(tau, delta);
-    double X = this->X(delta, Delta);
-    double dX_ddelta = this->dX_ddelta__constDeltabar(delta, Delta);
-    double dX_dDelta = this->dX_dDeltabar__constdelta(delta, Delta);
-    double Delta_t = this->dDeltabar_dtau__constdelta(tau, delta);
-    double Delta_d = this->dDeltabar_ddelta__consttau(tau, delta);
-    double Delta_dt = this->d2Deltabar_ddelta_dtau(tau, delta);
-    double Delta_tt = this->d2Deltabar_dtau2__constdelta(tau, delta);
-    double Delta_dtt = this->d3Deltabar_ddelta_dtau2(tau, delta);
-    double dXtt_ddelta = pow(X, 2)*(-12*Delta*pow(Delta_t, 2)*pow(X, 2)*pow(delta, 2)*(Delta*X*delta + 1) + 2*pow(Delta_t, 2)*X*delta*(-Delta*X*delta + 2)*(2*Delta*X*delta + 1) - Delta_tt*pow(2*Delta*X*delta + 1, 3) + 2*X*delta*(Delta*Delta_tt + 2*pow(Delta_t, 2))*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
-    double dXtt_dX = 2*X*delta*(-6*Delta*pow(Delta_t, 2)*pow(X, 2)*pow(delta, 2)*(Delta*X*delta + 1) + 3*pow(Delta_t, 2)*X*delta*(2*Delta*X*delta + 1) - Delta_tt*pow(2*Delta*X*delta + 1, 3) + X*delta*(Delta*Delta_tt + 3*pow(Delta_t, 2))*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
-    double dXtt_dDelta = 2*pow(X, 3)*pow(delta, 2)*(-6*pow(Delta_t, 2)*X*delta*(Delta*X*delta + 1) - 3*pow(Delta_t, 2)*X*delta*(2*Delta*X*delta + 1) + Delta_tt*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
-    double dXtt_dDelta_t = 4*Delta_t*pow(X, 3)*pow(delta, 2)*(3*Delta*X*delta + 2)/pow(2*Delta*X*delta + 1, 3);
-    double dXtt_dDelta_tt = -pow(X, 2)*delta/(2*Delta*X*delta + 1);
+    long double Delta = this->Deltabar(tau, delta);
+    long double X = this->X(delta, Delta);
+    long double dX_ddelta = this->dX_ddelta__constDeltabar(delta, Delta);
+    long double dX_dDelta = this->dX_dDeltabar__constdelta(delta, Delta);
+    long double Delta_t = this->dDeltabar_dtau__constdelta(tau, delta);
+    long double Delta_d = this->dDeltabar_ddelta__consttau(tau, delta);
+    long double Delta_dt = this->d2Deltabar_ddelta_dtau(tau, delta);
+    long double Delta_tt = this->d2Deltabar_dtau2__constdelta(tau, delta);
+    long double Delta_dtt = this->d3Deltabar_ddelta_dtau2(tau, delta);
+    long double dXtt_ddelta = pow(X, 2)*(-12*Delta*pow(Delta_t, 2)*pow(X, 2)*pow(delta, 2)*(Delta*X*delta + 1) + 2*pow(Delta_t, 2)*X*delta*(-Delta*X*delta + 2)*(2*Delta*X*delta + 1) - Delta_tt*pow(2*Delta*X*delta + 1, 3) + 2*X*delta*(Delta*Delta_tt + 2*pow(Delta_t, 2))*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
+    long double dXtt_dX = 2*X*delta*(-6*Delta*pow(Delta_t, 2)*pow(X, 2)*pow(delta, 2)*(Delta*X*delta + 1) + 3*pow(Delta_t, 2)*X*delta*(2*Delta*X*delta + 1) - Delta_tt*pow(2*Delta*X*delta + 1, 3) + X*delta*(Delta*Delta_tt + 3*pow(Delta_t, 2))*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
+    long double dXtt_dDelta = 2*pow(X, 3)*pow(delta, 2)*(-6*pow(Delta_t, 2)*X*delta*(Delta*X*delta + 1) - 3*pow(Delta_t, 2)*X*delta*(2*Delta*X*delta + 1) + Delta_tt*pow(2*Delta*X*delta + 1, 2))/pow(2*Delta*X*delta + 1, 4);
+    long double dXtt_dDelta_t = 4*Delta_t*pow(X, 3)*pow(delta, 2)*(3*Delta*X*delta + 2)/pow(2*Delta*X*delta + 1, 3);
+    long double dXtt_dDelta_tt = -pow(X, 2)*delta/(2*Delta*X*delta + 1);
     return dXtt_ddelta + dXtt_dX*dX_ddelta + dXtt_dX*dX_dDelta*Delta_d + dXtt_dDelta*Delta_d + dXtt_dDelta_t*Delta_dt + dXtt_dDelta_tt*Delta_dtt;
 }
 
 long double ResidualHelmholtzSAFTAssociating::d3X_ddelta2dtau(const long double &tau, const long double &delta)
 {
-    double Delta = this->Deltabar(tau, delta);
-    double X = this->X(delta, Delta);
-    double dX_ddelta = this->dX_ddelta__constDeltabar(delta, Delta);
-    double dX_dDelta = this->dX_dDeltabar__constdelta(delta, Delta);
-    double Delta_t = this->dDeltabar_dtau__constdelta(tau, delta);
-    double Delta_d = this->dDeltabar_ddelta__consttau(tau, delta);
-    double Delta_dd = this->d2Deltabar_ddelta2__consttau(tau, delta);
-    double Delta_dt = this->d2Deltabar_ddelta_dtau(tau, delta);
-    double Delta_tt = this->d2Deltabar_dtau2__constdelta(tau, delta);
-    double Delta_ddt = this->d3Deltabar_ddelta2_dtau(tau, delta);
-    double dXdd_dX = 2*X*(-6*Delta*pow(X, 2)*delta*pow(Delta + Delta_d*delta, 2)*(Delta*X*delta + 1) - Delta_dd*delta*pow(2*Delta*X*delta + 1, 3) + 2*X*(2*Delta*X*delta + 1)*(-Delta*Delta_d*delta*(2*Delta_d*X*pow(delta, 2) - 1) - Delta*delta*(2*pow(Delta, 2)*X - Delta_d) + Delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1) + Delta_d*delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1)) + pow(2*Delta*X*delta + 1, 2)*(3*pow(Delta, 2)*X + Delta*Delta_dd*X*pow(delta, 2) + Delta*X*(Delta + Delta_d*delta) + pow(Delta_d, 2)*X*pow(delta, 2) + Delta_d*X*delta*(Delta + Delta_d*delta) + Delta_d*(2*Delta_d*X*pow(delta, 2) - 1) - Delta_d))/pow(2*Delta*X*delta + 1, 4);
-    double dXdd_ddelta = pow(X, 2)*(-24*pow(Delta, 4)*pow(X, 3)*delta - 8*pow(Delta, 3)*Delta_d*pow(X, 3)*pow(delta, 2) - 18*pow(Delta, 3)*pow(X, 2) + 8*pow(Delta, 2)*Delta_d*pow(X, 2)*delta - 4*pow(Delta, 2)*Delta_dd*pow(X, 2)*pow(delta, 2) + 10*Delta*pow(Delta_d, 2)*pow(X, 2)*pow(delta, 2) + 12*Delta*Delta_d*X - 4*Delta*Delta_dd*X*delta + 8*pow(Delta_d, 2)*X*delta - Delta_dd)/(16*pow(Delta, 4)*pow(X, 4)*pow(delta, 4) + 32*pow(Delta, 3)*pow(X, 3)*pow(delta, 3) + 24*pow(Delta, 2)*pow(X, 2)*pow(delta, 2) + 8*Delta*X*delta + 1);
-    double dXdd_dDelta = pow(X, 3)*(-8*pow(Delta, 2)*Delta_d*pow(X, 2)*pow(delta, 3) + 8*pow(Delta, 2)*Delta_dd*pow(X, 2)*pow(delta, 4) + 10*pow(Delta, 2)*X*delta - 24*Delta*pow(Delta_d, 2)*pow(X, 2)*pow(delta, 4) + 8*Delta*Delta_d*X*pow(delta, 2) + 8*Delta*Delta_dd*X*pow(delta, 3) + 8*Delta - 18*pow(Delta_d, 2)*X*pow(delta, 3) + 12*Delta_d*delta + 2*Delta_dd*pow(delta, 2))/(16*pow(Delta, 4)*pow(X, 4)*pow(delta, 4) + 32*pow(Delta, 3)*pow(X, 3)*pow(delta, 3) + 24*pow(Delta, 2)*pow(X, 2)*pow(delta, 2) + 8*Delta*X*delta + 1);
-    double dXdd_dDelta_d = 2*pow(X, 2)*(2*X*delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1) + (2*Delta*X*delta + 1)*(2*Delta_d*X*pow(delta, 2) - 1))/pow(2*Delta*X*delta + 1, 3);
-    double dXdd_dDelta_dd = -pow(X, 2)*delta/(2*Delta*X*delta + 1);
+    long double Delta = this->Deltabar(tau, delta);
+    long double X = this->X(delta, Delta);
+    long double dX_ddelta = this->dX_ddelta__constDeltabar(delta, Delta);
+    long double dX_dDelta = this->dX_dDeltabar__constdelta(delta, Delta);
+    long double Delta_t = this->dDeltabar_dtau__constdelta(tau, delta);
+    long double Delta_d = this->dDeltabar_ddelta__consttau(tau, delta);
+    long double Delta_dd = this->d2Deltabar_ddelta2__consttau(tau, delta);
+    long double Delta_dt = this->d2Deltabar_ddelta_dtau(tau, delta);
+    long double Delta_tt = this->d2Deltabar_dtau2__constdelta(tau, delta);
+    long double Delta_ddt = this->d3Deltabar_ddelta2_dtau(tau, delta);
+    long double dXdd_dX = 2*X*(-6*Delta*pow(X, 2)*delta*pow(Delta + Delta_d*delta, 2)*(Delta*X*delta + 1) - Delta_dd*delta*pow(2*Delta*X*delta + 1, 3) + 2*X*(2*Delta*X*delta + 1)*(-Delta*Delta_d*delta*(2*Delta_d*X*pow(delta, 2) - 1) - Delta*delta*(2*pow(Delta, 2)*X - Delta_d) + Delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1) + Delta_d*delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1)) + pow(2*Delta*X*delta + 1, 2)*(3*pow(Delta, 2)*X + Delta*Delta_dd*X*pow(delta, 2) + Delta*X*(Delta + Delta_d*delta) + pow(Delta_d, 2)*X*pow(delta, 2) + Delta_d*X*delta*(Delta + Delta_d*delta) + Delta_d*(2*Delta_d*X*pow(delta, 2) - 1) - Delta_d))/pow(2*Delta*X*delta + 1, 4);
+    long double dXdd_ddelta = pow(X, 2)*(-24*pow(Delta, 4)*pow(X, 3)*delta - 8*pow(Delta, 3)*Delta_d*pow(X, 3)*pow(delta, 2) - 18*pow(Delta, 3)*pow(X, 2) + 8*pow(Delta, 2)*Delta_d*pow(X, 2)*delta - 4*pow(Delta, 2)*Delta_dd*pow(X, 2)*pow(delta, 2) + 10*Delta*pow(Delta_d, 2)*pow(X, 2)*pow(delta, 2) + 12*Delta*Delta_d*X - 4*Delta*Delta_dd*X*delta + 8*pow(Delta_d, 2)*X*delta - Delta_dd)/(16*pow(Delta, 4)*pow(X, 4)*pow(delta, 4) + 32*pow(Delta, 3)*pow(X, 3)*pow(delta, 3) + 24*pow(Delta, 2)*pow(X, 2)*pow(delta, 2) + 8*Delta*X*delta + 1);
+    long double dXdd_dDelta = pow(X, 3)*(-8*pow(Delta, 2)*Delta_d*pow(X, 2)*pow(delta, 3) + 8*pow(Delta, 2)*Delta_dd*pow(X, 2)*pow(delta, 4) + 10*pow(Delta, 2)*X*delta - 24*Delta*pow(Delta_d, 2)*pow(X, 2)*pow(delta, 4) + 8*Delta*Delta_d*X*pow(delta, 2) + 8*Delta*Delta_dd*X*pow(delta, 3) + 8*Delta - 18*pow(Delta_d, 2)*X*pow(delta, 3) + 12*Delta_d*delta + 2*Delta_dd*pow(delta, 2))/(16*pow(Delta, 4)*pow(X, 4)*pow(delta, 4) + 32*pow(Delta, 3)*pow(X, 3)*pow(delta, 3) + 24*pow(Delta, 2)*pow(X, 2)*pow(delta, 2) + 8*Delta*X*delta + 1);
+    long double dXdd_dDelta_d = 2*pow(X, 2)*(2*X*delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1) + (2*Delta*X*delta + 1)*(2*Delta_d*X*pow(delta, 2) - 1))/pow(2*Delta*X*delta + 1, 3);
+    long double dXdd_dDelta_dd = -pow(X, 2)*delta/(2*Delta*X*delta + 1);
 
     return dXdd_dX*dX_dDelta*Delta_t + dXdd_dDelta*Delta_t + dXdd_dDelta_d*Delta_dt + dXdd_dDelta_dd*Delta_ddt;
 }
@@ -1496,19 +1459,19 @@ double Xdd(double X, double delta, double Delta, double Delta_d, double Delta_dd
 
 long double ResidualHelmholtzSAFTAssociating::d3X_ddelta3(const long double &tau, const long double &delta)
 {
-    double Delta = this->Deltabar(tau, delta);
-    double X = this->X(delta, Delta);
-    double dX_ddelta = this->dX_ddelta__constDeltabar(delta, Delta);
-    double dX_dDelta = this->dX_dDeltabar__constdelta(delta, Delta);
-    double Delta_d = this->dDeltabar_ddelta__consttau(tau, delta);
-    double Delta_dd = this->d2Deltabar_ddelta2__consttau(tau, delta);
-    double Delta_ddd = this->d3Deltabar_ddelta3__consttau(tau, delta);
+    long double Delta = this->Deltabar(tau, delta);
+    long double X = this->X(delta, Delta);
+    long double dX_ddelta = this->dX_ddelta__constDeltabar(delta, Delta);
+    long double dX_dDelta = this->dX_dDeltabar__constdelta(delta, Delta);
+    long double Delta_d = this->dDeltabar_ddelta__consttau(tau, delta);
+    long double Delta_dd = this->d2Deltabar_ddelta2__consttau(tau, delta);
+    long double Delta_ddd = this->d3Deltabar_ddelta3__consttau(tau, delta);
 
-    double dXdd_dX = 2*X*(-6*Delta*pow(X, 2)*delta*pow(Delta + Delta_d*delta, 2)*(Delta*X*delta + 1) - Delta_dd*delta*pow(2*Delta*X*delta + 1, 3) + 2*X*(2*Delta*X*delta + 1)*(-Delta*Delta_d*delta*(2*Delta_d*X*pow(delta, 2) - 1) - Delta*delta*(2*pow(Delta, 2)*X - Delta_d) + Delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1) + Delta_d*delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1)) + pow(2*Delta*X*delta + 1, 2)*(3*pow(Delta, 2)*X + Delta*Delta_dd*X*pow(delta, 2) + Delta*X*(Delta + Delta_d*delta) + pow(Delta_d, 2)*X*pow(delta, 2) + Delta_d*X*delta*(Delta + Delta_d*delta) + Delta_d*(2*Delta_d*X*pow(delta, 2) - 1) - Delta_d))/pow(2*Delta*X*delta + 1, 4);
-    double dXdd_ddelta = pow(X, 2)*(-24*pow(Delta, 4)*pow(X, 3)*delta - 8*pow(Delta, 3)*Delta_d*pow(X, 3)*pow(delta, 2) - 18*pow(Delta, 3)*pow(X, 2) + 8*pow(Delta, 2)*Delta_d*pow(X, 2)*delta - 4*pow(Delta, 2)*Delta_dd*pow(X, 2)*pow(delta, 2) + 10*Delta*pow(Delta_d, 2)*pow(X, 2)*pow(delta, 2) + 12*Delta*Delta_d*X - 4*Delta*Delta_dd*X*delta + 8*pow(Delta_d, 2)*X*delta - Delta_dd)/(16*pow(Delta, 4)*pow(X, 4)*pow(delta, 4) + 32*pow(Delta, 3)*pow(X, 3)*pow(delta, 3) + 24*pow(Delta, 2)*pow(X, 2)*pow(delta, 2) + 8*Delta*X*delta + 1);
-    double dXdd_dDelta = pow(X, 3)*(-8*pow(Delta, 2)*Delta_d*pow(X, 2)*pow(delta, 3) + 8*pow(Delta, 2)*Delta_dd*pow(X, 2)*pow(delta, 4) + 10*pow(Delta, 2)*X*delta - 24*Delta*pow(Delta_d, 2)*pow(X, 2)*pow(delta, 4) + 8*Delta*Delta_d*X*pow(delta, 2) + 8*Delta*Delta_dd*X*pow(delta, 3) + 8*Delta - 18*pow(Delta_d, 2)*X*pow(delta, 3) + 12*Delta_d*delta + 2*Delta_dd*pow(delta, 2))/(16*pow(Delta, 4)*pow(X, 4)*pow(delta, 4) + 32*pow(Delta, 3)*pow(X, 3)*pow(delta, 3) + 24*pow(Delta, 2)*pow(X, 2)*pow(delta, 2) + 8*Delta*X*delta + 1);
-    double dXdd_dDelta_d = 2*pow(X, 2)*(2*X*delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1) + (2*Delta*X*delta + 1)*(2*Delta_d*X*pow(delta, 2) - 1))/pow(2*Delta*X*delta + 1, 3);
-    double dXdd_dDelta_dd = -pow(X, 2)*delta/(2*Delta*X*delta + 1);
+    long double dXdd_dX = 2*X*(-6*Delta*pow(X, 2)*delta*pow(Delta + Delta_d*delta, 2)*(Delta*X*delta + 1) - Delta_dd*delta*pow(2*Delta*X*delta + 1, 3) + 2*X*(2*Delta*X*delta + 1)*(-Delta*Delta_d*delta*(2*Delta_d*X*pow(delta, 2) - 1) - Delta*delta*(2*pow(Delta, 2)*X - Delta_d) + Delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1) + Delta_d*delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1)) + pow(2*Delta*X*delta + 1, 2)*(3*pow(Delta, 2)*X + Delta*Delta_dd*X*pow(delta, 2) + Delta*X*(Delta + Delta_d*delta) + pow(Delta_d, 2)*X*pow(delta, 2) + Delta_d*X*delta*(Delta + Delta_d*delta) + Delta_d*(2*Delta_d*X*pow(delta, 2) - 1) - Delta_d))/pow(2*Delta*X*delta + 1, 4);
+    long double dXdd_ddelta = pow(X, 2)*(-24*pow(Delta, 4)*pow(X, 3)*delta - 8*pow(Delta, 3)*Delta_d*pow(X, 3)*pow(delta, 2) - 18*pow(Delta, 3)*pow(X, 2) + 8*pow(Delta, 2)*Delta_d*pow(X, 2)*delta - 4*pow(Delta, 2)*Delta_dd*pow(X, 2)*pow(delta, 2) + 10*Delta*pow(Delta_d, 2)*pow(X, 2)*pow(delta, 2) + 12*Delta*Delta_d*X - 4*Delta*Delta_dd*X*delta + 8*pow(Delta_d, 2)*X*delta - Delta_dd)/(16*pow(Delta, 4)*pow(X, 4)*pow(delta, 4) + 32*pow(Delta, 3)*pow(X, 3)*pow(delta, 3) + 24*pow(Delta, 2)*pow(X, 2)*pow(delta, 2) + 8*Delta*X*delta + 1);
+    long double dXdd_dDelta = pow(X, 3)*(-8*pow(Delta, 2)*Delta_d*pow(X, 2)*pow(delta, 3) + 8*pow(Delta, 2)*Delta_dd*pow(X, 2)*pow(delta, 4) + 10*pow(Delta, 2)*X*delta - 24*Delta*pow(Delta_d, 2)*pow(X, 2)*pow(delta, 4) + 8*Delta*Delta_d*X*pow(delta, 2) + 8*Delta*Delta_dd*X*pow(delta, 3) + 8*Delta - 18*pow(Delta_d, 2)*X*pow(delta, 3) + 12*Delta_d*delta + 2*Delta_dd*pow(delta, 2))/(16*pow(Delta, 4)*pow(X, 4)*pow(delta, 4) + 32*pow(Delta, 3)*pow(X, 3)*pow(delta, 3) + 24*pow(Delta, 2)*pow(X, 2)*pow(delta, 2) + 8*Delta*X*delta + 1);
+    long double dXdd_dDelta_d = 2*pow(X, 2)*(2*X*delta*(Delta + Delta_d*delta)*(Delta*X*delta + 1) + (2*Delta*X*delta + 1)*(2*Delta_d*X*pow(delta, 2) - 1))/pow(2*Delta*X*delta + 1, 3);
+    long double dXdd_dDelta_dd = -pow(X, 2)*delta/(2*Delta*X*delta + 1);
 
     return dXdd_ddelta + dXdd_dX*(dX_ddelta + dX_dDelta*Delta_d) + dXdd_dDelta*Delta_d + dXdd_dDelta_d*Delta_dd + dXdd_dDelta_dd*Delta_ddd;
 }
@@ -1534,85 +1497,85 @@ long double ResidualHelmholtzSAFTAssociating::eta(const long double &delta){
 long double ResidualHelmholtzSAFTAssociating::base(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X = this->X(delta, this->Deltabar(tau, delta));
     return this->m*this->a*((log(X)-X/2.0+0.5));
 }
 long double ResidualHelmholtzSAFTAssociating::dDelta(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X = this->X(delta, this->Deltabar(tau, delta));
     return this->m*this->a*(1/X-0.5)*this->dX_ddelta(tau, delta);
 }
 long double ResidualHelmholtzSAFTAssociating::dTau(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X = this->X(delta, this->Deltabar(tau, delta));
     return this->m*this->a*(1/X-0.5)*this->dX_dtau(tau, delta);
 }
 long double ResidualHelmholtzSAFTAssociating::dTau2(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
-    double X_tau = this->dX_dtau(tau, delta);
-    double X_tautau = this->d2X_dtau2(tau, delta);
+    long double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X_tau = this->dX_dtau(tau, delta);
+    long double X_tautau = this->d2X_dtau2(tau, delta);
     return this->m*this->a*((1/X-0.5)*X_tautau-pow(X_tau/X, 2));
 }
 long double ResidualHelmholtzSAFTAssociating::dDelta2(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
-    double X_delta = this->dX_ddelta(tau, delta);
-    double X_deltadelta = this->d2X_ddelta2(tau, delta);
+    long double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X_delta = this->dX_ddelta(tau, delta);
+    long double X_deltadelta = this->d2X_ddelta2(tau, delta);
     return this->m*this->a*((1/X-0.5)*X_deltadelta-pow(X_delta/X,2));
 }
 long double ResidualHelmholtzSAFTAssociating::dDelta_dTau(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
-    double X_delta = this->dX_ddelta(tau, delta);
-    double X_deltadelta = this->d2X_ddelta2(tau, delta);
-    double X_tau = this->dX_dtau(tau, delta);
-    double X_deltatau = this->d2X_ddeltadtau(tau, delta);
+    long double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X_delta = this->dX_ddelta(tau, delta);
+    long double X_deltadelta = this->d2X_ddelta2(tau, delta);
+    long double X_tau = this->dX_dtau(tau, delta);
+    long double X_deltatau = this->d2X_ddeltadtau(tau, delta);
     return this->m*this->a*((-X_tau/X/X)*X_delta+X_deltatau*(1/X-0.5));
 }
 long double ResidualHelmholtzSAFTAssociating::dTau3(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
-    double X_t = this->dX_dtau(tau, delta);
-    double X_tt = this->d2X_dtau2(tau, delta);
-    double X_ttt = this->d3X_dtau3(tau, delta);
+    long double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X_t = this->dX_dtau(tau, delta);
+    long double X_tt = this->d2X_dtau2(tau, delta);
+    long double X_ttt = this->d3X_dtau3(tau, delta);
     return this->m*this->a*((1/X-1.0/2.0)*X_ttt+(-X_t/pow(X,(int)2))*X_tt-2*(pow(X,(int)2)*(X_t*X_tt)-pow(X_t,(int)2)*(X*X_t))/pow(X,(int)4));
 }
 long double ResidualHelmholtzSAFTAssociating::dDelta_dTau2(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
-    double X_t = this->dX_dtau(tau, delta);
-    double X_d = this->dX_ddelta(tau, delta);
-    double X_tt = this->d2X_dtau2(tau, delta);
-    double X_dt = this->d2X_ddeltadtau(tau, delta);
-    double X_dtt = this->d3X_ddeltadtau2(tau, delta);
+    long double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X_t = this->dX_dtau(tau, delta);
+    long double X_d = this->dX_ddelta(tau, delta);
+    long double X_tt = this->d2X_dtau2(tau, delta);
+    long double X_dt = this->d2X_ddeltadtau(tau, delta);
+    long double X_dtt = this->d3X_ddeltadtau2(tau, delta);
     return this->m*this->a*((1/X-1.0/2.0)*X_dtt-X_d/pow(X,(int)2)*X_tt-2*(pow(X,(int)2)*(X_t*X_dt)-pow(X_t,(int)2)*(X*X_d))/pow(X,(int)4));
 }
 long double ResidualHelmholtzSAFTAssociating::dDelta2_dTau(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
-    double X_t = this->dX_dtau(tau, delta);
-    double X_d = this->dX_ddelta(tau, delta);
-    double X_dd = this->d2X_ddelta2(tau, delta);
-    double X_dt = this->d2X_ddeltadtau(tau, delta);
-    double X_ddt = this->d3X_ddelta2dtau(tau, delta);
+    long double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X_t = this->dX_dtau(tau, delta);
+    long double X_d = this->dX_ddelta(tau, delta);
+    long double X_dd = this->d2X_ddelta2(tau, delta);
+    long double X_dt = this->d2X_ddeltadtau(tau, delta);
+    long double X_ddt = this->d3X_ddelta2dtau(tau, delta);
     return this->m*this->a*((1/X-1.0/2.0)*X_ddt-X_t/pow(X,(int)2)*X_dd-2*(pow(X,(int)2)*(X_d*X_dt)-pow(X_d,(int)2)*(X*X_t))/pow(X,(int)4));
 }
 long double ResidualHelmholtzSAFTAssociating::dDelta3(const long double &tau, const long double &delta)
 {
     if (disabled){return 0;}
-    double X = this->X(delta, this->Deltabar(tau, delta));
-    double X_d = this->dX_ddelta(tau, delta);
-    double X_dd = this->d2X_ddelta2(tau, delta);
-    double X_ddd = this->d3X_ddelta3(tau, delta);
+    long double X = this->X(delta, this->Deltabar(tau, delta));
+    long double X_d = this->dX_ddelta(tau, delta);
+    long double X_dd = this->d2X_ddelta2(tau, delta);
+    long double X_ddd = this->d3X_ddelta3(tau, delta);
     return this->m*this->a*((1/X-1.0/2.0)*X_ddd-X_d/pow(X,(int)2)*X_dd-2*(pow(X,(int)2)*(X_d*X_dd)-pow(X_d,(int)2)*(X*X_d))/pow(X,(int)4));
 }
 

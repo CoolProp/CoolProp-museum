@@ -112,7 +112,7 @@ struct ResidualHelmholtzPowerElement
 /// Power term
 /*!
 
-Term are of the form 
+Term of the form 
 \f[ \alpha_r=\left\lbrace\begin{array}{cc}\displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} & l_i=0\\ \displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} \exp(-\delta^{l_i}) & l_i\neq 0\end{array}\right.\f]
 
 */
