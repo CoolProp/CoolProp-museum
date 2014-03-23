@@ -96,35 +96,6 @@ public:
     virtual double A(const double log_tau, const double tau, const double log_delta, const double delta, const std::size_t i) throw() = 0;
 };
 
-//class ResidualHelmholtzTerm : public BaseHelmholtzTerm
-//{
-//public:
-//    std::vector<double> n, ///< The coefficients multiplying each term
-//                        s; ///< The summation vector
-//    
-//    enum parameters {iHEA, iHEdA_dDelta, iHEdA_dTau, iHEd2A_dDelta2, iHEd2A_dTau2, iHEd2A_dDelta_dTau, iHEd3A_dDelta3, iHEd3A_dDelta2_dTau, iHEd3A_dDelta_dTau2, iHEd3A_dTau3};
-//
-//    //std::vector<double> dDelta(std::vector<double> tau, std::vector<double> delta);
-//    //std::vector<double> dDelta2(std::vector<double> tau, std::vector<double> delta);
-//    //std::vector<double> dTau(std::vector<double> tau, std::vector<double> delta);
-//    //std::vector<double> dTau2(std::vector<double> tau, std::vector<double> delta);
-//    //std::vector<double> dDelta_dTau(std::vector<double> tau, std::vector<double> delta);
-//
-//    /// An evaluation function that will evaluate the desired derivative of the A function, where alphar_i = n_i*A_i
-//    double eval(const int key, const double tau, const double delta);
-//
-//    double base(const double tau, const double delta) throw() {return eval(iHEA, tau, delta);};
-//    double dDelta(const double tau, const double delta) throw() {return eval(iHEdA_dDelta, tau, delta);};
-//    //double dTau(const double tau, const double delta){return eval(iHEdA_dTau, tau, delta);};
-//    //double dDelta2(const double tau, const double delta){return eval(iHEd2A_dDelta2, tau, delta);};
-//    //double dDelta_dTau(const double tau, const double delta){return eval(iHEd2A_dDelta_dTau, tau, delta);};
-//    //double dTau2(const double tau, const double delta){return eval(iHEd2A_dTau2, tau, delta);};
-//    //double dDelta3(const double tau, const double delta){return eval(iHEd3A_dDelta3, tau, delta);};
-//    //double dDelta2_dTau(const double tau, const double delta){return eval(iHEd3A_dDelta2_dTau, tau, delta);};
-//    //double dDelta_dTau2(const double tau, const double delta){return eval(iHEd3A_dDelta_dTau2, tau, delta);};
-//    //double dTau3(const double tau, const double delta){return eval(iHEd3A_dTau3, tau, delta);};
-//};
-
 // #############################################################################
 // #############################################################################
 // #############################################################################
@@ -205,7 +176,7 @@ public:
     std::size_t N;
     std::vector<ResidualHelmholtzExponentialElement> elements;
     // Default Constructor
-    ResidualHelmholtzExponential(){};
+    ResidualHelmholtzExponential(){N = 0;};
     // Constructor
     ResidualHelmholtzExponential(const std::vector<double> &n, const std::vector<double> &d, const std::vector<double> &t, const std::vector<double> &g, const std::vector<double> &l)
     {
@@ -294,52 +265,57 @@ public:
     long double dDelta_dTau2(const long double &tau, const long double &delta);
     long double dTau3(const long double &tau, const long double &delta);
 };
-//
-////class ResidualHelmholtzGERG2008Gaussian : public ResidualHelmholtzTerm{
-////
-////public:
-////    std::vector<double> d, ///< The power for the delta terms
-////                        t, ///< The powers for the tau terms
-////                        eta, ///< The coefficient multiplying (delta-epsilon_i)^2
-////                        epsilon, 
-////                        beta, ///< The coefficient multiplying (tau-gamma_i)^2
-////                        gamma;
-////    // Default Constructor
-////    ResidualHelmholtzGERG2008Gaussian(){};
-////    // Constructor
-////    ResidualHelmholtzGERG2008Gaussian(const std::vector<double> &n, 
-////                                      const std::vector<double> &d, 
-////                                      const std::vector<double> &t, 
-////                                      const std::vector<double> &eta, 
-////                                      const std::vector<double> &epsilon,
-////                                      const std::vector<double> &beta,
-////                                      const std::vector<double> &gamma
-////                            )
-////        : d(d), t(t), eta(eta), epsilon(epsilon), beta(beta), gamma(gamma)
-////        {this->n = n;};
-////
-////    ///< Destructor for the alphar_power class.  No implementation
-////    ~ResidualHelmholtzGERG2008Gaussian(){};
-////
-////    double psi(double tau, double delta, int i){return exp(-eta[i]*pow(delta-epsilon[i],2)-beta[i]*(delta-gamma[i]));};
-////
-////    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
-////
-////    /// Derivatives for a single term for use in fitter
-////    double A(double log_tau, double tau, double log_delta, double delta, int i);
-////    double dA_dDelta(const double log_tau, const double tau, const double log_delta, const double delta, const int i);
-////    double dA_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d2A_dTau2(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d2A_dDelta2(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d2A_dDelta_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d3A_dDelta3(double log_tau, double tau, double log_delta, double delta, int i){throw ValueError();};;
-////    double d3A_dDelta2_dTau(double log_tau, double tau, double log_delta, double delta, int i){throw ValueError();};;
-////    double d3A_dDelta_dTau2(double log_tau, double tau, double log_delta, double delta, int i){throw ValueError();};;
-////    double d3A_dTau3(double log_tau, double tau, double log_delta, double delta, int i){throw ValueError();};;
-////};
-//
-//
-//
+
+class ResidualHelmholtzGERG2008Gaussian{
+
+public:
+    std::vector<long double> s;
+    std::size_t N;
+    std::vector<ResidualHelmholtzGaussianElement> elements;
+    // Default Constructor
+    ResidualHelmholtzGERG2008Gaussian(){N = 0;};
+    // Constructor
+    ResidualHelmholtzGERG2008Gaussian(const std::vector<double> &n, 
+                                      const std::vector<double> &d, 
+                                      const std::vector<double> &t, 
+                                      const std::vector<double> &eta, 
+                                      const std::vector<double> &epsilon,
+                                      const std::vector<double> &beta,
+                                      const std::vector<double> &gamma)
+    { 
+        N = n.size(); 
+        this->s = std::vector<long double>(N); 
+        for (std::size_t i = 0; i < n.size(); ++i)
+        {
+            ResidualHelmholtzGaussianElement el;
+            el.n = n[i];
+            el.d = d[i];
+            el.t = t[i];
+            el.eta = eta[i];
+            el.epsilon = epsilon[i];
+            el.beta = beta[i];
+            el.gamma = gamma[i];
+            elements.push_back(el);
+        }
+    };
+
+    ///< Destructor for the alphar_power class.  No implementation
+    ~ResidualHelmholtzGERG2008Gaussian(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
+
+    long double base(const long double &tau, const long double &delta);
+    long double dDelta(const long double &tau, const long double &delta);
+    long double dTau(const long double &tau, const long double &delta);
+    long double dDelta2(const long double &tau, const long double &delta);
+    long double dDelta_dTau(const long double &tau, const long double &delta);
+    long double dTau2(const long double &tau, const long double &delta);
+    long double dDelta3(const long double &tau, const long double &delta);
+    long double dDelta2_dTau(const long double &tau, const long double &delta);
+    long double dDelta_dTau2(const long double &tau, const long double &delta);
+    long double dTau3(const long double &tau, const long double &delta);
+};
+
 ////class ResidualHelmholtzLemmon2005 : public ResidualHelmholtzTerm{
 ////    
 ////public:
@@ -387,9 +363,11 @@ public:
     std::size_t N;
     std::vector<long double> s;
     std::vector<ResidualHelmholtzNonAnalyticElement> elements;
-    // Default Constructor
+    /// Default Constructor
     ResidualHelmholtzNonAnalytic(){N = 0;};
-    // Constructor
+    /// Destructor. No implementation
+    ~ResidualHelmholtzNonAnalytic(){};
+    /// Constructor
     ResidualHelmholtzNonAnalytic(const std::vector<double> &n, 
                                  const std::vector<double> &a, 
                                  const std::vector<double> &b, 
@@ -417,8 +395,6 @@ public:
         }
     };
 
-    ///< Destructor for the alphar_power class.  No implementation
-    ~ResidualHelmholtzNonAnalytic(){};
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
     long double base(const long double &tau, const long double &delta);
@@ -432,68 +408,72 @@ public:
     long double dDelta_dTau2(const long double &tau, const long double &delta);
     long double dTau3(const long double &tau, const long double &delta);
 };
-//
-////class ResidualHelmholtzSAFTAssociating : public ResidualHelmholtzTerm{
-////    
-////protected:
-////    double a, m,epsilonbar, vbarn, kappabar;
-////
-////    double Deltabar(double tau, double delta);
-////    double dDeltabar_ddelta__consttau(double tau, double delta);
-////    double d2Deltabar_ddelta2__consttau(double tau, double delta);
-////    double dDeltabar_dtau__constdelta(double tau, double delta);
-////    double d2Deltabar_dtau2__constdelta(double tau, double delta);
-////    double d2Deltabar_ddelta_dtau(double tau, double delta);
-////    double d3Deltabar_dtau3__constdelta(double tau, double delta);
-////    double d3Deltabar_ddelta_dtau2(double tau, double delta);
-////    double d3Deltabar_ddelta3__consttau(double tau, double delta);
-////    double d3Deltabar_ddelta2_dtau(double tau, double delta);
-////
-////    double X(double delta, double Deltabar);
-////    double dX_dDeltabar__constdelta(double delta, double Deltabar);
-////    double dX_ddelta__constDeltabar(double delta, double Deltabar);
-////    double dX_dtau(double tau, double delta);
-////    double dX_ddelta(double tau, double delta);
-////    double d2X_dtau2(double tau, double delta);
-////    double d2X_ddeltadtau(double tau, double delta);
-////    double d2X_ddelta2(double tau, double delta);
-////
-////    double d3X_dtau3(double tau, double delta);
-////    double d3X_ddelta3(double tau, double delta);
-////    double d3X_ddeltadtau2(double tau, double delta);
-////    double d3X_ddelta2dtau(double tau, double delta);
-////
-////    double g(double eta);
-////    double dg_deta(double eta);
-////    double d2g_deta2(double eta);
-////    double d3g_deta3(double eta);
-////    double eta(double delta);
-////
-////public:
-////    // Constructor
-////    ResidualHelmholtzSAFTAssociating(double a, double m, double epsilonbar, double vbarn, double kappabar)
-////        : a(a), m(m), epsilonbar(epsilonbar), vbarn(vbarn), kappabar(kappabar)
-////        {n = std::vector<double>(1,1);};
-////
-////    //Destructor
-////    ~ResidualHelmholtzSAFTAssociating(){};
-////
-////    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
-////
-////    double A(double log_tau, double tau, double log_delta, double delta, int i);
-////    double dA_dDelta(const double log_tau, const double tau, const double log_delta, const double delta, const int i);
-////    double dA_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-////    
-////    double d2A_dDelta2(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d2A_dDelta_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d2A_dTau2(double log_tau, double tau, double log_delta, double delta, int i);
-////    
-////    double d3A_dDelta3(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d3A_dDelta2_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d3A_dDelta_dTau2(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d3A_dTau3(double log_tau, double tau, double log_delta, double delta, int i);
-////};
-////
+
+class ResidualHelmholtzSAFTAssociating{
+    
+protected:
+    double a, m,epsilonbar, vbarn, kappabar;
+
+    long double Deltabar(const long double &tau, const long double &delta);
+    long double dDeltabar_ddelta__consttau(const long double &tau, const long double &delta);
+    long double d2Deltabar_ddelta2__consttau(const long double &tau, const long double &delta);
+    long double dDeltabar_dtau__constdelta(const long double &tau, const long double &delta);
+    long double d2Deltabar_dtau2__constdelta(const long double &tau, const long double &delta);
+    long double d2Deltabar_ddelta_dtau(const long double &tau, const long double &delta);
+    long double d3Deltabar_dtau3__constdelta(const long double &tau, const long double &delta);
+    long double d3Deltabar_ddelta_dtau2(const long double &tau, const long double &delta);
+    long double d3Deltabar_ddelta3__consttau(const long double &tau, const long double &delta);
+    long double d3Deltabar_ddelta2_dtau(const long double &tau, const long double &delta);
+
+    long double X(const long double &delta, const long double &Deltabar);
+    long double dX_dDeltabar__constdelta(const long double &delta, const long double &Deltabar);
+    long double dX_ddelta__constDeltabar(const long double &delta, const long double &Deltabar);
+    long double dX_dtau(const long double &tau, const long double &delta);
+    long double dX_ddelta(const long double &tau, const long double &delta);
+    long double d2X_dtau2(const long double &tau, const long double &delta);
+    long double d2X_ddeltadtau(const long double &tau, const long double &delta);
+    long double d2X_ddelta2(const long double &tau, const long double &delta);
+
+    long double d3X_dtau3(const long double &tau, const long double &delta);
+    long double d3X_ddelta3(const long double &tau, const long double &delta);
+    long double d3X_ddeltadtau2(const long double &tau, const long double &delta);
+    long double d3X_ddelta2dtau(const long double &tau, const long double &delta);
+
+    long double g(const long double &eta);
+    long double dg_deta(const long double &eta);
+    long double d2g_deta2(const long double &eta);
+    long double d3g_deta3(const long double &eta);
+    long double eta(const long double &delta);
+
+public:
+    /// Default constructor
+    ResidualHelmholtzSAFTAssociating(){disabled = true;};
+    // Constructor
+    ResidualHelmholtzSAFTAssociating(double a, double m, double epsilonbar, double vbarn, double kappabar)
+        : a(a), m(m), epsilonbar(epsilonbar), vbarn(vbarn), kappabar(kappabar)
+    {
+        disabled = false;
+    };
+
+    bool disabled;
+
+    //Destructor
+    ~ResidualHelmholtzSAFTAssociating(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
+
+    long double base(const long double &tau, const long double &delta);
+    long double dDelta(const long double &tau, const long double &delta);
+    long double dTau(const long double &tau, const long double &delta);
+    long double dDelta2(const long double &tau, const long double &delta);
+    long double dDelta_dTau(const long double &tau, const long double &delta);
+    long double dTau2(const long double &tau, const long double &delta);
+    long double dDelta3(const long double &tau, const long double &delta);
+    long double dDelta2_dTau(const long double &tau, const long double &delta);
+    long double dDelta_dTau2(const long double &tau, const long double &delta);
+    long double dTau3(const long double &tau, const long double &delta);
+};
+
 ////// #############################################################################
 ////// #############################################################################
 ////// #############################################################################
@@ -608,21 +588,25 @@ public:
 ////    double dDelta_dTau2(const double tau, const double delta){return 0.0;};
 ////    double dDelta3(const double tau, const double delta){return 0.0;};
 ////};
-////
 
 class ResidualHelmholtzContainer
 {
     
 public:
     ResidualHelmholtzPower Power;
+    ResidualHelmholtzExponential Exponential;
     ResidualHelmholtzGaussian Gaussian;
     ResidualHelmholtzNonAnalytic NonAnalytic;
+    ResidualHelmholtzSAFTAssociating SAFT;
 
     long double dDelta(long double tau, long double delta)
     {
         return (Power.dDelta(tau, delta)
+                +Exponential.dDelta(tau, delta)
                 +Gaussian.dDelta(tau, delta)
-                +NonAnalytic.dDelta(tau, delta));
+                +NonAnalytic.dDelta(tau, delta)
+                +SAFT.dDelta(tau,delta)
+                );
     };
 };
 
