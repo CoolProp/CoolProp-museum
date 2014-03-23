@@ -133,6 +133,11 @@ public:
 // #############################################################################
 // #############################################################################
 
+struct ResidualHelmholtzPowerElement
+{
+    long double n,d,t,ld;
+    int l;
+};
 /// Power term
 /*!
 
@@ -140,11 +145,6 @@ Term are of the form
 \f[ \alpha_r=\left\lbrace\begin{array}{cc}\displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} & l_i=0\\ \displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} \exp(-\delta^{l_i}) & l_i\neq 0\end{array}\right.\f]
 
 */
-struct ResidualHelmholtzPowerElement
-{
-    long double n,d,t,ld;
-    int l;
-};
 class ResidualHelmholtzPower{
     
 public:
@@ -155,23 +155,22 @@ public:
     std::size_t N;
     std::vector<ResidualHelmholtzPowerElement> elements;
     // Default Constructor
-    ResidualHelmholtzPower(){};
+    ResidualHelmholtzPower(){N = 0;};
     // Constructor
     ResidualHelmholtzPower(const std::vector<double> &n, const std::vector<double> &d, const std::vector<double> &t, const std::vector<double> &l)
-        //: d(d), t(t), l(l)
+    {
+        N = n.size();
+        this->s = std::vector<long double>(N);
+        for (std::size_t i = 0; i < n.size(); ++i)
         {
-            N = n.size();
-            this->s = std::vector<long double>(N);
-            for (std::size_t i = 0; i < n.size(); ++i)
-            {
-                ResidualHelmholtzPowerElement el;
-                el.d = d[i];
-                el.t = t[i];
-                el.l = l[i];
-                el.n = n[i];
-                el.ld = (long double)l[i];
-                elements.push_back(el);
-            }
+            ResidualHelmholtzPowerElement el;
+            el.d = d[i];
+            el.t = t[i];
+            el.l = l[i];
+            el.n = n[i];
+            el.ld = (long double)l[i];
+            elements.push_back(el);
+        }
     };
 
     ///< Destructor for the alphar_power class.  No implementation
@@ -191,43 +190,55 @@ public:
     long double dTau3(const long double &tau, const long double &delta);
 };
 
+struct ResidualHelmholtzExponentialElement
+{
+    long double n,d,t,g,l;
+};
+/**
+Term of the form
+\f[ \alpha_r=\displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} \exp(-\gamma_i\delta^{l_i}) \f]
+*/
+class ResidualHelmholtzExponential{
 
-//
-///**
-//Term of the form
-//\f[ \alpha_r=\displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} \exp(-\gamma_i\delta^{l_i}) \f]
-//*/
-//class ResidualHelmholtzExponential : public ResidualHelmholtzTerm{
-//
-//public:
-//    std::vector<double> d, ///< The power for the delta terms
-//                        t, ///< The powers for the tau terms
-//                        g, ///< The coefficient multiplying delta^l_i
-//                        l; ///< The powers for delta in the exp terms
-//    // Default Constructor
-//    ResidualHelmholtzExponential(){};
-//    // Constructor
-//    ResidualHelmholtzExponential(const std::vector<double> &n, const std::vector<double> &d, const std::vector<double> &t, const std::vector<double> &g, const std::vector<double> &l)
-//        : d(d), t(t), g(g), l(l)
-//        {this->n = n;};
-//
-//    ///< Destructor for the alphar_power class.  No implementation
-//    ~ResidualHelmholtzExponential(){};
-//
-//    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
-//
-//    /// Derivatives for a single term for use in fitter
-//    double A(double log_tau, double tau, double log_delta, double delta, int i);
-//    double dA_dDelta(const double log_tau, const double tau, const double log_delta, const double delta, const int i) throw();
-//    double dA_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-//    double d2A_dTau2(double log_tau, double tau, double log_delta, double delta, int i);
-//    double d2A_dDelta2(double log_tau, double tau, double log_delta, double delta, int i);
-//    double d2A_dDelta_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-//    double d3A_dDelta3(double log_tau, double tau, double log_delta, double delta, int i);
-//    double d3A_dDelta2_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-//    double d3A_dDelta_dTau2(double log_tau, double tau, double log_delta, double delta, int i);
-//    double d3A_dTau3(double log_tau, double tau, double log_delta, double delta, int i);
-//};
+public:
+    std::vector<long double> s;
+    std::size_t N;
+    std::vector<ResidualHelmholtzExponentialElement> elements;
+    // Default Constructor
+    ResidualHelmholtzExponential(){};
+    // Constructor
+    ResidualHelmholtzExponential(const std::vector<double> &n, const std::vector<double> &d, const std::vector<double> &t, const std::vector<double> &g, const std::vector<double> &l)
+    {
+        N = n.size();
+        s.resize(N);
+        for (std::size_t i = 0; i < n.size(); ++i)
+        {
+            ResidualHelmholtzExponentialElement el;
+            el.d = d[i];
+            el.t = t[i];
+            el.g = g[i];
+            el.l = l[i];
+            el.n = n[i];
+            elements.push_back(el);
+        }
+    }   
+
+    ///< Destructor for the alphar_power class.  No implementation
+    ~ResidualHelmholtzExponential(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
+
+    long double base(const long double &tau, const long double &delta);
+    long double dDelta(const long double &tau, const long double &delta);
+    long double dTau(const long double &tau, const long double &delta);
+    long double dDelta2(const long double &tau, const long double &delta);
+    long double dDelta_dTau(const long double &tau, const long double &delta);
+    long double dTau2(const long double &tau, const long double &delta);
+    long double dDelta3(const long double &tau, const long double &delta);
+    long double dDelta2_dTau(const long double &tau, const long double &delta);
+    long double dDelta_dTau2(const long double &tau, const long double &delta);
+    long double dTau3(const long double &tau, const long double &delta);
+};
 
 struct ResidualHelmholtzGaussianElement
 {
@@ -240,7 +251,7 @@ public:
     std::vector<ResidualHelmholtzGaussianElement> elements;
     std::vector<long double> s;
     // Default Constructor
-    ResidualHelmholtzGaussian(){};
+    ResidualHelmholtzGaussian(){N = 0;};
     // Constructor
     ResidualHelmholtzGaussian(const std::vector<double> &n, 
                               const std::vector<double> &d, 
@@ -377,7 +388,7 @@ public:
     std::vector<long double> s;
     std::vector<ResidualHelmholtzNonAnalyticElement> elements;
     // Default Constructor
-    ResidualHelmholtzNonAnalytic(){};
+    ResidualHelmholtzNonAnalytic(){N = 0;};
     // Constructor
     ResidualHelmholtzNonAnalytic(const std::vector<double> &n, 
                                  const std::vector<double> &a, 

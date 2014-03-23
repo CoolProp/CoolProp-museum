@@ -239,83 +239,158 @@ long double ResidualHelmholtzPower::dTau3(const long double &tau, const long dou
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
 
-////void ResidualHelmholtzExponential::to_json(rapidjson::Value &el, rapidjson::Document &doc)
-////{
-////    el.AddMember("type","alphar_exponential",doc.GetAllocator());
-////    rapidjson::Value _n(rapidjson::kArrayType), _d(rapidjson::kArrayType), _t(rapidjson::kArrayType), _l(rapidjson::kArrayType), _g(rapidjson::kArrayType);
-////    for (unsigned int i=0; i<=n.size(); ++i)
-////    {
-////        _n.PushBack(n[i],doc.GetAllocator());
-////        _d.PushBack(d[i],doc.GetAllocator());
-////        _t.PushBack(t[i],doc.GetAllocator());
-////        _l.PushBack(l[i],doc.GetAllocator());
-////        _g.PushBack(g[i],doc.GetAllocator());
-////    }
-////    el.AddMember("n",_n,doc.GetAllocator());
-////    el.AddMember("d",_d,doc.GetAllocator());
-////    el.AddMember("t",_t,doc.GetAllocator());
-////    el.AddMember("l",_l,doc.GetAllocator());
-////    el.AddMember("g",_g,doc.GetAllocator());
-////}
-////
-////// Term and its derivatives
-////double ResidualHelmholtzExponential::A(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    return exp(t[i]*log_tau+d[i]*log_delta-g[i]*pow(delta,l[i]));
-////}
-////double ResidualHelmholtzExponential::dA_dTau(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    return t[i]*exp((t[i]-1)*log_tau+d[i]*log_delta-g[i]*pow(delta,l[i]));
-////}
-////double ResidualHelmholtzExponential::d2A_dTau2(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    return t[i]*(t[i]-1)*exp((t[i]-2)*log_tau+d[i]*log_delta-g[i]*pow(delta,l[i]));
-////}
-////double ResidualHelmholtzExponential::d3A_dTau3(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    return t[i]*(t[i]-1)*(t[i]-2)*exp((t[i]-3)*log_tau+d[i]*log_delta-g[i]*pow(delta,l[i]));
-////}
-////double ResidualHelmholtzExponential::d3A_dDelta_dTau2(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    double pow_delta_li = pow(delta,l[i]);
-////    return t[i]*(t[i]-1)*(d[i]-g[i]*l[i]*pow_delta_li)*exp((t[i]-2)*log_tau+(d[i]-1)*log_delta-g[i]*pow_delta_li);
-////}
-////double ResidualHelmholtzExponential::dA_dDelta(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    double pow_delta_li = pow(delta,l[i]);
-////    return (d[i]-g[i]*l[i]*pow_delta_li)*exp(t[i]*log_tau+(d[i]-1)*log_delta-g[i]*pow_delta_li);
-////    
-////}
-////double ResidualHelmholtzExponential::d2A_dDelta2(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    double pow_delta_li = pow(delta,l[i]);
-////    // Typo in Span, 2000, re-derived from Sympy
-////    double bracket = d[i]*d[i] - 2*d[i]*pow(delta,l[i])*g[i]*l[i] - d[i] + pow(delta,2*l[i])*g[i]*g[i]*l[i]*l[i] - pow(delta,l[i])*g[i]*l[i]*l[i] + pow(delta,l[i])*g[i]*l[i];
-////    return bracket*exp(t[i]*log_tau+(d[i]-2)*log_delta-g[i]*pow_delta_li);
-////}
-////double ResidualHelmholtzExponential::d3A_dDelta3(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    // >> n_i, tau, t_i, d_i, delta, g_i, l_i = symbols(' n_i tau t_i d_i delta g_i l_i')
-////    // >> phir = n_i*tau**t_i*delta**d_i*exp(-g_i*pow(delta,l_i))
-////    // >> simplify(diff(diff(diff(phir,delta),delta),delta))
-////    double pow_delta_li = pow(delta,l[i]);
-////    double pow_delta_2li = pow(delta,2*l[i]);
-////    double pow_delta_3li = pow(delta,3*l[i]);
-////    double bracket = d[i]*d[i]*d[i] - 3*d[i]*d[i]*pow_delta_li*g[i]*l[i] - 3*d[i]*d[i] + 3*d[i]*pow_delta_2li*g[i]*g[i]*l[i]*l[i] - 3*d[i]*pow_delta_li*g[i]*l[i]*l[i] + 6*d[i]*pow_delta_li*g[i]*l[i] + 2*d[i] - pow_delta_3li*g[i]*g[i]*g[i]*l[i]*l[i]*l[i] + 3*pow_delta_2li*g[i]*g[i]*l[i]*l[i]*l[i] - 3*pow_delta_2li*g[i]*g[i]*l[i]*l[i] - pow_delta_li*g[i]*l[i]*l[i]*l[i] + 3*pow_delta_li*g[i]*l[i]*l[i] - 2*pow_delta_li*g[i]*l[i];
-////    return bracket*exp(t[i]*log_tau+(d[i]-3)*log_delta-g[i]*pow_delta_li);
-////}
-////double ResidualHelmholtzExponential::d3A_dDelta2_dTau(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    double pow_delta_li = pow(delta,l[i]);
-////    // Typo in Span, 2000, re-derived from Sympy
-////    double bracket = d[i]*d[i] - 2*d[i]*pow(delta,l[i])*g[i]*l[i] - d[i] + pow(delta,2*l[i])*g[i]*g[i]*l[i]*l[i] - pow(delta,l[i])*g[i]*l[i]*l[i] + pow(delta,l[i])*g[i]*l[i];
-////    return t[i]*bracket*exp((t[i]-1)*log_tau+(d[i]-2)*log_delta-g[i]*pow_delta_li);
-////}
-////double ResidualHelmholtzExponential::d2A_dDelta_dTau(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    double pow_delta_li = pow(delta,l[i]);
-////    return t[i]*(d[i]-g[i]*l[i]*pow_delta_li)*exp((t[i]-1)*log_tau+(d[i]-1)*log_delta-g[i]*pow_delta_li);
-////}
+void ResidualHelmholtzExponential::to_json(rapidjson::Value &el, rapidjson::Document &doc)
+{
+    el.AddMember("type","ResidualHelmholtzExponential",doc.GetAllocator());
+    rapidjson::Value _n(rapidjson::kArrayType), _d(rapidjson::kArrayType), _t(rapidjson::kArrayType), _l(rapidjson::kArrayType), _g(rapidjson::kArrayType);
+    for (unsigned int i=0; i<=N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        _n.PushBack((double)el.n, doc.GetAllocator());
+        _d.PushBack((double)el.d, doc.GetAllocator());
+        _t.PushBack((double)el.t, doc.GetAllocator());
+        _l.PushBack((double)el.l, doc.GetAllocator());
+        _g.PushBack((double)el.g, doc.GetAllocator());
+    }
+    el.AddMember("n",_n,doc.GetAllocator());
+    el.AddMember("d",_d,doc.GetAllocator());
+    el.AddMember("t",_t,doc.GetAllocator());
+    el.AddMember("l",_l,doc.GetAllocator());
+    el.AddMember("g",_g,doc.GetAllocator());
+}
+long double ResidualHelmholtzExponential::base(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta);
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        s[i] = ni*exp(ti*log_tau+di*log_delta-gi*pow(delta, li));
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+long double ResidualHelmholtzExponential::dDelta(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        s[i] = ni*(di-gi*li*pow_delta_li)*exp(ti*log_tau+(di-1)*log_delta-gi*pow_delta_li);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+long double ResidualHelmholtzExponential::dTau(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        s[i] = ni*ti*exp((ti-1)*log_tau+di*log_delta-gi*pow(delta,li));
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+
+long double ResidualHelmholtzExponential::dDelta2(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        // Typo in Span, 2000, re-derived from Sympy
+        double bracket = di*di - 2*di*pow(delta,li)*gi*li - di + pow(delta,2*li)*gi*gi*li*li - pow(delta,li)*gi*li*li + pow(delta,li)*gi*li;
+        s[i] = ni*bracket*exp(ti*log_tau+(di-2)*log_delta-gi*pow_delta_li);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+
+long double ResidualHelmholtzExponential::dDelta_dTau(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        s[i] = ni*ti*(di-gi*li*pow_delta_li)*exp((ti-1)*log_tau+(di-1)*log_delta-gi*pow_delta_li);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+long double ResidualHelmholtzExponential::dTau2(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        s[i] = ni*ti*(ti-1)*exp((ti-2)*log_tau+di*log_delta-gi*pow(delta,li));
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+
+long double ResidualHelmholtzExponential::dDelta3(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        // >> n_i, tau, t_i, d_i, delta, g_i, l_i = symbols(' n_i tau t_i d_i delta g_i l_i')
+        // >> phir = n_i*tau**t_i*delta**d_i*exp(-g_i*pow(delta,l_i))
+        // >> simplify(diff(diff(diff(phir,delta),delta),delta))
+        long double pow_delta_2li = pow(delta,2*li);
+        long double pow_delta_3li = pow(delta,3*li);
+        long double bracket = di*di*di - 3*di*di*pow_delta_li*gi*li - 3*di*di + 3*di*pow_delta_2li*gi*gi*li*li - 3*di*pow_delta_li*gi*li*li + 6*di*pow_delta_li*gi*li + 2*di - pow_delta_3li*gi*gi*gi*li*li*li + 3*pow_delta_2li*gi*gi*li*li*li - 3*pow_delta_2li*gi*gi*li*li - pow_delta_li*gi*li*li*li + 3*pow_delta_li*gi*li*li - 2*pow_delta_li*gi*li;
+        s[i] = ni*bracket*exp(ti*log_tau+(di-3)*log_delta-gi*pow_delta_li);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+long double ResidualHelmholtzExponential::dDelta2_dTau(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        // Typo in Span, 2000, re-derived from Sympy
+        long double bracket = di*di - 2*di*pow(delta,li)*gi*li - di + pow(delta,2*li)*gi*gi*li*li - pow(delta, li)*gi*li*li + pow(delta,li)*gi*li;
+        s[i] = ni*ti*bracket*exp((ti-1)*log_tau+(di-2)*log_delta-gi*pow_delta_li);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+long double ResidualHelmholtzExponential::dDelta_dTau2(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        s[i] = ni*ti*(ti-1)*(di-gi*li*pow_delta_li)*exp((ti-2)*log_tau+(di-1)*log_delta-gi*pow_delta_li);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+long double ResidualHelmholtzExponential::dTau3(const long double &tau, const long double &delta)
+{
+    double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
+    for (std::size_t i = 0; i < N; ++i)
+    {
+        ResidualHelmholtzExponentialElement &el = elements[i];
+        long double ni = el.n, di = el.d, ti = el.t, gi = el.g, li = el.l;
+        pow_delta_li = pow(delta, li);
+        s[i] = ni*ti*(ti-1)*(ti-2)*exp((ti-3)*log_tau+di*log_delta-gi*pow(delta,li));
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+
 
 
 void ResidualHelmholtzGaussian::to_json(rapidjson::Value &el, rapidjson::Document &doc)
