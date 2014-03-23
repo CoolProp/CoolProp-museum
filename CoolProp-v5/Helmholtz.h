@@ -131,15 +131,15 @@ public:
     ResidualHelmholtzPower(const std::vector<double> &n, const std::vector<double> &d, const std::vector<double> &t, const std::vector<double> &l)
     {
         N = n.size();
-        this->s = std::vector<long double>(N);
+        s.resize(N);
         for (std::size_t i = 0; i < n.size(); ++i)
         {
             ResidualHelmholtzPowerElement el;
+            el.n = n[i];
             el.d = d[i];
             el.t = t[i];
-            el.l = l[i];
-            el.n = n[i];
-            el.ld = (long double)l[i];
+            el.ld = l[i];
+            el.l = (std::size_t)el.ld;
             elements.push_back(el);
         }
     };
@@ -234,7 +234,7 @@ public:
                               )
     { 
         N = n.size(); 
-        this->s = std::vector<long double>(N); 
+        this->s.resize(N); 
         for (std::size_t i = 0; i < n.size(); ++i)
         {
             ResidualHelmholtzGaussianElement el;
@@ -284,7 +284,7 @@ public:
                                       const std::vector<double> &gamma)
     { 
         N = n.size(); 
-        this->s = std::vector<long double>(N); 
+        s.resize(N); 
         for (std::size_t i = 0; i < n.size(); ++i)
         {
             ResidualHelmholtzGaussianElement el;
@@ -316,42 +316,56 @@ public:
     long double dTau3(const long double &tau, const long double &delta);
 };
 
-////class ResidualHelmholtzLemmon2005 : public ResidualHelmholtzTerm{
-////    
-////public:
-////    std::vector<double> d, ///< The power for the delta terms
-////                        t, ///< The powers for the tau terms
-////                        l, ///< 
-////                        m; ///<     
-////    // Default Constructor
-////    ResidualHelmholtzLemmon2005(){};
-////    // Constructor
-////    ResidualHelmholtzLemmon2005(const std::vector<double> &n, 
-////                                const std::vector<double> &d, 
-////                                const std::vector<double> &t, 
-////                                const std::vector<double> &l, 
-////                                const std::vector<double> &m
-////                                )
-////        : d(d), t(t), l(l), m(m)
-////        {this->n = n;};
-////
-////    ///< Destructor for the alphar_power class.  No implementation
-////    ~ResidualHelmholtzLemmon2005(){};
-////
-////    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
-////
-////    /// Derivatives for a single term for use in fitter
-////    double A(double log_tau, double tau, double log_delta, double delta, int i);
-////    double dA_dDelta(const double log_tau, const double tau, const double log_delta, const double delta, const int i);
-////    double dA_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d2A_dTau2(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d2A_dDelta2(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d2A_dDelta_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d3A_dDelta3(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d3A_dDelta2_dTau(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d3A_dDelta_dTau2(double log_tau, double tau, double log_delta, double delta, int i);
-////    double d3A_dTau3(double log_tau, double tau, double log_delta, double delta, int i);
-////};
+struct ResidualHelmholtzLemmon2005Element{
+    long double n, d, t, ld, md;
+    int l, m;
+};
+class ResidualHelmholtzLemmon2005{
+public:
+    std::size_t N;
+    std::vector<long double> s; ///< Summation container
+    std::vector<ResidualHelmholtzLemmon2005Element> elements;
+    // Default Constructor
+    ResidualHelmholtzLemmon2005(){N = 0;};
+    // Constructor
+    ResidualHelmholtzLemmon2005(const std::vector<double> &n, 
+                                const std::vector<double> &d, 
+                                const std::vector<double> &t, 
+                                const std::vector<double> &l, 
+                                const std::vector<double> &m)
+    {
+        N = n.size();
+        s.resize(N);
+        for (std::size_t i = 0; i < n.size(); ++i)
+        {
+            ResidualHelmholtzLemmon2005Element el;
+            el.n = n[i];
+            el.d = d[i];
+            el.t = t[i];
+            el.ld = l[i];
+            el.md = m[i];
+            el.l = (std::size_t)el.ld;
+            el.m = (std::size_t)el.md;
+            elements.push_back(el);
+        }
+    };
+
+    ///< Destructor for the alphar_power class.  No implementation
+    ~ResidualHelmholtzLemmon2005(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
+
+    long double base(const long double &tau, const long double &delta);
+    long double dDelta(const long double &tau, const long double &delta);
+    long double dTau(const long double &tau, const long double &delta);
+    long double dDelta2(const long double &tau, const long double &delta);
+    long double dDelta_dTau(const long double &tau, const long double &delta);
+    long double dTau2(const long double &tau, const long double &delta);
+    long double dDelta3(const long double &tau, const long double &delta);
+    long double dDelta2_dTau(const long double &tau, const long double &delta);
+    long double dDelta_dTau2(const long double &tau, const long double &delta);
+    long double dTau3(const long double &tau, const long double &delta);
+};
 
 struct ResidualHelmholtzNonAnalyticElement
 {
@@ -379,7 +393,7 @@ public:
                                  )
     {
         N = n.size(); 
-        this->s = std::vector<long double>(N); 
+        s.resize(N); 
         for (std::size_t i = 0; i < n.size(); ++i)
         {
             ResidualHelmholtzNonAnalyticElement el;
@@ -447,7 +461,7 @@ protected:
 
 public:
     /// Default constructor
-    ResidualHelmholtzSAFTAssociating(){disabled = true;};
+    ResidualHelmholtzSAFTAssociating(){ disabled = true; };
     // Constructor
     ResidualHelmholtzSAFTAssociating(double a, double m, double epsilonbar, double vbarn, double kappabar)
         : a(a), m(m), epsilonbar(epsilonbar), vbarn(vbarn), kappabar(kappabar)
@@ -596,17 +610,72 @@ public:
     ResidualHelmholtzPower Power;
     ResidualHelmholtzExponential Exponential;
     ResidualHelmholtzGaussian Gaussian;
+    ResidualHelmholtzLemmon2005 Lemmon2005;
     ResidualHelmholtzNonAnalytic NonAnalytic;
     ResidualHelmholtzSAFTAssociating SAFT;
 
+    long double base(long double tau, long double delta)
+    {
+        return (Power.base(tau, delta) + Exponential.base(tau, delta)
+                +Gaussian.base(tau, delta) + Lemmon2005.base(tau, delta)
+                +NonAnalytic.base(tau, delta) + SAFT.base(tau,delta));
+    };
+
     long double dDelta(long double tau, long double delta)
     {
-        return (Power.dDelta(tau, delta)
-                +Exponential.dDelta(tau, delta)
-                +Gaussian.dDelta(tau, delta)
-                +NonAnalytic.dDelta(tau, delta)
-                +SAFT.dDelta(tau,delta)
-                );
+        return (Power.dDelta(tau, delta) + Exponential.dDelta(tau, delta) 
+                + Gaussian.dDelta(tau, delta) + Lemmon2005.dDelta(tau, delta) 
+                + NonAnalytic.dDelta(tau, delta) + SAFT.dDelta(tau,delta));
+    };
+    long double dTau(long double tau, long double delta)
+    {
+        return (Power.dTau(tau, delta) + Exponential.dTau(tau, delta) 
+                + Gaussian.dTau(tau, delta) + Lemmon2005.dTau(tau, delta) 
+                + NonAnalytic.dTau(tau, delta) + SAFT.dTau(tau,delta));
+    };
+
+    long double dDelta2(long double tau, long double delta)
+    {
+        return (Power.dDelta2(tau, delta) + Exponential.dDelta2(tau, delta)
+                +Gaussian.dDelta2(tau, delta) + Lemmon2005.dDelta2(tau, delta)
+                +NonAnalytic.dDelta2(tau, delta) + SAFT.dDelta2(tau,delta));
+    };
+    long double dDelta_dTau(long double tau, long double delta)
+    {
+        return (Power.dDelta_dTau(tau, delta) + Exponential.dDelta_dTau(tau, delta) 
+                + Gaussian.dDelta_dTau(tau, delta) + Lemmon2005.dDelta_dTau(tau, delta) 
+                + NonAnalytic.dDelta_dTau(tau, delta) + SAFT.dDelta_dTau(tau,delta));
+    };
+    long double dTau2(long double tau, long double delta)
+    {
+        return (Power.dTau2(tau, delta) + Exponential.dTau2(tau, delta) 
+                + Gaussian.dTau2(tau, delta) + Lemmon2005.dTau2(tau, delta) 
+                + NonAnalytic.dTau2(tau, delta) + SAFT.dTau2(tau,delta));
+    };
+    
+    long double dDelta3(long double tau, long double delta) 
+    {
+        return (Power.dDelta3(tau, delta) + Exponential.dDelta3(tau, delta)
+                +Gaussian.dDelta3(tau, delta) + Lemmon2005.dDelta3(tau, delta)
+                +NonAnalytic.dDelta3(tau, delta) + SAFT.dDelta3(tau,delta));
+    };
+    long double dDelta2_dTau(long double tau, long double delta)
+    {
+        return (Power.dDelta2_dTau(tau, delta) + Exponential.dDelta2_dTau(tau, delta) 
+                + Gaussian.dDelta2_dTau(tau, delta) + Lemmon2005.dDelta2_dTau(tau, delta) 
+                + NonAnalytic.dDelta2_dTau(tau, delta) + SAFT.dDelta2_dTau(tau,delta));
+    };
+    long double dDelta_dTau2(long double tau, long double delta)
+    {
+        return (Power.dDelta_dTau2(tau, delta) + Exponential.dDelta_dTau2(tau, delta) 
+                + Gaussian.dDelta_dTau2(tau, delta) + Lemmon2005.dDelta_dTau2(tau, delta) 
+                + NonAnalytic.dDelta_dTau2(tau, delta) + SAFT.dDelta_dTau2(tau,delta));
+    };
+    long double dTau3(long double tau, long double delta)
+    {
+        return (Power.dTau3(tau, delta) + Exponential.dTau3(tau, delta)
+                +Gaussian.dTau3(tau, delta) + Lemmon2005.dTau3(tau, delta)
+                +NonAnalytic.dTau3(tau, delta) + SAFT.dTau3(tau,delta));
     };
 };
 

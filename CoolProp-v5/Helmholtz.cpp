@@ -59,6 +59,7 @@ void ResidualHelmholtzPower::to_json(rapidjson::Value &el, rapidjson::Document &
 }
 long double ResidualHelmholtzPower::base(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -76,6 +77,7 @@ long double ResidualHelmholtzPower::base(const long double &tau, const long doub
 };
 long double ResidualHelmholtzPower::dDelta(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -94,6 +96,7 @@ long double ResidualHelmholtzPower::dDelta(const long double &tau, const long do
 };
 long double ResidualHelmholtzPower::dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -112,6 +115,7 @@ long double ResidualHelmholtzPower::dTau(const long double &tau, const long doub
 
 long double ResidualHelmholtzPower::dDelta2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -130,6 +134,7 @@ long double ResidualHelmholtzPower::dDelta2(const long double &tau, const long d
 };
 long double ResidualHelmholtzPower::dDelta_dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -148,6 +153,7 @@ long double ResidualHelmholtzPower::dDelta_dTau(const long double &tau, const lo
 };
 long double ResidualHelmholtzPower::dTau2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -164,10 +170,9 @@ long double ResidualHelmholtzPower::dTau2(const long double &tau, const long dou
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-
-
 long double ResidualHelmholtzPower::dDelta3(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -187,6 +192,7 @@ long double ResidualHelmholtzPower::dDelta3(const long double &tau, const long d
 };
 long double ResidualHelmholtzPower::dDelta2_dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -205,6 +211,7 @@ long double ResidualHelmholtzPower::dDelta2_dTau(const long double &tau, const l
 };
 long double ResidualHelmholtzPower::dDelta_dTau2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -223,6 +230,7 @@ long double ResidualHelmholtzPower::dDelta_dTau2(const long double &tau, const l
 };
 long double ResidualHelmholtzPower::dTau3(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -260,6 +268,7 @@ void ResidualHelmholtzExponential::to_json(rapidjson::Value &el, rapidjson::Docu
 }
 long double ResidualHelmholtzExponential::base(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -271,6 +280,7 @@ long double ResidualHelmholtzExponential::base(const long double &tau, const lon
 };
 long double ResidualHelmholtzExponential::dDelta(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -283,6 +293,7 @@ long double ResidualHelmholtzExponential::dDelta(const long double &tau, const l
 };
 long double ResidualHelmholtzExponential::dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -296,6 +307,7 @@ long double ResidualHelmholtzExponential::dTau(const long double &tau, const lon
 
 long double ResidualHelmholtzExponential::dDelta2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -310,6 +322,7 @@ long double ResidualHelmholtzExponential::dDelta2(const long double &tau, const 
 };
 long double ResidualHelmholtzExponential::dDelta_dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -322,6 +335,7 @@ long double ResidualHelmholtzExponential::dDelta_dTau(const long double &tau, co
 };
 long double ResidualHelmholtzExponential::dTau2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -334,6 +348,7 @@ long double ResidualHelmholtzExponential::dTau2(const long double &tau, const lo
 };
 long double ResidualHelmholtzExponential::dDelta3(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -352,6 +367,7 @@ long double ResidualHelmholtzExponential::dDelta3(const long double &tau, const 
 };
 long double ResidualHelmholtzExponential::dDelta2_dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -366,6 +382,7 @@ long double ResidualHelmholtzExponential::dDelta2_dTau(const long double &tau, c
 };
 long double ResidualHelmholtzExponential::dDelta_dTau2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -378,6 +395,7 @@ long double ResidualHelmholtzExponential::dDelta_dTau2(const long double &tau, c
 };
 long double ResidualHelmholtzExponential::dTau3(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
     double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
     for (std::size_t i = 0; i < N; ++i)
     {
@@ -417,6 +435,7 @@ void ResidualHelmholtzGaussian::to_json(rapidjson::Value &el, rapidjson::Documen
 }
 long double ResidualHelmholtzGaussian::base(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -428,6 +447,7 @@ long double ResidualHelmholtzGaussian::base(const long double &tau, const long d
 };
 long double ResidualHelmholtzGaussian::dDelta(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -439,6 +459,7 @@ long double ResidualHelmholtzGaussian::dDelta(const long double &tau, const long
 };
 long double ResidualHelmholtzGaussian::dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -450,6 +471,7 @@ long double ResidualHelmholtzGaussian::dTau(const long double &tau, const long d
 };
 long double ResidualHelmholtzGaussian::dDelta2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -461,6 +483,7 @@ long double ResidualHelmholtzGaussian::dDelta2(const long double &tau, const lon
 };
 long double ResidualHelmholtzGaussian::dDelta_dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -472,6 +495,7 @@ long double ResidualHelmholtzGaussian::dDelta_dTau(const long double &tau, const
 };
 long double ResidualHelmholtzGaussian::dTau2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -483,6 +507,7 @@ long double ResidualHelmholtzGaussian::dTau2(const long double &tau, const long 
 };
 long double ResidualHelmholtzGaussian::dDelta3(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -495,6 +520,7 @@ long double ResidualHelmholtzGaussian::dDelta3(const long double &tau, const lon
 };
 long double ResidualHelmholtzGaussian::dDelta2_dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -506,6 +532,7 @@ long double ResidualHelmholtzGaussian::dDelta2_dTau(const long double &tau, cons
 };
 long double ResidualHelmholtzGaussian::dDelta_dTau2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -517,6 +544,7 @@ long double ResidualHelmholtzGaussian::dDelta_dTau2(const long double &tau, cons
 };
 long double ResidualHelmholtzGaussian::dTau3(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	double log_tau = log(tau), log_delta = log(delta);
 	for (std::size_t i=0; i<N; ++i)
 	{
@@ -623,194 +651,284 @@ long double ResidualHelmholtzGERG2008Gaussian::dTau2(const long double &tau, con
 	return std::accumulate(s.begin(), s.end(), 0.0);
 };
 
-////void ResidualHelmholtzLemmon2005::to_json(rapidjson::Value &el, rapidjson::Document &doc)
-////{
-////    el.AddMember("type","alphar_Lemmon2005",doc.GetAllocator());
-////    rapidjson::Value _n(rapidjson::kArrayType), _d(rapidjson::kArrayType), _t(rapidjson::kArrayType), _l(rapidjson::kArrayType), _m(rapidjson::kArrayType);
-////    for (unsigned int i=0;i<=n.size();i++)
-////    {
-////        _n.PushBack(n[i],doc.GetAllocator());
-////        _d.PushBack(d[i],doc.GetAllocator());
-////        _t.PushBack(t[i],doc.GetAllocator());
-////        _l.PushBack(l[i],doc.GetAllocator());
-////        _m.PushBack(m[i],doc.GetAllocator());
-////    }
-////    el.AddMember("n",_n,doc.GetAllocator());
-////    el.AddMember("d",_d,doc.GetAllocator());
-////    el.AddMember("t",_t,doc.GetAllocator());
-////    el.AddMember("l",_l,doc.GetAllocator());
-////    el.AddMember("m",_m,doc.GetAllocator());
-////}
-////
-////// Term and its derivatives
-////double ResidualHelmholtzLemmon2005::A(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0)
-////        return exp(t[i]*log_tau+d[i]*log_delta-pow(delta,l[i])-pow(tau,m[i]));
-////    else if (l[i] != 0 && m[i] == 0)
-////        return exp(t[i]*log_tau+d[i]*log_delta-pow(delta,l[i]));
-////    else
-////        return exp(t[i]*log_tau+d[i]*log_delta);
-////}
-////double ResidualHelmholtzLemmon2005::dA_dTau(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){
-////        double pow_tau_mi = pow(tau,m[i]);
-////        return (t[i]-m[i]*pow_tau_mi)*exp((t[i]-1)*log_tau+d[i]*log_delta-pow(delta,l[i])-pow_tau_mi);
-////    }
-////    else if (l[i] != 0 && m[i] == 0)
-////        return t[i]*exp((t[i]-1)*log_tau+d[i]*log_delta-pow(delta,l[i]));
-////    else
-////        return t[i]*exp((t[i]-1)*log_tau+d[i]*log_delta);
-////}
-////double ResidualHelmholtzLemmon2005::d2A_dTau2(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){
-////        double pow_tau_mi = pow(tau,m[i]);
-////        double bracket = (t[i]-m[i]*pow_tau_mi)*(t[i]-1-m[i]*pow_tau_mi)-m[i]*m[i]*pow_tau_mi;
-////        return bracket*exp((t[i]-2)*log_tau+d[i]*log_delta-pow(delta,l[i])-pow_tau_mi);
-////    }
-////    else if (l[i] != 0 && m[i] == 0)
-////        return t[i]*(t[i]-1)*exp((t[i]-2)*log_tau+d[i]*log_delta-pow(delta,l[i]));
-////    else
-////        return t[i]*(t[i]-1)*exp((t[i]-2)*log_tau+d[i]*log_delta);
-////}
-////
-/////**
-////
-////\f[
-////\frac{{{\partial ^2}{\alpha ^r}}}{{\partial {\tau ^2}}} = {N_k}{\delta ^{{d_k}}}{\tau ^{{t_k} - 2}}\exp \left( { - {\delta ^{{l_k}}}} \right)\exp \left( { - {\tau ^{{m_k}}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
-////\f]
-////\f[
-////\frac{{{\partial ^2}{\alpha ^r}}}{{\partial {\tau ^2}}} = {N_k}{\delta ^{{d_k}}}\exp \left( { - {\delta ^{{l_k}}}} \right){\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
-////\f]
-////Group all the terms that don't depend on \$ \tau \$
-////\f[
-////\frac{{{\partial ^2}{\alpha ^r}}}{{\partial {\tau ^2}}} = A{\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
-////\f]
-////\f[
-////\frac{1}{A}\frac{{{\partial ^3}{\alpha ^r}}}{{\partial {\tau ^3}}} = {\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)\frac{\partial }{{\partial \tau }}\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right] + \frac{\partial }{{\partial \tau }}\left[ {{\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)} \right]\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
-////\f]
-////\f[
-////\frac{\partial }{{\partial \tau }}\left[ {{\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)} \right] = ({t_k} - 2){\tau ^{{t_k} - 3}}\exp \left( { - {\tau ^{{m_k}}}} \right) + {\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)( - {m_k}{\tau ^{{m_k} - 1}}) = \exp \left( { - {\tau ^{{m_k}}}} \right)\left( {({t_k} - 2){\tau ^{{t_k} - 3}} - {\tau ^{{t_k} - 2}}{m_k}{\tau ^{{m_k} - 1}}} \right)\\
-////\f]
-////\f[
-////\frac{\partial }{{\partial \tau }}\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right] = \left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( { - m_k^2{\tau ^{{m_k} - 1}}} \right) + \left( { - m_k^2{\tau ^{{m_k} - 1}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^3{\tau ^{{m_k} - 1}} =  - m_k^2{\tau ^{{m_k} - 1}}\left[ {{t_k} - {m_k}{\tau ^{{m_k}}} + {t_k} - 1 - {m_k}{\tau ^{{m_k}}} + {m_k}} \right] =  - m_k^2{\tau ^{{m_k} - 1}}\left[ {2{t_k} - 2{m_k}{\tau ^{{m_k}}} - 1 + {m_k}} \right]\\
-////\f]
-////\f[
-////\frac{1}{A}\frac{{{\partial ^3}{\alpha ^r}}}{{\partial {\tau ^3}}} = {\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)\left( { - m_k^2{\tau ^{{m_k} - 1}}\left[ {2{t_k} - 2{m_k}{\tau ^{{m_k}}} - 1 + {m_k}} \right]} \right) + \exp \left( { - {\tau ^{{m_k}}}} \right)\left( {({t_k} - 2){\tau ^{{t_k} - 3}} - {\tau ^{{t_k} - 2}}{m_k}{\tau ^{{m_k} - 1}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
-////\f]
-////\f[
-////\frac{1}{A}\frac{{{\partial ^3}{\alpha ^r}}}{{\partial {\tau ^3}}} = \exp \left( { - {\tau ^{{m_k}}}} \right)\left[ { - {\tau ^{{t_k} - 2}}m_k^2{\tau ^{{m_k} - 1}}\left[ {2{t_k} - 2{m_k}{\tau ^{{m_k}}} - 1 + {m_k}} \right] + \left( {({t_k} - 2){\tau ^{{t_k} - 3}} - {\tau ^{{t_k} - 2}}{m_k}{\tau ^{{m_k} - 1}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]} \right]
-////\f]
-////*/
-////double ResidualHelmholtzLemmon2005::d3A_dTau3(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        double pow_tau_mi = pow(tau,m[i]);
-////        double bracket = -pow(tau,t[i]+m[i]-3)*m[i]*m[i]*(2*t[i]-2*m[i]*pow_tau_mi-1-m[i])+((t[i]-2)*pow(tau,t[i]-3)-pow(tau,t[i]-2)*m[i]*pow(tau,m[i]-1))*((t[i]-m[i]*pow_tau_mi)*(t[i]-1-m[i]*pow_tau_mi)-m[i]*m[i]*pow_tau_mi);
-////        return t[i]*(t[i]-1)*(t[i]-2)*exp((t[i]-3)*log_tau+d[i]*log_delta-pow_delta_li-pow_tau_mi);
-////    }
-////    else if (l[i] != 0 && m[i] == 0){
-////        return t[i]*(t[i]-1)*(t[i]-2)*exp((t[i]-3)*log_tau+d[i]*log_delta-pow(delta,l[i]));
-////    }
-////    else
-////        return t[i]*(t[i]-1)*(t[i]-2)*exp((t[i]-3)*log_tau+d[i]*log_delta);
-////}
-////double ResidualHelmholtzLemmon2005::d3A_dDelta_dTau2(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        double pow_tau_mi = pow(tau,m[i]);
-////        // delta derivative of second tau derivative
-////        double bracket = ((t[i]-m[i]*pow_tau_mi)*(t[i]-1-m[i]*pow_tau_mi)-m[i]*m[i]*pow_tau_mi)*(d[i]-l[i]*pow_delta_li);
-////        return bracket*exp((t[i]-2)*log_tau+(d[i]-1)*log_delta-pow_delta_li-pow_tau_mi);
-////    }
-////    else if (l[i] != 0 && m[i] == 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        return t[i]*(t[i]-1)*(d[i]-l[i]*pow_delta_li)*exp((t[i]-2)*log_tau+(d[i]-1)*log_delta-pow_delta_li);
-////    }
-////    else
-////        return t[i]*(t[i]-1)*d[i]*exp((t[i]-2)*log_tau+(d[i]-1)*log_delta);
-////}
-////double ResidualHelmholtzLemmon2005::dA_dDelta(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        double pow_tau_mi = pow(tau,m[i]);
-////        return (d[i]-l[i]*pow_delta_li)*exp(t[i]*log_tau+(d[i]-1)*log_delta-pow_delta_li-pow_tau_mi);
-////    }
-////    else if (l[i]>0 && m[i] == 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        return (d[i]-l[i]*pow_delta_li)*exp(t[i]*log_tau+(d[i]-1)*log_delta-pow_delta_li);
-////    }
-////    else
-////        return d[i]*exp(t[i]*log_tau+(d[i]-1)*log_delta);
-////}
-////double ResidualHelmholtzLemmon2005::d2A_dDelta2(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){	
-////        double pow_delta_li = pow(delta,l[i]);
-////        double pow_tau_mi = pow(tau,m[i]);
-////        return ((d[i]-l[i]*pow_delta_li)*(d[i]-1.0-l[i]*pow_delta_li) - l[i]*l[i]*pow_delta_li)*exp(t[i]*log_tau+(d[i]-2)*log_delta-pow_delta_li-pow_tau_mi);
-////    }
-////        
-////    else if (l[i] != 0 && m[i] == 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        return ((d[i]-l[i]*pow_delta_li)*(d[i]-1.0-l[i]*pow_delta_li) - l[i]*l[i]*pow_delta_li)*exp(t[i]*log_tau+(d[i]-2)*log_delta-pow_delta_li);
-////    }
-////    else
-////        return d[i]*(d[i]-1.0)*exp(t[i]*log_tau+(d[i]-2)*log_delta);
-////}
-////double ResidualHelmholtzLemmon2005::d3A_dDelta3(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        double pow_tau_mi = pow(tau,m[i]);
-////        double bracket = (d[i]*(d[i]-1)*(d[i]-2)+pow_delta_li*(-2*l[i]+6*d[i]*l[i]-3*d[i]*d[i]*l[i]-3*d[i]*l[i]*l[i]+3*l[i]*l[i]-l[i]*l[i]*l[i])+pow_delta_li*pow_delta_li*(3*d[i]*l[i]*l[i]-3*l[i]*l[i]+3*l[i]*l[i]*l[i])-l[i]*l[i]*l[i]*pow_delta_li*pow_delta_li*pow_delta_li);
-////        return bracket*exp(t[i]*log_tau+(d[i]-3)*log_delta-pow_delta_li-pow_tau_mi);
-////    }
-////    else if (l[i] != 0 && m[i] == 0)
-////    {
-////        double pow_delta_li = pow(delta,l[i]);
-////        double bracket = (d[i]*(d[i]-1)*(d[i]-2)+pow_delta_li*(-2*l[i]+6*d[i]*l[i]-3*d[i]*d[i]*l[i]-3*d[i]*l[i]*l[i]+3*l[i]*l[i]-l[i]*l[i]*l[i])+pow_delta_li*pow_delta_li*(3*d[i]*l[i]*l[i]-3*l[i]*l[i]+3*l[i]*l[i]*l[i])-l[i]*l[i]*l[i]*pow_delta_li*pow_delta_li*pow_delta_li);
-////        return bracket*exp(t[i]*log_tau+(d[i]-3)*log_delta-pow_delta_li);
-////    }
-////    else
-////        return d[i]*(d[i]-1.0)*(d[i]-2)*exp(t[i]*log_tau+(d[i]-3)*log_delta);
-////}
-////
-////double ResidualHelmholtzLemmon2005::d3A_dDelta2_dTau(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        double pow_tau_mi = pow(tau,m[i]);
-////        double bracket = (t[i]-m[i]*pow_tau_mi)*(((d[i]-l[i]*pow_delta_li))*(d[i]-1-l[i]*pow_delta_li)-l[i]*l[i]*pow_delta_li);
-////        return bracket*exp((t[i]-1)*log_tau+(d[i]-2)*log_delta-pow_delta_li-pow_tau_mi);
-////    }
-////    else if (l[i] != 0 && m[i] == 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        double bracket = t[i]*(((d[i]-l[i]*pow_delta_li))*(d[i]-1-l[i]*pow_delta_li)-l[i]*l[i]*pow_delta_li);
-////        return bracket*exp((t[i]-1)*log_tau+(d[i]-2)*log_delta-pow_delta_li);
-////    }
-////    else
-////        return d[i]*t[i]*(d[i]-1)*exp((t[i]-1)*log_tau+(d[i]-2)*log_delta);
-////}
-////double ResidualHelmholtzLemmon2005::d2A_dDelta_dTau(double log_tau, double tau, double log_delta, double delta, int i)
-////{
-////    if (l[i] != 0 && m[i] != 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        double pow_tau_mi = pow(tau,m[i]);
-////        return (d[i]-l[i]*pow_delta_li)*(t[i]-m[i]*pow_tau_mi)*exp((t[i]-1)*log_tau+(d[i]-1)*log_delta-pow_delta_li-pow_tau_mi);
-////    }
-////    else if (l[i] != 0 && m[i] == 0){
-////        double pow_delta_li = pow(delta,l[i]);
-////        return t[i]*(d[i]-l[i]*pow_delta_li)*exp((t[i]-1)*log_tau+(d[i]-1)*log_delta-pow_delta_li);
-////    }
-////    else
-////        return d[i]*t[i]*exp((t[i]-1)*log_tau+(d[i]-1)*log_delta);
-////}
+void ResidualHelmholtzLemmon2005::to_json(rapidjson::Value &el, rapidjson::Document &doc)
+{
+    el.AddMember("type","ResidualHelmholtzLemmon2005",doc.GetAllocator());
+    rapidjson::Value _n(rapidjson::kArrayType), _d(rapidjson::kArrayType), 
+                     _t(rapidjson::kArrayType), _l(rapidjson::kArrayType), 
+                     _m(rapidjson::kArrayType);
+    for (unsigned int i=0;i<=N; ++i)
+    {
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        _n.PushBack((double)el.n, doc.GetAllocator());
+        _d.PushBack((double)el.d, doc.GetAllocator());
+        _t.PushBack((double)el.t, doc.GetAllocator());
+        _l.PushBack((double)el.l, doc.GetAllocator());
+        _m.PushBack((double)el.m, doc.GetAllocator());
+    }
+    el.AddMember("n",_n,doc.GetAllocator());
+    el.AddMember("d",_d,doc.GetAllocator());
+    el.AddMember("t",_t,doc.GetAllocator());
+    el.AddMember("l",_l,doc.GetAllocator());
+    el.AddMember("m",_m,doc.GetAllocator());
+}
+
+// Term and its derivatives
+long double ResidualHelmholtzLemmon2005::base(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0)
+            s[i] = ni*exp(ti*log_tau+di*log_delta-pow(delta, li)-pow(tau, mi));
+        else if (li != 0 && mi == 0)
+            s[i] = ni*exp(ti*log_tau+di*log_delta-pow(delta, li));
+        else
+            s[i] = ni*exp(ti*log_tau+di*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+long double ResidualHelmholtzLemmon2005::dDelta(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){
+            long double pow_delta_li = pow(delta,li);
+            long double pow_tau_mi = pow(tau,mi);
+            s[i] = ni*(di-li*pow_delta_li)*exp(ti*log_tau+(di-1)*log_delta-pow_delta_li-pow_tau_mi);
+        }
+        else if (li>0 && mi == 0){
+            long double pow_delta_li = pow(delta,li);
+            s[i] = ni*(di-li*pow_delta_li)*exp(ti*log_tau+(di-1)*log_delta-pow_delta_li);
+        }
+        else
+            s[i] = ni*di*exp(ti*log_tau+(di-1)*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+long double ResidualHelmholtzLemmon2005::dTau(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){
+            long double pow_tau_mi = pow(tau, mi);
+            s[i] = ni*(ti-mi*pow_tau_mi)*exp((ti-1)*log_tau+di*log_delta-pow(delta,li)-pow_tau_mi);
+        }
+        else if (li != 0 && mi == 0)
+            s[i] = ni*ti*exp((ti-1)*log_tau+di*log_delta-pow(delta,li));
+        else
+            s[i] = ni*ti*exp((ti-1)*log_tau+di*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+long double ResidualHelmholtzLemmon2005::dDelta2(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){	
+            long double pow_delta_li = pow(delta, li);
+            long double pow_tau_mi = pow(tau, mi);
+            s[i] = ni*((di-li*pow_delta_li)*(di-1.0-li*pow_delta_li) - li*li*pow_delta_li)*exp(ti*log_tau+(di-2)*log_delta-pow_delta_li-pow_tau_mi);
+        }
+        else if (li != 0 && mi == 0){
+            long double pow_delta_li = pow(delta, li);
+            s[i] = ni*((di-li*pow_delta_li)*(di-1.0-li*pow_delta_li) - li*li*pow_delta_li)*exp(ti*log_tau+(di-2)*log_delta-pow_delta_li);
+        }
+        else
+            s[i] = ni*di*(di-1.0)*exp(ti*log_tau+(di-2)*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+long double ResidualHelmholtzLemmon2005::dDelta_dTau(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){
+            long double pow_delta_li = pow(delta, li);
+            long double pow_tau_mi = pow(tau, mi);
+            s[i] = ni*(di-li*pow_delta_li)*(ti-mi*pow_tau_mi)*exp((ti-1)*log_tau+(di-1)*log_delta-pow_delta_li-pow_tau_mi);
+        }
+        else if (li != 0 && mi == 0){
+            long double pow_delta_li = pow(delta, li);
+            s[i] = ni*ti*(di-li*pow_delta_li)*exp((ti-1)*log_tau+(di-1)*log_delta-pow_delta_li);
+        }
+        else
+            s[i] = ni*di*ti*exp((ti-1)*log_tau+(di-1)*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+long double ResidualHelmholtzLemmon2005::dTau2(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){
+            long double pow_tau_mi = pow(tau, mi);
+            long double bracket = (ti-mi*pow_tau_mi)*(ti-1-mi*pow_tau_mi)-mi*mi*pow_tau_mi;
+            s[i] = ni*bracket*exp((ti-2)*log_tau+di*log_delta-pow(delta,li)-pow_tau_mi);
+        }
+        else if (li != 0 && mi == 0)
+            s[i] = ni*ti*(ti-1)*exp((ti-2)*log_tau+di*log_delta-pow(delta,li));
+        else
+            s[i] = ni*ti*(ti-1)*exp((ti-2)*log_tau+di*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+long double ResidualHelmholtzLemmon2005::dDelta3(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){
+            long double pow_delta_li = pow(delta, li);
+            long double pow_tau_mi = pow(tau, mi);
+            long double bracket = (di*(di-1)*(di-2)+pow_delta_li*(-2*li+6*di*li-3*di*di*li-3*di*li*li+3*li*li-li*li*li)+pow_delta_li*pow_delta_li*(3*di*li*li-3*li*li+3*li*li*li)-li*li*li*pow_delta_li*pow_delta_li*pow_delta_li);
+            s[i] = ni*bracket*exp(ti*log_tau+(di-3)*log_delta-pow_delta_li-pow_tau_mi);
+        }
+        else if (li != 0 && mi == 0)
+        {
+            long double pow_delta_li = pow(delta,li);
+            long double bracket = (di*(di-1)*(di-2)+pow_delta_li*(-2*li+6*di*li-3*di*di*li-3*di*li*li+3*li*li-li*li*li)+pow_delta_li*pow_delta_li*(3*di*li*li-3*li*li+3*li*li*li)-li*li*li*pow_delta_li*pow_delta_li*pow_delta_li);
+            s[i] = ni*bracket*exp(ti*log_tau+(di-3)*log_delta-pow_delta_li);
+        }
+        else
+            s[i] = ni*di*(di-1.0)*(di-2)*exp(ti*log_tau+(di-3)*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+long double ResidualHelmholtzLemmon2005::dDelta2_dTau(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){
+            long double pow_delta_li = pow(delta,li);
+            long double pow_tau_mi = pow(tau,mi);
+            long double bracket = (ti-mi*pow_tau_mi)*(((di-li*pow_delta_li))*(di-1-li*pow_delta_li)-li*li*pow_delta_li);
+            s[i] = ni*bracket*exp((ti-1)*log_tau+(di-2)*log_delta-pow_delta_li-pow_tau_mi);
+        }
+        else if (li != 0 && mi == 0){
+            long double pow_delta_li = pow(delta,li);
+            long double bracket = ti*(((di-li*pow_delta_li))*(di-1-li*pow_delta_li)-li*li*pow_delta_li);
+            s[i] = ni*bracket*exp((ti-1)*log_tau+(di-2)*log_delta-pow_delta_li);
+        }
+        else
+            s[i] = ni*di*ti*(di-1)*exp((ti-1)*log_tau+(di-2)*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+long double ResidualHelmholtzLemmon2005::dDelta_dTau2(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){
+            long double pow_delta_li = pow(delta,li);
+            long double pow_tau_mi = pow(tau,mi);
+            // delta derivative of second tau derivative
+            long double bracket = ((ti-mi*pow_tau_mi)*(ti-1-mi*pow_tau_mi)-mi*mi*pow_tau_mi)*(di-li*pow_delta_li);
+            s[i] = ni*bracket*exp((ti-2)*log_tau+(di-1)*log_delta-pow_delta_li-pow_tau_mi);
+        }
+        else if (li != 0 && mi == 0){
+            long double pow_delta_li = pow(delta,li);
+            s[i] = ni*ti*(ti-1)*(di-li*pow_delta_li)*exp((ti-2)*log_tau+(di-1)*log_delta-pow_delta_li);
+        }
+        else
+            s[i] = ni*ti*(ti-1)*di*exp((ti-2)*log_tau+(di-1)*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
+
+/**
+\f[
+\frac{{{\partial ^2}{\alpha ^r}}}{{\partial {\tau ^2}}} = {N_k}{\delta ^{{d_k}}}{\tau ^{{t_k} - 2}}\exp \left( { - {\delta ^{{l_k}}}} \right)\exp \left( { - {\tau ^{{m_k}}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
+\f]
+\f[
+\frac{{{\partial ^2}{\alpha ^r}}}{{\partial {\tau ^2}}} = {N_k}{\delta ^{{d_k}}}\exp \left( { - {\delta ^{{l_k}}}} \right){\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
+\f]
+Group all the terms that don't depend on \$ \tau \$
+\f[
+\frac{{{\partial ^2}{\alpha ^r}}}{{\partial {\tau ^2}}} = A{\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
+\f]
+\f[
+\frac{1}{A}\frac{{{\partial ^3}{\alpha ^r}}}{{\partial {\tau ^3}}} = {\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)\frac{\partial }{{\partial \tau }}\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right] + \frac{\partial }{{\partial \tau }}\left[ {{\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)} \right]\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
+\f]
+\f[
+\frac{\partial }{{\partial \tau }}\left[ {{\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)} \right] = ({t_k} - 2){\tau ^{{t_k} - 3}}\exp \left( { - {\tau ^{{m_k}}}} \right) + {\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)( - {m_k}{\tau ^{{m_k} - 1}}) = \exp \left( { - {\tau ^{{m_k}}}} \right)\left( {({t_k} - 2){\tau ^{{t_k} - 3}} - {\tau ^{{t_k} - 2}}{m_k}{\tau ^{{m_k} - 1}}} \right)\\
+\f]
+\f[
+\frac{\partial }{{\partial \tau }}\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right] = \left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( { - m_k^2{\tau ^{{m_k} - 1}}} \right) + \left( { - m_k^2{\tau ^{{m_k} - 1}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^3{\tau ^{{m_k} - 1}} =  - m_k^2{\tau ^{{m_k} - 1}}\left[ {{t_k} - {m_k}{\tau ^{{m_k}}} + {t_k} - 1 - {m_k}{\tau ^{{m_k}}} + {m_k}} \right] =  - m_k^2{\tau ^{{m_k} - 1}}\left[ {2{t_k} - 2{m_k}{\tau ^{{m_k}}} - 1 + {m_k}} \right]\\
+\f]
+\f[
+\frac{1}{A}\frac{{{\partial ^3}{\alpha ^r}}}{{\partial {\tau ^3}}} = {\tau ^{{t_k} - 2}}\exp \left( { - {\tau ^{{m_k}}}} \right)\left( { - m_k^2{\tau ^{{m_k} - 1}}\left[ {2{t_k} - 2{m_k}{\tau ^{{m_k}}} - 1 + {m_k}} \right]} \right) + \exp \left( { - {\tau ^{{m_k}}}} \right)\left( {({t_k} - 2){\tau ^{{t_k} - 3}} - {\tau ^{{t_k} - 2}}{m_k}{\tau ^{{m_k} - 1}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]\\
+\f]
+\f[
+\frac{1}{A}\frac{{{\partial ^3}{\alpha ^r}}}{{\partial {\tau ^3}}} = \exp \left( { - {\tau ^{{m_k}}}} \right)\left[ { - {\tau ^{{t_k} - 2}}m_k^2{\tau ^{{m_k} - 1}}\left[ {2{t_k} - 2{m_k}{\tau ^{{m_k}}} - 1 + {m_k}} \right] + \left( {({t_k} - 2){\tau ^{{t_k} - 3}} - {\tau ^{{t_k} - 2}}{m_k}{\tau ^{{m_k} - 1}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]} \right]
+\f]
+*/
+long double ResidualHelmholtzLemmon2005::dTau3(const long double &tau, const long double &delta)
+{
+    if (N==0){return 0.0;}
+    long double log_tau = log(tau), log_delta = log(delta);
+	for (std::size_t i=0; i<N; ++i)
+	{
+        ResidualHelmholtzLemmon2005Element &el = elements[i];
+        long double ni = el.n, ti = el.t, di = el.d;
+        int li = el.l, mi = el.m;
+        if (li != 0 && mi != 0){
+            long double pow_delta_li = pow(delta,li);
+            long double pow_tau_mi = pow(tau,mi);
+            long double bracket = -pow(tau,ti+mi-3)*mi*mi*(2*ti-2*mi*pow_tau_mi-1-mi)+((ti-2)*pow(tau,ti-3)-pow(tau,ti-2)*mi*pow(tau,mi-1))*((ti-mi*pow_tau_mi)*(ti-1-mi*pow_tau_mi)-mi*mi*pow_tau_mi);
+            s[i] = ni*ti*(ti-1)*(ti-2)*exp((ti-3)*log_tau+di*log_delta-pow_delta_li-pow_tau_mi);
+        }
+        else if (li != 0 && mi == 0){
+            s[i] = ni*ti*(ti-1)*(ti-2)*exp((ti-3)*log_tau+di*log_delta-pow(delta,li));
+        }
+        else
+            s[i] = ni*ti*(ti-1)*(ti-2)*exp((ti-3)*log_tau+di*log_delta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+}
 
 void ResidualHelmholtzNonAnalytic::to_json(rapidjson::Value &el, rapidjson::Document &doc)
 {
@@ -843,6 +961,7 @@ void ResidualHelmholtzNonAnalytic::to_json(rapidjson::Value &el, rapidjson::Docu
 
 long double ResidualHelmholtzNonAnalytic::base(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -855,12 +974,13 @@ long double ResidualHelmholtzNonAnalytic::base(const long double &tau, const lon
         long double dPSI_dDelta=-2.0*Ci*(delta-1.0)*PSI;
         long double dDELTA_dDelta=(delta-1.0)*(Ai*theta*2.0/betai*pow(pow(delta-1.0,2),1.0/(2.0*betai)-1.0)+2.0*Bi*ai*pow(pow(delta-1.0,2),ai-1.0));
         
-        s[i] = ni*pow(DELTA, bi)*delta*PSI;;
+        s[i] = ni*pow(DELTA, bi)*delta*PSI;
 	}
 	return std::accumulate(s.begin(), s.end(), 0.0);
 }
 long double ResidualHelmholtzNonAnalytic::dDelta(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -888,6 +1008,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta(const long double &tau, const l
 }
 long double ResidualHelmholtzNonAnalytic::dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -917,6 +1038,7 @@ long double ResidualHelmholtzNonAnalytic::dTau(const long double &tau, const lon
 
 long double ResidualHelmholtzNonAnalytic::dDelta2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -949,6 +1071,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta2(const long double &tau, const 
 }
 long double ResidualHelmholtzNonAnalytic::dDelta_dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -987,6 +1110,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta_dTau(const long double &tau, co
 }
 long double ResidualHelmholtzNonAnalytic::dTau2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -1008,6 +1132,7 @@ long double ResidualHelmholtzNonAnalytic::dTau2(const long double &tau, const lo
 
 long double ResidualHelmholtzNonAnalytic::dDelta3(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -1047,6 +1172,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta3(const long double &tau, const 
 }
 long double ResidualHelmholtzNonAnalytic::dDelta_dTau2(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -1100,6 +1226,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta_dTau2(const long double &tau, c
 
 long double ResidualHelmholtzNonAnalytic::dDelta2_dTau(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
@@ -1163,6 +1290,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta2_dTau(const long double &tau, c
 }
 long double ResidualHelmholtzNonAnalytic::dTau3(const long double &tau, const long double &delta)
 {
+    if (N==0){return 0.0;}
 	long double log_tau = log(tau), log_delta = log(delta);
 	for (unsigned int i=0; i<N; ++i)
 	{
