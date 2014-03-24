@@ -54,16 +54,27 @@ public:
     void calc_reducing_state(void);
     void calc_pressure(void);
 
+    double p_rhoT(long double rhomolar, long double T);
+
     // ***************************************************************
     // *************  PHASE DETERMINATION ROUTINES  ******************
     // ***************************************************************
     void DmolarT_phase_determination();
+    void DmolarP_phase_determination();
+    void PT_phase_determination();
 
     // ***************************************************************
     // *******************  FLASH ROUTINES  **************************
     // ***************************************************************
     void DmolarT_flash();
-    
+    void DmolarP_flash();
+    void PT_flash();
+
+    // ***************************************************************
+    // *******************  SOLVER ROUTINES  *************************
+    // ***************************************************************
+    void solver_rho_Tp();
+    long double solver_rho_Tp_SRK();
 };
 
 } /* namespace CoolProp */

@@ -90,6 +90,7 @@ protected:
 		// Universal gas constant [J/mol/K]
 		EOS.R_u = cpjson::get_double(EOS_json,"gas_constant");
         EOS.molar_mass = cpjson::get_double(EOS_json,"molar_mass");
+        EOS.accentric = cpjson::get_double(EOS_json,"accentric");
 
         rapidjson::Value &reducing_state = EOS_json["reducing_state"];
         

@@ -139,7 +139,7 @@ public:
             el.d = d[i];
             el.t = t[i];
             el.ld = l[i];
-            el.l = (std::size_t)el.ld;
+            el.l = (int)el.ld;
             elements.push_back(el);
         }
     };
@@ -344,8 +344,8 @@ public:
             el.t = t[i];
             el.ld = l[i];
             el.md = m[i];
-            el.l = (std::size_t)el.ld;
-            el.m = (std::size_t)el.md;
+            el.l = (int)el.ld;
+            el.m = (int)el.md;
             elements.push_back(el);
         }
     };

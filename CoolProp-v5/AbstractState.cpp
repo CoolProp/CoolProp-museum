@@ -179,7 +179,6 @@ double AbstractState::dalphar_dDelta(void){
     return _dalphar_dDelta;
 }
 
-
 //virtual double AbstractState::isothermal_compressibility(void){
 //	return 1.0/(_rho*dpdrho_constT());
 //}

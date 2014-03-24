@@ -185,7 +185,7 @@ std::string get_file_contents(const char *filename)
 	throw(errno);
 }
 
-void solve_cubic(double a, double b, double c, double d, double *x0, double *x1, double *x2)
+void solve_cubic(double a, double b, double c, double d, int &N, double &x0, double &x1, double &x2)
 {
 	// 0 = ax^3 + b*x^2 + c*x + d
 
@@ -208,9 +208,10 @@ void solve_cubic(double a, double b, double c, double d, double *x0, double *x1,
 		{
 			t0 = -2.0*sqrt(p/3.0)*sinh(1.0/3.0*asinh(3.0*q/(2.0*p)*sqrt(3.0/p)));
 		}
-		*x0 = t0-b/(3*a);
-		*x1 = t0-b/(3*a);
-		*x2 = t0-b/(3*a);
+        N = 1;
+		x0 = t0-b/(3*a);
+		x1 = t0-b/(3*a);
+		x2 = t0-b/(3*a);
 	}
 	else //(DELTA>0)
 	{
@@ -219,9 +220,10 @@ void solve_cubic(double a, double b, double c, double d, double *x0, double *x1,
 		double t1 = 2.0*sqrt(-p/3.0)*cos(1.0/3.0*acos(3.0*q/(2.0*p)*sqrt(-3.0/p))-1*2.0*M_PI/3.0);
 		double t2 = 2.0*sqrt(-p/3.0)*cos(1.0/3.0*acos(3.0*q/(2.0*p)*sqrt(-3.0/p))-2*2.0*M_PI/3.0);
 
-		*x0 = t0-b/(3*a);
-		*x1 = t1-b/(3*a);
-		*x2 = t2-b/(3*a);
+        N = 3;
+		x0 = t0-b/(3*a);
+		x1 = t1-b/(3*a);
+		x2 = t2-b/(3*a);
 	}
 }
 

@@ -8,12 +8,13 @@
 #ifndef COOLPROPFLUID_H_
 #define COOLPROPFLUID_H_
 
-
+#include <numeric>
 #include <string>
 #include <vector>
 #include <map>
 #include <assert.h>
 #include <iterator>
+
 #include "../DataStructures.h"
 #include "../Helmholtz.h"
 
@@ -66,7 +67,7 @@ class SurfaceTensionCorrelation
 class AncillaryFunction
 {
 private:
-    std::vector<double> n, t;
+    std::vector<double> n, t, s;
     bool using_tau_r;
     double Tmax, Tmin, reducing_value, T_r;
     int type;
@@ -90,18 +91,20 @@ public:
         else
             this->type = TYPE_EXPONENTIAL;
         this->N = n.size();
-        
+        s = n;
     };
     double evaluate(double T)
     {
-        double summer = 0;
         double THETA = 1-T/T_r;
-        if (type == TYPE_NOT_EXPONENTIAL)
+
+        for (std::size_t i = 0; i < N; ++i)
         {
-            for (std::size_t i = 0; i < N; ++i)
-            {
-                summer += n[i]*pow(THETA,t[i]);
-            }
+            s[i] = n[i]*pow(THETA, t[i]);
+        }
+        double summer = std::accumulate(s.begin(), s.end(), 0.0);
+        
+        if (type == TYPE_NOT_EXPONENTIAL)
+        {    
             return reducing_value*(1+summer);
         }
         else
@@ -111,11 +114,6 @@ public:
                 tau_r_value = T_r/T;
             else
                 tau_r_value = 1.0;
-
-            for (std::size_t i = 0; i < N; ++i)
-            {
-                summer += n[i]*pow(THETA, t[i]);
-            }
             return reducing_value*exp(tau_r_value*summer);
         }
     }
@@ -147,6 +145,7 @@ public:
     EOSLimits limits; ///< Limits on the EOS
     double R_u; ///< The universal gas constant used for this EOS (usually, but not always, 8.314472 J/mol/K)
     double molar_mass;
+    double accentric; ///< The accentric factor \f$ \omega = -log_{10}\left(\frac{p_s(T/T_c=0.7)}{p_c}\right)-1\f$
     ResidualHelmholtzContainer alphar; ///< The residual Helmholtz energy
     std::vector<BaseHelmholtzTerm*> alpha0_vector; ///< The ideal-gas Helmholtz energy
 

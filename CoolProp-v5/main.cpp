@@ -71,20 +71,22 @@ int main()
         AbstractState *State = AbstractState::factory("CORE-Water");
         CoolPropFluid* CPF = State->c;
         EquationOfState *EOS = &(CPF->EOSVector[0]);
+        State->update(DmassT_INPUTS,1e-3,300);
+        double p = State->p();
         double summer = 0;
         t1 = clock();
         for (std::size_t ii = 0; ii < N; ++ii)
         {
             //AbstractState *State = new REFPROPBackend("Methane");
-            summer += EOS->dalphar_dDelta(0.7,1.3);
+            //summer += EOS->dalphar_dDelta(0.7,1.3);
             /*for (int i = 0; i < 50; i++)
             {
                 summer += exp(1.3+1e-10*ii+1e-10*i);
             }
-            summer += log(0.7-1e-10*ii);
-            summer += log(1.3);*/
-            //State->update(DmassT_INPUTS,1e-3,300);
-            //summer += State->p();
+            summer += log(0.7-1e-10*ii);*/
+            //summer += log(1.3);
+            State->update(PT_INPUTS,101325,300);
+            summer += State->p();
         }
         t2 = clock();
         delete State;

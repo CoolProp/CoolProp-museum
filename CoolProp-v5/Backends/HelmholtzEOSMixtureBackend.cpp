@@ -86,9 +86,16 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
         }
         case DmassT_INPUTS:
         {
-            // Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
-            update(DmolarT_INPUTS, value1 / (double)_molar_mass, value2);
-            return;
+            // Use molar units [kg/m^3] / [kg/mol] -> [mol/m^3]
+            _rhomolar = value1 / (double)_molar_mass; _T = value2;
+            DmolarT_flash();
+            break;
+        }
+        case PT_INPUTS:
+        {
+            _p = value1; _T = value2;
+            PT_flash();
+            break;
         }
     }
     // Check the values that must always be set
@@ -112,20 +119,21 @@ void HelmholtzEOSMixtureBackend::DmolarT_phase_determination()
 			this->_phase = iphase_liquid; return;
 		}
 		else{
+            throw NotImplementedError("potentially two phase inputs not possible yet");
 			//// Actually have to use saturation information sadly
 			//// For the given temperature, find the saturation state
 			//// Run the saturation routines to determine the saturation densities and pressures
 			//// Use the passed in variables to save calls to the saturation routine so the values can be re-used again
 			//saturation_T(T, enabled_TTSE_LUT, pL, pV, rhoL, rhoV);
-			//double Q = (1/rho-1/rhoL)/(1/rhoV-1/rhoL);
+			//_Q = (1/rho-1/rhoL)/(1/rhoV-1/rhoL);
 			//if (Q < -100*DBL_EPSILON){
-			//	return iLiquid;
+			//	this->_phase = iphase_liquid; return;
 			//}
 			//else if (Q > 1+100*DBL_EPSILON){
-			//	return iGas;
+			//	this->_phase = iphase_gas; return;
 			//}
 			//else{
-			//	return iTwoPhase;
+			//	this->_phase = iphase_twophase; return;
 			//}
 		}
 	}
@@ -134,6 +142,57 @@ void HelmholtzEOSMixtureBackend::DmolarT_phase_determination()
     // Calculate the pressure if it is not already cached.
 	calc_pressure();
 
+    if (_T > _crit.T && _p > _crit.p){
+        this->_phase = iphase_supercritical; return;
+	}
+	else if (_T > _crit.T && _p < _crit.p){
+		this->_phase = iphase_gas; return;
+	}
+	else if (_T < _crit.T && _p > _crit.p){
+		this->_phase = iphase_liquid; return;
+	}
+	/*else if (p < params.ptriple){
+		return iphase_gas;
+	}*/
+	else{
+		throw ValueError(format("phase cannot be determined"));
+	}
+}
+
+void HelmholtzEOSMixtureBackend::PT_phase_determination()
+{
+    if (_T < _crit.T)
+	{
+		// Start to think about the saturation stuff
+		// First try to use the ancillary equations if you are far enough away
+		// Ancillary equations are good to within 1% in pressure in general
+		// Some industrial fluids might not be within 3%
+        if (_p > 1.05*c->ancillaries.p.evaluate(_T)){
+            this->_phase = iphase_liquid; return;
+		}
+        else if (_p < 0.95*c->ancillaries.p.evaluate(_T)){
+			this->_phase = iphase_gas; return;
+		}
+		else{
+            throw NotImplementedError("potentially two phase inputs not possible yet");
+			//// Actually have to use saturation information sadly
+			//// For the given temperature, find the saturation state
+			//// Run the saturation routines to determine the saturation densities and pressures
+			//// Use the passed in variables to save calls to the saturation routine so the values can be re-used again
+			//saturation_T(T, enabled_TTSE_LUT, pL, pV, rhoL, rhoV);
+			//double Q = (1/rho-1/rhoL)/(1/rhoV-1/rhoL);
+			//if (Q < -100*DBL_EPSILON){
+			//	this->_phase = iphase_liquid; return;
+			//}
+			//else if (Q > 1+100*DBL_EPSILON){
+			//	this->_phase = iphase_gas; return;
+			//}
+			//else{
+			//	this->_phase = iphase_twophase; return;
+			//}
+		}
+	}
+	// Now check the states above the critical temperature.
     if (_T > _crit.T && _p > _crit.p){
         this->_phase = iphase_supercritical; return;
 	}
@@ -166,6 +225,75 @@ void HelmholtzEOSMixtureBackend::DmolarT_flash()
             calc_pressure();
             _Q = -1;
         }
+    }
+}
+double HelmholtzEOSMixtureBackend::p_rhoT(long double rhomolar, long double T)
+{
+    _delta = rhomolar/_reducing.rhomolar;
+    _tau = _reducing.T/T;
+    
+    // Calculate derivative if needed
+    long double dalphar_dDelta = c->EOSVector[0].dalphar_dDelta(_tau, _delta);
+
+    // Get pressure
+    return rhomolar*(double)_gas_constant*T*(1+_delta*dalphar_dDelta);
+}
+void HelmholtzEOSMixtureBackend::solver_rho_Tp()
+{
+    long double molar_mass = (double)_molar_mass;
+    long double rhomolar = solver_rho_Tp_SRK();
+    double res = p_rhoT(rhomolar, _T);
+    double rhomass = rhomolar*molar_mass;
+}
+long double HelmholtzEOSMixtureBackend::solver_rho_Tp_SRK()
+{
+    long double rhomolar, R = (double)_gas_constant, T = _T;
+    long double accentric = c->EOSVector[0].accentric;
+
+    // Use SRK to get preliminary guess for the density
+    long double m = 0.480+1.574*accentric-0.176*pow(accentric,2);
+    long double b = 0.08664*R*_reducing.T/_reducing.p;
+    long double a = 0.42747*pow(R*_reducing.T,2)/_reducing.p*pow(1+m*(1-sqrt(_T/_reducing.T)),2);
+    long double A = a*_p/pow(R*T,2);
+    long double B = b*_p/(R*T);
+
+    //Solve the cubic for solutions for Z = p/(rho*R*T)
+    double Z0, Z1, Z2; int N;
+    solve_cubic(1, -1, A-B-B*B, -A*B, N, Z0, Z1, Z2);
+
+    // Determine the guess value
+    if (N == 1){
+        rhomolar = _p/(Z0*R*T);
+    }
+    else{
+        long double rhomolar0 = _p/(Z0*R*T);
+        long double rhomolar1 = _p/(Z1*R*T);
+        long double rhomolar2 = _p/(Z2*R*T);
+        switch(_phase)
+        {
+        case iphase_liquid:
+            rhomolar = max3(rhomolar0, rhomolar1, rhomolar2); break;
+        case iphase_gas:
+            rhomolar = min3(rhomolar0, rhomolar1, rhomolar2); break;
+        default:
+            throw ValueError();
+        };
+    }
+    return rhomolar;
+}
+void HelmholtzEOSMixtureBackend::PT_flash()
+{
+    // Find the phase, while updating all internal variables possible
+    PT_phase_determination();
+
+    if (!isHomogeneousPhase())
+    {
+        throw ValueError("twophase not implemented yet");
+    }
+    else
+    {
+        // Find density
+        solver_rho_Tp();
     }
 }
 void HelmholtzEOSMixtureBackend::calc_pressure(void)
