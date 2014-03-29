@@ -128,7 +128,6 @@ public:
     AbstractState();
     virtual ~AbstractState();
 
-    CoolPropFluid * c;
     double _tau, _delta;
     
     

@@ -63,15 +63,22 @@ int main()
         printf("%g %g\n",elap, summer);
         
     }
+    if (1)
+    {
+        AbstractState *MethaneEthane = AbstractState::factory("CORE-Methane|Ethane");
+
+        MethaneEthane->set_mole_fractions(std::vector<double>(2,0.5));
+
+        MethaneEthane->update(DmassT_INPUTS,0.0001,300);
+
+        double rr =0;
+    }
     if(1)
     {
         time_t t1,t2;
         
         std::size_t N = 1000000;
         AbstractState *State = AbstractState::factory("CORE-Water");
-        CoolPropFluid* CPF = State->c;
-        EquationOfState *EOS = &(CPF->EOSVector[0]);
-        State->update(DmassT_INPUTS,1e-3,300);
         double p = State->p();
         double summer = 0;
         t1 = clock();

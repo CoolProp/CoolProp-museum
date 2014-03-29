@@ -30,17 +30,18 @@ AbstractState * AbstractState::factory(std::string fluid_string)
 
         if (fluids.find('|') == -1)
         {
-            return new HelmholtzEOSBackend(&(get_library().get("Water")));
+            return new HelmholtzEOSBackend(&(get_library().get(fluids)));
         }
         else
         {
             // Split at the '|'
             std::vector<std::string> components = strsplit(fluids,'|');
 
-            return new REFPROPMixtureBackend(components);
+            return new HelmholtzEOSMixtureBackend(components);
         }
     }
-    else if (fluid_string.find("REFPROP-") == 0) // fluid_string starts with "REFPROP-" - more specificically, the first place that "REFPROP-" is found is at index 0
+    // fluid_string starts with "REFPROP-" - more specificically, the first place that "REFPROP-" is found is at index 0
+    else if (fluid_string.find("REFPROP-") == 0)
     {
         // Remove the "REFPROP-"
         std::string fluids = fluid_string.substr(8,fluid_string.size()-8);

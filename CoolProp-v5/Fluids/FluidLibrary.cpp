@@ -1,5 +1,6 @@
 
 #include "FluidLibrary.h"
+#include "../Backends/ReducingFunctions.h"
 
 namespace CoolProp{
 
@@ -12,6 +13,10 @@ void load()
     dd.Parse<0>(get_file_contents("../../../CoolProp/n-Propane.json").c_str());
 	if (dd.HasParseError()){throw ValueError();} else{library.add_one(dd);}
     dd.Parse<0>(get_file_contents("../../../CoolProp/Water.json").c_str());
+	if (dd.HasParseError()){throw ValueError();} else{library.add_one(dd);}
+    dd.Parse<0>(get_file_contents("../../../CoolProp/Methane.json").c_str());
+	if (dd.HasParseError()){throw ValueError();} else{library.add_one(dd);}
+    dd.Parse<0>(get_file_contents("../../../CoolProp/Ethane.json").c_str());
 	if (dd.HasParseError()){throw ValueError();} else{library.add_one(dd);}
 }
 

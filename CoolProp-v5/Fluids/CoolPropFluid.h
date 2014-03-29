@@ -155,9 +155,48 @@ public:
         assert(R_u < 9 && R_u > 8);
         assert(molar_mass > 0.001 && molar_mass < 1);
     };
+    long double base(const double tau, const double delta) throw()
+    {
+        return alphar.base(tau, delta);
+    };
+    // First partials
     long double dalphar_dDelta(const double tau, const double delta) throw()
     {
         return alphar.dDelta(tau, delta);
+    };
+    long double dalphar_dTau(const double tau, const double delta) throw()
+    {
+        return alphar.dTau(tau, delta);
+    };
+    // Second partials
+    long double d2alphar_dDelta2(const double tau, const double delta) throw()
+    {
+        return alphar.dDelta2(tau, delta);
+    };
+    long double d2alphar_dDelta_dTau(const double tau, const double delta) throw()
+    {
+        return alphar.dDelta_dTau(tau, delta);
+    };
+    long double d2alphar_dTau2(const double tau, const double delta) throw()
+    {
+        return alphar.dTau2(tau, delta);
+    };
+    // Third partials
+    long double d3alphar_dDelta3(const double tau, const double delta) throw()
+    {
+        return alphar.dDelta3(tau, delta);
+    };
+    long double d3alphar_dDelta2_dTau(const double tau, const double delta) throw()
+    {
+        return alphar.dDelta2_dTau(tau, delta);
+    };
+    long double d3alphar_dDelta_dTau2(const double tau, const double delta) throw()
+    {
+        return alphar.dDelta_dTau2(tau, delta);
+    };
+    long double d3alphar_dTau3(const double tau, const double delta) throw()
+    {
+        return alphar.dTau3(tau, delta);
     };
 };
 
@@ -173,6 +212,7 @@ class CoolPropFluid {
     public:
         CoolPropFluid(){};
         virtual ~CoolPropFluid(){};
+        EquationOfState *pEOS; ///< A pointer to the currently used EOS
         std::vector<EquationOfState> EOSVector; ///< The equations of state that could be used for this fluid
 
         std::string name; ///< The name of the fluid
@@ -188,8 +228,8 @@ class CoolPropFluid {
         EnvironmentalFactorsStruct environment;
         Ancillaries ancillaries;
 
-        double gas_constant(){ return EOSVector[0].R_u; };
-        double molar_mass(){ return EOSVector[0].molar_mass; };
+        double gas_constant(){ return pEOS->R_u; };
+        double molar_mass(){ return pEOS->molar_mass; };
 };
 
 //#include "../Backends/HelmholtzEOSBackend.h"

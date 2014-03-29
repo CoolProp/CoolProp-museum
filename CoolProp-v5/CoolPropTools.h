@@ -133,6 +133,7 @@
 	#include <algorithm> 
 	#include <functional> 
 	#include <cctype>
+    #include <map>
 	#include <locale>
 	#include <fstream>
 	#include <cerrno>
@@ -187,5 +188,24 @@
 	inline bool double_equal(double a, double b){return fabs(a - b) <= 1 * DBL_EPSILON * std::max(fabs(a), fabs(b));};
 
 	inline int Kronecker_delta(int i, int j){if (i == j) {return 1;} else {return 0;}};
+
+    class Dictionary
+    {
+    private:
+        std::map<std::string, double> numbers;
+        std::map<std::string, std::string> strings;
+    public:
+        Dictionary(){};
+        void add_string(std::string s1, std::string s2){ strings.insert(std::pair<std::string, std::string>(s1, s2));}
+        void add_number(std::string s1, double d){ numbers.insert(std::pair<std::string, double>(s1, d));}
+        std::string get_string(std::string s)
+        {
+            if (strings.find(s) != strings.end()){ return strings[s]; } else{ throw std::exception(); }
+        };
+        double get_number(std::string s)
+        {
+            if (numbers.find(s) != numbers.end()){ return numbers[s]; } else{ throw std::exception(); }
+        };
+    };
 
 #endif

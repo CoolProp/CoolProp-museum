@@ -3,12 +3,12 @@
 #define FLUIDLIBRARY_H
 
 #include <map>
-
+#include <algorithm>
 #include "../rapidjson/rapidjson_include.h"
-
 #include "CoolPropFluid.h"
 
 namespace CoolProp{
+
 /// A container for the fluid parameters for the CoolProp fluids
 /**
 This container holds copies of all of the fluid instances for the fluids that are loaded in CoolProp. 
@@ -114,6 +114,9 @@ protected:
 		{	
 			parse_EOS(*itr,fluid);
 		}
+
+        // Set the EOS pointer to the first EOS
+        fluid.pEOS = &(fluid.EOSVector[0]);
 	};
 
 	/// Parse the reducing state for the given EOS

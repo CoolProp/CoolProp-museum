@@ -11,8 +11,10 @@
 #include "../AbstractState.h"
 #include "../Fluids/CoolPropFluid.h"
 #include <vector>
+#include "ReducingFunctions.h"
 
 namespace CoolProp {
+
 
 class HelmholtzEOSMixtureBackend : public AbstractState  {
 protected:
@@ -24,9 +26,11 @@ protected:
                         mole_fractions_vap; ///< The mole fractions of the saturated vapor
     SimpleState _crit;
 public:
-    HelmholtzEOSMixtureBackend(){};
+    HelmholtzEOSMixtureBackend(){pReducing = NULL;};
     HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components);
+    HelmholtzEOSMixtureBackend(std::vector<std::string> components);
     virtual ~HelmholtzEOSMixtureBackend(){};
+    ReducingFunction *pReducing;
 
     void update(long input_pair, double value1, double value2);
 
@@ -35,6 +39,8 @@ public:
     @param components The components that are to be used in this mixture
     */
     void set_components(std::vector<CoolPropFluid*> components);
+
+    void set_reducing_function();
 
     /// Set the mole fractions
     /** 
@@ -47,11 +53,17 @@ public:
     @param mass_fractions The vector of mass fractions of the components
     */
     void set_mass_fractions(const std::vector<double> &mass_fractions){throw std::exception();};
-
-    double calc_dalphar_dDelta(void);
+    
     double calc_molar_mass(void);
     double calc_gas_constant(void);
+
+    double calc_dalphar_dDelta(void);
+
+    double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, double tau, double delta);
+    
     void calc_reducing_state(void);
+    void calc_reducing_state_nocache(const std::vector<double> & mole_fractions);
+
     void calc_pressure(void);
 
     double p_rhoT(long double rhomolar, long double T);
