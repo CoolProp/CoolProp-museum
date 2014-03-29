@@ -69,15 +69,15 @@ int main()
         std::vector<double> z(4, 1.0/4.0);
         double rhomass = 1, T = 300;
 
-        AbstractState *MethaneEthane = AbstractState::factory("CORE-Methane|n-Propane|Ethane|n-Butane");
-        MethaneEthane->set_mole_fractions(z);
-        MethaneEthane->update(DmassT_INPUTS, rhomass, T);
-        double p1 = MethaneEthane->p();
+        AbstractState *Mix = AbstractState::factory("CORE-Methane|n-Propane|Ethane|n-Butane");
+        Mix->set_mole_fractions(z);
+        Mix->update(DmassT_INPUTS, rhomass, T);
+        double p1 = Mix->p();
 
-        AbstractState *MethaneEthaneRP = AbstractState::factory("REFPROP-Methane|Propane|Ethane|Butane");
-        MethaneEthaneRP->set_mole_fractions(z);
-        MethaneEthaneRP->update(DmassT_INPUTS, rhomass, T);
-        double p2 = MethaneEthaneRP->p();
+        AbstractState *MixRP = AbstractState::factory("REFPROP-Methane|Propane|Ethane|Butane");
+        MixRP->set_mole_fractions(z);
+        MixRP->update(DmassT_INPUTS, rhomass, T);
+        double p2 = MixRP->p();
 
         double rr = 0;
     }

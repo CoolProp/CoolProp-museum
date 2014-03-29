@@ -12,9 +12,9 @@
 #include "../Fluids/CoolPropFluid.h"
 #include <vector>
 #include "ReducingFunctions.h"
+#include "ExcessHEFunction.h"
 
 namespace CoolProp {
-
 
 class HelmholtzEOSMixtureBackend : public AbstractState  {
 protected:
@@ -26,11 +26,12 @@ protected:
                         mole_fractions_vap; ///< The mole fractions of the saturated vapor
     SimpleState _crit;
 public:
-    HelmholtzEOSMixtureBackend(){pReducing = NULL;};
+    HelmholtzEOSMixtureBackend(){pReducing = NULL; pExcess = NULL;};
     HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components);
     HelmholtzEOSMixtureBackend(std::vector<std::string> components);
-    virtual ~HelmholtzEOSMixtureBackend(){};
+    virtual ~HelmholtzEOSMixtureBackend(){delete(pReducing); delete(pExcess);};
     ReducingFunction *pReducing;
+    ExcessTerm *pExcess;
 
     void update(long input_pair, double value1, double value2);
 
@@ -41,6 +42,7 @@ public:
     void set_components(std::vector<CoolPropFluid*> components);
 
     void set_reducing_function();
+    void set_excess_term();
 
     /// Set the mole fractions
     /** 
