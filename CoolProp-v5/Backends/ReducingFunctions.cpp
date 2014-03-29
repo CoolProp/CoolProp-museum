@@ -82,7 +82,6 @@ MixingParameterLibrary::MixingParameterLibrary()
             }
         }
 	} 
-    double rr =0;
 }
 
 ReducingFunction *ReducingFunction::factory(const std::vector<CoolPropFluid*> &components)

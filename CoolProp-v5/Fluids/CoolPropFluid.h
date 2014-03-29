@@ -155,7 +155,7 @@ public:
         assert(R_u < 9 && R_u > 8);
         assert(molar_mass > 0.001 && molar_mass < 1);
     };
-    long double base(const double tau, const double delta) throw()
+    long double baser(const double tau, const double delta) throw()
     {
         return alphar.base(tau, delta);
     };

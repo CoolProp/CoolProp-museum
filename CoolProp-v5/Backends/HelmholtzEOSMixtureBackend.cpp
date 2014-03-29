@@ -360,13 +360,26 @@ void HelmholtzEOSMixtureBackend::calc_reducing_state(void)
 {
     calc_reducing_state_nocache(mole_fractions);
 }
-
+class Excess
+{
+public:
+    double base(double tau, double delta){ return 0;};
+    double dDelta(double tau, double delta){ return 0;};
+    double dTau(double tau, double delta){ return 0;};
+    double dDelta2(double tau, double delta){ return 0;};
+    double dDelta_dTau(double tau, double delta){ return 0;};
+    double dTau2(double tau, double delta){ return 0;};
+    double dDelta3(double tau, double delta){ return 0;};
+    double dDelta_dTau2(double tau, double delta){ return 0;};
+    double dDelta2_dTau(double tau, double delta){ return 0;};
+    double dTau3(double tau, double delta){ return 0;};
+};
 double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> &mole_fractions, double tau, double delta)
 {
     if (is_pure_or_pseudopure)
     {
         if (nTau == 0 && nDelta == 0){
-            return components[0]->pEOS->base(tau, delta);
+            return components[0]->pEOS->baser(tau, delta);
         }
         else if (nTau == 0 && nDelta == 1){
             return components[0]->pEOS->dalphar_dDelta(tau, delta);
@@ -403,6 +416,7 @@ double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau, con
     else{
         unsigned int N = mole_fractions.size();
         double summer = 0;
+        Excess pExcess;
         if (nTau == 0 && nDelta == 0){
             for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->baser(tau, delta); }
             return summer + pExcess.base(tau, delta);

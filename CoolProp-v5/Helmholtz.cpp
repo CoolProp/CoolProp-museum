@@ -1275,7 +1275,6 @@ long double ResidualHelmholtzNonAnalytic::dTau3(const long double &tau, const lo
 	return std::accumulate(s.begin(), s.end(), 0.0);
 }
 
-
 void ResidualHelmholtzSAFTAssociating::to_json(rapidjson::Value &el, rapidjson::Document &doc)
 {
     el.AddMember("type","ResidualHelmholtzSAFTAssociating",doc.GetAllocator());

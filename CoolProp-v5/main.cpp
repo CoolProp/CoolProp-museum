@@ -65,13 +65,21 @@ int main()
     }
     if (1)
     {
-        AbstractState *MethaneEthane = AbstractState::factory("CORE-Methane|Ethane");
+        int N = 4;
+        std::vector<double> z(4, 1.0/4.0);
+        double rhomass = 1, T = 300;
 
-        MethaneEthane->set_mole_fractions(std::vector<double>(2,0.5));
+        AbstractState *MethaneEthane = AbstractState::factory("CORE-Methane|n-Propane|Ethane|n-Butane");
+        MethaneEthane->set_mole_fractions(z);
+        MethaneEthane->update(DmassT_INPUTS, rhomass, T);
+        double p1 = MethaneEthane->p();
 
-        MethaneEthane->update(DmassT_INPUTS,0.0001,300);
+        AbstractState *MethaneEthaneRP = AbstractState::factory("REFPROP-Methane|Propane|Ethane|Butane");
+        MethaneEthaneRP->set_mole_fractions(z);
+        MethaneEthaneRP->update(DmassT_INPUTS, rhomass, T);
+        double p2 = MethaneEthaneRP->p();
 
-        double rr =0;
+        double rr = 0;
     }
     if(1)
     {

@@ -68,7 +68,8 @@ protected:
 			}
 			else
 			{
-				throw ValueError(format("Unsupported Residual helmholtz type: ",type.c_str()));
+                std::cout << format("Unsupported Residual helmholtz type: %s\n",type.c_str());
+				//throw ValueError(format("Unsupported Residual helmholtz type: %s",type.c_str()));
 			}
 		}
 	};
@@ -235,7 +236,6 @@ public:
 			throw ValueError(format("key [%d] was not found in JSONFluidLibrary",key));
 		}
 	};
-    //std::vector<BaseHelmholtzTerm*> *ar;
 };
 
 /// Get a reference to the library instance
