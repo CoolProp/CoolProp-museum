@@ -64,6 +64,14 @@ void HelmholtzEOSMixtureBackend::set_components(std::vector<CoolPropFluid*> comp
         set_excess_term();
     }
 }
+void HelmholtzEOSMixtureBackend::set_mole_fractions(const std::vector<double> &mole_fractions)
+{
+    if (mole_fractions.size() != components.size())
+    {
+        throw ValueError(format("size of mole fraction vector [%d] does not equal that of component vector [%d]",mole_fractions.size(), components.size()));
+    }
+    this->mole_fractions = mole_fractions;
+};
 void HelmholtzEOSMixtureBackend::set_reducing_function()
 {
     pReducing = ReducingFunction::factory(components);
@@ -94,8 +102,7 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
 {
     clear();
 
-    if (is_pure_or_pseudopure == false && mole_fractions.size() == 0)
-    { 
+    if (is_pure_or_pseudopure == false && mole_fractions.size() == 0) { 
         throw ValueError("Mole fractions must be set"); 
     }
 

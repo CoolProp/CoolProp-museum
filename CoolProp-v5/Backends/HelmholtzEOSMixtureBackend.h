@@ -48,7 +48,7 @@ public:
     /** 
     @param mole_fractions The vector of mole fractions of the components
     */
-    void set_mole_fractions(const std::vector<double> &mole_fractions){this->mole_fractions = mole_fractions;};
+    void set_mole_fractions(const std::vector<double> &mole_fractions);
     
     /// Set the mass fractions
     /** 

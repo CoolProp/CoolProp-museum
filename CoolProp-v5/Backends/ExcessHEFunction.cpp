@@ -138,7 +138,8 @@ void ExcessTerm::construct(const std::vector<CoolPropFluid*> &components)
                 std::vector<double> epsilon = dic.get_double_vector("epsilon");
                 std::vector<double> beta = dic.get_double_vector("beta");
                 std::vector<double> gamma = dic.get_double_vector("gamma");
-                DepartureFunctionMatrix[i][j] = new GERG2008DepartureFunction(n,d,t,eta,epsilon,beta,gamma);
+                int Npower = static_cast<int>(dic.get_number("Npower"));
+                DepartureFunctionMatrix[i][j] = new GERG2008DepartureFunction(n,d,t,eta,epsilon,beta,gamma,Npower);
             }
             else if (!model.compare("Lemmon-JPCRD-2004") || !model.compare("Lemmon-JPCRD-2000"))
             {
@@ -160,7 +161,8 @@ ExcessTerm::~ExcessTerm()
 	{
 		for (unsigned int j = 0; j < N; j++)
 		{	
-            delete DepartureFunctionMatrix[i][j]; DepartureFunctionMatrix[i][j] = NULL;
+            delete DepartureFunctionMatrix[i][j]; // It is safe to delete NULL
+            DepartureFunctionMatrix[i][j] = NULL;
 		}
 	}
     DepartureFunctionMatrix.clear();
@@ -284,6 +286,38 @@ double ExcessTerm::d2alphar_dxi_dDelta(double tau, double delta, const std::vect
 	}
 	return summer;
 }
+
+GERG2008DepartureFunction::GERG2008DepartureFunction(const std::vector<double> &n,const std::vector<double> &d,const std::vector<double> &t,
+                                                     const std::vector<double> &eta,const std::vector<double> &epsilon,const std::vector<double> &beta,
+                                                     const std::vector<double> &gamma, int Npower)
+{
+    
+    /// Break up into power and gaussian terms
+    {
+        std::vector<double> _n(n.begin(), n.begin()+Npower);
+        std::vector<double> _d(d.begin(), d.begin()+Npower);
+        std::vector<double> _t(t.begin(), t.begin()+Npower);
+        std::vector<double> _l(Npower, 0.0);
+        phi1 = ResidualHelmholtzPower(_n, _d, _t, _l);
+    }
+    if (n.size() == Npower)
+    {
+        using_gaussian = false;
+    }
+    else
+    {
+        using_gaussian = true;
+        std::vector<double> _n(n.begin()+Npower,                   n.end());
+        std::vector<double> _d(d.begin()+Npower,                   d.end());
+        std::vector<double> _t(t.begin()+Npower,                   t.end());
+        std::vector<double> _eta(eta.begin()+Npower,             eta.end());
+        std::vector<double> _epsilon(epsilon.begin()+Npower, epsilon.end());
+        std::vector<double> _beta(beta.begin()+Npower,          beta.end());
+        std::vector<double> _gamma(gamma.begin()+Npower,       gamma.end());
+        phi2 = ResidualHelmholtzGERG2008Gaussian(_n, _d, _t, _eta, _epsilon, _beta, _gamma);
+    }
+}
+
 double GERG2008DepartureFunction::alphar(double tau, double delta)
 {
 	if (using_gaussian){

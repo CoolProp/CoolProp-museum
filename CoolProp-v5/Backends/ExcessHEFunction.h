@@ -33,6 +33,7 @@ public:
             assert(i<F.size());
             d.add_number("F",F[i]);
         }
+        d.add_number("Npower", cpjson::get_double(val,"Npower"));
         
         // Terms for the power
         d.add_double_vector("n", cpjson::get_double_array(val["n"]));
@@ -107,7 +108,9 @@ protected:
 	ResidualHelmholtzGERG2008Gaussian phi2;
 public:
 	GERG2008DepartureFunction(){};
-    GERG2008DepartureFunction(const std::vector<double> &n,const std::vector<double> &d,const std::vector<double> &t,const std::vector<double> &eta,const std::vector<double> &epsilon,const std::vector<double> &beta,const std::vector<double> &gamma){};
+    GERG2008DepartureFunction(const std::vector<double> &n,const std::vector<double> &d,const std::vector<double> &t,
+                              const std::vector<double> &eta,const std::vector<double> &epsilon,const std::vector<double> &beta,
+                              const std::vector<double> &gamma, int Npower);
 	~GERG2008DepartureFunction(){};
 	double alphar(double tau, double delta);
 	double dalphar_dDelta(double tau, double delta);
