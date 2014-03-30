@@ -26,12 +26,12 @@ protected:
                         mole_fractions_vap; ///< The mole fractions of the saturated vapor
     SimpleState _crit;
 public:
-    HelmholtzEOSMixtureBackend(){pReducing = NULL; pExcess = NULL;};
+    HelmholtzEOSMixtureBackend(){pReducing = NULL;};
     HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components);
     HelmholtzEOSMixtureBackend(std::vector<std::string> components);
-    virtual ~HelmholtzEOSMixtureBackend(){delete(pReducing); delete(pExcess);};
+    virtual ~HelmholtzEOSMixtureBackend(){delete(pReducing);};
     ReducingFunction *pReducing;
-    ExcessTerm *pExcess;
+    ExcessTerm Excess;
 
     void update(long input_pair, double value1, double value2);
 

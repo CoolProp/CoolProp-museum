@@ -63,18 +63,34 @@ int main()
         printf("%g %g\n",elap, summer);
         
     }
-    if (1)
+    if (0)
     {
-        int N = 4;
-        std::vector<double> z(4, 1.0/4.0);
         double rhomass = 1, T = 300;
 
-        AbstractState *Mix = AbstractState::factory("CORE-Methane|n-Propane|Ethane|n-Butane");
+        AbstractState *Mix = AbstractState::factory("CORE-n-Propane");
+        Mix->update(DmassT_INPUTS, rhomass, T);
+        double p1 = Mix->p();
+
+        AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
+        MixRP->update(DmassT_INPUTS, rhomass, T);
+        double p2 = MixRP->p();
+
+        double rr =0 ;
+    }
+    if (1)
+    {
+
+
+        int N = 2;
+        std::vector<double> z(N, 1.0/N);
+        double rhomass = 1, T = 300;
+
+        AbstractState *Mix = AbstractState::factory("CORE-Ethane|n-Propane");
         Mix->set_mole_fractions(z);
         Mix->update(DmassT_INPUTS, rhomass, T);
         double p1 = Mix->p();
 
-        AbstractState *MixRP = AbstractState::factory("REFPROP-Methane|Propane|Ethane|Butane");
+        AbstractState *MixRP = AbstractState::factory("REFPROP-Ethane|Propane");
         MixRP->set_mole_fractions(z);
         MixRP->update(DmassT_INPUTS, rhomass, T);
         double p2 = MixRP->p();
