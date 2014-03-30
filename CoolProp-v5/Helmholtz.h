@@ -27,73 +27,67 @@ Ideal-Gas Helmholtz Energy Terms:
 
 Term                                        | Helmholtz Energy Contribution
 ----------                                  | ------------------------------
-IdealHelmholtzLead                          | \f$ \alpha_0 = a_1 + a_2\tau + \ln\delta \f$
+IdealHelmholtzLead                          | \f$ \alpha_0 = n_1 + n_2\tau + \ln\delta \f$
 IdealHelmholtzEnthalpyEntropyOffset         | \f$ \alpha_0 = \displaystyle\frac{\Delta s}{R_u/M}+\frac{\Delta h}{(R_u/M)T}\tau \f$
-IdealHelmholtzLogTau                        | \f$ \alpha_0 = a_1\log\tau \f$
+IdealHelmholtzLogTau                        | \f$ \alpha_0 = n_1\log\tau \f$
+IdealHelmholtzPower                         | \f$ \alpha_0 = \displaystyle\sum_i n_i\tau^{t_i} \f$
+IdealHelmholtzPlanckEinstein                | \f$ \alpha_0 = \displaystyle\sum_i n_i\log[1-\exp(-\theta_i\tau)] \f$
+IdealHelmholtzPlanckEinstein2               | \f$ \alpha_0 = \displaystyle\sum_i n_i\log[c_i+\exp(\theta_i\tau)] \f$
 */
 class BaseHelmholtzTerm{
 public:
     BaseHelmholtzTerm(){};
     virtual ~BaseHelmholtzTerm(){};
     /// Returns the base, non-dimensional, Helmholtz energy term (no derivatives) [-]
-    /** @param tau Reciprocal reduced temperature where tau=Tc / T
-     *  @param delta Reduced density where delta = rho / rhoc 
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
      */
-    virtual double base(const double tau, const double delta) throw() = 0;
-    ///// Returns the first partial derivative of Helmholtz energy term with respect to tau [-]
-    ///** @param tau Reciprocal reduced temperature where tau=Tc / T
-    // *  @param delta Reduced density where delta = rho / rhoc 
-    // */
-    //virtual double dTau(const double tau, const double delta) throw() = 0;
-    ///// Returns the second partial derivative of Helmholtz energy term with respect to tau [-]
-    ///** @param tau Reciprocal reduced temperature where tau=Tc / T
-    // *  @param delta Reduced density where delta = rho / rhoc 
-    // */ 
-    //virtual double dTau2(const double tau, const double delta) throw() = 0;
-    ///// Returns the second mixed partial derivative (delta1,dtau1) of Helmholtz energy term with respect to delta and tau [-]
-    ///** @param tau Reciprocal reduced temperature where tau=Tc / T
-    // *  @param delta Reduced density where delta = rho / rhoc 
-    // */
-    //virtual double dDelta_dTau(const double tau, const double delta) throw() = 0;
-    ///// Returns the first partial derivative of Helmholtz energy term with respect to delta [-]
-    ///** @param tau Reciprocal reduced temperature where tau=Tc / T
-    // *  @param delta Reduced density where delta = rho / rhoc 
-    // */
-    virtual double dDelta(const double tau, const double delta) throw() = 0;
+    virtual long double base(const long double &tau, const long double &delta) throw() = 0;
+    /// Returns the first partial derivative of Helmholtz energy term with respect to tau [-]
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
+     */
+    virtual long double dTau(const long double &tau, const long double &delta) throw() = 0;
+    /// Returns the second partial derivative of Helmholtz energy term with respect to tau [-]
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
+     */ 
+    virtual long double dTau2(const long double &tau, const long double &delta) throw() = 0;
+    /// Returns the second mixed partial derivative (delta1,dtau1) of Helmholtz energy term with respect to delta and tau [-]
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
+     */
+    virtual long double dDelta_dTau(const long double &tau, const long double &delta) throw() = 0;
+    /// Returns the first partial derivative of Helmholtz energy term with respect to delta [-]
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
+     */
+    virtual long double dDelta(const long double &tau, const long double &delta) throw() = 0;
     /// Returns the second partial derivative of Helmholtz energy term with respect to delta [-]
-    /** @param tau Reciprocal reduced temperature where tau=Tc / T
-     *  @param delta Reduced density where delta = rho / rhoc 
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
      */
-    //virtual double dDelta2(const double tau, const double delta) throw() = 0;
-    ///// Returns the third mixed partial derivative (delta2,dtau1) of Helmholtz energy term with respect to delta and tau [-]
-    ///** @param tau Reciprocal reduced temperature where tau=Tc / T
-    // *  @param delta Reduced density where delta = rho / rhoc 
-    // */
-    //virtual double dDelta2_dTau(const double tau, const double delta) throw() = 0;
-    ///// Returns the third mixed partial derivative (delta1,dtau2) of Helmholtz energy term with respect to delta and tau [-]
-    ///** @param tau Reciprocal reduced temperature where tau=Tc / T
-    // *  @param delta Reduced density where delta = rho / rhoc 
-    // */
-    //virtual double dDelta_dTau2(const double tau, const double delta) throw() = 0;
-    ///// Returns the third partial derivative of Helmholtz energy term with respect to tau [-]
-    ///** @param tau Reciprocal reduced temperature where tau=Tc / T
-    // *  @param delta Reduced density where delta = rho / rhoc 
-    // */
-    //virtual double dTau3(const double tau, const double delta) throw() = 0;
-    ///// Returns the third partial derivative of Helmholtz energy term with respect to delta [-]
-    ///** @param tau Reciprocal reduced temperature where tau=Tc / T
-    // *  @param delta Reduced density where delta = rho / rhoc 
-    // */
-    //virtual double dDelta3(const double tau, const double delta) throw() = 0;
-
-    /// Add the data needed for this term into the rapidjson::Value
-    /** @param el rapidjson::Value to be filled
-     *  @param doc Top-level document that contains the allocator 
+    virtual long double dDelta2(const long double &tau, const long double &delta) throw() = 0;
+    /// Returns the third mixed partial derivative (delta2,dtau1) of Helmholtz energy term with respect to delta and tau [-]
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
      */
-    virtual void to_json(rapidjson::Value &el, rapidjson::Document &doc) = 0;
-
-    virtual void dA_dDelta(const double &log_tau, const double &tau, const double &log_delta, const double &delta, const std::size_t &i, double &n, double &s) throw() = 0;
-    virtual double A(const double log_tau, const double tau, const double log_delta, const double delta, const std::size_t i) throw() = 0;
+    virtual long double dDelta2_dTau(const long double &tau, const long double &delta) throw() = 0;
+    /// Returns the third mixed partial derivative (delta1,dtau2) of Helmholtz energy term with respect to delta and tau [-]
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
+     */
+    virtual long double dDelta_dTau2(const long double &tau, const long double &delta) throw() = 0;
+    /// Returns the third partial derivative of Helmholtz energy term with respect to tau [-]
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
+     */
+    virtual long double dTau3(const long double &tau, const long double &delta) throw() = 0;
+    /// Returns the third partial derivative of Helmholtz energy term with respect to delta [-]
+    /** @param tau Reciprocal reduced temperature where \f$\tau=T_c / T\f$
+     *  @param delta Reduced density where \f$\delta = \rho / \rho_c \f$
+     */
+    virtual long double dDelta3(const long double &tau, const long double &delta) throw() = 0;
 };
 
 // #############################################################################
@@ -111,12 +105,12 @@ struct ResidualHelmholtzPowerElement
 };
 /// Power term
 /*!
-
 Term of the form 
-\f[ \alpha_r=\left\lbrace\begin{array}{cc}\displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} & l_i=0\\ \displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} \exp(-\delta^{l_i}) & l_i\neq 0\end{array}\right.\f]
-
+\f[ 
+\alpha_r=\left\lbrace\begin{array}{cc}\displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} & l_i=0\\ \displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} \exp(-\delta^{l_i}) & l_i\neq 0\end{array}\right.
+\f]
 */
-class ResidualHelmholtzPower{
+class ResidualHelmholtzPower : public BaseHelmholtzTerm{
     
 public:
     /*std::vector<double> d, ///< The power for the delta terms
@@ -128,7 +122,8 @@ public:
     // Default Constructor
     ResidualHelmholtzPower(){N = 0;};
     // Constructor
-    ResidualHelmholtzPower(const std::vector<double> &n, const std::vector<double> &d, const std::vector<double> &t, const std::vector<double> &l)
+    ResidualHelmholtzPower(const std::vector<long double> &n, const std::vector<long double> &d, 
+                           const std::vector<long double> &t, const std::vector<long double> &l)
     {
         N = n.size();
         s.resize(N);
@@ -169,7 +164,7 @@ struct ResidualHelmholtzExponentialElement
 Term of the form
 \f[ \alpha_r=\displaystyle\sum_i n_i \delta^{d_i} \tau^{t_i} \exp(-\gamma_i\delta^{l_i}) \f]
 */
-class ResidualHelmholtzExponential{
+class ResidualHelmholtzExponential : public BaseHelmholtzTerm{
 
 public:
     std::vector<long double> s;
@@ -178,7 +173,9 @@ public:
     // Default Constructor
     ResidualHelmholtzExponential(){N = 0;};
     // Constructor
-    ResidualHelmholtzExponential(const std::vector<double> &n, const std::vector<double> &d, const std::vector<double> &t, const std::vector<double> &g, const std::vector<double> &l)
+    ResidualHelmholtzExponential(const std::vector<long double> &n, const std::vector<long double> &d, 
+                                 const std::vector<long double> &t, const std::vector<long double> &g, 
+                                 const std::vector<long double> &l)
     {
         N = n.size();
         s.resize(N);
@@ -215,7 +212,7 @@ struct ResidualHelmholtzGaussianElement
 {
     long double n, d, t, eta, epsilon, beta, gamma;
 };
-class ResidualHelmholtzGaussian{
+class ResidualHelmholtzGaussian : public BaseHelmholtzTerm{
 
 public:
     std::size_t N; ///< The number of terms
@@ -224,13 +221,13 @@ public:
     // Default Constructor
     ResidualHelmholtzGaussian(){N = 0;};
     // Constructor
-    ResidualHelmholtzGaussian(const std::vector<double> &n, 
-                              const std::vector<double> &d, 
-                              const std::vector<double> &t, 
-                              const std::vector<double> &eta, 
-                              const std::vector<double> &epsilon,
-                              const std::vector<double> &beta,
-                              const std::vector<double> &gamma
+    ResidualHelmholtzGaussian(const std::vector<long double> &n, 
+                              const std::vector<long double> &d, 
+                              const std::vector<long double> &t, 
+                              const std::vector<long double> &eta, 
+                              const std::vector<long double> &epsilon,
+                              const std::vector<long double> &beta,
+                              const std::vector<long double> &gamma
                               )
     { 
         N = n.size(); 
@@ -266,7 +263,7 @@ public:
     long double dTau3(const long double &tau, const long double &delta);
 };
 
-class ResidualHelmholtzGERG2008Gaussian{
+class ResidualHelmholtzGERG2008Gaussian : public BaseHelmholtzTerm{
 
 public:
     std::vector<long double> s;
@@ -275,13 +272,13 @@ public:
     // Default Constructor
     ResidualHelmholtzGERG2008Gaussian(){N = 0;};
     // Constructor
-    ResidualHelmholtzGERG2008Gaussian(const std::vector<double> &n, 
-                                      const std::vector<double> &d, 
-                                      const std::vector<double> &t, 
-                                      const std::vector<double> &eta, 
-                                      const std::vector<double> &epsilon,
-                                      const std::vector<double> &beta,
-                                      const std::vector<double> &gamma)
+    ResidualHelmholtzGERG2008Gaussian(const std::vector<long double> &n, 
+                                      const std::vector<long double> &d, 
+                                      const std::vector<long double> &t, 
+                                      const std::vector<long double> &eta, 
+                                      const std::vector<long double> &epsilon,
+                                      const std::vector<long double> &beta,
+                                      const std::vector<long double> &gamma)
     { 
         N = n.size(); 
         s.resize(N); 
@@ -310,17 +307,17 @@ public:
     long double dDelta2(const long double &tau, const long double &delta);
     long double dDelta_dTau(const long double &tau, const long double &delta);
     long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta);
-    long double dDelta2_dTau(const long double &tau, const long double &delta);
-    long double dDelta_dTau2(const long double &tau, const long double &delta);
-    long double dTau3(const long double &tau, const long double &delta);
+    long double dDelta3(const long double &tau, const long double &delta){throw NotImplementedError();};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){throw NotImplementedError();};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){throw NotImplementedError();};
+    long double dTau3(const long double &tau, const long double &delta){throw NotImplementedError();};
 };
 
 struct ResidualHelmholtzLemmon2005Element{
     long double n, d, t, ld, md;
     int l, m;
 };
-class ResidualHelmholtzLemmon2005{
+class ResidualHelmholtzLemmon2005 : public BaseHelmholtzTerm{
 public:
     std::size_t N;
     std::vector<long double> s; ///< Summation container
@@ -328,11 +325,11 @@ public:
     // Default Constructor
     ResidualHelmholtzLemmon2005(){N = 0;};
     // Constructor
-    ResidualHelmholtzLemmon2005(const std::vector<double> &n, 
-                                const std::vector<double> &d, 
-                                const std::vector<double> &t, 
-                                const std::vector<double> &l, 
-                                const std::vector<double> &m)
+    ResidualHelmholtzLemmon2005(const std::vector<long double> &n, 
+                                const std::vector<long double> &d, 
+                                const std::vector<long double> &t, 
+                                const std::vector<long double> &l, 
+                                const std::vector<long double> &m)
     {
         N = n.size();
         s.resize(N);
@@ -371,7 +368,7 @@ struct ResidualHelmholtzNonAnalyticElement
 {
     long double n, a, b, beta, A, B, C, D;
 };
-class ResidualHelmholtzNonAnalytic{
+class ResidualHelmholtzNonAnalytic : public BaseHelmholtzTerm{
 
 public:
     std::size_t N;
@@ -382,14 +379,14 @@ public:
     /// Destructor. No implementation
     ~ResidualHelmholtzNonAnalytic(){};
     /// Constructor
-    ResidualHelmholtzNonAnalytic(const std::vector<double> &n, 
-                                 const std::vector<double> &a, 
-                                 const std::vector<double> &b, 
-                                 const std::vector<double> &beta, 
-                                 const std::vector<double> &A,
-                                 const std::vector<double> &B,
-                                 const std::vector<double> &C,
-                                 const std::vector<double> &D
+    ResidualHelmholtzNonAnalytic(const std::vector<long double> &n, 
+                                 const std::vector<long double> &a, 
+                                 const std::vector<long double> &b, 
+                                 const std::vector<long double> &beta, 
+                                 const std::vector<long double> &A,
+                                 const std::vector<long double> &B,
+                                 const std::vector<long double> &C,
+                                 const std::vector<long double> &D
                                  )
     {
         N = n.size(); 
@@ -423,7 +420,7 @@ public:
     long double dTau3(const long double &tau, const long double &delta);
 };
 
-class ResidualHelmholtzSAFTAssociating{
+class ResidualHelmholtzSAFTAssociating : public BaseHelmholtzTerm{
     
 protected:
     double a, m,epsilonbar, vbarn, kappabar;
@@ -487,121 +484,6 @@ public:
     long double dDelta_dTau2(const long double &tau, const long double &delta);
     long double dTau3(const long double &tau, const long double &delta);
 };
-
-////// #############################################################################
-////// #############################################################################
-////// #############################################################################
-//////                                 IDEAL GAS TERMS
-////// #############################################################################
-////// #############################################################################
-////// #############################################################################
-////
-/////// The leading term in the EOS used to set the desired reference state
-/////**
-////\f[
-////\alpha_0 = \log(\delta)+a_1+a_2\tau
-////\f]
-////*/
-////class IdealHelmholtzLead : public BaseHelmholtzTerm{
-////
-////private:
-////    double a1, a2;
-////public:
-////    // Constructor
-////    IdealHelmholtzLead(double a1, double a2){a1=a1; a2=a2;};
-////
-////    //Destructor
-////    ~IdealHelmholtzLead(){};
-////
-////    void to_json(rapidjson::Value &el, rapidjson::Document &doc){
-////        el.AddMember("type","IdealHelmholtzLead",doc.GetAllocator());
-////        el.AddMember("a1",a1,doc.GetAllocator());
-////        el.AddMember("a2",a2,doc.GetAllocator());
-////    };
-////
-////    // Term and its derivatives
-////    double base(const double tau, const double delta){return log(delta)+a1+a2*tau;};
-////    double dTau(const double tau, const double delta){return a2;};
-////    double dTau2(const double tau, const double delta){return 0.0;};
-////    double dDelta(const double tau, const double delta){return 1.0/delta;};
-////    double dDelta2(const double tau, const double delta){return -1.0/delta/delta;};
-////    double dDelta2_dTau(const double tau, const double delta){return 0.0;};
-////    double dDelta_dTau(const double tau, const double delta){return 0.0;};
-////    double dDelta_dTau2(const double tau, const double delta){return 0.0;};
-////    double dTau3(const double tau, const double delta){return 0.0;};
-////    double dDelta3(const double tau, const double delta){return 2/delta/delta/delta;};
-////};
-////
-/////// The term in the EOS used to shift the reference state of the fluid
-/////**
-////\f[
-////\alpha_0 = a_1+a_2\tau
-////\f]
-////*/
-////class IdealHelmholtzEnthalpyEntropyOffset : public BaseHelmholtzTerm
-////{
-////private:
-////    double a1,a2; // Use these variables internally
-////public:
-////    // Constructor
-////    IdealHelmholtzEnthalpyEntropyOffset(double a1, double a2){a1=a1; a2=a2;};
-////
-////    //Destructor
-////    ~IdealHelmholtzEnthalpyEntropyOffset(){};
-////
-////    void to_json(rapidjson::Value &el, rapidjson::Document &doc){
-////        el.AddMember("type","IdealHelmholtzEnthalpyEntropyOffset",doc.GetAllocator());
-////        el.AddMember("a1",a1,doc.GetAllocator());
-////        el.AddMember("a2",a2,doc.GetAllocator());
-////    };
-////
-////    // Term and its derivatives
-////    double base(const double tau, const double delta){return a1+a2*tau;};
-////    double dTau(const double tau, const double delta){return a2;};
-////    double dTau2(const double tau, const double delta){return 0.0;};
-////    double dDelta(const double tau, const double delta){return 0.0;};
-////    double dDelta2(const double tau, const double delta){return 0.0;};
-////    double dDelta2_dTau(const double tau, const double delta){return 0.0;};
-////    double dDelta_dTau(const double tau, const double delta){return 0.0;};
-////    double dDelta_dTau2(const double tau, const double delta){return 0.0;};
-////    double dTau3(const double tau, const double delta){return 0.0;};
-////    double dDelta3(const double tau, const double delta){return 0.0;};
-////};
-////
-////
-/////**
-////\f[
-////\alpha_0 = a_1\ln\tau
-////\f]
-////*/
-////class IdealHelmholtzLogTau : public BaseHelmholtzTerm
-////{
-////private:
-////    double a1;
-////public:
-////    // Constructor
-////    IdealHelmholtzLogTau(double a1){this->a1=a1;};
-////
-////    //Destructor
-////    ~IdealHelmholtzLogTau(){};
-////
-////    void to_json(rapidjson::Value &el, rapidjson::Document &doc){
-////        el.AddMember("type","IdealHelmholtzLogTau",doc.GetAllocator());
-////        el.AddMember("a1",a1,doc.GetAllocator());
-////    };
-////
-////    // Term and its derivatives
-////    double base(const double tau, const double delta){return a1*log(tau);};
-////    double dTau(const double tau, const double delta){return a1/tau;};
-////    double dTau2(const double tau, const double delta){return -a1/tau/tau;};
-////    double dTau3(const double tau, const double delta){return 2*a1/tau/tau/tau;};
-////    double dDelta(const double tau, const double delta){return 0.0;};
-////    double dDelta2(const double tau, const double delta){return 0.0;};
-////    double dDelta2_dTau(const double tau, const double delta){return 0.0;};
-////    double dDelta_dTau(const double tau, const double delta){return 0.0;};
-////    double dDelta_dTau2(const double tau, const double delta){return 0.0;};
-////    double dDelta3(const double tau, const double delta){return 0.0;};
-////};
 
 class ResidualHelmholtzContainer
 {
@@ -676,6 +558,392 @@ public:
         return (Power.dTau3(tau, delta) + Exponential.dTau3(tau, delta)
                 +Gaussian.dTau3(tau, delta) + Lemmon2005.dTau3(tau, delta)
                 +NonAnalytic.dTau3(tau, delta) + SAFT.dTau3(tau,delta));
+    };
+};
+
+
+// #############################################################################
+// #############################################################################
+// #############################################################################
+//                                 IDEAL GAS TERMS
+// #############################################################################
+// #############################################################################
+// #############################################################################
+
+/// The leading term in the EOS used to set the desired reference state
+/**
+\f[
+\alpha_0 = \log(\delta)+a_1+a_2\tau
+\f]
+*/
+class IdealHelmholtzLead : public BaseHelmholtzTerm{
+
+private:
+    long double a1, a2;
+    bool enabled;
+public:
+    // Default constructor
+    IdealHelmholtzLead(){enabled = false;};
+
+    // Constructor
+    IdealHelmholtzLead(const long double a1, const long double a2)
+    :a1(a1), a2(a2)
+    {enabled = true;};
+
+    //Destructor
+    ~IdealHelmholtzLead(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc){
+        el.AddMember("type","IdealHelmholtzLead",doc.GetAllocator());
+        el.AddMember("a1", static_cast<double>(a1), doc.GetAllocator());
+        el.AddMember("a2", static_cast<double>(a2), doc.GetAllocator());
+    };
+
+    // Term and its derivatives
+    long double base(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return log(delta)+a1+a2*tau;
+    };
+    long double dDelta(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return 1.0/delta;
+    };
+    long double dTau(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return a2;
+    };
+    long double dDelta2(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return -1.0/delta/delta;
+    };
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return 2/delta/delta/delta;
+    };
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau3(const long double &tau, const long double &delta){return 0.0;};
+};
+
+/// The term in the EOS used to shift the reference state of the fluid
+/**
+\f[
+\alpha_0 = a_1+a_2\tau
+\f]
+*/
+class IdealHelmholtzEnthalpyEntropyOffset : public BaseHelmholtzTerm{
+private:
+    long double a1,a2; // Use these variables internally
+    bool enabled;
+public:
+    IdealHelmholtzEnthalpyEntropyOffset(){enabled = false;};
+
+    // Constructor
+    IdealHelmholtzEnthalpyEntropyOffset(long double a1, long double a2){a1=a1; a2=a2; enabled = true;};
+
+    //Destructor
+    ~IdealHelmholtzEnthalpyEntropyOffset(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc){
+        el.AddMember("type","IdealHelmholtzEnthalpyEntropyOffset",doc.GetAllocator());
+        el.AddMember("a1", static_cast<double>(a1), doc.GetAllocator());
+        el.AddMember("a2", static_cast<double>(a2), doc.GetAllocator());
+    };
+
+    // Term and its derivatives
+    long double base(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return a1+a2*tau;
+    };
+    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return a2;
+    };
+    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau3(const long double &tau, const long double &delta){return 0.0;};
+};
+
+
+/**
+\f[
+\alpha_0 = a_1\ln\tau
+\f]
+*/
+class IdealHelmholtzLogTau : public BaseHelmholtzTerm
+{
+private:
+    long double a1;
+    bool enabled;
+public:
+
+    /// Default constructor
+    IdealHelmholtzLogTau(){enabled = false;};
+
+    // Constructor
+    IdealHelmholtzLogTau(long double a1){this->a1=a1; enabled = true;};
+
+    //Destructor
+    ~IdealHelmholtzLogTau(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc){
+        el.AddMember("type", "IdealHelmholtzLogTau", doc.GetAllocator());
+        el.AddMember("a1", static_cast<double>(a1), doc.GetAllocator());
+    };
+
+    // Term and its derivatives
+    long double base(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return a1*log(tau);
+    };
+    long double dTau(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return a1/tau;
+    };
+    long double dTau2(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return -a1/tau/tau;
+    };
+    long double dTau3(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return 2*a1/tau/tau/tau;
+    };
+    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+};
+
+/**
+\f[
+\alpha_0 = \displaystyle\sum_i n_i\tau^{t_i}
+\f]
+*/
+class IdealHelmholtzPower : public BaseHelmholtzTerm{
+	
+private:
+	std::vector<long double> n, t; // Use these variables internally
+    std::size_t N;
+    bool enabled;
+public:
+    IdealHelmholtzPower(){enabled = false;};
+	// Constructor
+	IdealHelmholtzPower(const std::vector<long double> &n, const std::vector<long double> &t)
+    :n(n), t(t)
+	{
+		this->N = n.size();
+        enabled = true;
+	};
+
+	//Destructor
+	~IdealHelmholtzPower(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc)
+    {
+        el.AddMember("type","IdealHelmholtzPower",doc.GetAllocator());
+        cpjson::set_long_double_array("n",n,el,doc);
+        cpjson::set_long_double_array("t",t,el,doc);
+    };
+
+	// Term and its derivatives
+	long double base(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+		long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*pow(tau, t[i]);} return s;
+	};
+	long double dTau(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+		long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*pow(tau, t[i]-1);} return s;
+	};
+	long double dTau2(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*(t[i]-1)*pow(tau, t[i]-2);} return s;
+	};
+	long double dTau3(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*(t[i]-1)*(t[i]-2)*pow(tau, t[i]-3);} return s;
+	};
+	long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+};
+
+/**
+\f[
+\alpha_0 = \displaystyle\sum_i n_i\log[1-\exp(-\theta_i\tau)] 
+\f]
+*/
+class IdealHelmholtzPlanckEinstein : public BaseHelmholtzTerm{
+	
+private:
+	std::vector<long double> n,theta; // Use these variables internally
+	std::size_t N;
+    bool enabled;
+public:
+    IdealHelmholtzPlanckEinstein(){N = 0; enabled = false;}
+	// Constructor with std::vector instances
+	IdealHelmholtzPlanckEinstein(std::vector<long double> a, std::vector<long double> theta)
+    :n(n), theta(theta)
+	{
+		N = a.size();
+        enabled = false;
+	};
+
+	//Destructor
+	~IdealHelmholtzPlanckEinstein(){};
+  
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc)
+    {
+        el.AddMember("type","IdealHelmholtzPlanckEinstein",doc.GetAllocator());
+        cpjson::set_long_double_array("n",n,el,doc);
+        cpjson::set_long_double_array("theta",theta,el,doc);
+    };
+
+	// Term and its derivatives
+	long double base(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*log(1.0-exp(-theta[i]*tau));} return s;
+    };
+    long double dTau(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*theta[i]*(1.0/(1.0-exp(-theta[i]*tau))-1.0);} return s;
+    };
+	long double dTau2(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        long double s=0; for (std::size_t i=0; i < N; ++i){s -= n[i]*pow(theta[i],2)*exp(theta[i]*tau)/pow(1.0-exp(theta[i]*tau),2);} return s;
+    };
+    long double dTau3(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*pow(theta[i],2)*theta[i]*exp(theta[i]*tau)*(exp(theta[i]*tau)+1)/pow(exp(theta[i]*tau)-1,3);} return s;
+    };
+	long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta3(const long double &tau, const long double &delta){return 0;};
+};
+
+/**
+\f[ 
+\alpha_0 = \displaystyle\sum_i n_i\log[c_i+\exp(\theta_i\tau)] 
+\f]
+*/
+class IdealHelmholtzPlanckEinstein2 : public BaseHelmholtzTerm{
+	
+private:
+	std::vector<long double> n,theta,c; // Use these variables internally
+	std::size_t N;
+    bool enabled;
+public:
+    IdealHelmholtzPlanckEinstein2(){N = 0; enabled = false;}
+	// Constructor with std::vector instances
+	IdealHelmholtzPlanckEinstein2(const std::vector<long double> &n, 
+                                  const std::vector<long double> &theta, 
+                                  const std::vector<long double> &c)
+    :n(n), theta(theta), c(c)
+	{
+		N = n.size();
+        enabled = true;
+	};
+
+	//Destructor
+	~IdealHelmholtzPlanckEinstein2(){};
+  
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc)
+    {
+        el.AddMember("type","IdealHelmholtzPlanckEinstein2",doc.GetAllocator());
+        cpjson::set_long_double_array("n",n,el,doc);
+        cpjson::set_long_double_array("theta",theta,el,doc);
+        cpjson::set_long_double_array("c",c,el,doc);
+    };
+
+	// Term and its derivatives
+	long double base(const long double &tau, const long double &delta){
+        long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*log(c[i]+exp(theta[i]*tau));} return s;
+    };
+    long double dTau(const long double &tau, const long double &delta){
+        long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*theta[i]*exp(tau*theta[i])/(c[i]+exp(theta[i]*tau));} return s;
+    };
+	long double dTau2(const long double &tau, const long double &delta){
+        long double s=0; for (std::size_t i=0; i < N; ++i){s -= n[i]*pow(theta[i],2)*c[i]*exp(tau*theta[i])/pow(c[i]+exp(tau*theta[i]),2);} return s;
+    };
+    long double dTau3(const long double &tau, const long double &delta){
+        long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*pow(theta[i],2)*c[i]*(-theta[i])*exp(theta[i]*tau)*(exp(theta[i]*tau)-c[i])/pow(exp(theta[i]*tau)+c[i],3);} return s;
+    };
+	long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+	long double dDelta3(const long double &tau, const long double &delta){return 0;};
+};
+
+class IdealHelmholtzContainer
+{
+    
+public:
+    IdealHelmholtzLead Lead;
+    IdealHelmholtzEnthalpyEntropyOffset EnthalpyEntropyOffset;
+    IdealHelmholtzLogTau LogTau;
+    IdealHelmholtzPower Power;
+    IdealHelmholtzPlanckEinstein PlanckEinstein;
+    IdealHelmholtzPlanckEinstein2 PlanckEinstein2;
+
+    long double base(long double tau, long double delta)
+    {
+        return (Lead.base(tau, delta) + EnthalpyEntropyOffset.base(tau, delta)
+                + LogTau.base(tau, delta) + Power.base(tau, delta) 
+                + PlanckEinstein.base(tau, delta) + PlanckEinstein2.base(tau, delta)
+                );
+    };
+
+    long double dDelta(long double tau, long double delta)
+    {
+        return 0;
+    };
+    long double dTau(long double tau, long double delta)
+    {
+        return 0;
+    };
+    long double dDelta2(long double tau, long double delta)
+    {
+        return 0;
+    };
+    long double dDelta_dTau(long double tau, long double delta)
+    {
+        return 0;
+    };
+    long double dTau2(long double tau, long double delta)
+    {
+        return 0;
+    };
+    long double dDelta3(long double tau, long double delta) 
+    {
+        return 0;
+    };
+    long double dDelta2_dTau(long double tau, long double delta)
+    {
+        return 0;
+    };
+    long double dDelta_dTau2(long double tau, long double delta)
+    {
+        return 0;
+    };
+    long double dTau3(long double tau, long double delta)
+    {
+        return 0;
     };
 };
 

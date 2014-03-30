@@ -67,6 +67,18 @@ namespace cpjson
 		return out;
 	};
 
+    /// A convenience function to get a long double array compactly
+	inline std::vector<long double> get_long_double_array(rapidjson::Value &v)
+	{
+		std::vector<long double> out;
+		if (!v.IsArray()) { throw ValueError("input is not an array"); }
+		for (rapidjson::Value::ValueIterator itr = v.Begin(); itr != v.End(); ++itr)
+		{
+			out.push_back(itr->GetDouble());
+		}
+		return out;
+	};
+
 	/// A convenience function to get a string array compactly
 	inline std::vector<std::string> get_string_array(rapidjson::Value &v)
 	{
@@ -88,8 +100,27 @@ namespace cpjson
 		return buffer.GetString();
 	};
 
-	
-	
+    /// A convenience function to set a double array compactly
+    inline void set_double_array(const char *key, const std::vector<double> &vec, rapidjson::Value &value, rapidjson::Document &doc)
+    {
+        rapidjson::Value _v(rapidjson::kArrayType);
+        for (unsigned int i = 0; i < vec.size(); ++i)
+        {
+            _v.PushBack(vec[i],doc.GetAllocator());
+        }
+        value.AddMember(key, _v, doc.GetAllocator());
+    };
+
+    /// A convenience function to set a double array compactly
+    inline void set_long_double_array(const char *key, const std::vector<long double> &vec, rapidjson::Value &value, rapidjson::Document &doc)
+    {
+        rapidjson::Value _v(rapidjson::kArrayType);
+        for (unsigned int i = 0; i < vec.size(); ++i)
+        {
+            _v.PushBack(static_cast<double>(vec[i]), doc.GetAllocator());
+        }
+        value.AddMember(key, _v, doc.GetAllocator());
+    };
 
 }
 #endif

@@ -63,7 +63,7 @@ int main()
         printf("%g %g\n",elap, summer);
         
     }
-    if (0)
+    if (1)
     {
         double rhomass = 1, T = 300;
 
@@ -75,7 +75,7 @@ int main()
         MixRP->update(DmassT_INPUTS, rhomass, T);
         double p2 = MixRP->p();
 
-        double rr =0 ;
+        double rr = 0;
     }
     if (1)
     {

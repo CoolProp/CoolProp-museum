@@ -121,7 +121,7 @@ public:
 
 struct Ancillaries
 {
-    AncillaryFunction p,rhoL,rhoV;
+    AncillaryFunction p, rhoL, rhoV;
 };
 
 /// The core class for an equation of state
@@ -135,19 +135,14 @@ struct Ancillaries
 class EquationOfState{
 public:
     EquationOfState(){};
-    ~EquationOfState()
-    {
-	    while (!alpha0_vector.empty()){ 
-            delete alpha0_vector.back();  alpha0_vector.pop_back(); 
-        }
-    };
+    ~EquationOfState(){};
     SimpleState reduce; ///< Reducing state used for the EOS (usually, but not always, the critical point)
     EOSLimits limits; ///< Limits on the EOS
     double R_u; ///< The universal gas constant used for this EOS (usually, but not always, 8.314472 J/mol/K)
     double molar_mass;
     double accentric; ///< The accentric factor \f$ \omega = -log_{10}\left(\frac{p_s(T/T_c=0.7)}{p_c}\right)-1\f$
     ResidualHelmholtzContainer alphar; ///< The residual Helmholtz energy
-    std::vector<BaseHelmholtzTerm*> alpha0_vector; ///< The ideal-gas Helmholtz energy
+    IdealHelmholtzContainer alpha0; ///< The ideal Helmholtz energy
 
     /// Validate the EOS that was just constructed
     void validate()
@@ -197,6 +192,51 @@ public:
     long double d3alphar_dTau3(const double tau, const double delta) throw()
     {
         return alphar.dTau3(tau, delta);
+    };
+
+
+    long double base0(const double tau, const double delta) throw()
+    {
+        return alpha0.base(tau, delta);
+    };
+    // First partials
+    long double dalpha0_dDelta(const double tau, const double delta) throw()
+    {
+        return alpha0.dDelta(tau, delta);
+    };
+    long double dalpha0_dTau(const double tau, const double delta) throw()
+    {
+        return alpha0.dTau(tau, delta);
+    };
+    // Second partials
+    long double d2alpha0_dDelta2(const double tau, const double delta) throw()
+    {
+        return alpha0.dDelta2(tau, delta);
+    };
+    long double d2alpha0_dDelta_dTau(const double tau, const double delta) throw()
+    {
+        return alpha0.dDelta_dTau(tau, delta);
+    };
+    long double d2alpha0_dTau2(const double tau, const double delta) throw()
+    {
+        return alpha0.dTau2(tau, delta);
+    };
+    // Third partials
+    long double d3alpha0_dDelta3(const double tau, const double delta) throw()
+    {
+        return alpha0.dDelta3(tau, delta);
+    };
+    long double d3alpha0_dDelta2_dTau(const double tau, const double delta) throw()
+    {
+        return alpha0.dDelta2_dTau(tau, delta);
+    };
+    long double d3alpha0_dDelta_dTau2(const double tau, const double delta) throw()
+    {
+        return alpha0.dDelta_dTau2(tau, delta);
+    };
+    long double d3alpha0_dTau3(const double tau, const double delta) throw()
+    {
+        return alpha0.dTau3(tau, delta);
     };
 };
 

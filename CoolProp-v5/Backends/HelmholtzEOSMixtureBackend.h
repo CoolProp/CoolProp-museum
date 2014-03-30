@@ -61,7 +61,7 @@ public:
 
     double calc_dalphar_dDelta(void);
 
-    double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, double tau, double delta);
+    long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double tau, const long double delta);
     
     void calc_reducing_state(void);
     void calc_reducing_state_nocache(const std::vector<double> & mole_fractions);
@@ -83,6 +83,7 @@ public:
     void DmolarT_flash();
     void DmolarP_flash();
     void PT_flash();
+    void QT_flash();
 
     // ***************************************************************
     // *******************  SOLVER ROUTINES  *************************

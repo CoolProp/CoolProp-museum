@@ -294,10 +294,10 @@ GERG2008DepartureFunction::GERG2008DepartureFunction(const std::vector<double> &
     
     /// Break up into power and gaussian terms
     {
-        std::vector<double> _n(n.begin(), n.begin()+Npower);
-        std::vector<double> _d(d.begin(), d.begin()+Npower);
-        std::vector<double> _t(t.begin(), t.begin()+Npower);
-        std::vector<double> _l(Npower, 0.0);
+        std::vector<long double> _n(n.begin(), n.begin()+Npower);
+        std::vector<long double> _d(d.begin(), d.begin()+Npower);
+        std::vector<long double> _t(t.begin(), t.begin()+Npower);
+        std::vector<long double> _l(Npower, 0.0);
         phi1 = ResidualHelmholtzPower(_n, _d, _t, _l);
     }
     if (n.size() == Npower)
@@ -307,13 +307,13 @@ GERG2008DepartureFunction::GERG2008DepartureFunction(const std::vector<double> &
     else
     {
         using_gaussian = true;
-        std::vector<double> _n(n.begin()+Npower,                   n.end());
-        std::vector<double> _d(d.begin()+Npower,                   d.end());
-        std::vector<double> _t(t.begin()+Npower,                   t.end());
-        std::vector<double> _eta(eta.begin()+Npower,             eta.end());
-        std::vector<double> _epsilon(epsilon.begin()+Npower, epsilon.end());
-        std::vector<double> _beta(beta.begin()+Npower,          beta.end());
-        std::vector<double> _gamma(gamma.begin()+Npower,       gamma.end());
+        std::vector<long double> _n(n.begin()+Npower,                   n.end());
+        std::vector<long double> _d(d.begin()+Npower,                   d.end());
+        std::vector<long double> _t(t.begin()+Npower,                   t.end());
+        std::vector<long double> _eta(eta.begin()+Npower,             eta.end());
+        std::vector<long double> _epsilon(epsilon.begin()+Npower, epsilon.end());
+        std::vector<long double> _beta(beta.begin()+Npower,          beta.end());
+        std::vector<long double> _gamma(gamma.begin()+Npower,       gamma.end());
         phi2 = ResidualHelmholtzGERG2008Gaussian(_n, _d, _t, _eta, _epsilon, _beta, _gamma);
     }
 }

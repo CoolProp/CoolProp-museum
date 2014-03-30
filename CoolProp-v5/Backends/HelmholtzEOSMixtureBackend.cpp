@@ -131,6 +131,12 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
             DmolarT_flash();
             break;
         }
+        case QT_INPUTS:
+        {
+            _Q = value1; _T = value2;
+            QT_flash();
+            break;
+        }
         case PT_INPUTS:
         {
             _p = value1; _T = value2;
@@ -248,6 +254,17 @@ void HelmholtzEOSMixtureBackend::PT_phase_determination()
 	else{
 		throw ValueError(format("phase cannot be determined"));
 	}
+}
+void HelmholtzEOSMixtureBackend::QT_flash()
+{
+    if (is_pure_or_pseudopure)
+    {
+
+    }
+    else
+    {
+
+    }
 }
 void HelmholtzEOSMixtureBackend::DmolarT_flash()
 {
@@ -372,7 +389,7 @@ void HelmholtzEOSMixtureBackend::calc_reducing_state(void)
 {
     calc_reducing_state_nocache(mole_fractions);
 }
-double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> &mole_fractions, double tau, double delta)
+long double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> &mole_fractions, const long double tau, const long double delta)
 {
     if (is_pure_or_pseudopure)
     {

@@ -30,8 +30,8 @@ public:
         else
         {
             std::vector<double> F = cpjson::get_double_array(val["F"]);
-            assert(i<F.size());
-            d.add_number("F",F[i]);
+            assert(static_cast<std::size_t>(i) < F.size());
+            d.add_number("F", F[i]);
         }
         d.add_number("Npower", cpjson::get_double(val,"Npower"));
         

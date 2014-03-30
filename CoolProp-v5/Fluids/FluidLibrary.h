@@ -37,33 +37,33 @@ protected:
 
 			if (!type.compare("ResidualHelmholtzPower"))
 			{
-				std::vector<double> n = cpjson::get_double_array(contribution["n"]);
-				std::vector<double> d = cpjson::get_double_array(contribution["d"]);
-				std::vector<double> t = cpjson::get_double_array(contribution["t"]);
-				std::vector<double> l = cpjson::get_double_array(contribution["l"]);
+				std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
+				std::vector<long double> d = cpjson::get_long_double_array(contribution["d"]);
+				std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
+				std::vector<long double> l = cpjson::get_long_double_array(contribution["l"]);
 				EOS.alphar.Power = ResidualHelmholtzPower(n,d,t,l);
 			}
 			else if (!type.compare("ResidualHelmholtzGaussian"))
 			{
-				std::vector<double> n = cpjson::get_double_array(contribution["n"]);
-				std::vector<double> d = cpjson::get_double_array(contribution["d"]);
-				std::vector<double> t = cpjson::get_double_array(contribution["t"]);
-				std::vector<double> eta = cpjson::get_double_array(contribution["eta"]);
-				std::vector<double> epsilon = cpjson::get_double_array(contribution["epsilon"]);
-				std::vector<double> beta = cpjson::get_double_array(contribution["beta"]);
-				std::vector<double> gamma = cpjson::get_double_array(contribution["gamma"]);
+				std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
+				std::vector<long double> d = cpjson::get_long_double_array(contribution["d"]);
+				std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
+				std::vector<long double> eta = cpjson::get_long_double_array(contribution["eta"]);
+				std::vector<long double> epsilon = cpjson::get_long_double_array(contribution["epsilon"]);
+				std::vector<long double> beta = cpjson::get_long_double_array(contribution["beta"]);
+				std::vector<long double> gamma = cpjson::get_long_double_array(contribution["gamma"]);
 				EOS.alphar.Gaussian = ResidualHelmholtzGaussian(n,d,t,eta,epsilon,beta,gamma);
 			}
 			else if (!type.compare("ResidualHelmholtzNonAnalytic"))
 			{
-				std::vector<double> n = cpjson::get_double_array(contribution["n"]);
-				std::vector<double> a = cpjson::get_double_array(contribution["a"]);
-				std::vector<double> b = cpjson::get_double_array(contribution["b"]);
-				std::vector<double> beta = cpjson::get_double_array(contribution["beta"]);
-				std::vector<double> A = cpjson::get_double_array(contribution["A"]);
-				std::vector<double> B = cpjson::get_double_array(contribution["B"]);
-				std::vector<double> C = cpjson::get_double_array(contribution["C"]);
-				std::vector<double> D = cpjson::get_double_array(contribution["D"]);
+				std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
+				std::vector<long double> a = cpjson::get_long_double_array(contribution["a"]);
+				std::vector<long double> b = cpjson::get_long_double_array(contribution["b"]);
+				std::vector<long double> beta = cpjson::get_long_double_array(contribution["beta"]);
+				std::vector<long double> A = cpjson::get_long_double_array(contribution["A"]);
+				std::vector<long double> B = cpjson::get_long_double_array(contribution["B"]);
+				std::vector<long double> C = cpjson::get_long_double_array(contribution["C"]);
+				std::vector<long double> D = cpjson::get_long_double_array(contribution["D"]);
 				EOS.alphar.NonAnalytic = ResidualHelmholtzNonAnalytic(n,a,b,beta,A,B,C,D);
 			}
 			else

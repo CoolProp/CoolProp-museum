@@ -101,18 +101,18 @@ public:
 
 /*! 
 The Reducing parameter model used by the GERG-2008 formulation to yield the
-reducing parameters \f$ \bar\rho_r \f$ and \f$ T_r \f$ and derivatives thereof
+reducing parameters \f$ \rho_r \f$ and \f$ T_r \f$ and derivatives thereof
 */
 class GERG2008ReducingFunction : public ReducingFunction
 {
 protected:
-	STLMatrix v_c;
-	STLMatrix T_c; //!< \f$ 
-	STLMatrix beta_v; //!< \f$ \beta_{v,ij} \f$ from GERG-2008
-	STLMatrix gamma_v; //!< \f$ \gamma_{v,ij} \f$ from GERG-2008
-	STLMatrix beta_T; //!< \f$ \beta_{T,ij} \f$ from GERG-2008
-	STLMatrix gamma_T; //!< \f$ \gamma_{T,ij} \f$ from GERG-2008
-	std::vector<CoolPropFluid *> pFluids; //!< List of pointers to fluids
+	STLMatrix v_c; ///< \f$ v_{c,ij} = \frac{1}{8}\left(v_{c,i}^{1/3}+v_{c,j}^{1/3}\right)^{3}\f$ from GERG-2008
+	STLMatrix T_c; ///< \f$ T_{c,ij} = \sqrt{T_{c,i}T_{c,j}} \f$ from GERG=2008
+	STLMatrix beta_v; ///< \f$ \beta_{v,ij} \f$ from GERG-2008
+	STLMatrix gamma_v; ///< \f$ \gamma_{v,ij} \f$ from GERG-2008
+	STLMatrix beta_T; ///< \f$ \beta_{T,ij} \f$ from GERG-2008
+	STLMatrix gamma_T; ///< \f$ \gamma_{T,ij} \f$ from GERG-2008
+	std::vector<CoolPropFluid *> pFluids; ///< List of pointers to fluids
 public:
 	GERG2008ReducingFunction(std::vector<CoolPropFluid *> pFluids, STLMatrix beta_v, STLMatrix gamma_v, STLMatrix beta_T, STLMatrix gamma_T)
 	{
@@ -153,15 +153,15 @@ public:
 	double d2Trdxi2__constxj(const std::vector<double> &x, int i);
 	double d2Trdxidxj(const std::vector<double> &x, int i, int j);
 
-	double c_Y_ij(int i, int j, std::vector< std::vector< double> > * beta, std::vector< std::vector< double> > *gamma, std::vector< std::vector< double> > *Y_c);
-	double c_Y_ji(int j, int i, std::vector< std::vector< double> > * beta, std::vector< std::vector< double> > *gamma, std::vector< std::vector< double> > *Y_c);
-	double f_Y_ij(const std::vector<double> &x, int i, int j, std::vector< std::vector< double> > * beta);
+	double c_Y_ij(int i, int j, std::vector< std::vector< double> > &beta, std::vector< std::vector< double> > &gamma, std::vector< std::vector< double> > &Y_c);
+	double c_Y_ji(int j, int i, std::vector< std::vector< double> > &beta, std::vector< std::vector< double> > &gamma, std::vector< std::vector< double> > &Y_c);
+	double f_Y_ij(const std::vector<double> &x, int i, int j, std::vector< std::vector< double> > &beta);
 
-	double dfYkidxi__constxk(const std::vector<double> &x, int k, int i,std::vector< std::vector< double> > * beta);
-	double dfYikdxi__constxk(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > * beta);
-	double d2fYkidxi2__constxk(const std::vector<double> &x, int k, int i, std::vector< std::vector< double> > * beta);
-	double d2fYikdxi2__constxk(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > * beta);
-	double d2fYijdxidxj(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > * beta);
+	double dfYkidxi__constxk(const std::vector<double> &x, int k, int i,std::vector< std::vector< double> > &beta);
+	double dfYikdxi__constxk(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > &beta);
+	double d2fYkidxi2__constxk(const std::vector<double> &x, int k, int i, std::vector< std::vector< double> > &beta);
+	double d2fYikdxi2__constxk(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > &beta);
+	double d2fYijdxidxj(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > &beta);
 };
 
 /*! From Lemmon, JPCRD, 2000 for the properties of Dry Air, and also from Lemmon, JPCRD, 2004 for the properties of R404A, R410A, etc.	
