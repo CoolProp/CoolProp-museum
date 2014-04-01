@@ -793,11 +793,11 @@ private:
 public:
     IdealHelmholtzPlanckEinstein(){N = 0; enabled = false;}
     // Constructor with std::vector instances
-    IdealHelmholtzPlanckEinstein(std::vector<long double> a, std::vector<long double> theta)
+    IdealHelmholtzPlanckEinstein(std::vector<long double> n, std::vector<long double> theta)
     :n(n), theta(theta)
     {
-        N = a.size();
-        enabled = false;
+        N = n.size();
+        enabled = true;
     };
 
     //Destructor
@@ -1133,43 +1133,49 @@ public:
         return (Lead.base(tau, delta) + EnthalpyEntropyOffset.base(tau, delta)
                 + LogTau.base(tau, delta) + Power.base(tau, delta) 
                 + PlanckEinstein.base(tau, delta) + PlanckEinstein2.base(tau, delta)
+                + CP0Constant.base(tau, delta) + CP0PolyT.base(tau, delta)
+                + CP0AlyLee.base(tau, delta)
                 );
     };
     long double dDelta(const long double &tau, const long double &delta)
     {
-        return 0;
+        throw NotImplementedError();
     };
     long double dTau(const long double &tau, const long double &delta)
     {
-        return 0;
+        throw NotImplementedError();
     };
     long double dDelta2(const long double &tau, const long double &delta)
     {
-        return 0;
+        throw NotImplementedError();
     };
     long double dDelta_dTau(const long double &tau, const long double &delta)
     {
-        return 0;
+        throw NotImplementedError();
     };
     long double dTau2(const long double &tau, const long double &delta)
     {
-        return 0;
+        return (Lead.dTau2(tau, delta) + EnthalpyEntropyOffset.dTau2(tau, delta)
+                + LogTau.dTau2(tau, delta) + Power.dTau2(tau, delta) 
+                + PlanckEinstein.dTau2(tau, delta) + PlanckEinstein2.dTau2(tau, delta)
+                + CP0Constant.dTau2(tau, delta) + CP0PolyT.dTau2(tau, delta)
+                + CP0AlyLee.dTau2(tau, delta));
     };
     long double dDelta3(const long double &tau, const long double &delta) 
     {
-        return 0;
+        throw NotImplementedError();
     };
     long double dDelta2_dTau(const long double &tau, const long double &delta)
     {
-        return 0;
+        throw NotImplementedError();
     };
     long double dDelta_dTau2(const long double &tau, const long double &delta)
     {
-        return 0;
+        throw NotImplementedError();
     };
     long double dTau3(const long double &tau, const long double &delta)
     {
-        return 0;
+        throw NotImplementedError();
     };
 };
 

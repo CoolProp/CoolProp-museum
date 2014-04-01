@@ -1678,16 +1678,18 @@ void IdealHelmholtzCP0AlyLee::to_json(rapidjson::Value &el, rapidjson::Document 
     {
         _n.PushBack(static_cast<double>(c[i]),doc.GetAllocator());
     }
-    el.AddMember("n",_n,doc.GetAllocator());
+    el.AddMember("c",_n,doc.GetAllocator());
     el.AddMember("Tc",static_cast<double>(Tc),doc.GetAllocator());
     el.AddMember("T0",static_cast<double>(T0),doc.GetAllocator());
 }
 long double IdealHelmholtzCP0AlyLee::base(const long double &tau, const long double &delta)
 {	
+    if (!enabled){ return 0.0;}
     return -tau*(anti_deriv_cp0_tau2(tau)-anti_deriv_cp0_tau2(tau0))+(anti_deriv_cp0_tau(tau)-anti_deriv_cp0_tau(tau0));
 }
 long double IdealHelmholtzCP0AlyLee::dTau(const long double &tau, const long double &delta)
 {
+    if (!enabled){ return 0.0;}
     return -(anti_deriv_cp0_tau2(tau) - anti_deriv_cp0_tau2(tau0));
 }
 long double IdealHelmholtzCP0AlyLee::anti_deriv_cp0_tau2(const long double &tau)
@@ -1699,15 +1701,16 @@ long double IdealHelmholtzCP0AlyLee::anti_deriv_cp0_tau(const long double &tau)
     long double term1 = c[0]*log(tau);
     long double term2 = 2*c[1]*c[2]*tau/(-Tc + Tc*exp(-2*c[2]*tau/Tc)) + c[1]*log(-1 + exp(-2*c[2]*tau/Tc)) + 2*c[1]*c[2]*tau/Tc;
     long double term3 = -c[3]*(Tc*exp(2*c[4]*tau/Tc)*log(exp(2*c[4]*tau/Tc) + 1) + Tc*log(exp(2*c[4]*tau/Tc) + 1) - 2*c[4]*tau*exp(2*c[4]*tau/Tc))/(Tc*(exp(2*c[4]*tau/Tc) + 1));
-    
     return term1 + term2 + term3;
 }
 long double IdealHelmholtzCP0AlyLee::dTau2(const long double &tau, const long double &delta)
 {
+    if (!enabled){ return 0.0;}
     return -c[0]/pow(tau,2) - c[1]*pow(c[2]/Tc/sinh(c[2]*tau/Tc),2) - c[3]*pow(c[4]/Tc/cosh(c[4]*tau/Tc),2);
 }
 long double IdealHelmholtzCP0AlyLee::dTau3(const long double &tau, const long double &delta)
 {
+    if (!enabled){ return 0.0;}
     return 2*c[0]/pow(tau,3) + 2*c[1]*pow(c[2]/Tc,3)*cosh(c[2]*tau/Tc)/pow(sinh(c[2]*tau/Tc),3) + 2*c[3]*pow(c[4]/Tc,3)*sinh(c[4]*tau/Tc)/pow(cosh(c[4]*tau/Tc),3);
 }
 

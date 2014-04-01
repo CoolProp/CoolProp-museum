@@ -555,7 +555,7 @@ void REFPROPMixtureBackend::check_status(void)
 {
 	if (!_mole_fractions_set){ throw ValueError("Mole fractions not yet set");}
 }
-double REFPROPMixtureBackend::calc_viscosity(void)
+long double REFPROPMixtureBackend::calc_viscosity(void)
 {
 	double eta, tcx, rhomol_L = 0.001*_rhomolar;
 	long ierr;
@@ -568,15 +568,15 @@ double REFPROPMixtureBackend::calc_viscosity(void)
 	//else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
 	_viscosity = 1e-6*eta;
 	_conductivity = tcx;
-	return _viscosity;
+	return static_cast<double>(_viscosity);
 }
-double REFPROPMixtureBackend::calc_conductivity(void)
+long double REFPROPMixtureBackend::calc_conductivity(void)
 {
 	// Calling viscosity also caches conductivity, use that to save calls
 	calc_viscosity();
-	return _conductivity;
+	return static_cast<double>(_conductivity);
 }
-double REFPROPMixtureBackend::calc_surface_tension(void)
+long double REFPROPMixtureBackend::calc_surface_tension(void)
 {
 	double sigma, rho_mol_L = 0.001*_rhomolar;
 	long ierr;
@@ -587,7 +587,7 @@ double REFPROPMixtureBackend::calc_surface_tension(void)
 	if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } 
 	//else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
 	_surface_tension = sigma;
-	return _surface_tension;
+	return static_cast<double>(_surface_tension);
 }
 	
 void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)

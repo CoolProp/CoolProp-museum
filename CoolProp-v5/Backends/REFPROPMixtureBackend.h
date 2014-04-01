@@ -68,11 +68,11 @@ public:
 	void check_status();
 
 	/// Get the viscosity [Pa-s] (based on the temperature and density in the state class)
-	double calc_viscosity(void);
+	long double calc_viscosity(void);
 	/// Get the thermal conductivity [W/m/K] (based on the temperature and density in the state class)
-	double calc_conductivity(void);
+	long double calc_conductivity(void);
 	/// Get the surface tension [N/m] (based on the temperature in the state class).  Invalid for temperatures above critical point or below triple point temperature
-	double calc_surface_tension(void);
+	long double calc_surface_tension(void);
 
 };
 

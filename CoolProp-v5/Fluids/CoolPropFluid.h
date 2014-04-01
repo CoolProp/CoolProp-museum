@@ -272,34 +272,6 @@ class CoolPropFluid {
         double molar_mass(){ return pEOS->molar_mass; };
 };
 
-//#include "../Backends/HelmholtzEOSBackend.h"
-//#include "../Backends/REFPROPBackend.h"
-//
-///// The base class for interpolators
-//class AbstractInterpolator{};
-//
-///// BicubicInterpolator mixin
-//class BicubicInterpolator{};
-//
-///// TTSE Interpolator mixin
-//class TTSEInterpolator{};
-////
-//class HelmholtzTTSEInterpolator : public HelmholtzEOSBackend, TTSEInterpolator
-//{
-//};
-//
-//class HelmholtzBicubicInterpolator : public HelmholtzEOSBackend, BicubicInterpolator
-//{
-//};
-//
-//class REFPROPTTSEInterpolator : public REFPROPBackend, TTSEInterpolator
-//{
-//};
-//
-//class REFPROPBicubicInterpolator : public REFPROPBackend, BicubicInterpolator
-//{
-//};
-
 
 } /* namespace CoolProp */
 #endif /* COOLPROPFLUID_H_ */

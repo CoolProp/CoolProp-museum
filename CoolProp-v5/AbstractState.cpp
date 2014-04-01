@@ -179,6 +179,14 @@ double AbstractState::dalphar_dDelta(void){
     if (!_dalphar_dDelta) _dalphar_dDelta = calc_dalphar_dDelta();
     return _dalphar_dDelta;
 }
+double AbstractState::d2alphar_dTau2(void){
+    if (!_d2alphar_dTau2) _d2alphar_dTau2 = calc_d2alphar_dTau2();
+    return _d2alphar_dTau2;
+}
+double AbstractState::d2alpha0_dTau2(void){
+    if (!_d2alpha0_dTau2) _d2alpha0_dTau2 = calc_d2alpha0_dTau2();
+    return _d2alpha0_dTau2;
+}
 
 //virtual double AbstractState::isothermal_compressibility(void){
 //	return 1.0/(_rho*dpdrho_constT());

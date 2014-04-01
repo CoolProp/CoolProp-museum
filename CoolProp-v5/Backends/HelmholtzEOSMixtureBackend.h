@@ -56,18 +56,47 @@ public:
     */
     void set_mass_fractions(const std::vector<double> &mass_fractions){throw std::exception();};
     
-    double calc_molar_mass(void);
-    double calc_gas_constant(void);
+    long double calc_molar_mass(void);
+    long double calc_gas_constant(void);
 
-    double calc_dalphar_dDelta(void);
+    long double calc_dalphar_dDelta(void);
+    long double calc_d2alpha0_dTau2(void);
+    long double calc_d2alphar_dTau2(void);
 
     long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta);
-    long double calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta);
+    
+    /**
+    \brief Take derivatives of the ideal-gas part of the Helmholtz energy, don't use any cached values, or store any cached values
+
+    @param nTau How many derivatives with respect to \f$\tau\f$ to take
+    @param nDelta How many derivatives with respect to \f$\delta\f$ to take
+    @param mole_fractions Mole fractions
+    @param tau Reciprocal reduced temperature where \f$\tau=T_r / T\f$
+    @param delta Reduced density where \f$\delta = \rho / \rho_r \f$
+    @param Tr Reducing temperature of the mixture [K]
+    @param rhor Reducing molar density of the mixture [mol/m^3]
+
+    \f[
+    \alpha^0 = \displaystyle\sum_{i=1}^{N}x_i[\alpha^0_{oi}(\rho,T) + \ln x_i]
+    \f]
+    where in this case, we use the \f$\alpha^0\f$ for the given fluid, which uses the inputs \f$\tau_i\f$ and \f$\delta_i\f$, so we do the conversion between mixture and component reduced states with
+    \f[
+    \tau_i = \frac{T_{c,i}}{T} = \frac{\tau T_{c,i}}{T_r}
+    \f]
+    \f[
+    \delta_i = \frac{\rho}{\rho_{c,i}} = \frac{\delta\rho_r}{\rho_{c,i}}
+    \f]
+
+    \sa Table B5, GERG 2008 from Kunz Wagner, JCED, 2012
+    */
+    
+    long double calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta, const long double &Tr, const long double &rhor);
     
     void calc_reducing_state(void);
     void calc_reducing_state_nocache(const std::vector<double> & mole_fractions);
 
-    void calc_pressure(void);
+    long double calc_pressure(void);
+    long double calc_cvmolar(void);
 
     double p_rhoT(long double rhomolar, long double T);
 

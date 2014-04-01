@@ -109,21 +109,26 @@ protected:
     // Property accessors to be optionally implemented by the backend
     // for properties that are not always calculated
     // ----------------------------------------
-    virtual double calc_hmolar(void){throw NotImplementedError("calc_hmolar is not implemented for this backend");};
-    virtual double calc_smolar(void){throw NotImplementedError("calc_smolar is not implemented for this backend");};
-    virtual double calc_cpmolar(void){throw NotImplementedError("calc_cpmolar is not implemented for this backend");};
-    virtual double calc_cvmolar(void){throw NotImplementedError("calc_cvmolar is not implemented for this backend");};
-    virtual double calc_speed_sound(void){throw NotImplementedError("calc_speed_sound is not implemented for this backend");};
-    virtual double calc_isothermal_compressibility(void){throw NotImplementedError("calc_isothermal_compressibility is not implemented for this backend");};
-    virtual double calc_isobaric_expansion_coefficient(void){throw NotImplementedError("calc_isobaric_expansion_coefficient is not implemented for this backend");};
-    virtual double calc_viscosity(void){throw NotImplementedError("calc_viscosity is not implemented for this backend");};
-    virtual double calc_conductivity(void){throw NotImplementedError("calc_conductivity is not implemented for this backend");};
-    virtual double calc_surface_tension(void){throw NotImplementedError("calc_surface_tension is not implemented for this backend");};
-    virtual double calc_molar_mass(void){throw NotImplementedError("calc_molar_mass is not implemented for this backend");};
-    virtual double calc_gas_constant(void){throw NotImplementedError("calc_gas_constant is not implemented for this backend");};
-    virtual double calc_dalphar_dDelta(void){throw NotImplementedError("calc_dalphar_dDelta is not implemented for this backend");};
+    virtual long double calc_hmolar(void){throw NotImplementedError("calc_hmolar is not implemented for this backend");};
+    virtual long double calc_smolar(void){throw NotImplementedError("calc_smolar is not implemented for this backend");};
+    virtual long double calc_cpmolar(void){throw NotImplementedError("calc_cpmolar is not implemented for this backend");};
+    virtual long double calc_cvmolar(void){throw NotImplementedError("calc_cvmolar is not implemented for this backend");};
+    virtual long double calc_speed_sound(void){throw NotImplementedError("calc_speed_sound is not implemented for this backend");};
+    virtual long double calc_isothermal_compressibility(void){throw NotImplementedError("calc_isothermal_compressibility is not implemented for this backend");};
+    virtual long double calc_isobaric_expansion_coefficient(void){throw NotImplementedError("calc_isobaric_expansion_coefficient is not implemented for this backend");};
+    virtual long double calc_viscosity(void){throw NotImplementedError("calc_viscosity is not implemented for this backend");};
+    virtual long double calc_conductivity(void){throw NotImplementedError("calc_conductivity is not implemented for this backend");};
+    virtual long double calc_surface_tension(void){throw NotImplementedError("calc_surface_tension is not implemented for this backend");};
+    virtual long double calc_molar_mass(void){throw NotImplementedError("calc_molar_mass is not implemented for this backend");};
+    virtual long double calc_pressure(void){throw NotImplementedError("calc_pressure is not implemented for this backend");};
+    virtual long double calc_gas_constant(void){throw NotImplementedError("calc_gas_constant is not implemented for this backend");};
+    virtual long double calc_dalphar_dDelta(void){throw NotImplementedError("calc_dalphar_dDelta is not implemented for this backend");};
+    virtual long double calc_d2alphar_dTau2(void){throw NotImplementedError("calc_d2alphar_dTau2 is not implemented for this backend");};
+    virtual long double calc_d2alpha0_dTau2(void){throw NotImplementedError("calc_d2alpha0_dTau2 is not implemented for this backend");};
+    
+
     virtual void calc_reducing_state(void){throw NotImplementedError("calc_reducing_state is not implemented for this backend");};
-    virtual void calc_pressure(void){throw NotImplementedError("calc_pressure is not implemented for this backend");};
+    
 public:
     AbstractState();
     virtual ~AbstractState();
@@ -260,9 +265,9 @@ public:
     virtual double dalpha0_dDelta(void) = 0;
     virtual double dalpha0_dTau(void) = 0;
     virtual double d2alpha0_dDelta2(void) = 0;
-    virtual double d2alpha0_dDelta_dTau(void) = 0;
-    virtual double d2alpha0_dTau2(void) = 0;
-    virtual double d3alpha0_dDelta3(void) = 0;
+    virtual double d2alpha0_dDelta_dTau(void) = 0;*/
+    double d2alpha0_dTau2(void);
+    /*virtual double d3alpha0_dDelta3(void) = 0;
     virtual double d3alpha0_dDelta2_dTau(void) = 0;
     virtual double d3alpha0_dDelta_dTau2(void) = 0;
     virtual double d3alpha0_dTau3(void) = 0;
@@ -271,9 +276,9 @@ public:
     double dalphar_dDelta(void);
     /*virtual double dalphar_dTau(void) = 0;
     virtual double d2alphar_dDelta2(void) = 0;
-    virtual double d2alphar_dDelta_dTau(void) = 0;
-    virtual double d2alphar_dTau2(void) = 0;
-    virtual double d3alphar_dDelta3(void) = 0;
+    virtual double d2alphar_dDelta_dTau(void) = 0;*/
+    double d2alphar_dTau2(void);
+    /*virtual double d3alphar_dDelta3(void) = 0;
     virtual double d3alphar_dDelta2_dTau(void) = 0;
     virtual double d3alphar_dDelta_dTau2(void) = 0;
     virtual double d3alphar_dTau3(void) = 0;
