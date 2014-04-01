@@ -61,7 +61,8 @@ public:
 
     double calc_dalphar_dDelta(void);
 
-    long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double tau, const long double delta);
+    long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta);
+    long double calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta);
     
     void calc_reducing_state(void);
     void calc_reducing_state_nocache(const std::vector<double> & mole_fractions);

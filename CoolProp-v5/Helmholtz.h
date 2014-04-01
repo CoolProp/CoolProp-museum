@@ -269,9 +269,9 @@ public:
     std::vector<long double> s;
     std::size_t N;
     std::vector<ResidualHelmholtzGaussianElement> elements;
-    // Default Constructor
+    /// Default Constructor
     ResidualHelmholtzGERG2008Gaussian(){N = 0;};
-    // Constructor
+    /// Constructor
     ResidualHelmholtzGERG2008Gaussian(const std::vector<long double> &n, 
                                       const std::vector<long double> &d, 
                                       const std::vector<long double> &t, 
@@ -296,7 +296,7 @@ public:
         }
     };
 
-    ///< Destructor for the alphar_power class.  No implementation
+    ///< Destructor.  No implementation
     ~ResidualHelmholtzGERG2008Gaussian(){};
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
@@ -347,7 +347,7 @@ public:
         }
     };
 
-    ///< Destructor for the alphar_power class.  No implementation
+    ///< Destructor.  No implementation
     ~ResidualHelmholtzLemmon2005(){};
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
@@ -468,7 +468,7 @@ public:
 
     bool disabled;
 
-    //Destructor
+    //Destructor. No Implementation
     ~ResidualHelmholtzSAFTAssociating(){};
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
@@ -729,23 +729,23 @@ public:
 \f]
 */
 class IdealHelmholtzPower : public BaseHelmholtzTerm{
-	
+    
 private:
-	std::vector<long double> n, t; // Use these variables internally
+    std::vector<long double> n, t; // Use these variables internally
     std::size_t N;
     bool enabled;
 public:
     IdealHelmholtzPower(){enabled = false;};
-	// Constructor
-	IdealHelmholtzPower(const std::vector<long double> &n, const std::vector<long double> &t)
+    // Constructor
+    IdealHelmholtzPower(const std::vector<long double> &n, const std::vector<long double> &t)
     :n(n), t(t)
-	{
-		this->N = n.size();
+    {
+        this->N = n.size();
         enabled = true;
-	};
+    };
 
-	//Destructor
-	~IdealHelmholtzPower(){};
+    //Destructor
+    ~IdealHelmholtzPower(){};
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc)
     {
@@ -754,29 +754,29 @@ public:
         cpjson::set_long_double_array("t",t,el,doc);
     };
 
-	// Term and its derivatives
-	long double base(const long double &tau, const long double &delta){
+    // Term and its derivatives
+    long double base(const long double &tau, const long double &delta){
         if (!enabled){return 0.0;}
-		long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*pow(tau, t[i]);} return s;
-	};
-	long double dTau(const long double &tau, const long double &delta){
+        long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*pow(tau, t[i]);} return s;
+    };
+    long double dTau(const long double &tau, const long double &delta){
         if (!enabled){return 0.0;}
-		long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*pow(tau, t[i]-1);} return s;
-	};
-	long double dTau2(const long double &tau, const long double &delta){
+        long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*pow(tau, t[i]-1);} return s;
+    };
+    long double dTau2(const long double &tau, const long double &delta){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*(t[i]-1)*pow(tau, t[i]-2);} return s;
-	};
-	long double dTau3(const long double &tau, const long double &delta){
+    };
+    long double dTau3(const long double &tau, const long double &delta){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*(t[i]-1)*(t[i]-2)*pow(tau, t[i]-3);} return s;
-	};
-	long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+    };
+    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
 };
 
 /**
@@ -785,23 +785,23 @@ public:
 \f]
 */
 class IdealHelmholtzPlanckEinstein : public BaseHelmholtzTerm{
-	
+    
 private:
-	std::vector<long double> n,theta; // Use these variables internally
-	std::size_t N;
+    std::vector<long double> n,theta; // Use these variables internally
+    std::size_t N;
     bool enabled;
 public:
     IdealHelmholtzPlanckEinstein(){N = 0; enabled = false;}
-	// Constructor with std::vector instances
-	IdealHelmholtzPlanckEinstein(std::vector<long double> a, std::vector<long double> theta)
+    // Constructor with std::vector instances
+    IdealHelmholtzPlanckEinstein(std::vector<long double> a, std::vector<long double> theta)
     :n(n), theta(theta)
-	{
-		N = a.size();
+    {
+        N = a.size();
         enabled = false;
-	};
+    };
 
-	//Destructor
-	~IdealHelmholtzPlanckEinstein(){};
+    //Destructor
+    ~IdealHelmholtzPlanckEinstein(){};
   
     void to_json(rapidjson::Value &el, rapidjson::Document &doc)
     {
@@ -810,8 +810,8 @@ public:
         cpjson::set_long_double_array("theta",theta,el,doc);
     };
 
-	// Term and its derivatives
-	long double base(const long double &tau, const long double &delta){
+    // Term and its derivatives
+    long double base(const long double &tau, const long double &delta){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*log(1.0-exp(-theta[i]*tau));} return s;
     };
@@ -819,7 +819,7 @@ public:
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*theta[i]*(1.0/(1.0-exp(-theta[i]*tau))-1.0);} return s;
     };
-	long double dTau2(const long double &tau, const long double &delta){
+    long double dTau2(const long double &tau, const long double &delta){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s -= n[i]*pow(theta[i],2)*exp(theta[i]*tau)/pow(1.0-exp(theta[i]*tau),2);} return s;
     };
@@ -827,12 +827,12 @@ public:
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*pow(theta[i],2)*theta[i]*exp(theta[i]*tau)*(exp(theta[i]*tau)+1)/pow(exp(theta[i]*tau)-1,3);} return s;
     };
-	long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta3(const long double &tau, const long double &delta){return 0;};
+    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta){return 0;};
 };
 
 /**
@@ -841,25 +841,25 @@ public:
 \f]
 */
 class IdealHelmholtzPlanckEinstein2 : public BaseHelmholtzTerm{
-	
+    
 private:
-	std::vector<long double> n,theta,c; // Use these variables internally
-	std::size_t N;
+    std::vector<long double> n,theta,c; // Use these variables internally
+    std::size_t N;
     bool enabled;
 public:
     IdealHelmholtzPlanckEinstein2(){N = 0; enabled = false;}
-	// Constructor with std::vector instances
-	IdealHelmholtzPlanckEinstein2(const std::vector<long double> &n, 
+    // Constructor with std::vector instances
+    IdealHelmholtzPlanckEinstein2(const std::vector<long double> &n, 
                                   const std::vector<long double> &theta, 
                                   const std::vector<long double> &c)
     :n(n), theta(theta), c(c)
-	{
-		N = n.size();
+    {
+        N = n.size();
         enabled = true;
-	};
+    };
 
-	//Destructor
-	~IdealHelmholtzPlanckEinstein2(){};
+    //Destructor
+    ~IdealHelmholtzPlanckEinstein2(){};
   
     void to_json(rapidjson::Value &el, rapidjson::Document &doc)
     {
@@ -869,26 +869,249 @@ public:
         cpjson::set_long_double_array("c",c,el,doc);
     };
 
-	// Term and its derivatives
-	long double base(const long double &tau, const long double &delta){
+    // Term and its derivatives
+    long double base(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*log(c[i]+exp(theta[i]*tau));} return s;
     };
     long double dTau(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*theta[i]*exp(tau*theta[i])/(c[i]+exp(theta[i]*tau));} return s;
     };
-	long double dTau2(const long double &tau, const long double &delta){
+    long double dTau2(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s -= n[i]*pow(theta[i],2)*c[i]*exp(tau*theta[i])/pow(c[i]+exp(tau*theta[i]),2);} return s;
     };
     long double dTau3(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*pow(theta[i],2)*c[i]*(-theta[i])*exp(theta[i]*tau)*(exp(theta[i]*tau)-c[i])/pow(exp(theta[i]*tau)+c[i],3);} return s;
     };
-	long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-	long double dDelta3(const long double &tau, const long double &delta){return 0;};
+    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta){return 0;};
 };
+
+class IdealHelmholtzCP0Constant : public BaseHelmholtzTerm{
+
+private:
+    double cp_over_R,Tc,T0,tau0; // Use these variables internally
+    bool enabled;
+public:
+    /// Default constructor
+    IdealHelmholtzCP0Constant(){enabled = false;};
+
+    /// Constructor with just a single double value
+    IdealHelmholtzCP0Constant(long double cp_over_R, long double Tc, long double T0) 
+    : cp_over_R(cp_over_R), Tc(Tc), T0(T0)
+    { 
+        enabled = true;
+    };
+
+    /// Destructor
+    ~IdealHelmholtzCP0Constant(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc)
+    {
+        el.AddMember("type","IdealGasHelmholtzCP0Constant", doc.GetAllocator());
+        el.AddMember("cp_over_R", cp_over_R, doc.GetAllocator());
+        el.AddMember("Tc", Tc, doc.GetAllocator());
+        el.AddMember("T0", T0, doc.GetAllocator());
+    };
+
+    // Term and its derivatives
+    long double base(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return cp_over_R-cp_over_R*tau/tau0+cp_over_R*log(tau/tau0);
+    };
+    long double dTau(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return cp_over_R/tau-cp_over_R/tau0;
+    };
+    long double dTau2(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return -cp_over_R/(tau*tau);
+    };
+    long double dTau3(const long double &tau, const long double &delta){
+        if (!enabled){return 0.0;}
+        return 2*cp_over_R/(tau*tau*tau);
+    };
+    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+};
+
+class IdealHelmholtzCP0PolyT : public BaseHelmholtzTerm{
+private:
+    std::vector<long double> c, t;
+    long double Tc, T0, tau0; // Use these variables internally
+    std::size_t N;
+    bool enabled;
+public:
+    /// Destructor
+    IdealHelmholtzCP0PolyT(){N = 0; enabled = false;};
+
+    /// Constructor with std::vectors
+    IdealHelmholtzCP0PolyT(const std::vector<long double> &c, const std::vector<long double> &t, double Tc, double T0) 
+    : c(c), t(t), Tc(Tc), T0(T0)
+    { 
+        tau0 = Tc/T0;
+        enabled = true;
+    };
+
+    /// Destructor
+    ~IdealHelmholtzCP0PolyT(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
+
+    // Term and its derivatives
+    long double base(const long double &tau, const long double &delta);
+    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau(const long double &tau, const long double &delta);
+    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau2(const long double &tau, const long double &delta);
+    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau3(const long double &tau, const long double &delta);
+    
+};
+
+/// Term in the ideal-gas specific heat equation that is based on Aly-Lee formulation
+/** Specific heat is of the form:
+\f[
+\frac{c_p^0}{R_u} = A + B\left(\frac{C/T}{\sinh(C/T)}\right)^2 + D\left(\frac{E/T}{\cosh(E/T)}\right)^2
+\f]
+Second partial of ideal-gas Helmholtz energy given directly by specific heat (\f$\displaystyle\alpha_{\tau\tau}^0=-\frac{1}{\tau^2}\frac{c_p^0}{R_u} \f$) - this is obtained by real gas \f$c_p\f$ relationship, and killing off residual Helmholtz terms
+\f[
+\alpha^0_{\tau\tau} = -\frac{A}{\tau^2} - \frac{B}{\tau^2}\left(\frac{C/T}{\sinh(C/T)}\right)^2 - \frac{D}{\tau^2}\left(\frac{E/T}{\cosh(E/T)}\right)^2
+\f]
+or in terms of \f$ \tau \f$:
+\f[
+\alpha^0_{\tau\tau} = -\frac{A}{\tau^2} - \frac{BC^2}{T_c^2}\left(\frac{1}{\sinh(C\tau/T_c)}\right)^2 - \frac{DE^2}{T_c^2}\left(\frac{1}{\cosh(E\tau/T_c)}\right)^2
+\f]
+Third partial:
+\f[
+\alpha^0_{\tau\tau\tau} = 2\frac{A}{\tau^3} + 2\frac{BC^3}{T_c^3}\frac{\cosh(C\tau/T_c)}{\sinh^3(C\tau/T_c)} +2 \frac{DE^3}{T_c^3}\frac{\sinh(E\tau/T_c)}{\cosh^3(E\tau/T_c)}
+\f]
+Now coming back to the ideal gas Helmholtz energy definition:
+\f[
+\alpha^0 = -\tau\displaystyle\int_{\tau_0}^{\tau} \frac{1}{\tau^2}\frac{c_p^0}{R_u}d\tau+\displaystyle\int_{\tau_0}^{\tau} \frac{1}{\tau}\frac{c_p^0}{R_u}d\tau
+\f]
+Applying derivative
+\f[
+\alpha^0_{\tau} = -\displaystyle\int_{\tau_0}^{\tau} \frac{1}{\tau^2}\frac{c_p^0}{R_u}d\tau-\tau\frac{\partial}{\partial \tau}\left[\displaystyle\int_{\tau_0}^{\tau} \frac{1}{\tau^2}\frac{c_p^0}{R_u}d\tau \right]+\frac{\partial}{\partial \tau}\left[\displaystyle\int_{\tau_0}^{\tau} \frac{1}{\tau}\frac{c_p^0}{R_u}d\tau \right]
+\f]
+Fundamental theorem of calculus
+\f[
+\alpha^0_{\tau} = -\int_{\tau_0}^{\tau} \frac{1}{\tau^2}\frac{c_p^0}{R_u}d\tau-\tau \frac{1}{\tau^2}\frac{c_p^0}{R_u}d\tau+\frac{1}{\tau}\frac{c_p^0}{R_u}
+\f]
+Last two terms cancel, leaving
+\f[
+\alpha^0_{\tau} = -\int_{\tau_0}^{\tau} \frac{1}{\tau^2}\frac{c_p^0}{R_u}d\tau
+\f]
+Another derivative yields (from fundamental theorem of calculus)
+\f[
+\alpha^0_{\tau\tau} = - \frac{1}{\tau^2}\frac{c_p^0}{R_u}
+\f]
+
+see also Jaeschke and Schley, 1995, (http://link.springer.com/article/10.1007%2FBF02083547#page-1)
+*/
+class IdealHelmholtzCP0AlyLee : public BaseHelmholtzTerm{
+private:
+    std::vector<long double> c;
+    long double Tc, tau0, T0; // Use these variables internally
+    bool enabled;
+public:
+    IdealHelmholtzCP0AlyLee(){enabled = false;};
+
+    /// Constructor with std::vectors
+    IdealHelmholtzCP0AlyLee(std::vector<long double> c, double Tc, double T0)
+    :c(c), Tc(Tc), T0(T0)
+    {
+        tau0=Tc/T0;
+        enabled = true;
+    };
+
+    /// Destructor
+    ~IdealHelmholtzCP0AlyLee(){};
+
+    void to_json(rapidjson::Value &el, rapidjson::Document &doc);
+
+    
+    /// The antiderivative given by \f$ \displaystyle\int \frac{1}{\tau^2}\frac{c_p^0}{R_u}d\tau \f$
+    /**
+    sympy code for this derivative:
+
+        from sympy import *
+        a1,a2,a3,a4,a5,Tc,tau = symbols('a1,a2,a3,a4,a5,Tc,tau', real = True)
+        integrand = a1 + a2*(a3/Tc/sinh(a3*tau/Tc))**2 + a4*(a5/Tc/cosh(a5*tau/Tc))**2
+        integrand = integrand.rewrite(exp)
+        antideriv = trigsimp(integrate(integrand,tau))
+        display(antideriv)
+        print latex(antideriv)
+        print ccode(antideriv)
+
+    \f[
+    \displaystyle\int \frac{1}{\tau^2}\frac{c_p^0}{R_u}d\tau = -\frac{a_0}{\tau}+\frac{2a_1a_2}{T_c\left[\exp\left(-\frac{2a_2\tau}{T_c}\right)-1\right]}+\frac{2a_3a_4}{T_c\left[\exp\left(-\frac{2a_4\tau}{T_c}\right)+1\right]}
+    \f]
+    */
+    long double anti_deriv_cp0_tau2(const long double &tau);
+
+    /// The antiderivative given by \f$ \displaystyle\int \frac{1}{\tau}\frac{c_p^0}{R_u}d\tau \f$
+    /**
+    sympy code for this derivative:
+
+        a_0,a_1,a_2,a_3,a_4,Tc,tau = symbols('a_0,a_1,a_2,a_3,a_4,Tc,tau', real = True)
+        integrand = a_0/tau + a_1/tau*(a_2*tau/Tc/sinh(a_2*tau/Tc))**2 + a_3/tau*(a_4*tau/Tc/cosh(a_4*tau/Tc))**2
+
+        term2 = a_1/tau*(a_2*tau/Tc/sinh(a_2*tau/Tc))**2
+        term2 = term2.rewrite(exp)  # Unpack the sinh to exp functions
+        antideriv2 = trigsimp(integrate(term2,tau))
+        display(antideriv2)
+        print latex(antideriv2)
+        print ccode(antideriv2)
+
+        term3 = a_3/tau*(a_4*tau/Tc/cosh(a_4*tau/Tc))**2
+        term3 = term3.rewrite(exp)  # Unpack the cosh to exp functions
+        antideriv3 = factor(trigsimp(integrate(term3,tau).rewrite(exp)))
+        display(antideriv3)
+        print latex(antideriv3)
+        print ccode(antideriv3)
+
+    Can be broken into three parts (trick is to express \f$sinh\f$ and \f$cosh\f$ in terms of \f$exp\f$ function)
+
+    Term 2:
+    \f[
+    \displaystyle\int \frac{a_1a_2^2}{T_c^2}\frac{\tau}{\sinh\left(\displaystyle\frac{a_2\tau}{T_c}\right)^2} d\tau = \frac{2 a_{1} a_{2} \tau}{- Tc + Tc e^{- \frac{2 a_{2}}{Tc} \tau}} + a_{1} \log{\left (-1 + e^{- \frac{2 a_{2}}{Tc} \tau} \right )} + \frac{2 a_{1}}{Tc} a_{2} \tau
+    \f]
+
+    Term 3:
+    \f[
+    \displaystyle\int \frac{a_1a_2^2}{T_c^2}\frac{\tau}{\cosh\left(\displaystyle\frac{a_2\tau}{T_c}\right)^2} d\tau = - \frac{a_{3}}{Tc \left(e^{\frac{2 a_{4}}{Tc} \tau} + 1\right)} \left(Tc e^{\frac{2 a_{4}}{Tc} \tau} \log{\left (e^{\frac{2 a_{4}}{Tc} \tau} + 1 \right )} + Tc \log{\left (e^{\frac{2 a_{4}}{Tc} \tau} + 1 \right )} - 2 a_{4} \tau e^{\frac{2 a_{4}}{Tc} \tau}\right)
+    \f]
+    */
+    long double anti_deriv_cp0_tau(const long double &tau);
+
+    long double base(const long double &tau, const long double &delta);
+    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau(const long double &tau, const long double &delta);
+    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau2(const long double &tau, const long double &delta);
+    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
+    long double dTau3(const long double &tau, const long double &delta);
+    
+};
+
 
 class IdealHelmholtzContainer
 {
@@ -901,47 +1124,50 @@ public:
     IdealHelmholtzPlanckEinstein PlanckEinstein;
     IdealHelmholtzPlanckEinstein2 PlanckEinstein2;
 
-    long double base(long double tau, long double delta)
+    IdealHelmholtzCP0Constant CP0Constant;
+    IdealHelmholtzCP0PolyT CP0PolyT;
+    IdealHelmholtzCP0AlyLee CP0AlyLee;
+
+    long double base(const long double &tau, const long double &delta)
     {
         return (Lead.base(tau, delta) + EnthalpyEntropyOffset.base(tau, delta)
                 + LogTau.base(tau, delta) + Power.base(tau, delta) 
                 + PlanckEinstein.base(tau, delta) + PlanckEinstein2.base(tau, delta)
                 );
     };
-
-    long double dDelta(long double tau, long double delta)
+    long double dDelta(const long double &tau, const long double &delta)
     {
         return 0;
     };
-    long double dTau(long double tau, long double delta)
+    long double dTau(const long double &tau, const long double &delta)
     {
         return 0;
     };
-    long double dDelta2(long double tau, long double delta)
+    long double dDelta2(const long double &tau, const long double &delta)
     {
         return 0;
     };
-    long double dDelta_dTau(long double tau, long double delta)
+    long double dDelta_dTau(const long double &tau, const long double &delta)
     {
         return 0;
     };
-    long double dTau2(long double tau, long double delta)
+    long double dTau2(const long double &tau, const long double &delta)
     {
         return 0;
     };
-    long double dDelta3(long double tau, long double delta) 
+    long double dDelta3(const long double &tau, const long double &delta) 
     {
         return 0;
     };
-    long double dDelta2_dTau(long double tau, long double delta)
+    long double dDelta2_dTau(const long double &tau, const long double &delta)
     {
         return 0;
     };
-    long double dDelta_dTau2(long double tau, long double delta)
+    long double dDelta_dTau2(const long double &tau, const long double &delta)
     {
         return 0;
     };
-    long double dTau3(long double tau, long double delta)
+    long double dTau3(const long double &tau, const long double &delta)
     {
         return 0;
     };

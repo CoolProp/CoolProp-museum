@@ -55,7 +55,7 @@ public:
 /*! 
 An abstract base class for the reducing function to allow for
 Lemmon-Jacobsen, GERG, or other reducing function to yield the
-reducing parameters \f$ \bar\rho_r \f$ and \f$ T_r \f$
+reducing parameters \f$ \rho_r \f$ and \f$ T_r \f$
 */
 class ReducingFunction
 {

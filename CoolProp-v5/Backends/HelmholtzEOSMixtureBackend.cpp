@@ -477,6 +477,94 @@ long double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau
         }
     }
 }
+long double HelmholtzEOSMixtureBackend::calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> &mole_fractions, const long double &tau, const long double &delta)
+{
+    if (is_pure_or_pseudopure)
+    {
+        if (nTau == 0 && nDelta == 0){
+            return components[0]->pEOS->base0(tau, delta);
+        }
+        else if (nTau == 0 && nDelta == 1){
+            return components[0]->pEOS->dalpha0_dDelta(tau, delta);
+        }
+        else if (nTau == 1 && nDelta == 0){
+            return components[0]->pEOS->dalpha0_dTau(tau, delta);
+        }
+        else if (nTau == 0 && nDelta == 2){
+            return components[0]->pEOS->d2alpha0_dDelta2(tau, delta);
+        }
+        else if (nTau == 1 && nDelta == 1){
+            return components[0]->pEOS->d2alpha0_dDelta_dTau(tau, delta);
+        }
+        else if (nTau == 2 && nDelta == 0){
+            return components[0]->pEOS->d2alpha0_dTau2(tau, delta);
+        }
+        else if (nTau == 0 && nDelta == 3){
+            return components[0]->pEOS->d3alpha0_dDelta3(tau, delta);
+        }
+        else if (nTau == 1 && nDelta == 2){
+            return components[0]->pEOS->d3alpha0_dDelta2_dTau(tau, delta);
+        }
+        else if (nTau == 2 && nDelta == 1){
+            return components[0]->pEOS->d3alpha0_dDelta_dTau2(tau, delta);
+        }
+        else if (nTau == 3 && nDelta == 0){
+            return components[0]->pEOS->d3alpha0_dTau3(tau, delta);
+        }
+        else 
+        {
+            throw ValueError();
+        }
+    }
+    else{
+        unsigned int N = mole_fractions.size();
+        double summer = 0;
+        if (nTau == 0 && nDelta == 0){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->base0(tau, delta); }
+            return summer + Excess.alphar(tau, delta, mole_fractions);
+        }
+        else if (nTau == 0 && nDelta == 1){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->dalpha0_dDelta(tau, delta); }
+            return summer + Excess.dalphar_dDelta(tau, delta, mole_fractions);
+        }
+        else if (nTau == 1 && nDelta == 0){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->dalpha0_dTau(tau, delta); }
+            return summer + Excess.dalphar_dTau(tau, delta, mole_fractions);
+        }
+        else if (nTau == 0 && nDelta == 2){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->d2alpha0_dDelta2(tau, delta); }
+            return summer + Excess.d2alphar_dDelta2(tau, delta, mole_fractions);
+        }
+        else if (nTau == 1 && nDelta == 1){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->d2alpha0_dDelta_dTau(tau, delta); }
+            return summer + Excess.d2alphar_dDelta_dTau(tau, delta, mole_fractions);
+        }
+        else if (nTau == 2 && nDelta == 0){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->d2alpha0_dTau2(tau, delta); }
+            return summer + Excess.d2alphar_dTau2(tau, delta, mole_fractions);
+        }
+        /*else if (nTau == 0 && nDelta == 3){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->d3alpha0_dDelta3(tau, delta); }
+            return summer + pExcess.d3alphar_dDelta3(tau, delta);
+        }
+        else if (nTau == 1 && nDelta == 2){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->d3alpha0_dDelta2_dTau(tau, delta); }
+            return summer + pExcess.d3alphar_dDelta2_dTau(tau, delta);
+        }
+        else if (nTau == 2 && nDelta == 1){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->d3alpha0_dDelta_dTau2(tau, delta); }
+            return summer + pExcess.d3alphar_dDelta_dTau2(tau, delta);
+        }
+        else if (nTau == 3 && nDelta == 0){
+            for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->d3alphar_dTau3(tau, delta); }
+            return summer + pExcess.d3alphar_dTau3(tau, delta);
+        }*/
+        else 
+        {
+            throw ValueError();
+        }
+    }
+}
 double HelmholtzEOSMixtureBackend::calc_dalphar_dDelta(void)
 {
     const int nTau = 0, nDelta = 1;
