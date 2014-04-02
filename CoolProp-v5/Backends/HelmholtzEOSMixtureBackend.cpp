@@ -377,7 +377,43 @@ long double HelmholtzEOSMixtureBackend::calc_pressure(void)
     // Get pressure
     _p = _rhomolar*R_u*_T*(1+_delta*dar_dDelta);
 
-    return static_cast<double>(_p);
+    return static_cast<long double>(_p);
+}
+long double HelmholtzEOSMixtureBackend::calc_hmolar(void)
+{
+    // Calculate the reducing parameters
+    _delta = _rhomolar/_reducing.rhomolar;
+    _tau = _reducing.T/_T;
+
+    // Calculate derivatives if needed, or just use cached values
+    long double da0_dTau = dalpha0_dTau();
+    long double dar_dTau = dalphar_dTau();
+    long double dar_dDelta = dalphar_dDelta();
+    long double R_u = static_cast<long double>(_gas_constant);
+
+    // Get molar enthalpy
+    _hmolar = R_u*_T*(1 + _tau*(da0_dTau+dar_dTau) + _delta*dar_dDelta);
+
+    return static_cast<long double>(_hmolar);
+}
+long double HelmholtzEOSMixtureBackend::calc_smolar(void)
+{
+    // Calculate the reducing parameters
+    _delta = _rhomolar/_reducing.rhomolar;
+    _tau = _reducing.T/_T;
+
+    // Calculate derivatives if needed, or just use cached values
+    long double da0_dTau = dalpha0_dTau();
+    long double ar = alphar();
+    long double a0 = alpha0();
+    long double dar_dTau = dalphar_dTau();
+    long double dar_dDelta = dalphar_dDelta();
+    long double R_u = static_cast<long double>(_gas_constant);
+
+    // Get molar entropy
+    _smolar = R_u*(_tau*(da0_dTau+dar_dTau) - a0 - ar);
+
+    return static_cast<long double>(_smolar);
 }
 long double HelmholtzEOSMixtureBackend::calc_cvmolar(void)
 {

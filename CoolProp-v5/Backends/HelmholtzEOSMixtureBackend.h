@@ -108,6 +108,8 @@ public:
     long double calc_pressure(void);
     long double calc_cvmolar(void);
     long double calc_cpmolar(void);
+    long double calc_hmolar(void);
+    long double calc_smolar(void);
     long double calc_speed_sound(void);
 
     double p_rhoT(long double rhomolar, long double T);

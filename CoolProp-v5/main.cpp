@@ -83,8 +83,7 @@ int main()
     {
         int N = 2;
         std::vector<double> z(N, 1.0/N);
-        //z[0] = 0.0; z[1] = 1.0;
-        double rhomass = 0.00001, T = 300;
+        double rhomass = 0.01, T = 300;
 
         AbstractState *Mix = AbstractState::factory("CORE-Ethane|n-Propane");
         Mix->set_mole_fractions(z);
@@ -93,6 +92,8 @@ int main()
         double cv1 = Mix->cvmolar();
         double cp1 = Mix->cpmolar();
         double w1 = Mix->speed_sound();
+        double h1 = Mix->hmolar();
+        double s1 = Mix->smolar();
 
         AbstractState *MixRP = AbstractState::factory("REFPROP-Ethane|propane");
         MixRP->set_mole_fractions(z);
@@ -101,6 +102,8 @@ int main()
         double cv2 = MixRP->cvmolar();
         double cp2 = MixRP->cpmolar();
         double w2 = MixRP->speed_sound();
+        double h2 = MixRP->hmolar();
+        double s2 = MixRP->smolar();
 
         double rr = 0;
     }
