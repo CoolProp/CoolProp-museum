@@ -66,16 +66,18 @@ int main()
     if (1)
     {
         double rhomass = 0.00001, T = 300;
+        
+        AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
+        MixRP->update(QT_INPUTS, 0.0, T);
+        double p2 = MixRP->p();
+        double cv2 = MixRP->cvmolar();
 
         AbstractState *Mix = AbstractState::factory("CORE-n-Propane");
-        Mix->update(DmassT_INPUTS, rhomass, T);
+        Mix->update(QT_INPUTS, rhomass, T);
         double p1 = Mix->p();
         double cv1 = Mix->cvmolar();
 
-        AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
-        MixRP->update(DmassT_INPUTS, rhomass, T);
-        double p2 = MixRP->p();
-        double cv2 = MixRP->cvmolar();
+        
 
         double rr = 0;
     }

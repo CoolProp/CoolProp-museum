@@ -152,7 +152,7 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
 
     
 }
-void HelmholtzEOSMixtureBackend::DmolarT_phase_determination()
+void HelmholtzEOSMixtureBackend::DmolarT_phase_determination_pure_or_pseudopure()
 {
     if (_T < _crit.T)
 	{
@@ -261,7 +261,14 @@ void HelmholtzEOSMixtureBackend::QT_flash()
 {
     if (is_pure_or_pseudopure)
     {
-
+        //if pure()
+        //{
+       //     saturation_T_pure();
+       // }
+       // else
+       // {
+       //     saturation_T_pseudopure();
+       // }
     }
     else
     {
@@ -273,11 +280,11 @@ void HelmholtzEOSMixtureBackend::DmolarT_flash()
     if (is_pure_or_pseudopure)
     {
         // Find the phase, while updating all internal variables possible
-        DmolarT_phase_determination();
+        DmolarT_phase_determination_pure_or_pseudopure();
     }
     else
     {
-        // TODO: hard coded phase
+        // TODO: hard coded phase to assume homogeneous phase
         _phase  = iphase_gas;
     }
 

@@ -117,7 +117,7 @@ public:
     // ***************************************************************
     // *************  PHASE DETERMINATION ROUTINES  ******************
     // ***************************************************************
-    void DmolarT_phase_determination();
+    void DmolarT_phase_determination_pure_or_pseudopure();
     void DmolarP_phase_determination();
     void PT_phase_determination();
 
