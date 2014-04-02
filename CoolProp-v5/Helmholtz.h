@@ -1139,19 +1139,39 @@ public:
     };
     long double dDelta(const long double &tau, const long double &delta)
     {
-        throw NotImplementedError();
+        return (Lead.dDelta(tau, delta) + EnthalpyEntropyOffset.dDelta(tau, delta)
+                + LogTau.dDelta(tau, delta) + Power.dDelta(tau, delta) 
+                + PlanckEinstein.dDelta(tau, delta) + PlanckEinstein2.dDelta(tau, delta)
+                + CP0Constant.dDelta(tau, delta) + CP0PolyT.dDelta(tau, delta)
+                + CP0AlyLee.dDelta(tau, delta)
+                );
     };
     long double dTau(const long double &tau, const long double &delta)
     {
-        throw NotImplementedError();
+        return (Lead.dTau(tau, delta) + EnthalpyEntropyOffset.dTau(tau, delta)
+                + LogTau.dTau(tau, delta) + Power.dTau(tau, delta) 
+                + PlanckEinstein.dTau(tau, delta) + PlanckEinstein2.dTau(tau, delta)
+                + CP0Constant.dTau(tau, delta) + CP0PolyT.dTau(tau, delta)
+                + CP0AlyLee.dTau(tau, delta)
+                );
     };
     long double dDelta2(const long double &tau, const long double &delta)
     {
-        throw NotImplementedError();
+        return (Lead.dDelta2(tau, delta) + EnthalpyEntropyOffset.dDelta2(tau, delta)
+                + LogTau.dDelta2(tau, delta) + Power.dDelta2(tau, delta) 
+                + PlanckEinstein.dDelta2(tau, delta) + PlanckEinstein2.dDelta2(tau, delta)
+                + CP0Constant.dDelta2(tau, delta) + CP0PolyT.dDelta2(tau, delta)
+                + CP0AlyLee.dDelta2(tau, delta)
+                );
     };
     long double dDelta_dTau(const long double &tau, const long double &delta)
     {
-        throw NotImplementedError();
+        return (Lead.dDelta_dTau(tau, delta) + EnthalpyEntropyOffset.dDelta_dTau(tau, delta)
+                + LogTau.dDelta_dTau(tau, delta) + Power.dDelta_dTau(tau, delta) 
+                + PlanckEinstein.dDelta_dTau(tau, delta) + PlanckEinstein2.dDelta_dTau(tau, delta)
+                + CP0Constant.dDelta_dTau(tau, delta) + CP0PolyT.dDelta_dTau(tau, delta)
+                + CP0AlyLee.dDelta_dTau(tau, delta)
+                );
     };
     long double dTau2(const long double &tau, const long double &delta)
     {
@@ -1163,19 +1183,39 @@ public:
     };
     long double dDelta3(const long double &tau, const long double &delta) 
     {
-        throw NotImplementedError();
+        return (Lead.dDelta3(tau, delta) + EnthalpyEntropyOffset.dDelta3(tau, delta)
+                + LogTau.dDelta3(tau, delta) + Power.dDelta3(tau, delta) 
+                + PlanckEinstein.dDelta3(tau, delta) + PlanckEinstein2.dDelta3(tau, delta)
+                + CP0Constant.dDelta3(tau, delta) + CP0PolyT.dDelta3(tau, delta)
+                + CP0AlyLee.dDelta3(tau, delta)
+                );
     };
     long double dDelta2_dTau(const long double &tau, const long double &delta)
     {
-        throw NotImplementedError();
+        return (Lead.dDelta2_dTau(tau, delta) + EnthalpyEntropyOffset.dDelta2_dTau(tau, delta)
+                + LogTau.dDelta2_dTau(tau, delta) + Power.dDelta2_dTau(tau, delta) 
+                + PlanckEinstein.dDelta2_dTau(tau, delta) + PlanckEinstein2.dDelta2_dTau(tau, delta)
+                + CP0Constant.dDelta2_dTau(tau, delta) + CP0PolyT.dDelta2_dTau(tau, delta)
+                + CP0AlyLee.dDelta2_dTau(tau, delta)
+                );
     };
     long double dDelta_dTau2(const long double &tau, const long double &delta)
     {
-        throw NotImplementedError();
+        return (Lead.dDelta_dTau2(tau, delta) + EnthalpyEntropyOffset.dDelta_dTau2(tau, delta)
+                + LogTau.dDelta_dTau2(tau, delta) + Power.dDelta_dTau2(tau, delta) 
+                + PlanckEinstein.dDelta_dTau2(tau, delta) + PlanckEinstein2.dDelta_dTau2(tau, delta)
+                + CP0Constant.dDelta_dTau2(tau, delta) + CP0PolyT.dDelta_dTau2(tau, delta)
+                + CP0AlyLee.dDelta_dTau2(tau, delta)
+                );
     };
     long double dTau3(const long double &tau, const long double &delta)
     {
-        throw NotImplementedError();
+        return (Lead.dTau3(tau, delta) + EnthalpyEntropyOffset.dTau3(tau, delta)
+                + LogTau.dTau3(tau, delta) + Power.dTau3(tau, delta) 
+                + PlanckEinstein.dTau3(tau, delta) + PlanckEinstein2.dTau3(tau, delta)
+                + CP0Constant.dTau3(tau, delta) + CP0PolyT.dTau3(tau, delta)
+                + CP0AlyLee.dTau3(tau, delta)
+                );
     };
 };
 

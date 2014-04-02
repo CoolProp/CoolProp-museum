@@ -65,7 +65,7 @@ int main()
     }
     if (1)
     {
-        double rhomass = 0.00000000000001, T = 300;
+        double rhomass = 0.00001, T = 300;
 
         AbstractState *Mix = AbstractState::factory("CORE-n-Propane");
         Mix->update(DmassT_INPUTS, rhomass, T);
@@ -83,17 +83,22 @@ int main()
     {
         int N = 2;
         std::vector<double> z(N, 1.0/N);
-        double rhomolar = 7000, T = 350;
+        //z[0] = 0.0; z[1] = 1.0;
+        double rhomass = 0.00001, T = 300;
 
         AbstractState *Mix = AbstractState::factory("CORE-Ethane|n-Propane");
         Mix->set_mole_fractions(z);
-        Mix->update(DmolarT_INPUTS, rhomolar, T);
+        Mix->update(DmassT_INPUTS, rhomass, T);
         double p1 = Mix->p();
+        double cv1 = Mix->cvmolar();
+        double cp1 = Mix->cpmolar();
 
         AbstractState *MixRP = AbstractState::factory("REFPROP-Ethane|propane");
         MixRP->set_mole_fractions(z);
-        MixRP->update(DmolarT_INPUTS, rhomolar, T);
+        MixRP->update(DmassT_INPUTS, rhomass, T);
         double p2 = MixRP->p();
+        double cv2 = MixRP->cvmolar();
+        double cp2 = MixRP->cpmolar();
 
         double rr = 0;
     }

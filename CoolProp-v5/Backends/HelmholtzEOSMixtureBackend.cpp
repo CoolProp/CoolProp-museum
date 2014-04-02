@@ -371,10 +371,11 @@ long double HelmholtzEOSMixtureBackend::calc_pressure(void)
     _tau = _reducing.T/_T;
 
     // Calculate derivative if needed
-    dalphar_dDelta();
+    long double dar_dDelta = dalphar_dDelta();
+    long double R_u = static_cast<double>(_gas_constant);
 
     // Get pressure
-    _p = _rhomolar*(double)_gas_constant*_T*(1+_delta*(double)_dalphar_dDelta);
+    _p = _rhomolar*R_u*_T*(1+_delta*dar_dDelta);
 
     return static_cast<double>(_p);
 }
@@ -384,7 +385,7 @@ long double HelmholtzEOSMixtureBackend::calc_cvmolar(void)
     _delta = _rhomolar/_reducing.rhomolar;
     _tau = _reducing.T/_T;
 
-    // Calculate derivatives if needed
+    // Calculate derivatives if needed, or just use cached values
     long double d2ar_dTau2 = d2alphar_dTau2();
     long double d2a0_dTau2 = d2alpha0_dTau2();
     long double R_u = static_cast<double>(_gas_constant);
@@ -393,6 +394,25 @@ long double HelmholtzEOSMixtureBackend::calc_cvmolar(void)
     _cvmolar = -R_u*pow(_tau,2)*(d2ar_dTau2 + d2a0_dTau2);
 
     return static_cast<double>(_cvmolar);
+}
+long double HelmholtzEOSMixtureBackend::calc_cpmolar(void)
+{
+    // Calculate the reducing parameters
+    _delta = _rhomolar/_reducing.rhomolar;
+    _tau = _reducing.T/_T;
+
+    // Calculate derivatives if needed, or just use cached values
+    long double d2a0_dTau2 = d2alpha0_dTau2();
+    long double dar_dDelta = dalphar_dDelta();
+    long double d2ar_dDelta2 = d2alphar_dDelta2();
+    long double d2ar_dDelta_dTau = d2alphar_dDelta_dTau();
+    long double d2ar_dTau2 = d2alphar_dTau2();
+    long double R_u = static_cast<double>(_gas_constant);
+
+    // Get cp
+    _cpmolar = R_u*(-pow(_tau,2)*(d2ar_dTau2 + d2a0_dTau2)+pow(1+_delta*dar_dDelta-_delta*_tau*d2ar_dDelta_dTau,2)/(1+2*_delta*dar_dDelta+pow(_delta,2)*d2ar_dDelta2));
+
+    return static_cast<double>(_cpmolar);
 }
 
 void HelmholtzEOSMixtureBackend::calc_reducing_state_nocache(const std::vector<double> & mole_fractions)
@@ -544,8 +564,8 @@ long double HelmholtzEOSMixtureBackend::calc_alpha0_deriv_nocache(const int nTau
         long double summer = 0;
         long double tau_i, delta_i, rho_ci, T_ci;
         for (unsigned int i = 0; i < N; ++i){ 
-            rho_ci = rhor/components[i]->pEOS->reduce.rhomolar; 
-            T_ci = components[i]->pEOS->reduce.T*tau;
+            rho_ci = components[i]->pEOS->reduce.rhomolar; 
+            T_ci = components[i]->pEOS->reduce.T;
             tau_i = T_ci*tau/Tr;
             delta_i = delta*rhor/rho_ci;
 
@@ -553,19 +573,19 @@ long double HelmholtzEOSMixtureBackend::calc_alpha0_deriv_nocache(const int nTau
                 summer += mole_fractions[i]*(components[i]->pEOS->base0(tau_i, delta_i)+log(mole_fractions[i])); 
             }
             else if (nTau == 0 && nDelta == 1){
-                summer += mole_fractions[i]*rhor/rho_ci*components[i]->pEOS->dalpha0_dDelta(tau, delta); 
+                summer += mole_fractions[i]*rhor/rho_ci*components[i]->pEOS->dalpha0_dDelta(tau_i, delta_i); 
             }
             else if (nTau == 1 && nDelta == 0){
-                summer += mole_fractions[i]*T_ci/Tr*components[i]->pEOS->dalpha0_dTau(tau, delta); 
+                summer += mole_fractions[i]*T_ci/Tr*components[i]->pEOS->dalpha0_dTau(tau_i, delta_i); 
             }
             else if (nTau == 0 && nDelta == 2){
-                summer += mole_fractions[i]*pow(rhor/rho_ci,2)*components[i]->pEOS->d2alpha0_dDelta2(tau, delta); 
+                summer += mole_fractions[i]*pow(rhor/rho_ci,2)*components[i]->pEOS->d2alpha0_dDelta2(tau_i, delta_i); 
             }
             else if (nTau == 1 && nDelta == 1){
-                summer += mole_fractions[i]*rhor/rho_ci*T_ci/Tr*components[i]->pEOS->d2alpha0_dDelta_dTau(tau, delta); 
+                summer += mole_fractions[i]*rhor/rho_ci*T_ci/Tr*components[i]->pEOS->d2alpha0_dDelta_dTau(tau_i, delta_i); 
             }
             else if (nTau == 2 && nDelta == 0){
-                summer += mole_fractions[i]*pow(T_ci/Tr,2)*components[i]->pEOS->d2alpha0_dTau2(tau, delta); 
+                summer += mole_fractions[i]*pow(T_ci/Tr,2)*components[i]->pEOS->d2alpha0_dTau2(tau_i, delta_i); 
             }
             else 
             {
@@ -575,15 +595,61 @@ long double HelmholtzEOSMixtureBackend::calc_alpha0_deriv_nocache(const int nTau
         return summer;
     }
 }
+long double HelmholtzEOSMixtureBackend::calc_alphar(void)
+{
+    const int nTau = 0, nDelta = 0;
+    return calc_alphar_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta);
+}
 long double HelmholtzEOSMixtureBackend::calc_dalphar_dDelta(void)
 {
     const int nTau = 0, nDelta = 1;
+    return calc_alphar_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta);
+}
+long double HelmholtzEOSMixtureBackend::calc_dalphar_dTau(void)
+{
+    const int nTau = 1, nDelta = 0;
     return calc_alphar_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta);
 }
 long double HelmholtzEOSMixtureBackend::calc_d2alphar_dTau2(void)
 {
     const int nTau = 2, nDelta = 0;
     return calc_alphar_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta);
+}
+long double HelmholtzEOSMixtureBackend::calc_d2alphar_dDelta_dTau(void)
+{
+    const int nTau = 1, nDelta = 1;
+    return calc_alphar_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta);
+}
+long double HelmholtzEOSMixtureBackend::calc_d2alphar_dDelta2(void)
+{
+    const int nTau = 0, nDelta = 2;
+    return calc_alphar_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta);
+}
+
+long double HelmholtzEOSMixtureBackend::calc_alpha0(void)
+{
+    const int nTau = 0, nDelta = 0;
+    return calc_alpha0_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta, _reducing.T, _reducing.rhomolar);
+}
+long double HelmholtzEOSMixtureBackend::calc_dalpha0_dDelta(void)
+{
+    const int nTau = 0, nDelta = 1;
+    return calc_alpha0_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta, _reducing.T, _reducing.rhomolar);
+}
+long double HelmholtzEOSMixtureBackend::calc_dalpha0_dTau(void)
+{
+    const int nTau = 1, nDelta = 0;
+    return calc_alpha0_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta, _reducing.T, _reducing.rhomolar);
+}
+long double HelmholtzEOSMixtureBackend::calc_d2alpha0_dDelta2(void)
+{
+    const int nTau = 0, nDelta = 2;
+    return calc_alpha0_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta, _reducing.T, _reducing.rhomolar);
+}
+long double HelmholtzEOSMixtureBackend::calc_d2alpha0_dDelta_dTau(void)
+{
+    const int nTau = 1, nDelta = 1;
+    return calc_alpha0_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta, _reducing.T, _reducing.rhomolar);
 }
 long double HelmholtzEOSMixtureBackend::calc_d2alpha0_dTau2(void)
 {

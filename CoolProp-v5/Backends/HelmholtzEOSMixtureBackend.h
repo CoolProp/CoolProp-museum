@@ -59,9 +59,19 @@ public:
     long double calc_molar_mass(void);
     long double calc_gas_constant(void);
 
+    long double calc_alphar(void);
     long double calc_dalphar_dDelta(void);
-    long double calc_d2alpha0_dTau2(void);
+    long double calc_dalphar_dTau(void);
+    long double calc_d2alphar_dDelta2(void);
+    long double calc_d2alphar_dDelta_dTau(void);
     long double calc_d2alphar_dTau2(void);
+
+    long double calc_alpha0(void);
+    long double calc_dalpha0_dDelta(void);
+    long double calc_dalpha0_dTau(void);
+    long double calc_d2alpha0_dDelta2(void);
+    long double calc_d2alpha0_dDelta_dTau(void);
+    long double calc_d2alpha0_dTau2(void);
 
     long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta);
     
@@ -97,6 +107,7 @@ public:
 
     long double calc_pressure(void);
     long double calc_cvmolar(void);
+    long double calc_cpmolar(void);
 
     double p_rhoT(long double rhomolar, long double T);
 

@@ -122,10 +122,21 @@ protected:
     virtual long double calc_molar_mass(void){throw NotImplementedError("calc_molar_mass is not implemented for this backend");};
     virtual long double calc_pressure(void){throw NotImplementedError("calc_pressure is not implemented for this backend");};
     virtual long double calc_gas_constant(void){throw NotImplementedError("calc_gas_constant is not implemented for this backend");};
+
+    // Derivatives of residual helmholtz energy
+    virtual long double calc_alphar(void){throw NotImplementedError("calc_alphar is not implemented for this backend");};
     virtual long double calc_dalphar_dDelta(void){throw NotImplementedError("calc_dalphar_dDelta is not implemented for this backend");};
+    virtual long double calc_dalphar_dTau(void){throw NotImplementedError("calc_dalphar_dTau is not implemented for this backend");};
+    virtual long double calc_d2alphar_dDelta2(void){throw NotImplementedError("calc_d2alphar_dDelta2 is not implemented for this backend");};
+    virtual long double calc_d2alphar_dDelta_dTau(void){throw NotImplementedError("calc_d2alphar_dDelta_dTau is not implemented for this backend");};
     virtual long double calc_d2alphar_dTau2(void){throw NotImplementedError("calc_d2alphar_dTau2 is not implemented for this backend");};
+    // Derivatives of ideal-gas helmholtz energy
+    virtual long double calc_alpha0(void){throw NotImplementedError("calc_alpha0 is not implemented for this backend");};
+    virtual long double calc_dalpha0_dDelta(void){throw NotImplementedError("calc_dalpha0_dDelta is not implemented for this backend");};
+    virtual long double calc_dalpha0_dTau(void){throw NotImplementedError("calc_dalpha0_dTau is not implemented for this backend");};
+    virtual long double calc_d2alpha0_dDelta_dTau(void){throw NotImplementedError("calc_d2alpha0_dDelta_dTau is not implemented for this backend");};
+    virtual long double calc_d2alpha0_dDelta2(void){throw NotImplementedError("calc_d2alpha0_dDelta2 is not implemented for this backend");};
     virtual long double calc_d2alpha0_dTau2(void){throw NotImplementedError("calc_d2alpha0_dTau2 is not implemented for this backend");};
-    
 
     virtual void calc_reducing_state(void){throw NotImplementedError("calc_reducing_state is not implemented for this backend");};
     
@@ -261,24 +272,62 @@ public:
     // ----------------------------------------
     // Helmholtz energy and derivatives
     // ----------------------------------------
-    /*virtual double alpha0(void) = 0;
-    virtual double dalpha0_dDelta(void) = 0;
-    virtual double dalpha0_dTau(void) = 0;
-    virtual double d2alpha0_dDelta2(void) = 0;
-    virtual double d2alpha0_dDelta_dTau(void) = 0;*/
-    double d2alpha0_dTau2(void);
+    long double alpha0(void){
+        if (!_alpha0) _alpha0 = calc_alpha0();
+        return _alpha0;
+    };
+    long double dalpha0_dDelta(void){
+        if (!_dalpha0_dDelta) _dalpha0_dDelta = calc_dalpha0_dDelta();
+        return _dalpha0_dDelta;
+    };
+    long double dalpha0_dTau(void){
+        if (!_dalpha0_dTau) _dalpha0_dTau = calc_dalpha0_dTau();
+        return _dalpha0_dTau;
+    };
+    long double d2alpha0_dDelta2(void){
+        if (!_d2alpha0_dDelta2) _d2alpha0_dDelta2 = calc_d2alpha0_dDelta2();
+        return _d2alpha0_dDelta2;
+    };
+    long double d2alpha0_dDelta_dTau(void){
+        if (!_d2alpha0_dDelta_dTau) _d2alpha0_dDelta_dTau = calc_d2alpha0_dDelta_dTau();
+        return _d2alpha0_dDelta_dTau;
+    };
+    long double d2alpha0_dTau2(void){
+        if (!_d2alpha0_dTau2) _d2alpha0_dTau2 = calc_d2alpha0_dTau2();
+        return _d2alpha0_dTau2;
+    };
     /*virtual double d3alpha0_dDelta3(void) = 0;
     virtual double d3alpha0_dDelta2_dTau(void) = 0;
     virtual double d3alpha0_dDelta_dTau2(void) = 0;
     virtual double d3alpha0_dTau3(void) = 0;
+*/
 
-    virtual double alphar(void) = 0;*/
-    double dalphar_dDelta(void);
-    /*virtual double dalphar_dTau(void) = 0;
-    virtual double d2alphar_dDelta2(void) = 0;
-    virtual double d2alphar_dDelta_dTau(void) = 0;*/
-    double d2alphar_dTau2(void);
-    /*virtual double d3alphar_dDelta3(void) = 0;
+    long double alphar(void){
+        if (!_alphar) _alphar = calc_alphar();
+        return _alphar;
+    };
+    long double dalphar_dDelta(void){
+        if (!_dalphar_dDelta) _dalphar_dDelta = calc_dalphar_dDelta();
+        return _dalphar_dDelta;
+    };
+    long double dalphar_dTau(void){
+        if (!_dalphar_dTau) _dalphar_dTau = calc_dalphar_dTau();
+        return _dalphar_dTau;
+    };
+    long double d2alphar_dDelta2(void){
+        if (!_d2alphar_dDelta2) _d2alphar_dDelta2 = calc_d2alphar_dDelta2();
+        return _d2alphar_dDelta2;
+    };
+    long double d2alphar_dDelta_dTau(void){
+        if (!_d2alphar_dDelta_dTau) _d2alphar_dDelta_dTau = calc_d2alphar_dDelta_dTau();
+        return _d2alphar_dDelta_dTau;
+    };
+    long double d2alphar_dTau2(void){
+        if (!_d2alphar_dTau2) _d2alphar_dTau2 = calc_d2alphar_dTau2();
+        return _d2alphar_dTau2;
+    };
+    /*
+    virtual double d3alphar_dDelta3(void) = 0;
     virtual double d3alphar_dDelta2_dTau(void) = 0;
     virtual double d3alphar_dDelta_dTau2(void) = 0;
     virtual double d3alphar_dTau3(void) = 0;
@@ -286,7 +335,8 @@ public:
     virtual double dalphar_dDelta_lim(void) = 0;
     virtual double d2alphar_dDelta2_lim(void) = 0;
     virtual double d2alphar_dDelta_dTau_lim(void) = 0;
-    virtual double d3alphar_dDelta2_dTau_lim(void) = 0;*/
+    virtual double d3alphar_dDelta2_dTau_lim(void) = 0;
+    */
 };
 
 } /* namespace CoolProp */

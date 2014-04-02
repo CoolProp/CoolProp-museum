@@ -33,7 +33,7 @@ class CachedElement {
 
 private:
 	bool is_cached;
-	double value;
+	long double value;
 public:
 	/// Default constructor
 	CachedElement() {
@@ -57,6 +57,12 @@ public:
 
 	/// Cast to double, for returning value
 	operator double() {
+		if (is_cached) {return static_cast<double>(value); }
+		else {
+			throw std::exception();
+		}
+	}
+    operator long double() {
 		if (is_cached) {return value; }
 		else {
 			throw std::exception();
@@ -67,7 +73,7 @@ public:
 		is_cached = false;
 		this->value = _HUGE;
 	};
-	double &pt(){
+	long double &pt(){
 		return this->value;
 	}
 };
