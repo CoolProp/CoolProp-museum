@@ -414,6 +414,26 @@ long double HelmholtzEOSMixtureBackend::calc_cpmolar(void)
 
     return static_cast<double>(_cpmolar);
 }
+long double HelmholtzEOSMixtureBackend::calc_speed_sound(void)
+{
+    // Calculate the reducing parameters
+    _delta = _rhomolar/_reducing.rhomolar;
+    _tau = _reducing.T/_T;
+
+    // Calculate derivatives if needed, or just use cached values
+    long double d2a0_dTau2 = d2alpha0_dTau2();
+    long double dar_dDelta = dalphar_dDelta();
+    long double d2ar_dDelta2 = d2alphar_dDelta2();
+    long double d2ar_dDelta_dTau = d2alphar_dDelta_dTau();
+    long double d2ar_dTau2 = d2alphar_dTau2();
+    long double R_u = static_cast<long double>(_gas_constant);
+    long double mm = static_cast<long double>(_molar_mass);
+
+    // Get speed of sound
+    _speed_sound = sqrt(R_u*_T/mm*(1+2*_delta*dar_dDelta+pow(_delta,2)*d2ar_dDelta2 - pow(1+_delta*dar_dDelta-_delta*_tau*d2ar_dDelta_dTau,2)/(pow(_tau,2)*(d2ar_dTau2 + d2a0_dTau2))));
+
+    return static_cast<double>(_speed_sound);
+}
 
 void HelmholtzEOSMixtureBackend::calc_reducing_state_nocache(const std::vector<double> & mole_fractions)
 {

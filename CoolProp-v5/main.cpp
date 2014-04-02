@@ -92,6 +92,7 @@ int main()
         double p1 = Mix->p();
         double cv1 = Mix->cvmolar();
         double cp1 = Mix->cpmolar();
+        double w1 = Mix->speed_sound();
 
         AbstractState *MixRP = AbstractState::factory("REFPROP-Ethane|propane");
         MixRP->set_mole_fractions(z);
@@ -99,6 +100,7 @@ int main()
         double p2 = MixRP->p();
         double cv2 = MixRP->cvmolar();
         double cp2 = MixRP->cpmolar();
+        double w2 = MixRP->speed_sound();
 
         double rr = 0;
     }

@@ -146,7 +146,6 @@ public:
 
     double _tau, _delta;
     
-    
     /// A factory function to return a pointer to a new-allocated instance of one of the backends.
     /**
     Very Important!! : You must ensure to delete the backend instance that is created, otherwise there will be a memory leak
@@ -267,7 +266,6 @@ public:
     //virtual double dCdT(void);
     //virtual double dZdDelta(void);
     //virtual double dZdTau(void);
-
 
     // ----------------------------------------
     // Helmholtz energy and derivatives
