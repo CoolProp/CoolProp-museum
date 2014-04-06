@@ -144,16 +144,16 @@ public:
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta);
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta);
-    long double dDelta_dTau(const long double &tau, const long double &delta);
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta);
-    long double dDelta2_dTau(const long double &tau, const long double &delta);
-    long double dDelta_dTau2(const long double &tau, const long double &delta);
-    long double dTau3(const long double &tau, const long double &delta);
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw();
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw();
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw();
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw();
+    long double dTau3(const long double &tau, const long double &delta) throw();
 };
 
 struct ResidualHelmholtzExponentialElement
@@ -196,16 +196,16 @@ public:
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta);
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta);
-    long double dDelta_dTau(const long double &tau, const long double &delta);
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta);
-    long double dDelta2_dTau(const long double &tau, const long double &delta);
-    long double dDelta_dTau2(const long double &tau, const long double &delta);
-    long double dTau3(const long double &tau, const long double &delta);
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw();
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw();
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw();
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw();
+    long double dTau3(const long double &tau, const long double &delta) throw();
 };
 
 struct ResidualHelmholtzGaussianElement
@@ -251,16 +251,16 @@ public:
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta);
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta);
-    long double dDelta_dTau(const long double &tau, const long double &delta);
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta);
-    long double dDelta2_dTau(const long double &tau, const long double &delta);
-    long double dDelta_dTau2(const long double &tau, const long double &delta);
-    long double dTau3(const long double &tau, const long double &delta);
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw();
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw();
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw();
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw();
+    long double dTau3(const long double &tau, const long double &delta) throw();
 };
 
 class ResidualHelmholtzGERG2008Gaussian : public BaseHelmholtzTerm{
@@ -301,16 +301,16 @@ public:
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta);
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta);
-    long double dDelta_dTau(const long double &tau, const long double &delta);
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta){throw NotImplementedError();};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){throw NotImplementedError();};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){throw NotImplementedError();};
-    long double dTau3(const long double &tau, const long double &delta){throw NotImplementedError();};
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw();
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw();
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw() {throw NotImplementedError();};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw();
+    long double dTau3(const long double &tau, const long double &delta) throw();
 };
 
 struct ResidualHelmholtzLemmon2005Element{
@@ -352,16 +352,16 @@ public:
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta);
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta);
-    long double dDelta_dTau(const long double &tau, const long double &delta);
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta);
-    long double dDelta2_dTau(const long double &tau, const long double &delta);
-    long double dDelta_dTau2(const long double &tau, const long double &delta);
-    long double dTau3(const long double &tau, const long double &delta);
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw();
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw();
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw();
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw();
+    long double dTau3(const long double &tau, const long double &delta) throw();
 };
 
 struct ResidualHelmholtzNonAnalyticElement
@@ -408,16 +408,16 @@ public:
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta);
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta);
-    long double dDelta_dTau(const long double &tau, const long double &delta);
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta);
-    long double dDelta2_dTau(const long double &tau, const long double &delta);
-    long double dDelta_dTau2(const long double &tau, const long double &delta);
-    long double dTau3(const long double &tau, const long double &delta);
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw();
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw();
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw();
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw();
+    long double dTau3(const long double &tau, const long double &delta) throw();
 };
 
 class ResidualHelmholtzSAFTAssociating : public BaseHelmholtzTerm{
@@ -473,16 +473,16 @@ public:
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta);
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta);
-    long double dDelta_dTau(const long double &tau, const long double &delta);
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta);
-    long double dDelta2_dTau(const long double &tau, const long double &delta);
-    long double dDelta_dTau2(const long double &tau, const long double &delta);
-    long double dTau3(const long double &tau, const long double &delta);
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw();
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw();
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw();
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw();
+    long double dTau3(const long double &tau, const long double &delta) throw();
 };
 
 class ResidualHelmholtzContainer
@@ -600,31 +600,31 @@ public:
     };
 
     // Term and its derivatives
-    long double base(const long double &tau, const long double &delta){
+    long double base(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return log(delta)+a1+a2*tau;
     };
-    long double dDelta(const long double &tau, const long double &delta){
+    long double dDelta(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return 1.0/delta;
     };
-    long double dTau(const long double &tau, const long double &delta){
+    long double dTau(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return a2;
     };
-    long double dDelta2(const long double &tau, const long double &delta){
+    long double dDelta2(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return -1.0/delta/delta;
     };
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta3(const long double &tau, const long double &delta){
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return 2/delta/delta/delta;
     };
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau3(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau3(const long double &tau, const long double &delta) throw(){return 0.0;};
 };
 
 /// The term in the EOS used to shift the reference state of the fluid
@@ -653,22 +653,22 @@ public:
     };
 
     // Term and its derivatives
-    long double base(const long double &tau, const long double &delta){
+    long double base(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return a1+a2*tau;
     };
-    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau(const long double &tau, const long double &delta){
+    long double dDelta(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return a2;
     };
-    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau3(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau3(const long double &tau, const long double &delta) throw(){return 0.0;};
 };
 
 
@@ -699,28 +699,28 @@ public:
     };
 
     // Term and its derivatives
-    long double base(const long double &tau, const long double &delta){
+    long double base(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return a1*log(tau);
     };
-    long double dTau(const long double &tau, const long double &delta){
+    long double dTau(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return a1/tau;
     };
-    long double dTau2(const long double &tau, const long double &delta){
+    long double dTau2(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return -a1/tau/tau;
     };
-    long double dTau3(const long double &tau, const long double &delta){
+    long double dTau3(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return 2*a1/tau/tau/tau;
     };
-    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta) throw(){return 0.0;};
 };
 
 /**
@@ -755,28 +755,28 @@ public:
     };
 
     // Term and its derivatives
-    long double base(const long double &tau, const long double &delta){
+    long double base(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*pow(tau, t[i]);} return s;
     };
-    long double dTau(const long double &tau, const long double &delta){
+    long double dTau(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*pow(tau, t[i]-1);} return s;
     };
-    long double dTau2(const long double &tau, const long double &delta){
+    long double dTau2(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*(t[i]-1)*pow(tau, t[i]-2);} return s;
     };
-    long double dTau3(const long double &tau, const long double &delta){
+    long double dTau3(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i = 0; i<N; ++i){s += n[i]*t[i]*(t[i]-1)*(t[i]-2)*pow(tau, t[i]-3);} return s;
     };
-    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta) throw(){return 0.0;};
 };
 
 /**
@@ -811,28 +811,28 @@ public:
     };
 
     // Term and its derivatives
-    long double base(const long double &tau, const long double &delta){
+    long double base(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*log(1.0-exp(-theta[i]*tau));} return s;
     };
-    long double dTau(const long double &tau, const long double &delta){
+    long double dTau(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*theta[i]*(1.0/(1.0-exp(-theta[i]*tau))-1.0);} return s;
     };
-    long double dTau2(const long double &tau, const long double &delta){
+    long double dTau2(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s -= n[i]*pow(theta[i],2)*exp(theta[i]*tau)/pow(1.0-exp(theta[i]*tau),2);} return s;
     };
-    long double dTau3(const long double &tau, const long double &delta){
+    long double dTau3(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*pow(theta[i],2)*theta[i]*exp(theta[i]*tau)*(exp(theta[i]*tau)+1)/pow(exp(theta[i]*tau)-1,3);} return s;
     };
-    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta3(const long double &tau, const long double &delta){return 0;};
+    long double dDelta(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta) throw(){return 0;};
 };
 
 /**
@@ -870,28 +870,28 @@ public:
     };
 
     // Term and its derivatives
-    long double base(const long double &tau, const long double &delta){
+    long double base(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*log(c[i]+exp(theta[i]*tau));} return s;
     };
-    long double dTau(const long double &tau, const long double &delta){
+    long double dTau(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*theta[i]*exp(tau*theta[i])/(c[i]+exp(theta[i]*tau));} return s;
     };
-    long double dTau2(const long double &tau, const long double &delta){
+    long double dTau2(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s -= n[i]*pow(theta[i],2)*c[i]*exp(tau*theta[i])/pow(c[i]+exp(tau*theta[i]),2);} return s;
     };
-    long double dTau3(const long double &tau, const long double &delta){
+    long double dTau3(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*pow(theta[i],2)*c[i]*(-theta[i])*exp(theta[i]*tau)*(exp(theta[i]*tau)-c[i])/pow(exp(theta[i]*tau)+c[i],3);} return s;
     };
-    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta3(const long double &tau, const long double &delta){return 0;};
+    long double dDelta(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta) throw(){return 0;};
 };
 
 class IdealHelmholtzCP0Constant : public BaseHelmholtzTerm{
@@ -922,28 +922,28 @@ public:
     };
 
     // Term and its derivatives
-    long double base(const long double &tau, const long double &delta){
+    long double base(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return cp_over_R-cp_over_R*tau/tau0+cp_over_R*log(tau/tau0);
     };
-    long double dTau(const long double &tau, const long double &delta){
+    long double dTau(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return cp_over_R/tau-cp_over_R/tau0;
     };
-    long double dTau2(const long double &tau, const long double &delta){
+    long double dTau2(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return -cp_over_R/(tau*tau);
     };
-    long double dTau3(const long double &tau, const long double &delta){
+    long double dTau3(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
         return 2*cp_over_R/(tau*tau*tau);
     };
-    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
+    long double dDelta(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta3(const long double &tau, const long double &delta) throw(){return 0.0;};
 };
 
 class IdealHelmholtzCP0PolyT : public BaseHelmholtzTerm{
@@ -970,16 +970,16 @@ public:
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
     // Term and its derivatives
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau3(const long double &tau, const long double &delta);
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau3(const long double &tau, const long double &delta) throw();
     
 };
 
@@ -1099,16 +1099,16 @@ public:
     */
     long double anti_deriv_cp0_tau(const long double &tau);
 
-    long double base(const long double &tau, const long double &delta);
-    long double dDelta(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau(const long double &tau, const long double &delta);
-    long double dDelta2(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau2(const long double &tau, const long double &delta);
-    long double dDelta3(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta2_dTau(const long double &tau, const long double &delta){return 0.0;};
-    long double dDelta_dTau2(const long double &tau, const long double &delta){return 0.0;};
-    long double dTau3(const long double &tau, const long double &delta);
+    long double base(const long double &tau, const long double &delta) throw();
+    long double dDelta(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau(const long double &tau, const long double &delta) throw();
+    long double dDelta2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau2(const long double &tau, const long double &delta) throw();
+    long double dDelta3(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta2_dTau(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dDelta_dTau2(const long double &tau, const long double &delta) throw(){return 0.0;};
+    long double dTau3(const long double &tau, const long double &delta) throw();
     
 };
 

@@ -12,7 +12,7 @@
 
 namespace CoolProp {
 
-class InLiquid: public CoolProp::Incompressible {
+class InLiquid{
 public:
 	InLiquid();
 	virtual ~InLiquid();

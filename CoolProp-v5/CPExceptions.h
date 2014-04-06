@@ -6,6 +6,9 @@
 #include <exception>
 #include <iostream>
 
+namespace CoolProp
+{
+
 class CoolPropBaseError: public std::exception
 {
 protected:
@@ -97,4 +100,5 @@ public:
 	virtual const char* what() const throw(){ return err.c_str(); }
 };
 
+}; /* namespace CoolProp */
 #endif

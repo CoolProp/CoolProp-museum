@@ -1,23 +1,23 @@
 
 import subprocess, os
-import glob
+import glob2 as glob
 
 exports = ['-s','EXPORTED_FUNCTIONS=\"[\'_main\',\'_F2K\',\'_HAProps\',\'_Props1\',\'_PropsS\']\"']
 optimization = '-O2'
 
 def compile_sources():
-    for f in glob.glob(os.path.join('..','..','CoolProp','*.cpp')):
+    for f in glob.glob(os.path.join('..','..','CoolProp-v5','**','*.cpp')):
         
         # Don't compile CoolPropDLL in the compile pass to avoid duplicate symbols
-        if f.find('CoolPropDLL.cpp') > -1: 
+        if f.find('..\..\CoolProp-v5\main.cpp') > -1: 
             continue 
         
-        call = ['em++',optimization,f,'-I../../CoolProp','-c','-DEXTERNC']+ exports
+        call = ['em++',optimization,f,'-I../../CoolProp-v5','-c','-DEXTERNC']+ exports
         print 'Calling:',' '.join(call)
         subprocess.check_output(' '.join(call), shell = True)
 
 def link():
-    call = ['em++',optimization,'-o','coolprop.js','../../CoolProp/CoolPropDLL.cpp']+glob.glob('*.o')+['-I../../CoolProp','-DEXTERNC']  +  exports
+    call = ['em++',optimization,'-o','coolprop.js']+glob.glob('*.o')+['-DEXTERNC']  +  exports
     print 'Calling:',' '.join(call)
     subprocess.check_output(' '.join(call), shell = True)
 

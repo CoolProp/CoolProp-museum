@@ -20,7 +20,7 @@ void ResidualHelmholtzPower::to_json(rapidjson::Value &el, rapidjson::Document &
     el.AddMember("t",_t,doc.GetAllocator());
     el.AddMember("l",_l,doc.GetAllocator());
 }
-long double ResidualHelmholtzPower::base(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::base(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -38,7 +38,7 @@ long double ResidualHelmholtzPower::base(const long double &tau, const long doub
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzPower::dDelta(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dDelta(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -57,7 +57,7 @@ long double ResidualHelmholtzPower::dDelta(const long double &tau, const long do
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzPower::dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -76,7 +76,7 @@ long double ResidualHelmholtzPower::dTau(const long double &tau, const long doub
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
 
-long double ResidualHelmholtzPower::dDelta2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dDelta2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -95,7 +95,7 @@ long double ResidualHelmholtzPower::dDelta2(const long double &tau, const long d
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzPower::dDelta_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dDelta_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -114,7 +114,7 @@ long double ResidualHelmholtzPower::dDelta_dTau(const long double &tau, const lo
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzPower::dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -133,7 +133,7 @@ long double ResidualHelmholtzPower::dTau2(const long double &tau, const long dou
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzPower::dDelta3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dDelta3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -153,7 +153,7 @@ long double ResidualHelmholtzPower::dDelta3(const long double &tau, const long d
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzPower::dDelta2_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dDelta2_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -172,7 +172,7 @@ long double ResidualHelmholtzPower::dDelta2_dTau(const long double &tau, const l
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzPower::dDelta_dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dDelta_dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -191,7 +191,7 @@ long double ResidualHelmholtzPower::dDelta_dTau2(const long double &tau, const l
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzPower::dTau3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzPower::dTau3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -229,7 +229,7 @@ void ResidualHelmholtzExponential::to_json(rapidjson::Value &el, rapidjson::Docu
     el.AddMember("l",_l,doc.GetAllocator());
     el.AddMember("g",_g,doc.GetAllocator());
 }
-long double ResidualHelmholtzExponential::base(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::base(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -241,7 +241,7 @@ long double ResidualHelmholtzExponential::base(const long double &tau, const lon
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzExponential::dDelta(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dDelta(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -254,7 +254,7 @@ long double ResidualHelmholtzExponential::dDelta(const long double &tau, const l
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzExponential::dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -268,7 +268,7 @@ long double ResidualHelmholtzExponential::dTau(const long double &tau, const lon
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
 
-long double ResidualHelmholtzExponential::dDelta2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dDelta2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -283,7 +283,7 @@ long double ResidualHelmholtzExponential::dDelta2(const long double &tau, const 
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzExponential::dDelta_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dDelta_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -296,7 +296,7 @@ long double ResidualHelmholtzExponential::dDelta_dTau(const long double &tau, co
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzExponential::dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -309,7 +309,7 @@ long double ResidualHelmholtzExponential::dTau2(const long double &tau, const lo
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzExponential::dDelta3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dDelta3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -328,7 +328,7 @@ long double ResidualHelmholtzExponential::dDelta3(const long double &tau, const 
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzExponential::dDelta2_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dDelta2_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -343,7 +343,7 @@ long double ResidualHelmholtzExponential::dDelta2_dTau(const long double &tau, c
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzExponential::dDelta_dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dDelta_dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -356,7 +356,7 @@ long double ResidualHelmholtzExponential::dDelta_dTau2(const long double &tau, c
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzExponential::dTau3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzExponential::dTau3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta), pow_delta_li;
@@ -396,7 +396,7 @@ void ResidualHelmholtzGaussian::to_json(rapidjson::Value &el, rapidjson::Documen
     el.AddMember("beta",_beta,doc.GetAllocator());
     el.AddMember("gamma",_gamma,doc.GetAllocator());
 }
-long double ResidualHelmholtzGaussian::base(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::base(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -408,7 +408,7 @@ long double ResidualHelmholtzGaussian::base(const long double &tau, const long d
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dDelta(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dDelta(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -420,7 +420,7 @@ long double ResidualHelmholtzGaussian::dDelta(const long double &tau, const long
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -432,7 +432,7 @@ long double ResidualHelmholtzGaussian::dTau(const long double &tau, const long d
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dDelta2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dDelta2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -444,7 +444,7 @@ long double ResidualHelmholtzGaussian::dDelta2(const long double &tau, const lon
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dDelta_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dDelta_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -456,7 +456,7 @@ long double ResidualHelmholtzGaussian::dDelta_dTau(const long double &tau, const
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -468,7 +468,7 @@ long double ResidualHelmholtzGaussian::dTau2(const long double &tau, const long 
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dDelta3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dDelta3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -481,7 +481,7 @@ long double ResidualHelmholtzGaussian::dDelta3(const long double &tau, const lon
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dDelta2_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dDelta2_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -493,7 +493,7 @@ long double ResidualHelmholtzGaussian::dDelta2_dTau(const long double &tau, cons
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dDelta_dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dDelta_dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -505,7 +505,7 @@ long double ResidualHelmholtzGaussian::dDelta_dTau2(const long double &tau, cons
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGaussian::dTau3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGaussian::dTau3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -547,69 +547,104 @@ void ResidualHelmholtzGERG2008Gaussian::to_json(rapidjson::Value &el, rapidjson:
     el.AddMember("beta",_beta,doc.GetAllocator());
     el.AddMember("gamma",_gamma,doc.GetAllocator());
 }
-long double ResidualHelmholtzGERG2008Gaussian::base(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGERG2008Gaussian::base(const long double &tau, const long double &delta) throw()
 {
     long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i=0; i<N; ++i)
     {
         ResidualHelmholtzGaussianElement &el = elements[i];
-        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
         s[i] = el.n*pow(tau,el.t)*pow(delta,el.d)*psi;
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGERG2008Gaussian::dDelta(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGERG2008Gaussian::dDelta(const long double &tau, const long double &delta) throw()
 {
     long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i=0; i<N; ++i)
     {
         ResidualHelmholtzGaussianElement &el = elements[i];
-        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
         s[i] = el.n*pow(tau,el.t)*pow(delta,el.d)*psi*(el.d/delta-2*el.eta*(delta-el.epsilon)-el.beta);
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGERG2008Gaussian::dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGERG2008Gaussian::dTau(const long double &tau, const long double &delta) throw()
 {
     long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i=0; i<N; ++i)
     {
         ResidualHelmholtzGaussianElement &el = elements[i];
-        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
         s[i] = el.n*el.t*pow(tau,el.t-1)*pow(delta,el.d)*psi;
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGERG2008Gaussian::dDelta2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGERG2008Gaussian::dDelta2(const long double &tau, const long double &delta) throw()
 {
     long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i=0; i<N; ++i)
     {
         ResidualHelmholtzGaussianElement &el = elements[i];
-        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
         s[i] = el.n*pow(tau,el.t)*pow(delta,el.d)*psi*(pow(el.d/delta-2*el.eta*(delta-el.epsilon)-el.beta,2)-el.d/delta/delta-2*el.eta);
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGERG2008Gaussian::dDelta_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGERG2008Gaussian::dDelta_dTau(const long double &tau, const long double &delta) throw()
 {
     long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i=0; i<N; ++i)
     {
         ResidualHelmholtzGaussianElement &el = elements[i];
-        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
         s[i] = el.n*el.t*pow(tau,el.t-1)*pow(delta,el.d)*psi*(el.d/delta-2*el.eta*(delta-el.epsilon)-el.beta);
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
-long double ResidualHelmholtzGERG2008Gaussian::dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzGERG2008Gaussian::dTau2(const long double &tau, const long double &delta) throw()
 {
     long double log_tau = log(tau), log_delta = log(delta);
     for (std::size_t i=0; i<N; ++i)
     {
         ResidualHelmholtzGaussianElement &el = elements[i];
-        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*pow(tau-el.gamma,2));
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
         s[i] = el.n*el.t*(el.t-1)*pow(tau,el.t-2)*pow(delta,el.d)*psi;
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+
+
+long double ResidualHelmholtzGERG2008Gaussian::dDelta2_dTau(const long double &tau, const long double &delta) throw()
+{
+    long double log_tau = log(tau), log_delta = log(delta);
+    for (std::size_t i=0; i<N; ++i)
+    {
+        ResidualHelmholtzGaussianElement &el = elements[i];
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
+        s[i] = el.n*el.t*pow(tau,el.t-1)*pow(delta,el.d)*psi*(pow(el.d/delta-2*el.eta*(delta-el.epsilon)-el.beta,2)-el.d/delta/delta-2*el.eta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+long double ResidualHelmholtzGERG2008Gaussian::dDelta_dTau2(const long double &tau, const long double &delta) throw()
+{
+    long double log_tau = log(tau), log_delta = log(delta);
+    for (std::size_t i=0; i<N; ++i)
+    {
+        ResidualHelmholtzGaussianElement &el = elements[i];
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
+        s[i] = el.n*el.t*(el.t-1)*pow(tau,el.t-2)*pow(delta,el.d)*psi*(el.d/delta-2*el.eta*(delta-el.epsilon)-el.beta);
+    }
+    return std::accumulate(s.begin(), s.end(), 0.0);
+};
+long double ResidualHelmholtzGERG2008Gaussian::dTau3(const long double &tau, const long double &delta) throw()
+{
+    long double log_tau = log(tau), log_delta = log(delta);
+    for (std::size_t i=0; i<N; ++i)
+    {
+        ResidualHelmholtzGaussianElement &el = elements[i];
+        long double psi=exp(-el.eta*pow(delta-el.epsilon,2)-el.beta*(delta-el.gamma));
+        s[i] = el.n*el.t*(el.t-1)*(el.t-2)*pow(tau,el.t-3)*pow(delta,el.d)*psi;
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 };
@@ -637,7 +672,7 @@ void ResidualHelmholtzLemmon2005::to_json(rapidjson::Value &el, rapidjson::Docum
 }
 
 // Term and its derivatives
-long double ResidualHelmholtzLemmon2005::base(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::base(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -655,7 +690,7 @@ long double ResidualHelmholtzLemmon2005::base(const long double &tau, const long
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzLemmon2005::dDelta(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dDelta(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -678,7 +713,7 @@ long double ResidualHelmholtzLemmon2005::dDelta(const long double &tau, const lo
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzLemmon2005::dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -698,7 +733,7 @@ long double ResidualHelmholtzLemmon2005::dTau(const long double &tau, const long
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzLemmon2005::dDelta2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dDelta2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -721,7 +756,7 @@ long double ResidualHelmholtzLemmon2005::dDelta2(const long double &tau, const l
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzLemmon2005::dDelta_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dDelta_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -744,7 +779,7 @@ long double ResidualHelmholtzLemmon2005::dDelta_dTau(const long double &tau, con
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzLemmon2005::dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -765,7 +800,7 @@ long double ResidualHelmholtzLemmon2005::dTau2(const long double &tau, const lon
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzLemmon2005::dDelta3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dDelta3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -791,7 +826,7 @@ long double ResidualHelmholtzLemmon2005::dDelta3(const long double &tau, const l
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzLemmon2005::dDelta2_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dDelta2_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -816,7 +851,7 @@ long double ResidualHelmholtzLemmon2005::dDelta2_dTau(const long double &tau, co
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzLemmon2005::dDelta_dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dDelta_dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -869,7 +904,7 @@ Group all the terms that don't depend on \f$ \tau \f$
 \frac{1}{A}\frac{{{\partial ^3}{\alpha ^r}}}{{\partial {\tau ^3}}} = \exp \left( { - {\tau ^{{m_k}}}} \right)\left[ { - {\tau ^{{t_k} - 2}}m_k^2{\tau ^{{m_k} - 1}}\left[ {2{t_k} - 2{m_k}{\tau ^{{m_k}}} - 1 + {m_k}} \right] + \left( {({t_k} - 2){\tau ^{{t_k} - 3}} - {\tau ^{{t_k} - 2}}{m_k}{\tau ^{{m_k} - 1}}} \right)\left[ {\left( {{t_k} - {m_k}{\tau ^{{m_k}}}} \right)\left( {{t_k} - 1 - {m_k}{\tau ^{{m_k}}}} \right) - m_k^2{\tau ^{{m_k}}}} \right]} \right]
 \f]
 */
-long double ResidualHelmholtzLemmon2005::dTau3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzLemmon2005::dTau3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -922,7 +957,7 @@ void ResidualHelmholtzNonAnalytic::to_json(rapidjson::Value &el, rapidjson::Docu
     el.AddMember("D",_D,doc.GetAllocator());
 }
 
-long double ResidualHelmholtzNonAnalytic::base(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::base(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -941,7 +976,7 @@ long double ResidualHelmholtzNonAnalytic::base(const long double &tau, const lon
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzNonAnalytic::dDelta(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dDelta(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -969,7 +1004,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta(const long double &tau, const l
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzNonAnalytic::dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -999,7 +1034,7 @@ long double ResidualHelmholtzNonAnalytic::dTau(const long double &tau, const lon
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
 
-long double ResidualHelmholtzNonAnalytic::dDelta2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dDelta2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -1032,7 +1067,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta2(const long double &tau, const 
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzNonAnalytic::dDelta_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dDelta_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -1071,7 +1106,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta_dTau(const long double &tau, co
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzNonAnalytic::dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -1093,7 +1128,7 @@ long double ResidualHelmholtzNonAnalytic::dTau2(const long double &tau, const lo
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
 
-long double ResidualHelmholtzNonAnalytic::dDelta3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dDelta3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -1133,7 +1168,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta3(const long double &tau, const 
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzNonAnalytic::dDelta_dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dDelta_dTau2(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -1187,7 +1222,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta_dTau2(const long double &tau, c
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
 
-long double ResidualHelmholtzNonAnalytic::dDelta2_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dDelta2_dTau(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -1251,7 +1286,7 @@ long double ResidualHelmholtzNonAnalytic::dDelta2_dTau(const long double &tau, c
     }
     return std::accumulate(s.begin(), s.end(), 0.0);
 }
-long double ResidualHelmholtzNonAnalytic::dTau3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzNonAnalytic::dTau3(const long double &tau, const long double &delta) throw()
 {
     if (N==0){return 0.0;}
     long double log_tau = log(tau), log_delta = log(delta);
@@ -1493,25 +1528,25 @@ long double ResidualHelmholtzSAFTAssociating::d3g_deta3(const long double &eta)
 long double ResidualHelmholtzSAFTAssociating::eta(const long double &delta){
     return this->vbarn*delta;
 }
-long double ResidualHelmholtzSAFTAssociating::base(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::base(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
     return this->m*this->a*((log(X)-X/2.0+0.5));
 }
-long double ResidualHelmholtzSAFTAssociating::dDelta(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dDelta(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
     return this->m*this->a*(1/X-0.5)*this->dX_ddelta(tau, delta);
 }
-long double ResidualHelmholtzSAFTAssociating::dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dTau(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
     return this->m*this->a*(1/X-0.5)*this->dX_dtau(tau, delta);
 }
-long double ResidualHelmholtzSAFTAssociating::dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dTau2(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
@@ -1519,7 +1554,7 @@ long double ResidualHelmholtzSAFTAssociating::dTau2(const long double &tau, cons
     long double X_tautau = this->d2X_dtau2(tau, delta);
     return this->m*this->a*((1/X-0.5)*X_tautau-pow(X_tau/X, 2));
 }
-long double ResidualHelmholtzSAFTAssociating::dDelta2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dDelta2(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
@@ -1527,7 +1562,7 @@ long double ResidualHelmholtzSAFTAssociating::dDelta2(const long double &tau, co
     long double X_deltadelta = this->d2X_ddelta2(tau, delta);
     return this->m*this->a*((1/X-0.5)*X_deltadelta-pow(X_delta/X,2));
 }
-long double ResidualHelmholtzSAFTAssociating::dDelta_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dDelta_dTau(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
@@ -1537,7 +1572,7 @@ long double ResidualHelmholtzSAFTAssociating::dDelta_dTau(const long double &tau
     long double X_deltatau = this->d2X_ddeltadtau(tau, delta);
     return this->m*this->a*((-X_tau/X/X)*X_delta+X_deltatau*(1/X-0.5));
 }
-long double ResidualHelmholtzSAFTAssociating::dTau3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dTau3(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
@@ -1546,7 +1581,7 @@ long double ResidualHelmholtzSAFTAssociating::dTau3(const long double &tau, cons
     long double X_ttt = this->d3X_dtau3(tau, delta);
     return this->m*this->a*((1/X-1.0/2.0)*X_ttt+(-X_t/pow(X,(int)2))*X_tt-2*(pow(X,(int)2)*(X_t*X_tt)-pow(X_t,(int)2)*(X*X_t))/pow(X,(int)4));
 }
-long double ResidualHelmholtzSAFTAssociating::dDelta_dTau2(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dDelta_dTau2(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
@@ -1557,7 +1592,7 @@ long double ResidualHelmholtzSAFTAssociating::dDelta_dTau2(const long double &ta
     long double X_dtt = this->d3X_ddeltadtau2(tau, delta);
     return this->m*this->a*((1/X-1.0/2.0)*X_dtt-X_d/pow(X,(int)2)*X_tt-2*(pow(X,(int)2)*(X_t*X_dt)-pow(X_t,(int)2)*(X*X_d))/pow(X,(int)4));
 }
-long double ResidualHelmholtzSAFTAssociating::dDelta2_dTau(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dDelta2_dTau(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
@@ -1568,7 +1603,7 @@ long double ResidualHelmholtzSAFTAssociating::dDelta2_dTau(const long double &ta
     long double X_ddt = this->d3X_ddelta2dtau(tau, delta);
     return this->m*this->a*((1/X-1.0/2.0)*X_ddt-X_t/pow(X,(int)2)*X_dd-2*(pow(X,(int)2)*(X_d*X_dt)-pow(X_d,(int)2)*(X*X_t))/pow(X,(int)4));
 }
-long double ResidualHelmholtzSAFTAssociating::dDelta3(const long double &tau, const long double &delta)
+long double ResidualHelmholtzSAFTAssociating::dDelta3(const long double &tau, const long double &delta) throw()
 {
     if (disabled){return 0;}
     long double X = this->X(delta, this->Deltabar(tau, delta));
@@ -1594,7 +1629,7 @@ void IdealHelmholtzCP0PolyT::to_json(rapidjson::Value &el, rapidjson::Document &
     el.AddMember("Tc", static_cast<double>(Tc), doc.GetAllocator());
     el.AddMember("T0", static_cast<double>(T0), doc.GetAllocator());
 }
-long double IdealHelmholtzCP0PolyT::base(const long double &tau, const long double &delta)
+long double IdealHelmholtzCP0PolyT::base(const long double &tau, const long double &delta) throw()
 { 
     double sum=0;
     for (std::size_t i = 0; i < N; ++i){
@@ -1613,7 +1648,7 @@ long double IdealHelmholtzCP0PolyT::base(const long double &tau, const long doub
     }
     return sum;
 }
-long double IdealHelmholtzCP0PolyT::dTau(const long double &tau, const long double &delta)
+long double IdealHelmholtzCP0PolyT::dTau(const long double &tau, const long double &delta) throw()
 {
     double sum=0;
     for (std::size_t i = 0; i < N; ++i){
@@ -1632,7 +1667,7 @@ long double IdealHelmholtzCP0PolyT::dTau(const long double &tau, const long doub
     }
     return sum;
 }
-long double IdealHelmholtzCP0PolyT::dTau2(const long double &tau, const long double &delta)
+long double IdealHelmholtzCP0PolyT::dTau2(const long double &tau, const long double &delta) throw()
 {
     double sum=0;
     for (std::size_t i = 0; i < N; ++i){
@@ -1651,7 +1686,7 @@ long double IdealHelmholtzCP0PolyT::dTau2(const long double &tau, const long dou
     }
     return sum;
 }
-long double IdealHelmholtzCP0PolyT::dTau3(const long double &tau, const long double &delta)
+long double IdealHelmholtzCP0PolyT::dTau3(const long double &tau, const long double &delta) throw()
 {
     double sum=0;
     for (std::size_t i = 0; i < N; ++i){
@@ -1682,12 +1717,12 @@ void IdealHelmholtzCP0AlyLee::to_json(rapidjson::Value &el, rapidjson::Document 
     el.AddMember("Tc",static_cast<double>(Tc),doc.GetAllocator());
     el.AddMember("T0",static_cast<double>(T0),doc.GetAllocator());
 }
-long double IdealHelmholtzCP0AlyLee::base(const long double &tau, const long double &delta)
+long double IdealHelmholtzCP0AlyLee::base(const long double &tau, const long double &delta) throw()
 {	
     if (!enabled){ return 0.0;}
     return -tau*(anti_deriv_cp0_tau2(tau)-anti_deriv_cp0_tau2(tau0))+(anti_deriv_cp0_tau(tau)-anti_deriv_cp0_tau(tau0));
 }
-long double IdealHelmholtzCP0AlyLee::dTau(const long double &tau, const long double &delta)
+long double IdealHelmholtzCP0AlyLee::dTau(const long double &tau, const long double &delta) throw()
 {
     if (!enabled){ return 0.0;}
     return -(anti_deriv_cp0_tau2(tau) - anti_deriv_cp0_tau2(tau0));
@@ -1703,12 +1738,12 @@ long double IdealHelmholtzCP0AlyLee::anti_deriv_cp0_tau(const long double &tau)
     long double term3 = -c[3]*(Tc*exp(2*c[4]*tau/Tc)*log(exp(2*c[4]*tau/Tc) + 1) + Tc*log(exp(2*c[4]*tau/Tc) + 1) - 2*c[4]*tau*exp(2*c[4]*tau/Tc))/(Tc*(exp(2*c[4]*tau/Tc) + 1));
     return term1 + term2 + term3;
 }
-long double IdealHelmholtzCP0AlyLee::dTau2(const long double &tau, const long double &delta)
+long double IdealHelmholtzCP0AlyLee::dTau2(const long double &tau, const long double &delta) throw()
 {
     if (!enabled){ return 0.0;}
     return -c[0]/pow(tau,2) - c[1]*pow(c[2]/Tc/sinh(c[2]*tau/Tc),2) - c[3]*pow(c[4]/Tc/cosh(c[4]*tau/Tc),2);
 }
-long double IdealHelmholtzCP0AlyLee::dTau3(const long double &tau, const long double &delta)
+long double IdealHelmholtzCP0AlyLee::dTau3(const long double &tau, const long double &delta) throw()
 {
     if (!enabled){ return 0.0;}
     return 2*c[0]/pow(tau,3) + 2*c[1]*pow(c[2]/Tc,3)*cosh(c[2]*tau/Tc)/pow(sinh(c[2]*tau/Tc),3) + 2*c[3]*pow(c[4]/Tc,3)*sinh(c[4]*tau/Tc)/pow(cosh(c[4]*tau/Tc),3);

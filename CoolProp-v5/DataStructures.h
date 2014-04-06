@@ -20,7 +20,7 @@ struct SimpleState
 /// --------------------------------------------------
 /// These are constants for the input and output parameters
 /// The structure is taken directly from the AbstractState class.
-const enum params {
+enum params {
     // Bulk properties
     iT, irho, ip, iQ, ih, is, icp, icv, ispeed_sound, iisothermal_compressibility, iisobaric_expansion_coefficient,
 
@@ -54,26 +54,26 @@ const enum params {
 };
 
 /// These are constants for the phases of the fluid
-const enum phases {iphase_liquid, iphase_supercritical, iphase_gas, iphase_twophase, iphase_unknown};
+enum phases {iphase_liquid, iphase_supercritical, iphase_gas, iphase_twophase, iphase_unknown};
 
 /// These are unit types for the fluid
-const enum fluid_types{FLUID_TYPE_PURE, FLUID_TYPE_PSEUDOPURE, FLUID_TYPE_REFPROP, FLUID_TYPE_INCOMPRESSIBLE_LIQUID, FLUID_TYPE_INCOMPRESSIBLE_SOLUTION, FLUID_TYPE_UNDEFINED};
+enum fluid_types{FLUID_TYPE_PURE, FLUID_TYPE_PSEUDOPURE, FLUID_TYPE_REFPROP, FLUID_TYPE_INCOMPRESSIBLE_LIQUID, FLUID_TYPE_INCOMPRESSIBLE_SOLUTION, FLUID_TYPE_UNDEFINED};
 
 /// These are input pairs that can be used (in each pair, input keys are sorted alphabetically)
-const enum input_pairs{PT_INPUTS, ///< Pressure in Pa, Temperature in K
-                       QT_INPUTS, ///< Molar quality, Temperature in K
-                       PQ_INPUTS, ///< Pressure in Pa, Molar quality
-                       DmassT_INPUTS, ///< Mass density in kg/m^3, Temperature in K
-                       DmolarT_INPUTS, ///< Molar density in mol/m^3, Temperature in K 
-                       DmassP_INPUTS, ///< Mass density in kg/m^3, Pressure in Pa
-                       DmolarP_INPUTS, ///< Molar density in mol/m^3, Pressure in Pa
-                       HmassP_INPUTS, ///< Enthalpy in J/kg, Pressure in Pa
-                       HmolarP_INPUTS, ///< Enthalpy in J/mol, Pressure in Pa
-                       PSmass_INPUTS, ///< Pressure in Pa, Entropy in J/kg/K
-                       PSmolar_INPUTS, ///< Pressure in Pa, Entropy in J/mol/K 
-                       HmolarSmolar_INPUTS, ///< Enthalpy in J/kg, Entropy in J/kg/K
-                       HmassSmass_INPUTS ///< Enthalpy in J/mol, Entropy in J/mol/K
-                       };
+enum input_pairs{PT_INPUTS, ///< Pressure in Pa, Temperature in K
+                 QT_INPUTS, ///< Molar quality, Temperature in K
+                 PQ_INPUTS, ///< Pressure in Pa, Molar quality
+                 DmassT_INPUTS, ///< Mass density in kg/m^3, Temperature in K
+                 DmolarT_INPUTS, ///< Molar density in mol/m^3, Temperature in K 
+                 DmassP_INPUTS, ///< Mass density in kg/m^3, Pressure in Pa
+                 DmolarP_INPUTS, ///< Molar density in mol/m^3, Pressure in Pa
+                 HmassP_INPUTS, ///< Enthalpy in J/kg, Pressure in Pa
+                 HmolarP_INPUTS, ///< Enthalpy in J/mol, Pressure in Pa
+                 PSmass_INPUTS, ///< Pressure in Pa, Entropy in J/kg/K
+                 PSmolar_INPUTS, ///< Pressure in Pa, Entropy in J/mol/K 
+                 HmolarSmolar_INPUTS, ///< Enthalpy in J/kg, Entropy in J/kg/K
+                 HmassSmass_INPUTS ///< Enthalpy in J/mol, Entropy in J/mol/K
+                 };
 
 } /* namespace CoolProp */
 #endif /* DATASTRUCTURES_H_ */

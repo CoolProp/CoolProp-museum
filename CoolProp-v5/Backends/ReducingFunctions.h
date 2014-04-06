@@ -203,6 +203,18 @@ public:
     };
 };
 
+class ReducingFunctionContainer
+{
+public:
+    ReducingFunction *p;
+    ReducingFunctionContainer(){p = NULL;};
+    ReducingFunctionContainer(ReducingFunction *pReducing)
+    {
+        p = pReducing;
+    };
+    ~ReducingFunctionContainer(){delete(p);};
+};
+
 
 } /* namespace CoolProp */
 #endif

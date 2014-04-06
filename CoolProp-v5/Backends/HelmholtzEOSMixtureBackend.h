@@ -16,6 +16,8 @@
 
 namespace CoolProp {
 
+class SaturationSolvers;
+
 class HelmholtzEOSMixtureBackend : public AbstractState  {
 protected:
     std::vector<CoolPropFluid*> components; ///< The components that are in use
@@ -25,13 +27,18 @@ protected:
     std::vector<double> mole_fractions_liq, ///< The mole fractions of the saturated liquid 
                         mole_fractions_vap; ///< The mole fractions of the saturated vapor
     SimpleState _crit;
+    int imposed_phase_index;
 public:
-    HelmholtzEOSMixtureBackend(){pReducing = NULL;};
-    HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components);
-    HelmholtzEOSMixtureBackend(std::vector<std::string> components);
-    virtual ~HelmholtzEOSMixtureBackend(){delete(pReducing);};
-    ReducingFunction *pReducing;
+    HelmholtzEOSMixtureBackend(){SatL = NULL; SatV = NULL; imposed_phase_index = -1;};
+    HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components, bool generate_SatL_and_SatV = true);
+    HelmholtzEOSMixtureBackend(std::vector<std::string> component_names, bool generate_SatL_and_SatV = true);
+    virtual ~HelmholtzEOSMixtureBackend(){};
+    ReducingFunctionContainer Reducing;
     ExcessTerm Excess;
+
+    const std::vector<CoolPropFluid*> &get_components(){return components;};
+
+    HelmholtzEOSMixtureBackend *SatL, *SatV; ///< 
 
     void update(long input_pair, double value1, double value2);
 
@@ -39,7 +46,13 @@ public:
     /**
     @param components The components that are to be used in this mixture
     */
-    void set_components(std::vector<CoolPropFluid*> components);
+    void set_components(std::vector<CoolPropFluid*> components, bool generate_SatL_and_SatV = true);
+
+    /**
+    \brief Specify the phase - this phase will always be used in calculations
+    @param phase_index The index from CoolProp::phases
+    */
+    void specify_phase(int phase_index){imposed_phase_index = phase_index;};
 
     void set_reducing_function();
     void set_excess_term();
@@ -49,6 +62,8 @@ public:
     @param mole_fractions The vector of mole fractions of the components
     */
     void set_mole_fractions(const std::vector<double> &mole_fractions);
+
+    const std::vector<double> &get_mole_fractions(){return mole_fractions;};
     
     /// Set the mass fractions
     /** 
@@ -132,9 +147,22 @@ public:
     // ***************************************************************
     // *******************  SOLVER ROUTINES  *************************
     // ***************************************************************
+        
     void solver_rho_Tp();
     long double solver_rho_Tp_SRK();
 };
+
+
+struct saturation_T_pure_Akasaka_options{
+    bool use_guesses;
+    long double omega, rhoL, rhoV, pL, pV;
+};
+class SaturationSolvers
+{
+public:
+    static void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
+};
+
 
 } /* namespace CoolProp */
 #endif /* HELMHOLTZEOSMIXTUREBACKEND_H_ */

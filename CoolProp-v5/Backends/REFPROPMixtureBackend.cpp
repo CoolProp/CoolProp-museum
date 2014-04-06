@@ -220,6 +220,10 @@ void *getFunctionPointer(char * name)
     #endif
 }
 
+//#include <dlfcn.h>
+//void *RefpropdllInstance=NULL;
+//char refpropPath[] = "/opt/refprop";
+
 //Moved pointer handling to a function, helps to maintain
 //an overview and structures OS dependent parts
 double setFunctionPointers()

@@ -19,10 +19,11 @@
 
 #include "HelmholtzEOSMixtureBackend.h"
 #include "../Fluids/FluidLibrary.h"
+#include "../Solvers.h"
 
 namespace CoolProp {
 
-HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<std::string> component_names) {
+HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<std::string> component_names, bool generate_SatL_and_SatV) {
     std::vector<CoolPropFluid*> components;
     components.resize(component_names.size());
 
@@ -31,18 +32,15 @@ HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<std::string> 
         components[i] = &(get_library().get(component_names[i]));
     }
 
-    pReducing = NULL;
+    /// Set the components and associated flags
+    set_components(components, generate_SatL_and_SatV);
+}
+HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components, bool generate_SatL_and_SatV) {
 
     /// Set the components and associated flags
-    set_components(components);
+    set_components(components, generate_SatL_and_SatV);
 }
-HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components) {
-    pReducing = NULL;
-
-    /// Set the components and associated flags
-    set_components(components);
-}
-void HelmholtzEOSMixtureBackend::set_components(std::vector<CoolPropFluid*> components) {
+void HelmholtzEOSMixtureBackend::set_components(std::vector<CoolPropFluid*> components, bool generate_SatL_and_SatV) {
 
     // Copy the components
     this->components = components;
@@ -63,6 +61,22 @@ void HelmholtzEOSMixtureBackend::set_components(std::vector<CoolPropFluid*> comp
     {
         set_excess_term();
     }
+
+    imposed_phase_index = -1;
+
+    // Top-level class can hold copies of the base saturation classes, 
+    // saturation classes cannot hold copies of the saturation classes
+    if (generate_SatL_and_SatV)
+    {
+        SatL = new HelmholtzEOSMixtureBackend(components, false);
+        SatL->specify_phase(iphase_liquid);
+        SatV = new HelmholtzEOSMixtureBackend(components, false);
+        SatV->specify_phase(iphase_gas);
+    }
+    else
+    {
+        SatL = NULL; SatV = NULL;
+    }
 }
 void HelmholtzEOSMixtureBackend::set_mole_fractions(const std::vector<double> &mole_fractions)
 {
@@ -74,7 +88,7 @@ void HelmholtzEOSMixtureBackend::set_mole_fractions(const std::vector<double> &m
 };
 void HelmholtzEOSMixtureBackend::set_reducing_function()
 {
-    pReducing = ReducingFunction::factory(components);
+    Reducing = ReducingFunctionContainer(ReducingFunction::factory(components));
 }
 void HelmholtzEOSMixtureBackend::set_excess_term()
 {
@@ -149,8 +163,6 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
     if (!ValidNumber(_T)){ throw ValueError("T is not a valid number");}
     if (!ValidNumber(_rhomolar)){ throw ValueError("rhomolar is not a valid number");}
     if (!ValidNumber(_Q)){ throw ValueError("Q is not a valid number");}
-
-    
 }
 void HelmholtzEOSMixtureBackend::DmolarT_phase_determination_pure_or_pseudopure()
 {
@@ -158,8 +170,7 @@ void HelmholtzEOSMixtureBackend::DmolarT_phase_determination_pure_or_pseudopure(
 	{
 		// Start to think about the saturation stuff
 		// First try to use the ancillary equations if you are far enough away
-		// Ancillary equations are good to within 1% in pressure in general
-		// Some industrial fluids might not be within 3%
+		// You know how accurate the ancillary equations are thanks to using CoolProp code to refit them
         if (_rhomolar < 0.95*components[0]->ancillaries.rhoV.evaluate(_T)){
             this->_phase = iphase_gas; return;
 		}
@@ -257,18 +268,27 @@ void HelmholtzEOSMixtureBackend::PT_phase_determination()
 		throw ValueError(format("phase cannot be determined"));
 	}
 }
+
 void HelmholtzEOSMixtureBackend::QT_flash()
 {
     if (is_pure_or_pseudopure)
     {
-        //if pure()
-        //{
-       //     saturation_T_pure();
-       // }
-       // else
-       // {
-       //     saturation_T_pseudopure();
-       // }
+        if (1)//pure()
+        {
+            // Set some imput options
+            saturation_T_pure_Akasaka_options options;
+            options.omega = 1.0;
+            options.use_guesses = false;
+            // Actually call the solver
+            SaturationSolvers::saturation_T_pure_Akasaka(this, _T, options);
+            // Load the outputs
+            _p = _Q*options.pV + (1-_Q)*options.pL;
+            _rhomolar = 1/(_Q/options.rhoV+(1-_Q)/options.rhoL);
+        }
+        else
+        {
+            //saturation_T_pseudopure();
+        }
     }
     else
     {
@@ -279,8 +299,16 @@ void HelmholtzEOSMixtureBackend::DmolarT_flash()
 {
     if (is_pure_or_pseudopure)
     {
-        // Find the phase, while updating all internal variables possible
-        DmolarT_phase_determination_pure_or_pseudopure();
+        if (imposed_phase_index > -1) 
+        {
+            // Use the phase defined by the imposed phase
+            _phase = imposed_phase_index;
+        }
+        else
+        {
+            // Find the phase, while updating all internal variables possible
+            DmolarT_phase_determination_pure_or_pseudopure();
+        }
     }
     else
     {
@@ -485,8 +513,8 @@ void HelmholtzEOSMixtureBackend::calc_reducing_state_nocache(const std::vector<d
         _crit = _reducing;
     }
     else{
-        _reducing.T = pReducing->Tr(mole_fractions);
-        _reducing.rhomolar = pReducing->rhormolar(mole_fractions);
+        _reducing.T = Reducing.p->Tr(mole_fractions);
+        _reducing.rhomolar = Reducing.p->rhormolar(mole_fractions);
     }
 }
 void HelmholtzEOSMixtureBackend::calc_reducing_state(void)
@@ -533,7 +561,7 @@ long double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau
         }
     }
     else{
-        unsigned int N = mole_fractions.size();
+        std::size_t N = mole_fractions.size();
         long double summer = 0;
         if (nTau == 0 && nDelta == 0){
             for (unsigned int i = 0; i < N; ++i){ summer += mole_fractions[i]*components[i]->pEOS->baser(tau, delta); }
@@ -623,7 +651,7 @@ long double HelmholtzEOSMixtureBackend::calc_alpha0_deriv_nocache(const int nTau
     }
     else{
         // See Table B5, GERG 2008 from Kunz Wagner, JCED, 2012
-        unsigned int N = mole_fractions.size();
+        std::size_t N = mole_fractions.size();
         long double summer = 0;
         long double tau_i, delta_i, rho_ci, T_ci;
         for (unsigned int i = 0; i < N; ++i){ 
@@ -719,5 +747,123 @@ long double HelmholtzEOSMixtureBackend::calc_d2alpha0_dTau2(void)
     const int nTau = 2, nDelta = 0;
     return calc_alpha0_deriv_nocache(nTau, nDelta, mole_fractions, _tau, _delta, _reducing.T, _reducing.rhomolar);
 }
+
+void SaturationSolvers::saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options)
+{
+    // Start with the method of Akasaka
+
+    /*
+	This function implements the method of Akasaka 
+
+	R. Akasaka,"A Reliable and Useful Method to Determine the Saturation State from 
+	Helmholtz Energy Equations of State", 
+	Journal of Thermal Science and Technology v3 n3,2008
+
+	Ancillary equations are used to get a sensible starting point
+	*/
+    
+    const SimpleState & reduce = HEOS->get_reducing();
+    long double R_u = HEOS->calc_gas_constant();
+    HelmholtzEOSMixtureBackend *SatL = HEOS->SatL, *SatV = HEOS->SatV;
+    const std::vector<double> & mole_fractions = HEOS->get_mole_fractions();
+
+	long double rhoL,rhoV,JL,JV,KL,KV,dJL,dJV,dKL,dKV;
+	long double DELTA, deltaL=0, deltaV=0, tau=0, error, PL, PV, stepL, stepV;
+	int iter=0;
+	// Use the density ancillary function as the starting point for the solver
+    try
+	{
+        if (!options.use_guesses)
+		{
+			// If very close to the critical temp, evaluate the ancillaries for a slightly lower temperature
+            if (T > 0.99*HEOS->get_reducing().T){
+				rhoL = HEOS->get_components()[0]->ancillaries.rhoL.evaluate(T-1);
+				rhoV = HEOS->get_components()[0]->ancillaries.rhoV.evaluate(T-1);
+			}
+			else{
+				rhoL = HEOS->get_components()[0]->ancillaries.rhoL.evaluate(T);
+				rhoV = HEOS->get_components()[0]->ancillaries.rhoV.evaluate(T);
+			}
+		}
+		else
+		{
+            rhoL = options.rhoL;
+			rhoV = options.rhoV;
+		}
+
+		deltaL = rhoL/reduce.rhomolar;
+		deltaV = rhoV/reduce.rhomolar;
+		tau = reduce.T/T;
+	}
+	catch(NotImplementedError &)
+	{
+		/*double Tc = crit.T;
+		double pc = crit.p.Pa;
+		double w = 6.67228479e-09*Tc*Tc*Tc-7.20464352e-06*Tc*Tc+3.16947758e-03*Tc-2.88760012e-01;
+		double q = -6.08930221451*w -5.42477887222;
+		double pt = exp(q*(Tc/T-1))*pc;*/
+
+		//double rhoL = density_Tp_Soave(T, pt, 0), rhoV = density_Tp_Soave(T, pt, 1);
+
+		//deltaL = rhoL/reduce.rhomolar;
+		//deltaV = rhoV/reduce.rhomolar;
+		//tau = reduce.T/T;
+	}
+	//if (get_debug_level()>5){
+	//		std::cout << format("%s:%d: Akasaka guess values deltaL = %g deltaV = %g tau = %g\n",__FILE__,__LINE__,deltaL, deltaV, tau).c_str();
+	//	}
+
+	do{
+		/*if (get_debug_level()>8){
+			std::cout << format("%s:%d: right before the derivs with deltaL = %g deltaV = %g tau = %g\n",__FILE__,__LINE__,deltaL, deltaV, tau).c_str();
+		}*/
+
+		// Calculate once to save on calls to EOS
+        SatL->update(DmolarT_INPUTS, rhoL, T);
+        SatV->update(DmolarT_INPUTS, rhoV, T);
+        double alpharL = SatL->alphar();
+		double alpharV = SatV->alphar();
+        double dalphar_ddeltaL = SatL->dalphar_dDelta();
+		double dalphar_ddeltaV = SatV->dalphar_dDelta();
+        double d2alphar_ddelta2L = SatL->d2alphar_dDelta2();
+        double d2alphar_ddelta2V = SatV->d2alphar_dDelta2();
+		
+		JL = deltaL * (1 + deltaL*dalphar_ddeltaL);
+		JV = deltaV * (1 + deltaV*dalphar_ddeltaV);
+		KL = deltaL*dalphar_ddeltaL + alpharL + log(deltaL);
+		KV = deltaV*dalphar_ddeltaV + alpharV + log(deltaV);
+
+		PL = R_u*reduce.rhomolar*T*JL;
+		PV = R_u*reduce.rhomolar*T*JV;
+		
+		// At low pressure, the magnitude of ddphirL and ddphirV are enormous, truncation problems arise for all the partials
+		dJL = 1 + 2*deltaL*dalphar_ddeltaL + deltaL*deltaL*d2alphar_ddelta2L;
+		dJV = 1 + 2*deltaV*dalphar_ddeltaV + deltaV*deltaV*d2alphar_ddelta2V;
+		dKL = 2*dalphar_ddeltaL + deltaL*d2alphar_ddelta2L + 1/deltaL;
+		dKV = 2*dalphar_ddeltaV + deltaV*d2alphar_ddelta2V + 1/deltaV;
+		
+		DELTA = dJV*dKL-dJL*dKV;
+
+		error = fabs(KL-KV)+fabs(JL-JV);
+
+		//  Get the predicted step
+		stepL = options.omega/DELTA*( (KV-KL)*dJV-(JV-JL)*dKV);
+		stepV = options.omega/DELTA*( (KV-KL)*dJL-(JV-JL)*dKL);
+		
+		if (deltaL+stepL > 1 && deltaV+stepV < 1 && deltaV+stepV > 0){
+            deltaL += stepL;  deltaV += stepV; 
+            rhoL = deltaL*reduce.rhomolar; rhoV = deltaV*reduce.rhomolar;
+		}
+		else{
+			throw ValueError(format("rhosatPure_Akasaka failed"));
+		}
+		iter++;
+		if (iter > 100){
+			throw SolutionError(format("Akasaka solver did not converge after 100 iterations"));
+		}
+	}
+	while (error > 1e-10 && fabs(stepL) > 10*DBL_EPSILON*fabs(stepL) && fabs(stepV) > 10*DBL_EPSILON*fabs(stepV));
+}
+
 
 } /* namespace CoolProp */

@@ -8,11 +8,11 @@
 #ifndef INCOMPRESSIBLE_H_
 #define INCOMPRESSIBLE_H_
 
-#include "AbstractFluid.h"
+//#include "AbstractFluid.h"
 
 namespace CoolProp {
 
-class Incompressible: public CoolProp::AbstractFluid {
+class Incompressible{
 public:
 	Incompressible();
 	virtual ~Incompressible();

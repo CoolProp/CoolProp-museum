@@ -167,6 +167,8 @@ public:
     virtual void set_mole_fractions(const std::vector<double> &mole_fractions) = 0;
     virtual void set_mass_fractions(const std::vector<double> &mass_fractions) = 0;
 
+    const SimpleState & get_reducing(){return _reducing;};
+
     // ----------------------------------------
     // Bulk properties - temperature and density are directly calculated every time
     // All other parameters are calculated on an as-needed basis

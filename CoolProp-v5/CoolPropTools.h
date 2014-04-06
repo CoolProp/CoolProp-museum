@@ -199,7 +199,7 @@
         Dictionary(){};
         void add_string(std::string s1, std::string s2){ strings.insert(std::pair<std::string, std::string>(s1, s2));}
         void add_number(std::string s1, double d){ numbers.insert(std::pair<std::string, double>(s1, d));}
-        void add_double_vector(std::string s1, std::vector<double> d){ double_vectors.insert(std::pair<std::string, std::vector<double>>(s1, d));}
+        void add_double_vector(std::string s1, std::vector<double> d){ double_vectors.insert(std::pair<std::string, std::vector<double> >(s1, d));}
         std::string get_string(std::string s)
         {
             if (strings.find(s) != strings.end()){ return strings[s]; } else{ throw std::exception(); }

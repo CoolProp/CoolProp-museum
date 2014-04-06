@@ -12,7 +12,7 @@
 
 namespace CoolProp {
 
-class InSolution: public CoolProp::Incompressible {
+class InSolution{
 public:
 	InSolution();
 	virtual ~InSolution();

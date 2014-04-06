@@ -65,19 +65,43 @@ int main()
     }
     if (1)
     {
-        double rhomass = 0.00001, T = 300;
+        double T = 300;
         
         AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
-        MixRP->update(QT_INPUTS, 0.0, T);
+        {
+            long N = 10000;
+            double t1 = clock(), summer = 0;
+            for (std::size_t ii = 0; ii < N; ++ii)
+            {
+                MixRP->update(QT_INPUTS, 0.0, T+10/((double)N)*ii);
+                summer += MixRP->p();
+            }
+            double t2 = clock();
+            double elap = (t2-t1)/CLOCKS_PER_SEC/((double)N)*1e6;
+            printf("%g %g\n",elap, summer);
+        }
         double p2 = MixRP->p();
         double cv2 = MixRP->cvmolar();
+        double cp2 = MixRP->cpmolar();
+        double T2 = MixRP->T();
 
         AbstractState *Mix = AbstractState::factory("CORE-n-Propane");
-        Mix->update(QT_INPUTS, rhomass, T);
+        {
+            long N = 10000;
+            double t1 = clock(), summer = 0;
+            for (std::size_t ii = 0; ii < N; ++ii)
+            {
+                Mix->update(QT_INPUTS, 0.0, T+10/((double)N)*ii);
+                summer += Mix->p();
+            }
+            double t2 = clock();
+            double elap = (t2-t1)/CLOCKS_PER_SEC/((double)N)*1e6;
+            printf("%g %g\n",elap, summer);
+        }
         double p1 = Mix->p();
         double cv1 = Mix->cvmolar();
-
-        
+        double cp1 = Mix->cpmolar();
+        double T1 = Mix->T();
 
         double rr = 0;
     }

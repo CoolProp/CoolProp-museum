@@ -87,7 +87,7 @@ MixingParameterLibrary::MixingParameterLibrary()
 ReducingFunction *ReducingFunction::factory(const std::vector<CoolPropFluid*> &components)
 {
     std::string _model;
-    unsigned int N = components.size();
+    std::size_t N = components.size();
 
     STLMatrix beta_v, gamma_v, beta_T, gamma_T;
     beta_v.resize(N, std::vector<double>(N, 0));
