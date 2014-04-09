@@ -63,13 +63,22 @@ int main()
         printf("%g %g\n",elap, summer);
         
     }
-    if (1)
+    if (0)
     {
+        AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
+        MixRP->update(DmolarT_INPUTS, 800, 300);
+
+        AbstractState *Mix = AbstractState::factory("CORE-n-Propane");
+        Mix->update(DmolarT_INPUTS, 800, 300);
+    }
+    if (0)
+    {
+
         double T = 300;
         
         AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
         {
-            long N = 10000;
+            long N = 100000;
             double t1 = clock(), summer = 0;
             for (std::size_t ii = 0; ii < N; ++ii)
             {
@@ -87,7 +96,7 @@ int main()
 
         AbstractState *Mix = AbstractState::factory("CORE-n-Propane");
         {
-            long N = 10000;
+            long N = 100000;
             double t1 = clock(), summer = 0;
             for (std::size_t ii = 0; ii < N; ++ii)
             {
@@ -120,6 +129,8 @@ int main()
         double w1 = Mix->speed_sound();
         double h1 = Mix->hmolar();
         double s1 = Mix->smolar();
+        double phi10 = Mix->fugacity_coefficient(0);
+        double phi11 = Mix->fugacity_coefficient(1);
 
         AbstractState *MixRP = AbstractState::factory("REFPROP-Ethane|propane");
         MixRP->set_mole_fractions(z);
@@ -130,6 +141,8 @@ int main()
         double w2 = MixRP->speed_sound();
         double h2 = MixRP->hmolar();
         double s2 = MixRP->smolar();
+        double phi20 = MixRP->fugacity_coefficient(0);
+        double phi21 = MixRP->fugacity_coefficient(1);
 
         double rr = 0;
     }

@@ -62,6 +62,10 @@ AbstractState * AbstractState::factory(std::string fluid_string)
     {
         throw ValueError("BRINE backend not yet implemented");
     }
+    else if (fluid_string.find("TREND-") == 0)
+    {
+        throw ValueError("TREND backend not yet implemented");
+    }
     else
     {
         throw ValueError("Invalid input to factory function");
@@ -174,6 +178,10 @@ double AbstractState::molar_mass(void){
 double AbstractState::gas_constant(void){
     if (!_gas_constant) _gas_constant = calc_gas_constant();
     return _gas_constant;
+}
+double AbstractState::fugacity_coefficient(int i){
+    // TODO: Cache the fug. coeff for each component
+    return calc_fugacity_coefficient(i);
 }
 
 //virtual double AbstractState::isothermal_compressibility(void){

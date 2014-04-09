@@ -105,6 +105,8 @@ reducing parameters \f$ \rho_r \f$ and \f$ T_r \f$ and derivatives thereof
 */
 class GERG2008ReducingFunction : public ReducingFunction
 {
+private:
+    GERG2008ReducingFunction(const GERG2008ReducingFunction& that); // No copying
 protected:
 	STLMatrix v_c; ///< \f$ v_{c,ij} = \frac{1}{8}\left(v_{c,i}^{1/3}+v_{c,j}^{1/3}\right)^{3}\f$ from GERG-2008
 	STLMatrix T_c; ///< \f$ T_{c,ij} = \sqrt{T_{c,i}T_{c,j}} \f$ from GERG=2008
@@ -113,6 +115,7 @@ protected:
 	STLMatrix beta_T; ///< \f$ \beta_{T,ij} \f$ from GERG-2008
 	STLMatrix gamma_T; ///< \f$ \gamma_{T,ij} \f$ from GERG-2008
 	std::vector<CoolPropFluid *> pFluids; ///< List of pointers to fluids
+
 public:
 	GERG2008ReducingFunction(std::vector<CoolPropFluid *> pFluids, STLMatrix beta_v, STLMatrix gamma_v, STLMatrix beta_T, STLMatrix gamma_T)
 	{
@@ -187,6 +190,8 @@ and
 */
 class LemmonAirHFCReducingFunction
 {
+protected:
+    LemmonAirHFCReducingFunction(const LemmonAirHFCReducingFunction &);
 public:
 	/// Set the coefficients based on reducing parameters loaded from JSON
 	static void convert_to_GERG(const std::vector<CoolPropFluid*> &pFluids, int i, int j, Dictionary d, double &beta_T, double &beta_v, double &gamma_T, double &gamma_v)
@@ -205,14 +210,20 @@ public:
 
 class ReducingFunctionContainer
 {
+private:
+    ReducingFunctionContainer(const ReducingFunctionContainer&);
+    ReducingFunctionContainer& operator=(const ReducingFunctionContainer&);
 public:
     ReducingFunction *p;
-    ReducingFunctionContainer(){p = NULL;};
-    ReducingFunctionContainer(ReducingFunction *pReducing)
-    {
+    ReducingFunctionContainer(){
+        p = NULL;
+    };
+    void set(ReducingFunction *pReducing){p = pReducing;};
+    ReducingFunctionContainer(ReducingFunction *pReducing){
         p = pReducing;
     };
     ~ReducingFunctionContainer(){delete(p);};
+
 };
 
 

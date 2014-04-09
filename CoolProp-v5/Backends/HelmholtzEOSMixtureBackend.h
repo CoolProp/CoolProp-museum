@@ -14,11 +14,13 @@
 #include "ReducingFunctions.h"
 #include "ExcessHEFunction.h"
 
+#include "MixtureDerivatives.h"
+
 namespace CoolProp {
 
 class SaturationSolvers;
 
-class HelmholtzEOSMixtureBackend : public AbstractState  {
+class HelmholtzEOSMixtureBackend : public AbstractState {
 protected:
     std::vector<CoolPropFluid*> components; ///< The components that are in use
     
@@ -45,6 +47,7 @@ public:
     /// Set the components of the mixture
     /**
     @param components The components that are to be used in this mixture
+    @param generate_SatL_and_SatV true if SatL and SatV classes should be added, false otherwise.  Added so that saturation classes can be added without infinite recursion of adding saturation classes
     */
     void set_components(std::vector<CoolPropFluid*> components, bool generate_SatL_and_SatV = true);
 
@@ -73,6 +76,14 @@ public:
     
     long double calc_molar_mass(void);
     long double calc_gas_constant(void);
+
+    long double calc_pressure(void);
+    long double calc_cvmolar(void);
+    long double calc_cpmolar(void);
+    long double calc_hmolar(void);
+    long double calc_smolar(void);
+    long double calc_speed_sound(void);
+    long double calc_fugacity_coefficient(int i);
 
     long double calc_alphar(void);
     long double calc_dalphar_dDelta(void);
@@ -114,53 +125,309 @@ public:
 
     \sa Table B5, GERG 2008 from Kunz Wagner, JCED, 2012
     */
-    
     long double calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta, const long double &Tr, const long double &rhor);
     
     void calc_reducing_state(void);
     void calc_reducing_state_nocache(const std::vector<double> & mole_fractions);
 
-    long double calc_pressure(void);
-    long double calc_cvmolar(void);
-    long double calc_cpmolar(void);
-    long double calc_hmolar(void);
-    long double calc_smolar(void);
-    long double calc_speed_sound(void);
-
     double p_rhoT(long double rhomolar, long double T);
 
+
+
+
+    // *************************************************************** 
     // ***************************************************************
     // *************  PHASE DETERMINATION ROUTINES  ******************
     // ***************************************************************
+    // *************************************************************** 
     void DmolarT_phase_determination_pure_or_pseudopure();
     void DmolarP_phase_determination();
     void PT_phase_determination();
 
+
+
+
+
+
+
+
+    // *************************************************************** 
     // ***************************************************************
     // *******************  FLASH ROUTINES  **************************
     // ***************************************************************
+    // *************************************************************** 
     void DmolarT_flash();
     void DmolarP_flash();
     void PT_flash();
+    void PQ_flash();
     void QT_flash();
 
+
+
+
+
+
+
+
+
+
+
+
+
+    // ***************************************************************
     // ***************************************************************
     // *******************  SOLVER ROUTINES  *************************
     // ***************************************************************
-        
+    // ***************************************************************        
+    
     void solver_rho_Tp();
     long double solver_rho_Tp_SRK();
-};
 
 
-struct saturation_T_pure_Akasaka_options{
-    bool use_guesses;
-    long double omega, rhoL, rhoV, pL, pV;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // ***************************************************************
+    // ***************************************************************
+    // *****************  MIXTURE DERIVATIVES  ***********************
+    // ***************************************************************
+    // ***************************************************************
+
+
+    long double mixderiv_dalphar_dxi(int i);
+    long double mixderiv_d2alphar_dxi_dTau(int i);
+    long double mixderiv_d2alphar_dxi_dDelta(int i);
+    long double mixderiv_d2alphardxidxj(int i, int j);
+
+    /*! The derivative term
+	\f[
+	\left(\frac{\partial p}{\partial T} \right)_{V,\bar n} = \rho R(1+\delta \alpha_{\delta}^r-\delta \tau \alpha^r_{\delta\tau})
+	\f]
+	GERG 2004 Monograph equation 7.61
+	*/
+	long double mixderiv_dpdT__constV_n();
+
+	/*! The derivative term
+	\f[
+	n\left(\frac{\partial p}{\partial V} \right)_{T,\bar n} = -\rho^2 RT(1+2\delta \alpha_{\delta}^r+\delta^2\alpha^r_{\delta\delta})
+	\f]
+	GERG 2004 Monograph equation 7.62
+	*/
+	long double mixderiv_ndpdV__constT_n();
+
+	/*! The derivative term
+	\f[
+	n\left(\frac{\partial p}{\partial n_i} \right)_{T,V,n_j} = \rho RT\left[1+\delta\alpha_{\delta}^r\left[2- \frac{1}{\rho_r}\cdot n\left( \frac{\partial \rho_r}{\partial n_i}\right)_{n_j}\right] +\delta\cdot n\left(\frac{\partial\alpha_{\delta}^r}{\partial n_i}\right)_{T,V,n_j}\right]
+	\f]
+	GERG 2004 Monograph equation 7.63
+	*/
+	long double mixderiv_ndpdni__constT_V_nj(int i);
+
+    /// GERG 2004 monograph Eqn. 7.32
+    /*! The partial molar volume
+	\f[
+	\hat v_i = \left( \frac{\partial V}{\partial n_i}\right)_{T,p,n_j} = \frac{-\left(\dfrac{\partial p}{\partial n_i}\right)_{T,V,n_j}}{\left(\dfrac{\partial p}{\partial V}\right)_{T,\bar n}}
+	\f]
+	*/
+	long double mixderiv_partial_molar_volume(int i);
+
+    /*!
+	Natural logarithm of the fugacity coefficient
+	*/
+    long double mixderiv_ln_fugacity_coefficient(int i);
+
+	/*!
+	Derivative of the natural logarithm of the fugacity coefficient with respect to T
+	*/
+	long double mixderiv_dln_fugacity_coefficient_dT__constrho(int i);
+
+    /// GERG 2004 Monograph Eqn. 7.29
+	/** The derivative term
+	\f[
+	\left(\frac{\partial \ln \phi_i}{\partial T} \right)_{p,\bar n} = \left(\frac{\partial^2n\alpha^r}{\partial T\partial n_i} \right)_{V,n_j} + \frac{1}{T}-\frac{\hat v}{RT}\left(\frac{\partial p}{\partial T}\right)_{V,\bar n}
+	\f]
+	*/
+	long double mixderiv_dln_fugacity_coefficient_dT__constp_n(int i);
+
+    /// Table B4, Kunz, JCED, 2012 for the original term and the subsequent substitutions
+    /*! The derivative term
+	\f[
+	n\left(\frac{\partial \phi^r}{\partial n_i} \right)_{T,V,n_j}
+	\f]
+	which is equal to
+	\f{eqnarray*}{
+	n\left(\frac{\partial \phi^r}{\partial n_i} \right)_{T,V,n_j} &=& \delta \phi^r_{\delta}\left[ 1-\frac{1}{\rho_r}\left[\left(\frac{\partial \rho_r}{\partial x_i}\right)_{x_j} - \sum_{k=1}^N x_k\left(\frac{\partial \rho_r}{\partial x_k}\right)_{x_j}  \right]\right]\\
+	&& +\tau \phi^r_{\tau}\frac{1}{T_r}\left[\left(\frac{\partial T_r}{\partial x_i}\right)_{x_j} - \sum_{k=1}^N x_k\left(\frac{\partial T_r}{\partial x_k}\right)_{x_j}  \right]\\
+	&& +\phi^r_{x_i}-\sum_{k=1}^{N}x_k\phi^r_{x_k}
+	\f}
+	*/
+	long double mixderiv_ndalphar_dni__constT_V_nj(int i);
+
+	/// GERG Equation 7.42
+	long double mixderiv_dnalphar_dni__constT_V_nj(int i);
+
+    /// GERG 2004 Monograph Eqn. 7.30
+	/**
+    The derivative term
+	\f[
+	\left(\frac{\partial \ln \phi_i}{\partial p} \right)_{T,\bar n} = \frac{\hat v_i}{RT}-\frac{1}{p}
+	\f]
+	*/
+	long double mixderiv_dln_fugacity_coefficient_dp__constT_n(int i);
+
+	///GERG 2004 Monograph Equation 7.31
+    /** The derivative term
+	\f[
+	n\left(\frac{\partial \ln \phi_i}{\partial n_j}\right)_{T,p} = n\left(\frac{\partial^2n\alpha^r}{\partial n_j \partial n_i} \right)_{T,V}+1+\frac{n}{RT}\frac{\left(\frac{\partial p}{\partial n_j}\right)_{T,V,n_i}\left(\frac{\partial p}{\partial n_i}\right)_{T,V,n_j}}{\left(\frac{\partial p}{\partial V}\right)_{T,\bar n}}
+	\f]
+	which is also equal to 
+	\f[
+	n\left(\frac{\partial \ln \phi_i}{\partial n_j}\right)_{T,p} = n\left(\frac{\partial^2n\alpha^r}{\partial n_j \partial n_i} \right)_{T,V}+1-\frac{\hat v_i}{RT}\left[n\left(\frac{\partial p}{\partial n_j}\right)_{T,V,n_i}\right]
+	\f]
+	*/
+	long double mixderiv_ndln_fugacity_coefficient_dnj__constT_p(int i, int j);
+
+	/// Gernert Equation 3.115
+	/// Catch test provided
+	long double mixderiv_dln_fugacity_coefficient_dxj__constT_p_xi(int i, int j);
+	
+	/// Gernert Equation 3.130
+	/// Catch test provided
+	long double mixderiv_dpdxj__constT_V_xi(int j);
+
+	/// Gernert Equation 3.117
+    long double mixderiv_d2nalphar_dni_dxj__constT_V(int i, int j){ return mixderiv_d_ndalphardni_dxj__constT_V_xi(i, j) + mixderiv_dalphar_dxj__constT_V_xi(j);};
+
+	/// Gernert Equation 3.119
+	/// Catch test provided
+	long double mixderiv_dalphar_dxj__constT_V_xi(int j);
+
+	/// Gernert Equation 3.118
+	/// Catch test provided
+	long double mixderiv_d_ndalphardni_dxj__constT_V_xi(int i, int j);
+
+	/// Gernert Equation 3.134
+	/// Catch test provided
+	long double mixderiv_d_dalpharddelta_dxj__constT_V_xi(int j);
+
+	/// Gernert Equation 3.121
+	/// Catch test provided
+	long double mixderiv_ddelta_dxj__constT_V_xi(int j);
+
+	/// Gernert Equation 3.122
+	/// Catch test provided
+	long double mixderiv_dtau_dxj__constT_V_xi(int j);
+
+	///  GERG 2004 Monograph, equations 7.44 and 7.51
+    /** The derivative term
+	\f[
+	\left(\frac{\partial^2n\alpha^r}{\partial T\partial n_i} \right)_{V,n_j} = \left( \frac{\partial}{\partial T}\left(\frac{\partial n \alpha^r}{\partial n_i}\right)_{T,V,n_j} \right)_{V,\bar n}
+	\f]
+	\f[
+	\left(\frac{\partial^2n\alpha^r}{\partial T\partial n_i} \right)_{V,n_j} = -\frac{\tau}{T}\left[\alpha_{\tau}^r +\left( \frac{\partial}{\partial \tau}\left(n\left(\frac{\partial \alpha^r}{\partial n_i}\right)_{T,V,n_j}\right)\right)_{\delta,\bar x}\right]
+	\f]
+	*/
+	long double mixderiv_d2nalphar_dni_dT(int i);
+
+	/// GERG 2004 Monograph Equation 7.51 and Table B4, Kunz, JCED, 2012
+    /** The derivative term
+	\f{eqnarray*}{
+	\frac{\partial }{\partial \tau} \left( n\left(\frac{\partial \phi^r}{\partial n_i} \right)_{T,V,n_j} \right) &=& \delta \phi^r_{\delta\tau}\left[ 1-\frac{1}{\rho_r}\left[\left(\frac{\partial \rho_r}{\partial x_i}\right)_{x_j} - \sum_{k=1}^N x_k\left(\frac{\partial \rho_r}{\partial x_k}\right)_{x_j}  \right]\right]\\
+	&& +(\tau \phi^r_{\tau\tau}+\phi^r_{\tau})\frac{1}{T_r}\left[\left(\frac{\partial T_r}{\partial x_i}\right)_{x_j} - \sum_{k=1}^N x_k\left(\frac{\partial T_r}{\partial x_k}\right)_{x_j}  \right]\\
+	&& +\phi^r_{x_i\tau}-\sum_{k=1}^{N}x_k\phi^r_{x_k\tau}
+	\f}
+	*/
+	long double mixderiv_d_ndalphardni_dTau(int i);
+
+	/// GERG 2004 Monograph Equation 7.50 and Table B4, Kunz, JCED, 2012
+    /** The derivative term
+	\f{eqnarray*}{
+	\left(\frac{\partial }{\partial \delta} \left( n\left(\frac{\partial \phi^r}{\partial n_i} \right)_{T,V,n_j} \right)\right)_{\tau,\bar x} &=& (\alpha_{\delta}^r+\delta\alpha_{\delta\delta}^r)\left[1-\frac{1}{\rho_r}\cdot n\left(\frac{\partial \rho_r}{\partial n_i}\right)_{n_j} \right] \\
+	&+&\tau\alpha^r_{\delta\tau}\frac{1}{T_r}\cdot n\left(\frac{\partial T_r}{\partial n_i}\right)_{n_j}\\
+	&+&\phi^r_{\delta x_i}-\sum_{k=1}^{N}x_k\phi^r_{\delta x_k}
+	\f}
+	*/
+	long double mixderiv_d_ndalphardni_dDelta(int i);
+
+	/** GERG 2004 Monograph equation 7.41:
+	\f[
+	n\left(\frac{\partial^2n\alpha^r}{\partial n_i \partial n_j} \right)_{T,V} = n\left( \frac{\partial}{\partial n_j}\left(\frac{\partial n\alpha^r}{\partial n_i}\right)_{T,V,n_j}\right)_{T,V,n_i}
+	\f]
+	and
+	GERG 2004 Monograph equation 7.46:
+	\f[
+	n\left( \frac{\partial}{\partial n_j}\left(\frac{\partial n\alpha^r}{\partial n_i}\right)_{T,V,n_j}\right)_{T,V,n_i} = n\left( \frac{\partial \alpha^r}{\partial n_j}\right)_{T,V,n_i} + n\left( \frac{\partial}{\partial n_j}\left(n\left(\frac{\partial \alpha^r}{\partial n_i}\right)_{T,V,n_j} \right) \right)_{T,V,n_i}
+	\f]
+	GERG 2004 Monograph equation 7.47:
+	\f{eqnarray*}{
+	n\left( \frac{\partial}{\partial n_j}\left(n\left(\frac{\partial \alpha^r}{\partial n_i}\right)_{T,V,n_j} \right) \right)_{T,V,n_i} &=& \left( \frac{\partial}{\partial \delta}\left(n\left(\frac{\partial\alpha^r}{\partial n_i}\right)_{T,V,n_j}\right)\right)_{\tau,\bar x}\cdot n\left(\frac{\partial\delta}{\partial n_j}\right)_{T,V,n_i}\\ 
+	&+& \left( \frac{\partial}{\partial \tau}\left(n\left(\frac{\partial\alpha^r}{\partial n_i}\right)_{T,V,n_j}\right)\right)_{\tau,\bar x}\cdot n\left(\frac{\partial\tau}{\partial n_j}\right)_{T,V,n_i}\\
+	&+& \left( \frac{\partial}{\partial x_j}\left(n\left(\frac{\partial\alpha^r}{\partial n_i}\right)_{T,V,n_j}\right)\right)_{\delta,\tau,x_i}-\sum_{k=1}^{N}x_k \left( \frac{\partial}{\partial x_k}\left(n\left(\frac{\partial\alpha^r}{\partial n_i}\right)_{T,V,n_j}\right)\right)_{\delta,\tau,x_i}\\
+	\f}
+	*/
+	long double mixderiv_nd2nalphardnidnj__constT_V(int i, int j);
+
+    /// GERG 2004 Monograph equation 7.48
+	/** The derivative term
+	\f[
+	n\left(\frac{\partial \delta}{\partial n_i} \right)_{T,V,n_j} = \delta - \frac{\delta}{\rho_r}\cdot n\left(\frac{\partial \rho_r}{\partial n_i} \right)_{n_j}
+	\f]
+	*/
+	long double mixderiv_nddeltadni__constT_V_nj(int i);
+	
+    /// GERG 2004 Monograph equation 7.49
+    /** The derivative term
+	\f[
+	n\left(\frac{\partial \tau}{\partial n_i} \right)_{T,V,n_j} = \frac{\tau}{T_r}\cdot n\left(\frac{\partial T_r}{\partial n_i} \right)_{n_j}
+	\f]
+	*/
+	long double mixderiv_ndtaudni__constT_V_nj(int i);
+
+    /// \brief GERG 2004 Monograph equation 7.52
+	/** The derivative term
+	\f{eqnarray*}{
+	\left( \frac{\partial}{\partial x_j}\left(n\left(\frac{\partial\alpha^r}{\partial n_i}\right)_{T,V,n_j}\right)\right)_{\delta,\tau,x_i} &=& \delta\alpha_{\delta x_j}^{r}\left[ 1-\frac{1}{\rho_r}\cdot n\left(\frac{\partial \rho_r}{\partial n_i}\right)_{n_j}\right] \\
+	&-& \delta\alpha_{\delta}^{r}\frac{1}{\rho_r}\left[ \left(\frac{\partial}{\partial x_j}\left(n\left(\frac{\partial \rho_r}{\partial n_i}\right)_{n_j}\right)\right)_{x_i}-\frac{1}{\rho_r}\left(\frac{\partial \rho_r}{\partial x_j}\right)_{x_i}\cdot n\left(\frac{\partial \rho_r}{\partial n_i}\right)_{n_j}\right] \\
+	&+& \tau\alpha_{\tau x_j}^r\frac{1}{T_r}\cdot n\left(\frac{\partial T_r}{\partial n_i}\right)_{n_j}\\
+	&+& \tau\alpha_{\tau}^{r}\frac{1}{T_r}\left[ \left(\frac{\partial}{\partial x_j}\left(n\left(\frac{\partial T_r}{\partial n_i}\right)_{n_j}\right)\right)_{x_i}-\frac{1}{T_r}\left(\frac{\partial T_r}{\partial x_j}\right)_{x_i}\cdot n\left(\frac{\partial T_r}{\partial n_i}\right)_{n_j}\right] \\
+	&+& \alpha_{x_ix_j}^r-\alpha_{x_j}^r-\sum_{m=1}^Nx_m\alpha_{x_jx_m}^r
+	\f}
+	*/
+	long double mixderiv_d_ndalphardni_dxj__constdelta_tau_xi(int i, int j);
+
 };
+
 class SaturationSolvers
 {
 public:
+    struct saturation_T_pure_Akasaka_options{
+        bool use_guesses;
+        long double omega, rhoL, rhoV, pL, pV;
+    };
+    struct saturation_T_pure_options{
+        bool use_guesses;
+        long double omega, rhoL, rhoV, pL, pV;
+    };
+    struct saturation_p_pure_options{
+        bool use_guesses;
+        long double omega, rhoL, rhoV, pL, pV;
+    };
+
+    static void saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options);
     static void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
+    static void saturation_p_pure(HelmholtzEOSMixtureBackend *HEOS, long double p, saturation_p_pure_options &options);
 };
 
 

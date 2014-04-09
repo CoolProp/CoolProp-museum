@@ -143,6 +143,7 @@ static char default_reference_state[] = "DEF";
  ESFLSHdll_POINTER ESFLSHdll;
  FGCTYdll_POINTER FGCTYdll;
  FPVdll_POINTER FPVdll;
+ FUGCOFdll_POINTER FUGCOFdll;
  GERG04dll_POINTER GERG04dll;
  GETFIJdll_POINTER GETFIJdll;
  GETKTVdll_POINTER GETKTVdll;
@@ -268,6 +269,7 @@ double setFunctionPointers()
     ESFLSHdll = (ESFLSHdll_POINTER) getFunctionPointer((char *)ESFLSHdll_NAME);
     FGCTYdll = (FGCTYdll_POINTER) getFunctionPointer((char *)FGCTYdll_NAME);
     FPVdll = (FPVdll_POINTER) getFunctionPointer((char *)FPVdll_NAME);
+    FUGCOFdll = (FUGCOFdll_POINTER) getFunctionPointer((char *)FUGCOFdll_NAME);
     GERG04dll = (GERG04dll_POINTER) getFunctionPointer((char *)GERG04dll_NAME);
     GETFIJdll = (GETFIJdll_POINTER) getFunctionPointer((char *)GETFIJdll_NAME);
     GETKTVdll = (GETKTVdll_POINTER) getFunctionPointer((char *)GETKTVdll_NAME);
@@ -592,6 +594,19 @@ long double REFPROPMixtureBackend::calc_surface_tension(void)
     //else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
     _surface_tension = sigma;
     return static_cast<double>(_surface_tension);
+}
+long double REFPROPMixtureBackend::calc_fugacity_coefficient(int i)
+{
+    double rho_mol_L = 0.001*_rhomolar;
+    long ierr;
+    std::vector<double> fug_cof = mole_fractions;
+    char herr[255];
+    FUGCOFdll(&_T, &rho_mol_L, &(mole_fractions[0]),  // Inputs
+             &(fug_cof[0]),                   // Outputs
+             &ierr, herr, errormessagelength);       // Error message
+    if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } 
+    //else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+    return static_cast<long double>(fug_cof[i]);
 }
     
 void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)

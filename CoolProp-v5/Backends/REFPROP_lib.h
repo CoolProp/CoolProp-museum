@@ -60,6 +60,7 @@
 #  define ENTROdll ENTROdll
 #  define ESFLSHdll ESFLSHdll
 #  define FGCTYdll FGCTYdll
+#  define FUGCOFdll FUGCOFdll
 #  define FPVdll FPVdll
 #  define GERG04dll GERG04dll
 #  define GETFIJdll GETFIJdll
@@ -174,6 +175,7 @@
 #  define ENTROdll entrodll_
 #  define ESFLSHdll esflshdll_
 #  define FGCTYdll fgctydll_
+#  define FUGCOFdll fugcofdll_
 #  define FPVdll fpvdll_
 #  define GERG04dll gerg04dll_
 #  define GETFIJdll getfijdll_
@@ -279,6 +281,7 @@
 #  define ENTROdll entrodll_
 #  define ESFLSHdll esflshdll_
 #  define FGCTYdll fgctydll_
+#  define FUGCOFdll fugcofdll_
 #  define FPVdll fpvdll_
 #  define GERG04dll gerg04dll_
 #  define GETFIJdll getfijdll_
@@ -498,6 +501,7 @@
 #define ENTROdll_NAME FUNCTION_NAME(ENTROdll)
 #define ESFLSHdll_NAME FUNCTION_NAME(ESFLSHdll)
 #define FGCTYdll_NAME FUNCTION_NAME(FGCTYdll)
+#define FUGCOFdll_NAME FUNCTION_NAME(FUGCOFdll)
 #define FPVdll_NAME FUNCTION_NAME(FPVdll)
 #define GERG04dll_NAME FUNCTION_NAME(GERG04dll)
 #define GETFIJdll_NAME FUNCTION_NAME(GETFIJdll)
@@ -611,6 +615,7 @@ extern "C" {
   typedef void (CALLCONV ESFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
   typedef void (CALLCONV FGCTYdll_TYPE)(double *,double *,double *,double *);
   typedef void (CALLCONV FPVdll_TYPE)(double *,double *,double *,double *,double *);
+  typedef void (CALLCONV FUGCOFdll_TYPE)(double *,double *,double *,double*, long *,char*,long );
   typedef void (CALLCONV GERG04dll_TYPE)(long *,long *,long *,char*,long );
   typedef void (CALLCONV GETFIJdll_TYPE)(char*,double *,char*,char*,long ,long ,long );
   typedef void (CALLCONV GETKTVdll_TYPE)(long *,long *,char*,double *,char*,char*,char*,char*,long ,long ,long ,long ,long );
@@ -818,6 +823,7 @@ extern "C" {
   typedef ESFLSHdll_TYPE * ESFLSHdll_POINTER;
   typedef FGCTYdll_TYPE * FGCTYdll_POINTER;
   typedef FPVdll_TYPE * FPVdll_POINTER;
+  typedef FUGCOFdll_TYPE * FUGCOFdll_POINTER;
   typedef GERG04dll_TYPE * GERG04dll_POINTER;
   typedef GETFIJdll_TYPE * GETFIJdll_POINTER;
   typedef GETKTVdll_TYPE * GETKTVdll_POINTER;

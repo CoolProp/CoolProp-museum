@@ -139,8 +139,11 @@ public:
     SimpleState reduce; ///< Reducing state used for the EOS (usually, but not always, the critical point)
     EOSLimits limits; ///< Limits on the EOS
     double R_u; ///< The universal gas constant used for this EOS (usually, but not always, 8.314472 J/mol/K)
-    double molar_mass;
+    double molar_mass; ///< The molar mass in kg/mol (note NOT kg/kmol)
     double accentric; ///< The accentric factor \f$ \omega = -log_{10}\left(\frac{p_s(T/T_c=0.7)}{p_c}\right)-1\f$
+    double Ttriple; ///< Triple point temperature (K)
+    double ptriple; ///< Triple point pressure (Pa)
+    bool pseudo_pure; ///< Is a pseudo-pure fluid (true) or pure fluid (false)
     ResidualHelmholtzContainer alphar; ///< The residual Helmholtz energy
     IdealHelmholtzContainer alpha0; ///< The ideal Helmholtz energy
 

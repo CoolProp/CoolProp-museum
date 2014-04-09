@@ -89,6 +89,8 @@ protected:
 
     CachedElement _hmolar, _smolar, _logp, _logrhomolar, _cpmolar, _cvmolar, _speed_sound;
 
+    CachedElement _fugacity_coefficient;
+
     /// Smoothing values
     double _rhospline, _dsplinedp, _dsplinedh;
 
@@ -109,33 +111,62 @@ protected:
     // Property accessors to be optionally implemented by the backend
     // for properties that are not always calculated
     // ----------------------------------------
+    /// Using this backend, calculate the molar enthalpy in J/mol
     virtual long double calc_hmolar(void){throw NotImplementedError("calc_hmolar is not implemented for this backend");};
+    /// Using this backend, calculate the molar entropy in J/mol/K
     virtual long double calc_smolar(void){throw NotImplementedError("calc_smolar is not implemented for this backend");};
+    /// Using this backend, calculate the molar constant-pressure specific heat in J/mol/K
     virtual long double calc_cpmolar(void){throw NotImplementedError("calc_cpmolar is not implemented for this backend");};
+    /// Using this backend, calculate the molar constant-volume specific heat in J/mol/K
     virtual long double calc_cvmolar(void){throw NotImplementedError("calc_cvmolar is not implemented for this backend");};
+    /// Using this backend, calculate the speed of sound in m/s
     virtual long double calc_speed_sound(void){throw NotImplementedError("calc_speed_sound is not implemented for this backend");};
+    /// Using this backend, calculate the isothermal compressibility \f$ \kappa = -\frac{1}{v}\left.\frac{\partial v}{\partial p}\right|_T=\frac{1}{\rho}\left.\frac{\partial \rho}{\partial p}\right|_T\f$  in 1/Pa
     virtual long double calc_isothermal_compressibility(void){throw NotImplementedError("calc_isothermal_compressibility is not implemented for this backend");};
+    /// Using this backend, calculate the isobaric expansion coefficient \f$ \beta = \frac{1}{v}\left.\frac{\partial v}{\partial T}\right|_p = -\frac{1}{\rho}\left.\frac{\partial \rho}{\partial T}\right|_p\f$  in 1/K
     virtual long double calc_isobaric_expansion_coefficient(void){throw NotImplementedError("calc_isobaric_expansion_coefficient is not implemented for this backend");};
+    /// Using this backend, calculate the viscosity in Pa-s
     virtual long double calc_viscosity(void){throw NotImplementedError("calc_viscosity is not implemented for this backend");};
+    /// Using this backend, calculate the thermal conductivity in W/m/K
     virtual long double calc_conductivity(void){throw NotImplementedError("calc_conductivity is not implemented for this backend");};
+    /// Using this backend, calculate the surface tension in N/m
     virtual long double calc_surface_tension(void){throw NotImplementedError("calc_surface_tension is not implemented for this backend");};
+    /// Using this backend, calculate the molar mass in kg/mol
     virtual long double calc_molar_mass(void){throw NotImplementedError("calc_molar_mass is not implemented for this backend");};
+    /// Using this backend, calculate the pressure in Pa
     virtual long double calc_pressure(void){throw NotImplementedError("calc_pressure is not implemented for this backend");};
+    /// Using this backend, calculate the universal gas constant \f$R_u\f$ in J/mol/K
     virtual long double calc_gas_constant(void){throw NotImplementedError("calc_gas_constant is not implemented for this backend");};
+    /// Using this backend, calculate the fugacity coefficient (dimensionless)
+    virtual long double calc_fugacity_coefficient(int i){throw NotImplementedError("calc_fugacity_coefficient is not implemented for this backend");};
+
 
     // Derivatives of residual helmholtz energy
+    /// Using this backend, calculate the residual Helmholtz energy term \f$\alpha^r\f$ (dimensionless)
     virtual long double calc_alphar(void){throw NotImplementedError("calc_alphar is not implemented for this backend");};
+    /// Using this backend, calculate the residual Helmholtz energy term \f$\alpha^r_{\delta}\f$ (dimensionless)
     virtual long double calc_dalphar_dDelta(void){throw NotImplementedError("calc_dalphar_dDelta is not implemented for this backend");};
+    /// Using this backend, calculate the residual Helmholtz energy term \f$\alpha^r_{\tau}\f$ (dimensionless)
     virtual long double calc_dalphar_dTau(void){throw NotImplementedError("calc_dalphar_dTau is not implemented for this backend");};
+    /// Using this backend, calculate the residual Helmholtz energy term \f$\alpha^r_{\delta\delta}\f$ (dimensionless)
     virtual long double calc_d2alphar_dDelta2(void){throw NotImplementedError("calc_d2alphar_dDelta2 is not implemented for this backend");};
+    /// Using this backend, calculate the residual Helmholtz energy term \f$\alpha^r_{\delta\tau}\f$ (dimensionless)
     virtual long double calc_d2alphar_dDelta_dTau(void){throw NotImplementedError("calc_d2alphar_dDelta_dTau is not implemented for this backend");};
+    /// Using this backend, calculate the residual Helmholtz energy term \f$\alpha^r_{\tau\tau}\f$ (dimensionless)
     virtual long double calc_d2alphar_dTau2(void){throw NotImplementedError("calc_d2alphar_dTau2 is not implemented for this backend");};
+    
     // Derivatives of ideal-gas helmholtz energy
+    /// Using this backend, calculate the ideal-gas Helmholtz energy term \f$\alpha^0\f$ (dimensionless)
     virtual long double calc_alpha0(void){throw NotImplementedError("calc_alpha0 is not implemented for this backend");};
+    /// Using this backend, calculate the ideal-gas Helmholtz energy term \f$\alpha^0_{\delta}\f$ (dimensionless)
     virtual long double calc_dalpha0_dDelta(void){throw NotImplementedError("calc_dalpha0_dDelta is not implemented for this backend");};
+    /// Using this backend, calculate the ideal-gas Helmholtz energy term \f$\alpha^0_{\tau}\f$ (dimensionless)
     virtual long double calc_dalpha0_dTau(void){throw NotImplementedError("calc_dalpha0_dTau is not implemented for this backend");};
+    /// Using this backend, calculate the ideal-gas Helmholtz energy term \f$\alpha^0_{\delta\delta}\f$ (dimensionless)
     virtual long double calc_d2alpha0_dDelta_dTau(void){throw NotImplementedError("calc_d2alpha0_dDelta_dTau is not implemented for this backend");};
+    /// Using this backend, calculate the ideal-gas Helmholtz energy term \f$\alpha^0_{\delta\tau}\f$ (dimensionless)
     virtual long double calc_d2alpha0_dDelta2(void){throw NotImplementedError("calc_d2alpha0_dDelta2 is not implemented for this backend");};
+    /// Using this backend, calculate the ideal-gas Helmholtz energy term \f$\alpha^0_{\tau\tau}\f$ (dimensionless)
     virtual long double calc_d2alpha0_dTau2(void){throw NotImplementedError("calc_d2alpha0_dTau2 is not implemented for this backend");};
 
     virtual void calc_reducing_state(void){throw NotImplementedError("calc_reducing_state is not implemented for this backend");};
@@ -188,6 +219,7 @@ public:
     double speed_sound(void);
     double isothermal_compressibility(void);
     double isobaric_expansion_coefficient(void);
+    double fugacity_coefficient(int i);
 
     // ----------------------------------------
     // Transport properties
@@ -272,6 +304,7 @@ public:
     // ----------------------------------------
     // Helmholtz energy and derivatives
     // ----------------------------------------
+    /// Return the derivative \f$ \alpha^0 \f$
     long double alpha0(void){
         if (!_alpha0) _alpha0 = calc_alpha0();
         return _alpha0;
