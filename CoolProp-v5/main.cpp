@@ -63,13 +63,14 @@ int main()
         printf("%g %g\n",elap, summer);
         
     }
-    if (0)
+    if (1)
     {
         AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
         MixRP->update(DmolarT_INPUTS, 800, 300);
 
-        AbstractState *Mix = AbstractState::factory("CORE-n-Propane");
-        Mix->update(DmolarT_INPUTS, 800, 300);
+        AbstractState *Mix = AbstractState::factory("CORE-R410A");
+        Mix->update(QT_INPUTS, 0, 330);
+        delete Mix; delete MixRP;
     }
     if (0)
     {
@@ -112,6 +113,7 @@ int main()
         double cp1 = Mix->cpmolar();
         double T1 = Mix->T();
 
+        delete Mix; delete MixRP;
         double rr = 0;
     }
     if (1)
@@ -147,7 +149,24 @@ int main()
         double phi10 = Mix->fugacity_coefficient(0);
         double phi11 = Mix->fugacity_coefficient(1);
 
+        delete Mix; delete MixRP;
         double rr = 0;
+    }
+    if (1)
+    {
+        int N = 2;
+        std::vector<long double> z(N, 1.0/N);
+        double Q = 0, T = 250, p = 300000;
+
+        AbstractState *Mix = AbstractState::factory("CORE-Ethane|n-Propane");
+        Mix->set_mole_fractions(z);
+        
+        for (double T = 210; ;T += 0.1)
+        {    
+            Mix->update(QT_INPUTS, Q, T);
+            std::cout << format(" %g %g\n",Mix->p(),Mix->T());
+        }
+        delete(Mix);
     }
     if(1)
     {

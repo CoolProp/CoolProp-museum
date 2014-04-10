@@ -248,10 +248,10 @@ void HelmholtzEOSMixtureBackend::PT_phase_determination()
 		// First try to use the ancillary equations if you are far enough away
 		// Ancillary equations are good to within 1% in pressure in general
 		// Some industrial fluids might not be within 3%
-        if (_p > 1.05*components[0]->ancillaries.p.evaluate(_T)){
+        if (_p > 1.05*components[0]->ancillaries.pL.evaluate(_T)){
             this->_phase = iphase_liquid; return;
 		}
-        else if (_p < 0.95*components[0]->ancillaries.p.evaluate(_T)){
+        else if (_p < 0.95*components[0]->ancillaries.pV.evaluate(_T)){
 			this->_phase = iphase_gas; return;
 		}
 		else{
@@ -308,8 +308,34 @@ void HelmholtzEOSMixtureBackend::QT_flash()
             _rhomolar = 1/(_Q/SatV->rhomolar() + (1-_Q)/SatL->rhomolar());
         }
         else{
-            throw NotImplementedError();
-            //saturation_T_pseudopure();
+            // Pseudo-pure fluid
+            long double rhoLanc, rhoVanc, rhoLsat, rhoVsat;
+            long double psatLanc = components[0]->ancillaries.pL.evaluate(_T); // These ancillaries are used explicitly
+		    long double psatVanc = components[0]->ancillaries.pV.evaluate(_T); // These ancillaries are used explicitly
+		    try{
+                rhoLanc = components[0]->ancillaries.rhoL.evaluate(_T);
+                rhoVanc = components[0]->ancillaries.rhoV.evaluate(_T);
+
+			    if (!ValidNumber(rhoLanc) || !ValidNumber(rhoVanc))
+			    {
+				    throw ValueError("pseudo-pure failed");
+			    }
+
+                rhoLsat = solver_rho_Tp(_T, psatLanc, rhoLanc);
+			    rhoVsat = solver_rho_Tp(_T, psatVanc, rhoLanc);
+			    if (!ValidNumber(rhoLsat) || !ValidNumber(rhoVsat) || 
+				     fabs(rhoLsat/rhoLanc-1) > 0.1 || fabs(rhoVanc/rhoVsat-1) > 0.1)
+			    {
+				    throw ValueError("pseudo-pure failed");
+			    }
+		    }
+		    catch (std::exception &){
+			    // Near the critical point, the behavior is not very nice, so we will just use the ancillary near the critical point
+			    rhoLsat = rhoLanc;
+                rhoVsat = rhoVanc;
+		    }
+            _p = _Q*psatVanc + (1-_Q)*psatLanc;
+            _rhomolar = 1/(_Q/rhoVsat + (1-_Q)/rhoLsat);
         }
     }
     else
@@ -348,7 +374,6 @@ void HelmholtzEOSMixtureBackend::PQ_flash()
         }
         else{
             throw NotImplementedError();
-            //saturation_p_pseudopure();
         }
     }
     else

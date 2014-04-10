@@ -121,7 +121,7 @@ public:
 
 struct Ancillaries
 {
-    AncillaryFunction p, rhoL, rhoV;
+    AncillaryFunction pL, pV, rhoL, rhoV;
 };
 
 /// The core class for an equation of state

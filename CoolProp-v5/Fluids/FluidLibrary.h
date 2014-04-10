@@ -234,8 +234,9 @@ protected:
     /// Parse the critical state for the given EOS
     void parse_ancillaries(rapidjson::Value &ancillaries, CoolPropFluid & fluid)
     {
-        if (!ancillaries.HasMember("p") || !ancillaries.HasMember("rhoL") || !ancillaries.HasMember("rhoV")){throw ValueError("Ancillary curves are missing");};
-        fluid.ancillaries.p = AncillaryFunction(ancillaries["p"]);
+        if (!ancillaries.HasMember("pL") || !ancillaries.HasMember("pV") || !ancillaries.HasMember("rhoL") || !ancillaries.HasMember("rhoV")){throw ValueError("Ancillary curves are missing");};
+        fluid.ancillaries.pL = AncillaryFunction(ancillaries["pL"]);
+        fluid.ancillaries.pV = AncillaryFunction(ancillaries["pV"]);
         fluid.ancillaries.rhoL = AncillaryFunction(ancillaries["rhoL"]);
         fluid.ancillaries.rhoV = AncillaryFunction(ancillaries["rhoV"]);
     };
