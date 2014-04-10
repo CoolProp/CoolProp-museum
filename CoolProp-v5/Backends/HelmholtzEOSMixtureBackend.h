@@ -257,7 +257,12 @@ public:
 	/*!
 	Derivative of the natural logarithm of the fugacity coefficient with respect to T
 	*/
-	long double mixderiv_dln_fugacity_coefficient_dT__constrho(int i);
+	long double mixderiv_dln_fugacity_coefficient_dT__constrho_n(int i);
+
+    /*!
+	Derivative of the natural logarithm of the fugacity coefficient with respect to T
+	*/
+	long double mixderiv_dln_fugacity_coefficient_drho__constT_n(int i);
 
     /// GERG 2004 Monograph Eqn. 7.29
 	/** The derivative term
@@ -436,6 +441,7 @@ public:
     struct successive_substitution_options
     {
         int sstype, Nstep_max;
+        long double rhomolar_liq, rhomolar_vap, p;
     };
 
     /*! Returns the natural logarithm of K for component i using the method from Wilson as in
@@ -455,7 +461,7 @@ public:
     static void saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options);
     static void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
     static void saturation_p_pure(HelmholtzEOSMixtureBackend *HEOS, long double p, saturation_p_pure_options &options);
-    static long double successive_substitution(HelmholtzEOSMixtureBackend *HEOS, long double beta, long double T, long double p, const std::vector<long double> &z, std::vector<long double> &K, successive_substitution_options &options);
+    static long double successive_substitution(HelmholtzEOSMixtureBackend *HEOS, const long double beta, long double T, long double p, const std::vector<long double> &z, std::vector<long double> &K, successive_substitution_options &options);
     static void x_and_y_from_K(long double beta, const std::vector<long double> &K, const std::vector<long double> &z, std::vector<long double> &x, std::vector<long double> &y);
 
     /*! A wrapper function around the residual to find the initial guess for the bubble point temperature
@@ -533,6 +539,68 @@ public:
 	    if (!ValidNumber(T)){throw ValueError("saturation_p_Wilson failed to get good T");}
 	    return T;
     }
+    struct SuccessiveSubstitutionStep
+    {
+        long double T,p;
+    };
+    /*!
+    A class to do newton raphson solver for VLE given guess values for vapor-liquid equilibria.  This class will then be included in the Mixture class
+
+    A class is used rather than a function so that it is easier to store iteration histories, additional output values, etc.
+    */
+    class newton_raphson_VLE_GV
+    {
+    public:
+	    long double error_rms, rhobar_liq, rhobar_vap, T, p;
+	    unsigned int N;
+	    bool logging;
+	    int Nsteps;
+	    int Nsteps_max;
+	    STLMatrix J;
+        HelmholtzEOSMixtureBackend *SatL, *SatV;
+	    std::vector<long double> K, x, y, phi_ij_liq, phi_ij_vap, dlnphi_drho_liq, dlnphi_drho_vap, r, dXdS, neg_dFdS;
+	    std::vector<SuccessiveSubstitutionStep> step_logger;
+
+	    newton_raphson_VLE_GV(){Nsteps_max = 20;};
+
+	    void resize(unsigned int N);
+	
+	    // Reset the state of all the internal variables
+	    void pre_call()
+	    {
+		    K.clear(); x.clear(); y.clear();  phi_ij_liq.clear(); 
+            phi_ij_vap.clear(); dlnphi_drho_liq.clear(), dlnphi_drho_vap.clear(),
+            step_logger.clear(); error_rms = 1e99; Nsteps = 0;
+		    rhobar_liq = _HUGE; rhobar_vap = _HUGE; T = _HUGE; p = _HUGE;
+	    };
+
+	    /*! Call the Newton-Raphson VLE Solver
+
+	    This solver must be passed reasonable guess values for the mole fractions, 
+	    densities, etc.  You may want to take a few steps of successive substitution
+	    before you start with Newton Raphson.
+
+	    @param T Temperature [K]
+	    @param p Pressure [Pa]
+	    @param rhobar_liq Current value of molar density of the liquid [mol/m^3]
+	    @param rhobar_vap Current value of molar density of the vapor [mol/m^3]
+	    @param z Bulk mole fractions [-]
+	    @param K Array of K-factors [-]
+	    */
+	    double call(HelmholtzEOSMixtureBackend *HEOS, long double beta, long double T, long double p, long double rhobar_liq, const long double rhobar_vap, const std::vector<long double> &z, std::vector<long double> &K);
+
+	    /*! Build the arrays for the Newton-Raphson solve
+
+	    This method builds the Jacobian matrix, the sensitivity matrix, etc.
+
+	    @param beta Void fraction [-] (0: bubble, 1: dew)
+	    @param T Temperature [K]
+	    @param p Pressure [Pa]
+	    @param z Bulk mole fractions [-]
+	    @param K Array of K-factors [-]
+	    */
+	    void build_arrays(HelmholtzEOSMixtureBackend *HEOS, long double beta, long double T, long double rhomolar_liq, const long double rho_vapor, const std::vector<long double> &z, std::vector<long double> & K);
+    };
 };
 
 
