@@ -548,12 +548,16 @@ void REFPROPMixtureBackend::set_REFPROP_fluids(const std::vector<std::string> &f
         }
     }
 }
-void REFPROPMixtureBackend::set_mole_fractions(const std::vector<double> &mole_fractions)
+void REFPROPMixtureBackend::set_mole_fractions(const std::vector<long double> &mole_fractions)
 {
+    this->mole_fractions.resize(mole_fractions.size());
+    for (std::size_t i = 0; i < mole_fractions.size(); ++i)
+    {
+        this->mole_fractions[i] = static_cast<double>(mole_fractions[i]);
+    }
     _mole_fractions_set = true;
-    this->mole_fractions = mole_fractions;
 }
-void REFPROPMixtureBackend::set_mass_fractions(const std::vector<double> &mole_fractions)
+void REFPROPMixtureBackend::set_mass_fractions(const std::vector<long double> &mole_fractions)
 {
     throw NotImplementedError("Mass fractions not currently supported");
 }
@@ -566,7 +570,6 @@ long double REFPROPMixtureBackend::calc_viscosity(void)
     double eta, tcx, rhomol_L = 0.001*_rhomolar;
     long ierr;
     char herr[255];
-
     TRNPRPdll(&_T,&rhomol_L,&(mole_fractions[0]),  // Inputs
               &eta,&tcx,                           // Outputs
               &ierr,herr,errormessagelength);      // Error message
@@ -599,7 +602,8 @@ long double REFPROPMixtureBackend::calc_fugacity_coefficient(int i)
 {
     double rho_mol_L = 0.001*_rhomolar;
     long ierr;
-    std::vector<double> fug_cof = mole_fractions;
+    std::vector<double> fug_cof;
+    fug_cof.resize(mole_fractions.size());
     char herr[255];
     FUGCOFdll(&_T, &rho_mol_L, &(mole_fractions[0]),  // Inputs
              &(fug_cof[0]),                   // Outputs
@@ -633,7 +637,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 
             // Use flash routine to find properties
             TPFLSHdll(&T,&p_kPa,&(mole_fractions[0]),&rho_mol_L,
-                      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions[0]), // Saturation terms
                       &q,&emol,&hmol,&smol,&cvmol,&cpmol,&w,
                       &ierr,herr,errormessagelength); //
             if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}

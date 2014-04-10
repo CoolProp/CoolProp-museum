@@ -167,7 +167,7 @@ ExcessTerm::~ExcessTerm()
 	}
     DepartureFunctionMatrix.clear();
 }
-double ExcessTerm::alphar(double tau, double delta, const std::vector<double> &x)
+double ExcessTerm::alphar(double tau, double delta, const std::vector<long double> &x)
 {
 	double summer = 0;
 	for (unsigned int i = 0; i < N-1; i++)
@@ -179,7 +179,7 @@ double ExcessTerm::alphar(double tau, double delta, const std::vector<double> &x
 	}
 	return summer;
 }
-double ExcessTerm::dalphar_dTau(double tau, double delta, const std::vector<double> &x)
+double ExcessTerm::dalphar_dTau(double tau, double delta, const std::vector<long double> &x)
 {
 	double summer = 0;
 	for (unsigned int i = 0; i < N-1; i++)
@@ -191,7 +191,7 @@ double ExcessTerm::dalphar_dTau(double tau, double delta, const std::vector<doub
 	}
 	return summer;
 }
-double ExcessTerm::dalphar_dDelta(double tau, double delta, const std::vector<double> &x)
+double ExcessTerm::dalphar_dDelta(double tau, double delta, const std::vector<long double> &x)
 {
 	double summer = 0;
 	for (unsigned int i = 0; i < N-1; i++)
@@ -203,7 +203,7 @@ double ExcessTerm::dalphar_dDelta(double tau, double delta, const std::vector<do
 	}
 	return summer;
 }
-double ExcessTerm::d2alphar_dDelta2(double tau, double delta, const std::vector<double> &x)
+double ExcessTerm::d2alphar_dDelta2(double tau, double delta, const std::vector<long double> &x)
 {
 	double summer = 0;
 	for (unsigned int i = 0; i < N-1; i++)
@@ -215,7 +215,7 @@ double ExcessTerm::d2alphar_dDelta2(double tau, double delta, const std::vector<
 	}
 	return summer;
 }
-double ExcessTerm::d2alphar_dTau2(double tau, double delta, const std::vector<double> &x)
+double ExcessTerm::d2alphar_dTau2(double tau, double delta, const std::vector<long double> &x)
 {
 	double summer = 0;
 	for (unsigned int i = 0; i < N-1; i++)
@@ -227,7 +227,7 @@ double ExcessTerm::d2alphar_dTau2(double tau, double delta, const std::vector<do
 	}
 	return summer;
 }
-double ExcessTerm::d2alphar_dDelta_dTau(double tau, double delta, const std::vector<double> &x)
+double ExcessTerm::d2alphar_dDelta_dTau(double tau, double delta, const std::vector<long double> &x)
 {
 	double summer = 0;
 	for (unsigned int i = 0; i < N-1; i++)
@@ -239,7 +239,7 @@ double ExcessTerm::d2alphar_dDelta_dTau(double tau, double delta, const std::vec
 	}
 	return summer;
 }
-double ExcessTerm::dalphar_dxi(double tau, double delta, const std::vector<double> &x, unsigned int i)
+double ExcessTerm::dalphar_dxi(double tau, double delta, const std::vector<long double> &x, unsigned int i)
 {
 	double summer = 0;
 	for (unsigned int k = 0; k < N; k++)
@@ -251,7 +251,7 @@ double ExcessTerm::dalphar_dxi(double tau, double delta, const std::vector<doubl
 	}
 	return summer;
 }
-double ExcessTerm::d2alphardxidxj(double tau, double delta, const std::vector<double> &x, unsigned int i, unsigned int j)
+double ExcessTerm::d2alphardxidxj(double tau, double delta, const std::vector<long double> &x, unsigned int i, unsigned int j)
 {
 	if (i != j)
 	{
@@ -262,7 +262,7 @@ double ExcessTerm::d2alphardxidxj(double tau, double delta, const std::vector<do
 		return 0;
 	}
 }
-double ExcessTerm::d2alphar_dxi_dTau(double tau, double delta, const std::vector<double> &x, unsigned int i)
+double ExcessTerm::d2alphar_dxi_dTau(double tau, double delta, const std::vector<long double> &x, unsigned int i)
 {
 	double summer = 0;
 	for (unsigned int k = 0; k < N; k++)
@@ -274,7 +274,7 @@ double ExcessTerm::d2alphar_dxi_dTau(double tau, double delta, const std::vector
 	}
 	return summer;
 }
-double ExcessTerm::d2alphar_dxi_dDelta(double tau, double delta, const std::vector<double> &x, unsigned int i)
+double ExcessTerm::d2alphar_dxi_dDelta(double tau, double delta, const std::vector<long double> &x, unsigned int i)
 {
 	double summer = 0;
 	for (unsigned int k = 0; k < N; k++)

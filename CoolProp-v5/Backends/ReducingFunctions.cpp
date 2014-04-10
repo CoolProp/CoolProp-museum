@@ -90,10 +90,10 @@ ReducingFunction *ReducingFunction::factory(const std::vector<CoolPropFluid*> &c
     std::size_t N = components.size();
 
     STLMatrix beta_v, gamma_v, beta_T, gamma_T;
-    beta_v.resize(N, std::vector<double>(N, 0));
-	gamma_v.resize(N, std::vector<double>(N, 0));
-	beta_T.resize(N, std::vector<double>(N, 0));
-	gamma_T.resize(N, std::vector<double>(N, 0));
+    beta_v.resize(N, std::vector<long double>(N, 0));
+	gamma_v.resize(N, std::vector<long double>(N, 0));
+	beta_T.resize(N, std::vector<long double>(N, 0));
+	gamma_T.resize(N, std::vector<long double>(N, 0));
 
     for (unsigned int i = 0; i < N; ++i)
     {
@@ -145,37 +145,37 @@ ReducingFunction *ReducingFunction::factory(const std::vector<CoolPropFluid*> &c
     return new GERG2008ReducingFunction(components,beta_v, gamma_v, beta_T, gamma_T);
 }
 
-double ReducingFunction::d_ndTrdni_dxj__constxi(const std::vector<double> &x, int i, int j)
+long double ReducingFunction::d_ndTrdni_dxj__constxi(const std::vector<long double> &x, int i, int j)
 {
-	double s = 0;
+	long double s = 0;
 	for (unsigned int k = 0; k < N; k++)
 	{
 		s += x[k]*d2Trdxidxj(x,j,k);
 	}
 	return d2Trdxidxj(x,i,j)-dTrdxi__constxj(x,j)-s;
 }
-double ReducingFunction::d_ndrhorbardni_dxj__constxi(const std::vector<double> &x, int i, int j)
+long double ReducingFunction::d_ndrhorbardni_dxj__constxi(const std::vector<long double> &x, int i, int j)
 {
-	double s = 0;
+	long double s = 0;
 	for (unsigned int k = 0; k < N; k++)
 	{
 		s += x[k]*d2rhormolardxidxj(x,j,k);
 	}
 	return d2rhormolardxidxj(x,j,i)-drhormolardxi__constxj(x,j)-s;
 }
-double ReducingFunction::ndrhorbardni__constnj(const std::vector<double> &x, int i)
+long double ReducingFunction::ndrhorbardni__constnj(const std::vector<long double> &x, int i)
 {
-	double summer_term1 = 0;
+	long double summer_term1 = 0;
 	for (unsigned int j = 0; j < N; j++)
 	{
 		summer_term1 += x[j]*drhormolardxi__constxj(x,j);
 	}
 	return drhormolardxi__constxj(x,i)-summer_term1;
 }
-double ReducingFunction::ndTrdni__constnj(const std::vector<double> &x, int i)
+long double ReducingFunction::ndTrdni__constnj(const std::vector<long double> &x, int i)
 {
 	// GERG Equation 7.54
-	double summer_term1 = 0;
+	long double summer_term1 = 0;
 	for (unsigned int j = 0; j < N; j++)
 	{
 		summer_term1 += x[j]*dTrdxi__constxj(x,j);
@@ -183,9 +183,9 @@ double ReducingFunction::ndTrdni__constnj(const std::vector<double> &x, int i)
 	return dTrdxi__constxj(x,i)-summer_term1;
 }
 
-double GERG2008ReducingFunction::Tr(const std::vector<double> &x)
+long double GERG2008ReducingFunction::Tr(const std::vector<long double> &x)
 {
-	double Tr = 0;
+	long double Tr = 0;
 	for (unsigned int i = 0; i < N; i++)
 	{
 		double xi = x[i], Tci = pFluids[i]->pEOS->reduce.T;
@@ -201,11 +201,11 @@ double GERG2008ReducingFunction::Tr(const std::vector<double> &x)
 	}
 	return Tr;
 }
-double GERG2008ReducingFunction::dTrdxi__constxj(const std::vector<double> &x, int i)
+long double GERG2008ReducingFunction::dTrdxi__constxj(const std::vector<long double> &x, int i)
 {
 	// See Table B9 from Kunz Wagner 2012 (GERG 2008)
-	double xi = x[i];
-	double dTr_dxi = 2*xi*pFluids[i]->pEOS->reduce.T;
+	long double xi = x[i];
+	long double dTr_dxi = 2*xi*pFluids[i]->pEOS->reduce.T;
 	for (int k = 0; k < i; k++)
 	{
 		dTr_dxi += c_Y_ji(k,i,beta_T,gamma_T,T_c)*dfYkidxi__constxk(x,k,i,beta_T);
@@ -216,10 +216,10 @@ double GERG2008ReducingFunction::dTrdxi__constxj(const std::vector<double> &x, i
 	}
 	return dTr_dxi;
 }
-double GERG2008ReducingFunction::d2Trdxi2__constxj(const std::vector<double> &x, int i)
+long double GERG2008ReducingFunction::d2Trdxi2__constxj(const std::vector<long double> &x, int i)
 {
 	// See Table B9 from Kunz Wagner 2012 (GERG 2008)
-	double d2Tr_dxi2 = 2*pFluids[i]->pEOS->reduce.T;
+	long double d2Tr_dxi2 = 2*pFluids[i]->pEOS->reduce.T;
 	for (int k = 0; k < i; k++)
 	{
 		d2Tr_dxi2 += c_Y_ij(k,i,beta_T,gamma_T,T_c)*d2fYkidxi2__constxk(x,k,i,beta_T);
@@ -230,7 +230,7 @@ double GERG2008ReducingFunction::d2Trdxi2__constxj(const std::vector<double> &x,
 	}
 	return d2Tr_dxi2;
 }
-double GERG2008ReducingFunction::d2Trdxidxj(const std::vector<double> &x, int i, int j)
+long double GERG2008ReducingFunction::d2Trdxidxj(const std::vector<long double> &x, int i, int j)
 {
 	if (i == j)
 	{
@@ -242,11 +242,11 @@ double GERG2008ReducingFunction::d2Trdxidxj(const std::vector<double> &x, int i,
 		return c_Y_ij(i, j, beta_T, gamma_T, T_c)*d2fYijdxidxj(x, i, j, beta_T);
 	}
 }
-double GERG2008ReducingFunction::dvrmolardxi__constxj(const std::vector<double> &x, int i)
+long double GERG2008ReducingFunction::dvrmolardxi__constxj(const std::vector<long double> &x, int i)
 {
 	// See Table B9 from Kunz Wagner 2012 (GERG 2008)
-	double xi = x[i];
-	double dvrbar_dxi = 2*xi/pFluids[i]->pEOS->reduce.rhomolar;
+	long double xi = x[i];
+	long double dvrbar_dxi = 2*xi/pFluids[i]->pEOS->reduce.rhomolar;
 
 	for (int k = 0; k < i; k++)
 	{
@@ -258,7 +258,7 @@ double GERG2008ReducingFunction::dvrmolardxi__constxj(const std::vector<double> 
 	}
 	return dvrbar_dxi;
 }
-double GERG2008ReducingFunction::d2vrmolardxidxj(const std::vector<double> &x, int i, int j)
+long double GERG2008ReducingFunction::d2vrmolardxidxj(const std::vector<long double> &x, int i, int j)
 {
 	if (i == j)
 	{
@@ -269,11 +269,11 @@ double GERG2008ReducingFunction::d2vrmolardxidxj(const std::vector<double> &x, i
 		return c_Y_ij(i, j, beta_v, gamma_v, v_c)*d2fYijdxidxj(x, i, j, beta_v);
 	}
 }
-double GERG2008ReducingFunction::drhormolardxi__constxj(const std::vector<double> &x, int i)
+long double GERG2008ReducingFunction::drhormolardxi__constxj(const std::vector<long double> &x, int i)
 {
 	return -pow(rhormolar(x),2)*dvrmolardxi__constxj(x,i);
 }
-double GERG2008ReducingFunction::d2vrmolardxi2__constxj(const std::vector<double> &x, int i)
+long double GERG2008ReducingFunction::d2vrmolardxi2__constxj(const std::vector<long double> &x, int i)
 {
 	// See Table B9 from Kunz Wagner 2012 (GERG 2008)
 	double d2vrbardxi2 = 2/pFluids[i]->pEOS->reduce.rhomolar;
@@ -288,13 +288,13 @@ double GERG2008ReducingFunction::d2vrmolardxi2__constxj(const std::vector<double
 	}
 	return d2vrbardxi2;
 }
-double GERG2008ReducingFunction::d2rhormolardxi2__constxj(const std::vector<double> &x, int i)
+long double GERG2008ReducingFunction::d2rhormolardxi2__constxj(const std::vector<long double> &x, int i)
 {
-	double rhor = this->rhormolar(x);
-	double dvrbardxi = this->dvrmolardxi__constxj(x,i);
+	long double rhor = this->rhormolar(x);
+	long double dvrbardxi = this->dvrmolardxi__constxj(x,i);
 	return 2*pow(rhor,(int)3)*pow(dvrbardxi,(int)2)-pow(rhor,(int)2)*this->d2vrmolardxi2__constxj(x,i);
 }
-double GERG2008ReducingFunction::d2rhormolardxidxj(const std::vector<double> &x, int i, int j)
+long double GERG2008ReducingFunction::d2rhormolardxidxj(const std::vector<long double> &x, int i, int j)
 {
 	double rhor = this->rhormolar(x);
 	double dvrbardxi = this->dvrmolardxi__constxj(x,i);
@@ -302,7 +302,7 @@ double GERG2008ReducingFunction::d2rhormolardxidxj(const std::vector<double> &x,
 	return 2*pow(rhor,(int)3)*dvrbardxi*dvrbardxj-pow(rhor,(int)2)*this->d2vrmolardxidxj(x,i,j);
 }
 
-double GERG2008ReducingFunction::rhormolar(const std::vector<double> &x)
+long double GERG2008ReducingFunction::rhormolar(const std::vector<long double> &x)
 {
 	double vrbar = 0;
 	for (unsigned int i = 0; i < N; i++)
@@ -319,40 +319,40 @@ double GERG2008ReducingFunction::rhormolar(const std::vector<double> &x)
 	}
 	return 1/vrbar;
 }
-double GERG2008ReducingFunction::dfYkidxi__constxk(const std::vector<double> &x, int k, int i, std::vector< std::vector< double> > &beta)
+long double GERG2008ReducingFunction::dfYkidxi__constxk(const std::vector<long double> &x, int k, int i, std::vector< std::vector< long double> > &beta)
 {
 	double xk = x[k], xi = x[i], beta_Y = beta[k][i];
 	return xk*(xk+xi)/(beta_Y*beta_Y*xk+xi)+xk*xi/(beta_Y*beta_Y*xk+xi)*(1-(xk+xi)/(beta_Y*beta_Y*xk+xi));
 }
-double GERG2008ReducingFunction::dfYikdxi__constxk(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > &beta)
+long double GERG2008ReducingFunction::dfYikdxi__constxk(const std::vector<long double> &x, int i, int k, std::vector< std::vector< long double> > &beta)
 {
 	double xk = x[k], xi = x[i], beta_Y = beta[i][k];
 	return xk*(xi+xk)/(beta_Y*beta_Y*xi+xk)+xi*xk/(beta_Y*beta_Y*xi+xk)*(1-beta_Y*beta_Y*(xi+xk)/(beta_Y*beta_Y*xi+xk));
 }
-double GERG2008ReducingFunction::c_Y_ij(int i, int j, std::vector< std::vector< double> > &beta, std::vector< std::vector< double> > &gamma, std::vector< std::vector< double> > &Y_c)
+long double GERG2008ReducingFunction::c_Y_ij(int i, int j, std::vector< std::vector< long double> > &beta, std::vector< std::vector< long double> > &gamma, std::vector< std::vector< long double> > &Y_c)
 {
 	return 2*beta[i][j]*gamma[i][j]*Y_c[i][j];
 }
-double GERG2008ReducingFunction::c_Y_ji(int j, int i, std::vector< std::vector< double> > &beta, std::vector< std::vector< double> > &gamma, std::vector< std::vector< double> > &Y_c)
+long double GERG2008ReducingFunction::c_Y_ji(int j, int i, std::vector< std::vector< long double> > &beta, std::vector< std::vector< long double> > &gamma, std::vector< std::vector< long double> > &Y_c)
 {
 	return 2/beta[i][j]*gamma[i][j]*Y_c[i][j];
 }
-double GERG2008ReducingFunction::f_Y_ij(const std::vector<double> &x, int i, int j, std::vector< std::vector< double> > &beta)
+long double GERG2008ReducingFunction::f_Y_ij(const std::vector<long double> &x, int i, int j, std::vector< std::vector< long double> > &beta)
 {
 	double xi = x[i], xj = x[j], beta_Y = beta[i][j];
 	return xi*xj*(xi+xj)/(beta_Y*beta_Y*xi+xj);
 }
-double GERG2008ReducingFunction::d2fYikdxi2__constxk(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > &beta)
+long double GERG2008ReducingFunction::d2fYikdxi2__constxk(const std::vector<long double> &x, int i, int k, std::vector< std::vector< long double> > &beta)
 {
 	double xi = x[i], xk = x[k], beta_Y = beta[i][k];
 	return 1/(beta_Y*beta_Y*xi+xk)*(1-beta_Y*beta_Y*(xi+xk)/(beta_Y*beta_Y*xi+xk))*(2*xk-xi*xk*2*beta_Y*beta_Y/(beta_Y*beta_Y*xi+xk));
 }
-double GERG2008ReducingFunction::d2fYkidxi2__constxk(const std::vector<double> &x, int k, int i, std::vector< std::vector< double> > &beta)
+long double GERG2008ReducingFunction::d2fYkidxi2__constxk(const std::vector<long double> &x, int k, int i, std::vector< std::vector< long double> > &beta)
 {
 	double xi = x[i], xk = x[k], beta_Y = beta[k][i];
 	return 1/(beta_Y*beta_Y*xk+xi)*(1-(xk+xi)/(beta_Y*beta_Y*xk+xi))*(2*xk-xk*xi*2/(beta_Y*beta_Y*xk+xi));
 }
-double GERG2008ReducingFunction::d2fYijdxidxj(const std::vector<double> &x, int i, int j, std::vector< std::vector< double> > &beta)
+long double GERG2008ReducingFunction::d2fYijdxidxj(const std::vector<long double> &x, int i, int j, std::vector< std::vector< long double> > &beta)
 {
 	double xi = x[i], xj = x[j], beta_Y = beta[i][j], beta_Y2 = beta_Y*beta_Y;
 	return (xi+xj)/(beta_Y2*xi+xj) + xj/(beta_Y2*xi+xj)*(1-(xi+xj)/(beta_Y2*xi+xj))

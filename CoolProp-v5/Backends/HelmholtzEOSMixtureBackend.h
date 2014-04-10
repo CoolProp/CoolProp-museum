@@ -13,8 +13,7 @@
 #include <vector>
 #include "ReducingFunctions.h"
 #include "ExcessHEFunction.h"
-
-#include "MixtureDerivatives.h"
+#include "../Solvers.h"
 
 namespace CoolProp {
 
@@ -25,9 +24,12 @@ protected:
     std::vector<CoolPropFluid*> components; ///< The components that are in use
     
     bool is_pure_or_pseudopure; ///< A flag for whether the substance is a pure or pseudo-pure fluid (true) or a mixture (false)
-    std::vector<double> mole_fractions; ///< The mole fractions of the components
-    std::vector<double> mole_fractions_liq, ///< The mole fractions of the saturated liquid 
-                        mole_fractions_vap; ///< The mole fractions of the saturated vapor
+    std::vector<long double> mole_fractions; ///< The mole fractions of the components
+    std::vector<long double> mole_fractions_liq, ///< The mole fractions of the saturated liquid 
+                             mole_fractions_vap, ///< The mole fractions of the saturated vapor
+                             K, ///< The K factors for the components
+                             lnK; ///< The natural logarithms of the K factors of the components
+
     SimpleState _crit;
     int imposed_phase_index;
 public:
@@ -39,10 +41,14 @@ public:
     ExcessTerm Excess;
 
     const std::vector<CoolPropFluid*> &get_components(){return components;};
+    std::vector<long double> &get_K(){return K;};
+    std::vector<long double> &get_lnK(){return lnK;};
 
     HelmholtzEOSMixtureBackend *SatL, *SatV; ///< 
 
     void update(long input_pair, double value1, double value2);
+
+    void update_TP_guessrho(long double T, long double p, long double rho_guess);
 
     /// Set the components of the mixture
     /**
@@ -64,15 +70,15 @@ public:
     /** 
     @param mole_fractions The vector of mole fractions of the components
     */
-    void set_mole_fractions(const std::vector<double> &mole_fractions);
+    void set_mole_fractions(const std::vector<long double> &mole_fractions);
 
-    const std::vector<double> &get_mole_fractions(){return mole_fractions;};
+    const std::vector<long double> &get_mole_fractions(){return mole_fractions;};
     
     /// Set the mass fractions
     /** 
     @param mass_fractions The vector of mass fractions of the components
     */
-    void set_mass_fractions(const std::vector<double> &mass_fractions){throw std::exception();};
+    void set_mass_fractions(const std::vector<long double> &mass_fractions){throw std::exception();};
     
     long double calc_molar_mass(void);
     long double calc_gas_constant(void);
@@ -99,7 +105,7 @@ public:
     long double calc_d2alpha0_dDelta_dTau(void);
     long double calc_d2alpha0_dTau2(void);
 
-    long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta);
+    long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<long double> & mole_fractions, const long double &tau, const long double &delta);
     
     /**
     \brief Take derivatives of the ideal-gas part of the Helmholtz energy, don't use any cached values, or store any cached values
@@ -125,10 +131,10 @@ public:
 
     \sa Table B5, GERG 2008 from Kunz Wagner, JCED, 2012
     */
-    long double calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> & mole_fractions, const long double &tau, const long double &delta, const long double &Tr, const long double &rhor);
+    long double calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<long double> & mole_fractions, const long double &tau, const long double &delta, const long double &Tr, const long double &rhor);
     
     void calc_reducing_state(void);
-    void calc_reducing_state_nocache(const std::vector<double> & mole_fractions);
+    SimpleState calc_reducing_state_nocache(const std::vector<long double> & mole_fractions);
 
     double p_rhoT(long double rhomolar, long double T);
 
@@ -180,8 +186,8 @@ public:
     // ***************************************************************
     // ***************************************************************        
     
-    void solver_rho_Tp();
-    long double solver_rho_Tp_SRK();
+    long double solver_rho_Tp(long double T, long double p, long double rho_guess = -1);
+    long double solver_rho_Tp_SRK(long double T, long double p, int phase);
 
 
 
@@ -406,7 +412,8 @@ public:
 	\f}
 	*/
 	long double mixderiv_d_ndalphardni_dxj__constdelta_tau_xi(int i, int j);
-
+    
+    
 };
 
 class SaturationSolvers
@@ -425,9 +432,107 @@ public:
         long double omega, rhoL, rhoV, pL, pV;
     };
 
+    enum sstype_enum {imposed_T, imposed_p};
+    struct successive_substitution_options
+    {
+        int sstype, Nstep_max;
+    };
+
+    /*! Returns the natural logarithm of K for component i using the method from Wilson as in
+	\f[
+	\ln K_i = \ln\left(\frac{p_{c,i}}{p}\right)+5.373(1+\omega_i)\left(1-\frac{T_{c,i}}{T}\right)
+	\f]
+    @param HEOS The Helmholtz EOS mixture backend
+	@param T Temperature [K]
+	@param p Pressure [Pa]
+	@param i Index of component [-]
+	*/
+	static long double Wilson_lnK_factor(HelmholtzEOSMixtureBackend *HEOS, long double T, long double p, int i){ 
+        EquationOfState *EOS = (HEOS->get_components())[i]->pEOS; 
+        return log(EOS->reduce.p/p)+5.373*(1 + EOS->accentric)*(1-EOS->reduce.T/T);
+    };
+
     static void saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options);
     static void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
     static void saturation_p_pure(HelmholtzEOSMixtureBackend *HEOS, long double p, saturation_p_pure_options &options);
+    static long double successive_substitution(HelmholtzEOSMixtureBackend *HEOS, long double beta, long double T, long double p, const std::vector<long double> &z, std::vector<long double> &K, successive_substitution_options &options);
+    static void x_and_y_from_K(long double beta, const std::vector<long double> &K, const std::vector<long double> &z, std::vector<long double> &x, std::vector<long double> &y);
+
+    /*! A wrapper function around the residual to find the initial guess for the bubble point temperature
+    \f[
+    r = \sum_i \frac{z_i(K_i-1)}{1-beta+beta*K_i}
+    \f]
+    */
+    class WilsonK_resid : public FuncWrapper1D
+    {
+    public:
+        int input_type;
+	    double T, p, beta;
+	    const std::vector<long double> *z;
+        std::vector<long double> *K;
+	    HelmholtzEOSMixtureBackend *HEOS;
+
+	    WilsonK_resid(HelmholtzEOSMixtureBackend *HEOS, double beta, double imposed_value, int input_type, const std::vector<long double> &z, std::vector<long double> &K){ 
+            this->z = &z; this->K = &K; this->HEOS = HEOS; this->beta = beta; this->input_type = input_type;
+            if (input_type == imposed_T){
+                this->T = imposed_value;
+            }
+            else{
+                this->p = imposed_value;
+            }
+	    };
+	    double call(double input_value){
+		    double summer = 0;
+            if (input_type == imposed_T){
+                p = input_value; // Iterate on pressure
+            }
+            else{
+                T = input_value; // Iterate on temperature, pressure imposed
+            }
+		    for (unsigned int i = 0; i< (*z).size(); i++) {
+			    (*K)[i] = exp(Wilson_lnK_factor(HEOS,T,p,i));
+			    summer += (*z)[i]*((*K)[i]-1)/(1-beta+beta*(*K)[i]);
+		    }
+		    return summer;
+	    };
+    };
+    static double saturation_preconditioner(HelmholtzEOSMixtureBackend *HEOS, double input_value, int input_type, const std::vector<long double> &z)
+    {
+	    double ptriple = 0, pcrit = 0, Ttriple = 0, Tcrit = 0;
+	    
+	    for (unsigned int i = 0; i < z.size(); i++)
+	    {
+            EquationOfState *EOS = (HEOS->get_components())[i]->pEOS; 
+
+		    ptriple += EOS->ptriple*z[i];
+            pcrit += EOS->reduce.p*z[i];
+		    Ttriple += EOS->Ttriple*z[i];
+		    Tcrit += EOS->reduce.T*z[i];
+	    }
+
+        if (input_type == imposed_T)
+        {
+            return exp(log(pcrit/ptriple)/(Tcrit-Ttriple)*(input_value-Ttriple)+log(ptriple));
+        }
+        else if (input_type == imposed_p)
+        {
+            return (Tcrit-Ttriple)/log(pcrit/ptriple)*log(input_value/ptriple)+Ttriple;
+        }
+        else{ throw ValueError();}
+    }
+    static double saturation_Wilson(HelmholtzEOSMixtureBackend *HEOS, double beta, double input_value, int input_type, const std::vector<long double> &z, double guess)
+    {
+	    double T;
+
+	    std::string errstr;
+
+	    // Find first guess for T using Wilson K-factors
+        WilsonK_resid Resid(HEOS, beta, input_value, input_type, z, HEOS->get_K());
+	    T = Secant(Resid, guess, 0.001, 1e-10, 100, errstr);
+	
+	    if (!ValidNumber(T)){throw ValueError("saturation_p_Wilson failed to get good T");}
+	    return T;
+    }
 };
 
 

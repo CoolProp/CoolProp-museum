@@ -195,8 +195,8 @@ public:
     
     bool clear();
     virtual void update(long input_pair, double Value1, double Value2) = 0;
-    virtual void set_mole_fractions(const std::vector<double> &mole_fractions) = 0;
-    virtual void set_mass_fractions(const std::vector<double> &mass_fractions) = 0;
+    virtual void set_mole_fractions(const std::vector<long double> &mole_fractions) = 0;
+    virtual void set_mass_fractions(const std::vector<long double> &mass_fractions) = 0;
 
     const SimpleState & get_reducing(){return _reducing;};
 

@@ -1,5 +1,3 @@
-
-
 #ifndef SOLVERS_H
 #define SOLVERS_H
 
@@ -29,10 +27,10 @@ public:
 };
 
 // Single-Dimensional solvers
-double Brent(FuncWrapper1D &f, double a, double b, double macheps, double t, int maxiter, std::string *errstr);
-double Secant(FuncWrapper1D &f, double x0, double dx, double ftol, int maxiter, std::string *errstring);
-double BoundedSecant(FuncWrapper1D &f, double x0, double xmin, double xmax, double dx, double ftol, int maxiter, std::string *errstring);
-double Newton(FuncWrapper1D &f, double x0, double ftol, int maxiter, std::string *errstring);
+double Brent(FuncWrapper1D &f, double a, double b, double macheps, double t, int maxiter, std::string &errstr);
+double Secant(FuncWrapper1D &f, double x0, double dx, double ftol, int maxiter, std::string &errstring);
+double BoundedSecant(FuncWrapper1D &f, double x0, double xmin, double xmax, double dx, double ftol, int maxiter, std::string &errstring);
+double Newton(FuncWrapper1D &f, double x0, double ftol, int maxiter, std::string &errstring);
 
 // Multi-Dimensional solvers
 std::vector<double> NDNewtonRaphson_Jacobian(FuncWrapperND *f, std::vector<double> x0, double tol, int maxiter, std::string *errstring);

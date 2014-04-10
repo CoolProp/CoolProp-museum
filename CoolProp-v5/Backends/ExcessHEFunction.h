@@ -6,7 +6,7 @@
 
 namespace CoolProp{
 
-typedef std::vector<std::vector<double> > STLMatrix;
+typedef std::vector<std::vector<long double> > STLMatrix;
 
 /// A container for the mixing parameters for CoolProp mixtures
 /**
@@ -88,16 +88,16 @@ public:
     void construct(const std::vector<CoolPropFluid*> &components);
 	~ExcessTerm();
 
-	double alphar(double tau, double delta, const std::vector<double> &x);
-	double dalphar_dDelta(double tau, double delta, const std::vector<double> &x);
-	double d2alphar_dDelta2(double tau, double delta, const std::vector<double> &x);
-	double d2alphar_dDelta_dTau(double tau, double delta, const std::vector<double> &x);
-	double dalphar_dTau(double tau, double delta, const std::vector<double> &x);
-	double d2alphar_dTau2(double tau, double delta, const std::vector<double> &x);
-	double dalphar_dxi(double tau, double delta, const std::vector<double> &x, unsigned int i);
-	double d2alphardxidxj(double tau, double delta, const std::vector<double> &x, unsigned int i, unsigned int j);
-	double d2alphar_dxi_dTau(double tau, double delta, const std::vector<double> &x, unsigned int i);
-	double d2alphar_dxi_dDelta(double tau, double delta, const std::vector<double> &x, unsigned int i);
+	double alphar(double tau, double delta, const std::vector<long double> &x);
+	double dalphar_dDelta(double tau, double delta, const std::vector<long double> &x);
+	double d2alphar_dDelta2(double tau, double delta, const std::vector<long double> &x);
+	double d2alphar_dDelta_dTau(double tau, double delta, const std::vector<long double> &x);
+	double dalphar_dTau(double tau, double delta, const std::vector<long double> &x);
+	double d2alphar_dTau2(double tau, double delta, const std::vector<long double> &x);
+	double dalphar_dxi(double tau, double delta, const std::vector<long double> &x, unsigned int i);
+	double d2alphardxidxj(double tau, double delta, const std::vector<long double> &x, unsigned int i, unsigned int j);
+	double d2alphar_dxi_dTau(double tau, double delta, const std::vector<long double> &x, unsigned int i);
+	double d2alphar_dxi_dDelta(double tau, double delta, const std::vector<long double> &x, unsigned int i);
 };
 
 class GERG2008DepartureFunction : public DepartureFunction

@@ -117,12 +117,27 @@ int main()
     if (1)
     {
         int N = 2;
-        std::vector<double> z(N, 1.0/N);
-        double rhomass = 0.01, T = 300;
+        std::vector<long double> z(N, 1.0/N);
+        double Q = 1, T = 250, p = 300000;
+
+        int inputs = PQ_INPUTS; double val1 = p, val2 = Q;
+
+        AbstractState *MixRP = AbstractState::factory("REFPROP-Ethane|propane");
+        MixRP->set_mole_fractions(z);
+        MixRP->update(inputs, val1, val2);
+        double p2 = MixRP->p();
+        double rho2 = MixRP->rhomolar();
+        double cv2 = MixRP->cvmolar();
+        double cp2 = MixRP->cpmolar();
+        double w2 = MixRP->speed_sound();
+        double h2 = MixRP->hmolar();
+        double s2 = MixRP->smolar();
+        double phi20 = MixRP->fugacity_coefficient(0);
+        double phi21 = MixRP->fugacity_coefficient(1);
 
         AbstractState *Mix = AbstractState::factory("CORE-Ethane|n-Propane");
         Mix->set_mole_fractions(z);
-        Mix->update(DmassT_INPUTS, rhomass, T);
+        Mix->update(inputs, val1, val2);
         double p1 = Mix->p();
         double cv1 = Mix->cvmolar();
         double cp1 = Mix->cpmolar();
@@ -131,18 +146,6 @@ int main()
         double s1 = Mix->smolar();
         double phi10 = Mix->fugacity_coefficient(0);
         double phi11 = Mix->fugacity_coefficient(1);
-
-        AbstractState *MixRP = AbstractState::factory("REFPROP-Ethane|propane");
-        MixRP->set_mole_fractions(z);
-        MixRP->update(DmassT_INPUTS, rhomass, T);
-        double p2 = MixRP->p();
-        double cv2 = MixRP->cvmolar();
-        double cp2 = MixRP->cpmolar();
-        double w2 = MixRP->speed_sound();
-        double h2 = MixRP->hmolar();
-        double s2 = MixRP->smolar();
-        double phi20 = MixRP->fugacity_coefficient(0);
-        double phi21 = MixRP->fugacity_coefficient(1);
 
         double rr = 0;
     }
@@ -179,7 +182,7 @@ int main()
     if (0)
     {
         AbstractState *State = AbstractState::factory("REFPROP-Methane|Ethane");
-        std::vector<double> x(2,0.5);
+        std::vector<long double> x(2,0.5);
         State->set_mole_fractions(x);
         State->update(DmassT_INPUTS,1,250);
         double hh = State->hmolar();

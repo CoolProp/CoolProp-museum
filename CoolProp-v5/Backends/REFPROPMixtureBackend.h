@@ -56,13 +56,13 @@ public:
 	/** 
 	@param mole_fractions The vector of mole fractions of the components
 	*/
-	void set_mole_fractions(const std::vector<double> &mole_fractions);
+	void set_mole_fractions(const std::vector<long double> &mole_fractions);
 	
 	/// Set the mass fractions
 	/** 
 	@param mass_fractions The vector of mass fractions of the components
 	*/
-	void set_mass_fractions(const std::vector<double> &mass_fractions);
+	void set_mass_fractions(const std::vector<long double> &mass_fractions);
 
 	/// Check if the mole fractions have been set, etc.
 	void check_status();

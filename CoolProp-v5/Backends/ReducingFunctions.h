@@ -6,7 +6,7 @@
 
 namespace CoolProp{
 
-typedef std::vector<std::vector<double> > STLMatrix;
+typedef std::vector<std::vector<long double> > STLMatrix;
 
 /// A container for the mixing parameters for CoolProp mixtures
 /**
@@ -69,34 +69,34 @@ public:
     static ReducingFunction *factory(const std::vector<CoolPropFluid*> &components);
 
 	/// The reduced temperature
-	virtual double Tr(const std::vector<double> &x) = 0;
+	virtual long double Tr(const std::vector<long double> &x) = 0;
 	/// The derivative of reduced temperature with respect to component i mole fraction
-	virtual double dTrdxi__constxj(const std::vector<double> &x, int i) = 0;
+	virtual long double dTrdxi__constxj(const std::vector<long double> &x, int i) = 0;
 	/// The molar reducing density
-	virtual double rhormolar(const std::vector<double> &x) = 0;
+	virtual long double rhormolar(const std::vector<long double> &x) = 0;
 	///Derivative of the molar reducing density with respect to component i mole fraction
-	virtual double drhormolardxi__constxj(const std::vector<double> &x, int i) = 0;
+	virtual long double drhormolardxi__constxj(const std::vector<long double> &x, int i) = 0;
 
-	virtual double d2rhormolardxi2__constxj(const std::vector<double> &x, int i) = 0;
-	virtual double d2rhormolardxidxj(const std::vector<double> &x, int i, int j) = 0;
-	virtual double d2Trdxi2__constxj(const std::vector<double> &x, int i) = 0;
-	virtual double d2Trdxidxj(const std::vector<double> &x, int i, int j) = 0;
+	virtual long double d2rhormolardxi2__constxj(const std::vector<long double> &x, int i) = 0;
+	virtual long double d2rhormolardxidxj(const std::vector<long double> &x, int i, int j) = 0;
+	virtual long double d2Trdxi2__constxj(const std::vector<long double> &x, int i) = 0;
+	virtual long double d2Trdxidxj(const std::vector<long double> &x, int i, int j) = 0;
 
 	/*! GERG 2004 Monograph equation 7.56:
 	\f[
 	\left(\frac{\partial}{\partial x_j}\left(n\left(\frac{\partial T_r}{\partial n_i} \right)_{n_j}\right)\right)_{x_i} = \left(\frac{\partial^2T_r}{\partial x_j \partial x_i}\right)-\left(\frac{\partial T_r}{\partial x_j}\right)_{x_i}-\sum_{k=1}^Nx_k\left(\frac{\partial^2T_r}{\partial x_j \partial x_k}\right)
 	\f]
 	*/
-	double d_ndTrdni_dxj__constxi(const std::vector<double> &x, int i, int j);
+	long double d_ndTrdni_dxj__constxi(const std::vector<long double> &x, int i, int j);
 	/*! GERG 2004 Monograph equation 7.55:
 	\f[
 	\left(\frac{\partial}{\partial x_j}\left(n\left(\frac{\partial \rho_r}{\partial n_i} \right)_{n_j}\right)\right)_{x_i} = \left(\frac{\partial^2\rho_r}{\partial x_j \partial x_i}\right)-\left(\frac{\partial \rho_r}{\partial x_j}\right)_{x_i}-\sum_{k=1}^Nx_k\left(\frac{\partial^2\rho_r}{\partial x_j \partial x_k}\right)
 	\f]
 	*/
-	double d_ndrhorbardni_dxj__constxi(const std::vector<double> &x, int i, int j);
+	long double d_ndrhorbardni_dxj__constxi(const std::vector<long double> &x, int i, int j);
 
-	double ndrhorbardni__constnj(const std::vector<double> &x, int i);
-	double ndTrdni__constnj(const std::vector<double> &x, int i);
+	long double ndrhorbardni__constnj(const std::vector<long double> &x, int i);
+	long double ndTrdni__constnj(const std::vector<long double> &x, int i);
 };
 
 /*! 
@@ -125,8 +125,8 @@ public:
 		this->beta_T = beta_T;
 		this->gamma_T = gamma_T;
 		this->N = pFluids.size();
-		T_c.resize(N,std::vector<double>(N,0));
-		v_c.resize(N,std::vector<double>(N,0));
+		T_c.resize(N,std::vector<long double>(N,0));
+		v_c.resize(N,std::vector<long double>(N,0));
 		for (unsigned int i = 0; i < N; ++i)
 		{
 			for (unsigned int j = 0; j < N; j++)
@@ -140,31 +140,31 @@ public:
 	/// Default destructor
 	~GERG2008ReducingFunction(){};
 	/// The reduced temperature
-	double Tr(const std::vector<double> &x);
+	long double Tr(const std::vector<long double> &x);
 	/// The derivative of reduced temperature with respect to component i mole fraction
-	double dTrdxi__constxj(const std::vector<double> &x, int i);
+	long double dTrdxi__constxj(const std::vector<long double> &x, int i);
 	/// The molar reducing density
-	double rhormolar(const std::vector<double> &x);
+	long double rhormolar(const std::vector<long double> &x);
 	///Derivative of the molar reducing density with respect to component i mole fraction
-	double drhormolardxi__constxj(const std::vector<double> &x, int i);
-	double dvrmolardxi__constxj(const std::vector<double> &x, int i);
+	long double drhormolardxi__constxj(const std::vector<long double> &x, int i);
+	long double dvrmolardxi__constxj(const std::vector<long double> &x, int i);
 
-	double d2vrmolardxi2__constxj(const std::vector<double> &x, int i);
-	double d2rhormolardxi2__constxj(const std::vector<double> &x, int i);
-	double d2vrmolardxidxj(const std::vector<double> &x, int i, int j);
-	double d2rhormolardxidxj(const std::vector<double> &x, int i, int j);
-	double d2Trdxi2__constxj(const std::vector<double> &x, int i);
-	double d2Trdxidxj(const std::vector<double> &x, int i, int j);
+	long double d2vrmolardxi2__constxj(const std::vector<long double> &x, int i);
+	long double d2rhormolardxi2__constxj(const std::vector<long double> &x, int i);
+	long double d2vrmolardxidxj(const std::vector<long double> &x, int i, int j);
+	long double d2rhormolardxidxj(const std::vector<long double> &x, int i, int j);
+	long double d2Trdxi2__constxj(const std::vector<long double> &x, int i);
+	long double d2Trdxidxj(const std::vector<long double> &x, int i, int j);
 
-	double c_Y_ij(int i, int j, std::vector< std::vector< double> > &beta, std::vector< std::vector< double> > &gamma, std::vector< std::vector< double> > &Y_c);
-	double c_Y_ji(int j, int i, std::vector< std::vector< double> > &beta, std::vector< std::vector< double> > &gamma, std::vector< std::vector< double> > &Y_c);
-	double f_Y_ij(const std::vector<double> &x, int i, int j, std::vector< std::vector< double> > &beta);
+	long double c_Y_ij(int i, int j, std::vector< std::vector< long double> > &beta, std::vector< std::vector< long double> > &gamma, std::vector< std::vector< long double> > &Y_c);
+	long double c_Y_ji(int j, int i, std::vector< std::vector< long double> > &beta, std::vector< std::vector< long double> > &gamma, std::vector< std::vector< long double> > &Y_c);
+	long double f_Y_ij(const std::vector<long double> &x, int i, int j, std::vector< std::vector< long double> > &beta);
 
-	double dfYkidxi__constxk(const std::vector<double> &x, int k, int i,std::vector< std::vector< double> > &beta);
-	double dfYikdxi__constxk(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > &beta);
-	double d2fYkidxi2__constxk(const std::vector<double> &x, int k, int i, std::vector< std::vector< double> > &beta);
-	double d2fYikdxi2__constxk(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > &beta);
-	double d2fYijdxidxj(const std::vector<double> &x, int i, int k, std::vector< std::vector< double> > &beta);
+	long double dfYkidxi__constxk(const std::vector<long double> &x, int k, int i,std::vector< std::vector< long double> > &beta);
+	long double dfYikdxi__constxk(const std::vector<long double> &x, int i, int k, std::vector< std::vector< long double> > &beta);
+	long double d2fYkidxi2__constxk(const std::vector<long double> &x, int k, int i, std::vector< std::vector< long double> > &beta);
+	long double d2fYikdxi2__constxk(const std::vector<long double> &x, int i, int k, std::vector< std::vector< long double> > &beta);
+	long double d2fYijdxidxj(const std::vector<long double> &x, int i, int k, std::vector< std::vector< long double> > &beta);
 };
 
 /*! From Lemmon, JPCRD, 2000 for the properties of Dry Air, and also from Lemmon, JPCRD, 2004 for the properties of R404A, R410A, etc.	
@@ -194,16 +194,16 @@ protected:
     LemmonAirHFCReducingFunction(const LemmonAirHFCReducingFunction &);
 public:
 	/// Set the coefficients based on reducing parameters loaded from JSON
-	static void convert_to_GERG(const std::vector<CoolPropFluid*> &pFluids, int i, int j, Dictionary d, double &beta_T, double &beta_v, double &gamma_T, double &gamma_v)
+	static void convert_to_GERG(const std::vector<CoolPropFluid*> &pFluids, int i, int j, Dictionary d, long double &beta_T, long double &beta_v, long double &gamma_T, long double &gamma_v)
     {
-        double xi_ij = d.get_number("xi");
-        double zeta_ij = d.get_number("zeta");
+        long double xi_ij = d.get_number("xi");
+        long double zeta_ij = d.get_number("zeta");
 	    beta_T = 1;
 	    beta_v = 1;
 	    gamma_T = (pFluids[i]->pEOS->reduce.T + pFluids[j]->pEOS->reduce.T + xi_ij)/(2*sqrt(pFluids[i]->pEOS->reduce.T*pFluids[j]->pEOS->reduce.T));
-	    double v_i = 1/pFluids[i]->pEOS->reduce.rhomolar;
-	    double v_j = 1/pFluids[j]->pEOS->reduce.rhomolar;
-	    double one_third = 1.0/3.0;
+	    long double v_i = 1/pFluids[i]->pEOS->reduce.rhomolar;
+	    long double v_j = 1/pFluids[j]->pEOS->reduce.rhomolar;
+	    long double one_third = 1.0/3.0;
 	    gamma_v = (v_i + v_j + zeta_ij)/(0.25*pow(pow(v_i, one_third)+pow(v_j, one_third),(int)3));
     };
 };

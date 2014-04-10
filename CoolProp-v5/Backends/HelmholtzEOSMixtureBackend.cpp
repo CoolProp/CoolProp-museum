@@ -47,7 +47,7 @@ void HelmholtzEOSMixtureBackend::set_components(std::vector<CoolPropFluid*> comp
 
     if (components.size() == 1){
         is_pure_or_pseudopure = true;
-        mole_fractions = std::vector<double>(1, 1);
+        mole_fractions = std::vector<long double>(1, 1);
     }
     else{
         is_pure_or_pseudopure = false;
@@ -77,13 +77,15 @@ void HelmholtzEOSMixtureBackend::set_components(std::vector<CoolPropFluid*> comp
         SatL = NULL; SatV = NULL;
     }
 }
-void HelmholtzEOSMixtureBackend::set_mole_fractions(const std::vector<double> &mole_fractions)
+void HelmholtzEOSMixtureBackend::set_mole_fractions(const std::vector<long double> &mole_fractions)
 {
     if (mole_fractions.size() != components.size())
     {
         throw ValueError(format("size of mole fraction vector [%d] does not equal that of component vector [%d]",mole_fractions.size(), components.size()));
     }
     this->mole_fractions = mole_fractions;
+    this->K.resize(mole_fractions.size());
+    this->lnK.resize(mole_fractions.size());
 };
 void HelmholtzEOSMixtureBackend::set_reducing_function()
 {
@@ -111,6 +113,13 @@ long double HelmholtzEOSMixtureBackend::calc_molar_mass(void)
     }
     return summer;
 }
+
+void HelmholtzEOSMixtureBackend::update_TP_guessrho(long double T, long double p, long double rho_guess)
+{
+    double rho = solver_rho_Tp(T, p, rho_guess);
+    update(DmolarT_INPUTS, rho, T);
+}
+
 void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double value2 )
 {
     clear();
@@ -148,6 +157,12 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
         {
             _Q = value1; _T = value2;
             QT_flash();
+            break;
+        }
+        case PQ_INPUTS:
+        {
+            _p = value1; _Q = value2;
+            PQ_flash();
             break;
         }
         case PT_INPUTS:
@@ -293,58 +308,86 @@ void HelmholtzEOSMixtureBackend::QT_flash()
             _rhomolar = 1/(_Q/SatV->rhomolar() + (1-_Q)/SatL->rhomolar());
         }
         else{
+            throw NotImplementedError();
             //saturation_T_pseudopure();
         }
     }
     else
     {
+        // Set some imput options
+        SaturationSolvers::successive_substitution_options options;
+        options.sstype = SaturationSolvers::imposed_T;
+        options.Nstep_max = 5;
 
+        // Get an extremely rough guess by interpolation of ln(p) v. T curve where the limits are mole-fraction-weighted
+        long double pguess = SaturationSolvers::saturation_preconditioner(this, _T, SaturationSolvers::imposed_T, mole_fractions);
+
+        // Use Wilson iteration to obtain updated guess for pressure
+        pguess = SaturationSolvers::saturation_Wilson(this, _Q, _T, SaturationSolvers::imposed_T, mole_fractions, pguess);
+        
+        // Actually call the successive substitution solver
+        SaturationSolvers::successive_substitution(this, _Q, _T, pguess, mole_fractions, K, options);
     }
 }
-//void HelmholtzEOSMixtureBackend::PQ_flash()
-//{
-//    if (is_pure_or_pseudopure)
-//    {
-//        if (!(components[0]->pEOS->pseudo_pure))
-//        {
-//            // Set some imput options
-//            SaturationSolvers::saturation_p_pure_Akasaka_options options;
-//            options.omega = 1.0;
-//            options.use_guesses = false;
-//            // Actually call the solver
-//            SaturationSolvers::saturation_p_pure_Akasaka(this, _T, options);
-//            // Load the outputs
-//            _p = _Q*SatV->p() + (1-_Q)*SatL->p();
-//            _rhomolar = 1/(_Q/SatV->rhomolar() + (1-_Q)/SatL->rhomolar());
-//        }
-//        else{
-//            //saturation_p_pseudopure();
-//        }
-//    }
-//    else
-//    {
-//
-//    }
-//}
-void HelmholtzEOSMixtureBackend::DmolarT_flash()
+void HelmholtzEOSMixtureBackend::PQ_flash()
 {
     if (is_pure_or_pseudopure)
     {
-        if (imposed_phase_index > -1) 
+        if (!(components[0]->pEOS->pseudo_pure))
         {
-            // Use the phase defined by the imposed phase
-            _phase = imposed_phase_index;
+            throw NotImplementedError();
+            //// Set some imput options
+            //SaturationSolvers::saturation_p_pure_Akasaka_options options;
+            //options.omega = 1.0;
+            //options.use_guesses = false;
+            //// Actually call the solver
+            //SaturationSolvers::saturation_p_pure_Akasaka(this, _T, options);
+            //// Load the outputs
+            //_p = _Q*SatV->p() + (1-_Q)*SatL->p();
+            //_rhomolar = 1/(_Q/SatV->rhomolar() + (1-_Q)/SatL->rhomolar());
         }
-        else
-        {
-            // Find the phase, while updating all internal variables possible
-            DmolarT_phase_determination_pure_or_pseudopure();
+        else{
+            throw NotImplementedError();
+            //saturation_p_pseudopure();
         }
     }
     else
     {
-        // TODO: hard coded phase to assume homogeneous phase
-        _phase  = iphase_gas;
+        // Set some imput options
+        SaturationSolvers::successive_substitution_options options;
+        options.sstype = SaturationSolvers::imposed_p;
+        options.Nstep_max = 5;
+
+        // Get an extremely rough guess by interpolation of ln(p) v. T curve where the limits are mole-fraction-weighted
+        long double Tguess = SaturationSolvers::saturation_preconditioner(this, _p, SaturationSolvers::imposed_p, mole_fractions);
+
+        // Use Wilson iteration to obtain updated guess for temperature
+        Tguess = SaturationSolvers::saturation_Wilson(this, _Q, _p, SaturationSolvers::imposed_p, mole_fractions, Tguess);
+        
+        // Actually call the successive substitution solver
+        SaturationSolvers::successive_substitution(this, _Q, Tguess, _p, mole_fractions, K, options);
+    }
+}
+void HelmholtzEOSMixtureBackend::DmolarT_flash()
+{
+    if (imposed_phase_index > -1) 
+    {
+        // Use the phase defined by the imposed phase
+        _phase = imposed_phase_index;
+    }
+    else
+    {
+        if (is_pure_or_pseudopure)
+        {
+            // Find the phase, while updating all internal variables possible
+            DmolarT_phase_determination_pure_or_pseudopure();
+        }
+        else
+        {
+            _phase = iphase_gas;
+            // Find the phase, while updating all internal variables possible
+            //DmolarT_phase_determination_pure_or_pseudopure();
+        }
     }
 
     if (isHomogeneousPhase() && !ValidNumber(_p))
@@ -356,33 +399,79 @@ void HelmholtzEOSMixtureBackend::DmolarT_flash()
 // TODO: no cache
 double HelmholtzEOSMixtureBackend::p_rhoT(long double rhomolar, long double T)
 {
-    _delta = rhomolar/_reducing.rhomolar;
-    _tau = _reducing.T/T;
+    SimpleState reducing = calc_reducing_state_nocache(mole_fractions);
+    long double delta = rhomolar/reducing.rhomolar;
+    long double tau = reducing.T/T;
     
     // Calculate derivative if needed
-    long double dalphar_dDelta = components[0]->pEOS->dalphar_dDelta(_tau, _delta);
+    int nTau = 0, nDelta = 1;
+    long double dalphar_dDelta = calc_alphar_deriv_nocache(nTau, nDelta, mole_fractions, tau, delta);
 
     // Get pressure
-    return rhomolar*(double)_gas_constant*T*(1+_delta*dalphar_dDelta);
+    return rhomolar*gas_constant()*T*(1+delta*dalphar_dDelta);
 }
-void HelmholtzEOSMixtureBackend::solver_rho_Tp()
+long double HelmholtzEOSMixtureBackend::solver_rho_Tp(long double T, long double p, long double rhomolar_guess)
 {
-    long double molar_mass = (double)_molar_mass;
-    long double rhomolar = solver_rho_Tp_SRK();
-    double res = p_rhoT(rhomolar, _T);
-    double rhomass = rhomolar*molar_mass;
-}
-long double HelmholtzEOSMixtureBackend::solver_rho_Tp_SRK()
-{
-    long double rhomolar, R = (double)_gas_constant, T = _T;
-    long double accentric = components[0]->pEOS->accentric;
+    int phase;
+    if (imposed_phase_index > -1)
+        phase = imposed_phase_index;
+    else
+        phase = _phase;
+    if (rhomolar_guess < 0){
+        rhomolar_guess = solver_rho_Tp_SRK(T, p, phase);
+    }
+    
+    class solver_TP_resid : public FuncWrapper1D
+    {
+    public:
+	    double T, p;
+	    HelmholtzEOSMixtureBackend *HEOS;
 
-    // Use SRK to get preliminary guess for the density
-    long double m = 0.480+1.574*accentric-0.176*pow(accentric,2);
-    long double b = 0.08664*R*_reducing.T/_reducing.p;
-    long double a = 0.42747*pow(R*_reducing.T,2)/_reducing.p*pow(1+m*(1-sqrt(_T/_reducing.T)),2);
-    long double A = a*_p/pow(R*T,2);
-    long double B = b*_p/(R*T);
+	    solver_TP_resid(HelmholtzEOSMixtureBackend *HEOS, long double T, long double p){ 
+            this->HEOS = HEOS; this->T = T; this->p = p;
+	    };
+	    double call(double rhomolar){ 
+            return (HEOS->p_rhoT(rhomolar,T)-p)/p;
+        };
+    };
+    solver_TP_resid resid(this,T,p);
+    std::string errstring;
+    double rhomolar = Secant(resid, rhomolar_guess, 0.0001*rhomolar_guess, 1e-10, 100, errstring);
+    return rhomolar;
+}
+long double HelmholtzEOSMixtureBackend::solver_rho_Tp_SRK(long double T, long double p, int phase)
+{
+    long double rhomolar, R_u = gas_constant(), a = 0, b = 0, k_ij = 0;
+
+    for (std::size_t i = 0; i < components.size(); ++i)
+    {
+        long double Tci = components[i]->pEOS->reduce.T, pci = components[i]->pEOS->reduce.p, accentric_i = components[i]->pEOS->accentric;
+        long double m_i = 0.480+1.574*accentric_i-0.176*pow(accentric_i, 2);
+        long double b_i = 0.08664*R_u*Tci/pci;
+        b += mole_fractions[i]*b_i;
+
+        long double a_i = 0.42747*pow(R_u*Tci,2)/pci*pow(1+m_i*(1-sqrt(T/Tci)),2);
+
+        for (std::size_t j = 0; j < components.size(); ++j)
+        {
+            long double Tcj = components[j]->pEOS->reduce.T, pcj = components[j]->pEOS->reduce.p, accentric_j = components[j]->pEOS->accentric;
+            long double m_j = 0.480+1.574*accentric_j-0.176*pow(accentric_j, 2);
+
+            long double a_j = 0.42747*pow(R_u*Tcj,2)/pcj*pow(1+m_j*(1-sqrt(T/Tcj)),2);
+            
+            if (i == j){
+                k_ij = 0;
+            }
+            else{
+                k_ij = 0;
+            }
+
+            a += mole_fractions[i]*mole_fractions[j]*sqrt(a_i*a_j)*(1-k_ij);
+        }
+    }
+
+    long double A = a*p/pow(R_u*T,2);
+    long double B = b*p/(R_u*T);
 
     //Solve the cubic for solutions for Z = p/(rho*R*T)
     double Z0, Z1, Z2; int Nsolns;
@@ -390,20 +479,20 @@ long double HelmholtzEOSMixtureBackend::solver_rho_Tp_SRK()
 
     // Determine the guess value
     if (Nsolns == 1){
-        rhomolar = _p/(Z0*R*T);
+        rhomolar = p/(Z0*R_u*T);
     }
     else{
-        long double rhomolar0 = _p/(Z0*R*T);
-        long double rhomolar1 = _p/(Z1*R*T);
-        long double rhomolar2 = _p/(Z2*R*T);
-        switch(_phase)
+        long double rhomolar0 = p/(Z0*R_u*T);
+        long double rhomolar1 = p/(Z1*R_u*T);
+        long double rhomolar2 = p/(Z2*R_u*T);
+        switch(phase)
         {
         case iphase_liquid:
             rhomolar = max3(rhomolar0, rhomolar1, rhomolar2); break;
         case iphase_gas:
             rhomolar = min3(rhomolar0, rhomolar1, rhomolar2); break;
         default:
-            throw ValueError();
+            throw ValueError("Bad phase to solver_rho_Tp_SRK");
         };
     }
     return rhomolar;
@@ -420,7 +509,7 @@ void HelmholtzEOSMixtureBackend::PT_flash()
     else
     {
         // Find density
-        solver_rho_Tp();
+        solver_rho_Tp(_T, _p);
     }
 }
 long double HelmholtzEOSMixtureBackend::calc_pressure(void)
@@ -535,22 +624,25 @@ long double HelmholtzEOSMixtureBackend::calc_fugacity_coefficient(int i)
     return exp(mixderiv_ln_fugacity_coefficient(i));
 }
 
-void HelmholtzEOSMixtureBackend::calc_reducing_state_nocache(const std::vector<double> & mole_fractions)
+SimpleState HelmholtzEOSMixtureBackend::calc_reducing_state_nocache(const std::vector<long double> & mole_fractions)
 {
+    SimpleState reducing;
     if (is_pure_or_pseudopure){
-        _reducing = components[0]->pEOS->reduce;
-        _crit = _reducing;
+        reducing = components[0]->pEOS->reduce;
+        
     }
     else{
-        _reducing.T = Reducing.p->Tr(mole_fractions);
-        _reducing.rhomolar = Reducing.p->rhormolar(mole_fractions);
+        reducing.T = Reducing.p->Tr(mole_fractions);
+        reducing.rhomolar = Reducing.p->rhormolar(mole_fractions);
     }
+    return reducing;
 }
 void HelmholtzEOSMixtureBackend::calc_reducing_state(void)
 {
-    calc_reducing_state_nocache(mole_fractions);
+    _reducing = calc_reducing_state_nocache(mole_fractions);
+    _crit = _reducing;
 }
-long double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> &mole_fractions, const long double &tau, const long double &delta)
+long double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<long double> &mole_fractions, const long double &tau, const long double &delta)
 {
     if (is_pure_or_pseudopure)
     {
@@ -638,7 +730,7 @@ long double HelmholtzEOSMixtureBackend::calc_alphar_deriv_nocache(const int nTau
         }
     }
 }
-long double HelmholtzEOSMixtureBackend::calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<double> &mole_fractions, 
+long double HelmholtzEOSMixtureBackend::calc_alpha0_deriv_nocache(const int nTau, const int nDelta, const std::vector<long double> &mole_fractions, 
                                                                   const long double &tau, const long double &delta, const long double &Tr, const long double &rhor)
 {
     if (is_pure_or_pseudopure)
@@ -1018,7 +1110,7 @@ void SaturationSolvers::saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HE
     const SimpleState & reduce = HEOS->get_reducing();
     long double R_u = HEOS->calc_gas_constant();
     HelmholtzEOSMixtureBackend *SatL = HEOS->SatL, *SatV = HEOS->SatV;
-    const std::vector<double> & mole_fractions = HEOS->get_mole_fractions();
+    const std::vector<long double> & mole_fractions = HEOS->get_mole_fractions();
 
 	long double rhoL,rhoV,JL,JV,KL,KV,dJL,dJV,dKL,dKV;
 	long double DELTA, deltaL=0, deltaV=0, tau=0, error, PL, PV, stepL, stepV;
@@ -1118,5 +1210,113 @@ void SaturationSolvers::saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HE
 	while (error > 1e-10 && fabs(stepL) > 10*DBL_EPSILON*fabs(stepL) && fabs(stepV) > 10*DBL_EPSILON*fabs(stepV));
 }
 
+void SaturationSolvers::x_and_y_from_K(long double beta, const std::vector<long double> &K, const std::vector<long double> &z, std::vector<long double> &x, std::vector<long double> &y)
+{
+	for (unsigned int i=0; i < K.size(); i++)
+	{
+		double denominator = (1-beta+beta*K[i]); // Common denominator
+		x[i] = z[i]/denominator;
+		y[i] = K[i]*z[i]/denominator;
+	}
+	//normalize_vector(x);
+	//normalize_vector(y);
+}
+
+long double SaturationSolvers::successive_substitution(HelmholtzEOSMixtureBackend *HEOS, long double beta, long double T, long double p, const std::vector<long double> &z, 
+                                                       std::vector<long double> &K, successive_substitution_options &options)
+{
+	int iter = 1;
+	long double change, f, df, rhobar_liq_new, rhobar_vap_new, deriv_liq, deriv_vap;
+	std::size_t N = z.size();
+    std::vector<long double> x, y, ln_phi_liq, ln_phi_vap;
+	ln_phi_liq.resize(N); ln_phi_vap.resize(N); x.resize(N); y.resize(N);
+
+	x_and_y_from_K(beta, K, z, x, y);
+    HelmholtzEOSMixtureBackend *SatL = new HelmholtzEOSMixtureBackend(HEOS->get_components()), 
+                               *SatV = new HelmholtzEOSMixtureBackend(HEOS->get_components());
+    SatL->specify_phase(iphase_liquid);
+    SatV->specify_phase(iphase_gas);
+
+    SatL->set_mole_fractions(x);
+    SatV->set_mole_fractions(y);
+    long double rhomolar_liq = SatL->solver_rho_Tp_SRK(T, p, iphase_liquid); // [mol/m^3]
+	long double rhomolar_vap = SatV->solver_rho_Tp_SRK(T, p, iphase_gas); // [mol/m^3]
+    
+	do
+	{
+        
+        SatL->update_TP_guessrho(T, p, rhomolar_liq);
+        SatV->update_TP_guessrho(T, p, rhomolar_vap);
+
+		f = 0;
+		df = 0;
+
+		for (std::size_t i = 0; i < N; ++i)
+		{
+			ln_phi_liq[i] = SatL->mixderiv_ln_fugacity_coefficient(i);
+            ln_phi_vap[i] = SatV->mixderiv_ln_fugacity_coefficient(i);
+
+            if (options.sstype == imposed_p){
+			    deriv_liq = SatL->mixderiv_dln_fugacity_coefficient_dT__constp_n(i);
+                deriv_vap = SatV->mixderiv_dln_fugacity_coefficient_dT__constp_n(i);
+            }
+            else if (options.sstype == imposed_T){
+                deriv_liq = SatL->mixderiv_dln_fugacity_coefficient_dp__constT_n(i);
+                deriv_vap = SatV->mixderiv_dln_fugacity_coefficient_dp__constT_n(i);
+            }
+            else {throw ValueError();}
+
+			K[i] = exp(ln_phi_liq[i]-ln_phi_vap[i]);
+			
+			f += z[i]*(K[i]-1)/(1-beta+beta*K[i]);
+
+			double dfdK = K[i]*z[i]/pow(1-beta+beta*K[i],(int)2);
+			df += dfdK*(deriv_liq-deriv_vap);
+		}
+		
+		change = -f/df;
+
+		if (options.sstype == imposed_p){
+			T += change;
+        }
+        else if (options.sstype == imposed_T){
+            p += change;
+        }
+
+		x_and_y_from_K(beta, K, z, x, y);
+
+		iter += 1;
+		if (iter > 50)
+		{
+			return _HUGE;
+			//throw ValueError(format("saturation_p was unable to reach a solution within 50 iterations"));
+		}
+		//// If SS takes a large step, help by re-guessing using Peng-Robinson
+		//if (fabs(change) > 3)
+		//{
+		//	rhomolar_liq = SatL->solver_rho_Tp_SRK(T, p, iphase_liquid); // [mol/m^3]
+		//	rhomolar_vap = SatV->solver_rho_Tp_SRK(T, p, iphase_gas); // [mol/m^3]
+		//}
+	}
+	while(fabs(f) > 1e-3 && iter < options.Nstep_max);
+	
+	//if (!useNR)
+	//{
+	//	this->rhobar_liq = rhobar_liq;
+	//	this->rhobar_vap = rhobar_vap;
+	//	return T;
+	//}
+	//else
+	//{
+	//	// Pass off to Newton-Raphson to polish the solution
+	//	double Treturn = Mix->NRVLE.call(beta, T, p, rhobar_liq, rhobar_vap, z, K, N+1, log(p));
+	//	this->rhobar_liq = Mix->NRVLE.rhobar_liq;
+	//	this->rhobar_vap = Mix->NRVLE.rhobar_vap;
+	//	return Treturn;
+	//}
+    HEOS->specify_phase(iphase_liquid);
+    HEOS->update(DmolarT_INPUTS, beta*SatV->rhomolar()+(1-beta)*SatL->rhomolar(), T);
+    HEOS->specify_phase(-1);
+}
 
 } /* namespace CoolProp */
