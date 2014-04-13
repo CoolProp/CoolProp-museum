@@ -187,6 +187,18 @@
 
 	inline bool double_equal(double a, double b){return fabs(a - b) <= 1 * DBL_EPSILON * std::max(fabs(a), fabs(b));};
 
+    template<class T> T max_abs_value(std::vector<T> x)
+    {
+        T max = 0;
+        std::size_t N = x.size();
+        for (std::size_t i = 0; i < N; ++i)
+        {
+            T axi = fabs(x[i]);
+            if (axi > max){ max = axi; }
+        }
+        return max;
+    }
+
 	inline int Kronecker_delta(int i, int j){if (i == j) {return 1;} else {return 0;}};
 
     class Dictionary

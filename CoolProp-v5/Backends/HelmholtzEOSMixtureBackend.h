@@ -225,6 +225,8 @@ public:
 	*/
 	long double mixderiv_dpdT__constV_n();
 
+    long double mixderiv_dpdrho__constT_n();
+
 	/*! The derivative term
 	\f[
 	n\left(\frac{\partial p}{\partial V} \right)_{T,\bar n} = -\rho^2 RT(1+2\delta \alpha_{\delta}^r+\delta^2\alpha^r_{\delta\delta})
@@ -438,10 +440,10 @@ public:
     };
 
     enum sstype_enum {imposed_T, imposed_p};
-    struct successive_substitution_options
+    struct mixture_VLE_IO
     {
         int sstype, Nstep_max;
-        long double rhomolar_liq, rhomolar_vap, p;
+        long double rhomolar_liq, rhomolar_vap, p, T, beta;
     };
 
     /*! Returns the natural logarithm of K for component i using the method from Wilson as in
@@ -461,7 +463,7 @@ public:
     static void saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options);
     static void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
     static void saturation_p_pure(HelmholtzEOSMixtureBackend *HEOS, long double p, saturation_p_pure_options &options);
-    static long double successive_substitution(HelmholtzEOSMixtureBackend *HEOS, const long double beta, long double T, long double p, const std::vector<long double> &z, std::vector<long double> &K, successive_substitution_options &options);
+    static long double successive_substitution(HelmholtzEOSMixtureBackend *HEOS, const long double beta, long double T, long double p, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &options);
     static void x_and_y_from_K(long double beta, const std::vector<long double> &K, const std::vector<long double> &z, std::vector<long double> &x, std::vector<long double> &y);
 
     /*! A wrapper function around the residual to find the initial guess for the bubble point temperature
@@ -543,6 +545,7 @@ public:
     {
         long double T,p;
     };
+
     /*!
     A class to do newton raphson solver for VLE given guess values for vapor-liquid equilibria.  This class will then be included in the Mixture class
 
@@ -551,17 +554,16 @@ public:
     class newton_raphson_VLE_GV
     {
     public:
-	    long double error_rms, rhobar_liq, rhobar_vap, T, p;
+	    long double error_rms, rhobar_liq, rhobar_vap, T, p, max_rel_change;
 	    unsigned int N;
 	    bool logging;
 	    int Nsteps;
-	    int Nsteps_max;
 	    STLMatrix J;
         HelmholtzEOSMixtureBackend *SatL, *SatV;
-	    std::vector<long double> K, x, y, phi_ij_liq, phi_ij_vap, dlnphi_drho_liq, dlnphi_drho_vap, r, dXdS, neg_dFdS;
+	    std::vector<long double> K, x, y, phi_ij_liq, phi_ij_vap, dlnphi_drho_liq, dlnphi_drho_vap, r, negative_r, dXdS, neg_dFdS;
 	    std::vector<SuccessiveSubstitutionStep> step_logger;
 
-	    newton_raphson_VLE_GV(){Nsteps_max = 20;};
+	    newton_raphson_VLE_GV(){};
 
 	    void resize(unsigned int N);
 	
@@ -587,7 +589,7 @@ public:
 	    @param z Bulk mole fractions [-]
 	    @param K Array of K-factors [-]
 	    */
-	    double call(HelmholtzEOSMixtureBackend *HEOS, long double beta, long double T, long double p, long double rhobar_liq, const long double rhobar_vap, const std::vector<long double> &z, std::vector<long double> &K);
+	    double call(HelmholtzEOSMixtureBackend *HEOS, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &IO);
 
 	    /*! Build the arrays for the Newton-Raphson solve
 
@@ -600,6 +602,10 @@ public:
 	    @param K Array of K-factors [-]
 	    */
 	    void build_arrays(HelmholtzEOSMixtureBackend *HEOS, long double beta, long double T, long double rhomolar_liq, const long double rho_vapor, const std::vector<long double> &z, std::vector<long double> & K);
+
+        /** Check the derivatives in the Jacobian using numerical derivatives.
+        */
+        void check_Jacobian(HelmholtzEOSMixtureBackend *HEOS, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &IO);
     };
 };
 
