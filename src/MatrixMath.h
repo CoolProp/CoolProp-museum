@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
+#include "float.h"
 
 namespace CoolProp{
 

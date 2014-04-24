@@ -177,8 +177,48 @@
 	double root_sum_square(std::vector<double> x);
 	double interp1d(std::vector<double> *x, std::vector<double> *y, double x0);
 	double powInt(double x, int y);
-	double QuadInterp(double x0, double x1, double x2, double f0, double f1, double f2, double x);
-	double CubicInterp( double x0, double x1, double x2, double x3, double f0, double f1, double f2, double f3, double x);
+    
+    template<class T> T LinearInterp(std::vector<T> x, std::vector<T> y, std::size_t i0, std::size_t i1, T val)
+    {
+        return LinearInterp(x[i0],x[i1],y[i0],y[i1],val);
+    };
+    template<class T> T LinearInterp(T x0, T x1, T y0, T y1, T x)
+    {
+        return (y1-y0)/(x1-x0)*(x-x0)+y0;
+    };
+	template<class T> T QuadInterp(std::vector<T> x, std::vector<T> y, int i0, int i1, int i2, T val)
+    {
+        return QuadInterp(x[i0],x[i1],x[i2],y[i0],y[i1],y[i2],val);
+    };
+    template<class T> T QuadInterp(T x0, T x1, T x2, T f0, T f1, T f2, T x)
+    {
+        /* Quadratic interpolation.  
+        Based on method from Kreyszig, 
+        Advanced Engineering Mathematics, 9th Edition 
+        */
+        T L0, L1, L2;
+        L0=((x-x1)*(x-x2))/((x0-x1)*(x0-x2));
+        L1=((x-x0)*(x-x2))/((x1-x0)*(x1-x2));
+        L2=((x-x0)*(x-x1))/((x2-x0)*(x2-x1));
+        return L0*f0+L1*f1+L2*f2;
+    };
+    template<class T> T CubicInterp(std::vector<T> x, std::vector<T> y, int i0, int i1, int i2, int i3, T val)
+    {
+        return CubicInterp(x[i0],x[i1],x[i2],x[i3],y[i0],y[i1],y[i2],y[i3],val);
+    };
+	template<class T> T CubicInterp( T x0, T x1, T x2, T x3, T f0, T f1, T f2, T f3, T x)
+    {
+	    /*
+	    Lagrange cubic interpolation as from
+	    http://nd.edu/~jjwteach/441/PdfNotes/lecture6.pdf
+	    */
+	    T L0,L1,L2,L3;
+	    L0=((x-x1)*(x-x2)*(x-x3))/((x0-x1)*(x0-x2)*(x0-x3));
+	    L1=((x-x0)*(x-x2)*(x-x3))/((x1-x0)*(x1-x2)*(x1-x3));
+	    L2=((x-x0)*(x-x1)*(x-x3))/((x2-x0)*(x2-x1)*(x2-x3));
+	    L3=((x-x0)*(x-x1)*(x-x2))/((x3-x0)*(x3-x1)*(x3-x2));
+	    return L0*f0+L1*f1+L2*f2+L3*f3;
+    };
 
 	void solve_cubic(double a, double b, double c, double d, int &N, double &x0, double &x1, double &x2);
 	

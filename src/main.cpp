@@ -63,7 +63,7 @@ int main()
         printf("%g %g\n",elap, summer);
         
     }
-    if (1)
+    if (0)
     {
         AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
         MixRP->update(DmolarT_INPUTS, 800, 300);
@@ -116,7 +116,7 @@ int main()
         delete Mix; delete MixRP;
         double rr = 0;
     }
-    if (1)
+    if (0)
     {
         int N = 2;
         std::vector<long double> z(N, 1.0/N);

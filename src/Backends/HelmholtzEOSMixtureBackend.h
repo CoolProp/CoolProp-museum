@@ -17,8 +17,6 @@
 
 namespace CoolProp {
 
-class SaturationSolvers;
-
 class HelmholtzEOSMixtureBackend : public AbstractState {
 protected:
     std::vector<CoolPropFluid*> components; ///< The components that are in use
@@ -423,9 +421,8 @@ public:
     
 };
 
-class SaturationSolvers
+namespace SaturationSolvers
 {
-public:
     struct saturation_T_pure_Akasaka_options{
         bool use_guesses;
         long double omega, rhoL, rhoV, pL, pV;
@@ -444,6 +441,7 @@ public:
     {
         int sstype, Nstep_max;
         long double rhomolar_liq, rhomolar_vap, p, T, beta;
+        std::vector<long double> x,y,K;
     };
 
     /*! Returns the natural logarithm of K for component i using the method from Wilson as in
@@ -582,14 +580,12 @@ public:
 	    densities, etc.  You may want to take a few steps of successive substitution
 	    before you start with Newton Raphson.
 
-	    @param T Temperature [K]
-	    @param p Pressure [Pa]
-	    @param rhobar_liq Current value of molar density of the liquid [mol/m^3]
-	    @param rhobar_vap Current value of molar density of the vapor [mol/m^3]
+	    @param HEOS Temperature [K]
+	    @param z Pressure [Pa]
 	    @param z Bulk mole fractions [-]
 	    @param K Array of K-factors [-]
 	    */
-	    double call(HelmholtzEOSMixtureBackend *HEOS, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &IO);
+	    void call(HelmholtzEOSMixtureBackend *HEOS, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &IO);
 
 	    /*! Build the arrays for the Newton-Raphson solve
 
@@ -606,6 +602,55 @@ public:
         /** Check the derivatives in the Jacobian using numerical derivatives.
         */
         void check_Jacobian(HelmholtzEOSMixtureBackend *HEOS, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &IO);
+    };
+};
+
+namespace PhaseEnvelope
+{
+    class PhaseEnvelopeLog
+    {
+    public:
+	    std::vector< std::vector<long double> > K, lnK, x, y;
+	    std::vector<long double> T, p, lnT, lnp, rhomolar_liq, rhomolar_vap, lnrhomolar_liq, lnrhomolar_vap;
+        void resize(std::size_t N)
+        {
+            K.resize(N);
+            lnK.resize(N);
+            x.resize(N);
+            y.resize(N);
+        }
+	    void store_variables(const long double T, 
+		                     const long double p, 
+						     const long double rhomolar_liq, 
+						     const long double rhomolar_vap, 
+						     const std::vector<long double> & K,
+						     const std::vector<long double> & x, 
+						     const std::vector<long double> & y)
+	    {
+            std::size_t N = K.size();
+		    this->p.push_back(p);
+		    this->T.push_back(T);
+		    this->lnT.push_back(log(T));
+		    this->lnp.push_back(log(p));
+		    this->rhomolar_liq.push_back(rhomolar_liq);
+		    this->rhomolar_vap.push_back(rhomolar_vap);
+		    this->lnrhomolar_liq.push_back(log(rhomolar_liq));
+		    this->lnrhomolar_vap.push_back(log(rhomolar_vap));
+		    for (unsigned int i = 0; i < N; i++)
+		    {
+			    this->K[i].push_back(K[i]);
+			    this->lnK[i].push_back(log(K[i]));
+                this->x[i].push_back(x[i]);
+			    this->y[i].push_back(y[i]);
+		    }
+	    };
+    };
+    class PhaseEnvelope_GV
+    {
+    public:
+	    PhaseEnvelopeLog bubble, dew;
+
+        void build(HelmholtzEOSMixtureBackend *HEOS, const std::vector<long double> &z, std::vector<long double> &K, SaturationSolvers::mixture_VLE_IO &IO);
     };
 };
 

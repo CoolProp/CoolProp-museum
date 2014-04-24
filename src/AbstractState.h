@@ -183,12 +183,13 @@ public:
 
     The backend that is selected is based on the string passed in:
     
-    1. If it starts with "REFPROP-", the REFPROP backend will be used.  The remaining part of the string should then 
+    1. If it starts with "REFPROP-", or no backend specification is provided, the function will assume that the backend is the CORE backend (for backwards-compatibility reasons)
+    2. If it starts with "REFPROP-", the REFPROP backend will be used.  The remaining part of the string should then 
        either be
        1. A pure or pseudo-pure fluid name (eg. "PROPANE" or "R410A"), yielding a REFPROPBackend instance.
        2. A string that encodes the components of the mixture with a vertical bar between them (e.g. "R32|R125"), yielding a REFPROPMixtureBackend instance.
-    2. If it starts with "TTSE", the TTSE backend will be used, yielding a TTSEBackend instance
-    3. If it starts with "BICUBIC", the BICUBIC backend will be used, yielding a BICUBICBackend instance
+    3. If it starts with "TTSE", the TTSE backend will be used, yielding a TTSEBackend instance
+    4. If it starts with "BICUBIC", the BICUBIC backend will be used, yielding a BICUBICBackend instance
 
     */
     static AbstractState * factory(std::string fluid_string);
@@ -198,7 +199,12 @@ public:
     virtual void set_mole_fractions(const std::vector<long double> &mole_fractions) = 0;
     virtual void set_mass_fractions(const std::vector<long double> &mass_fractions) = 0;
 
-    const SimpleState & get_reducing(){return _reducing;};
+    void set_mole_fractions(const std::vector<double> &mole_fractions){set_mole_fractions(std::vector<long double>(mole_fractions.begin(), mole_fractions.end()));};
+    void set_mass_fractions(const std::vector<double> &mass_fractions){set_mass_fractions(std::vector<long double>(mass_fractions.begin(), mass_fractions.end()));};
+
+    double sum(const std::vector<double> &m){ return std::accumulate(m.begin(), m.end(), 0.0);};
+
+    const CoolProp::SimpleState & get_reducing(){return _reducing;};
 
     // ----------------------------------------
     // Bulk properties - temperature and density are directly calculated every time

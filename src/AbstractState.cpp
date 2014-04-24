@@ -184,12 +184,12 @@ double AbstractState::fugacity_coefficient(int i){
     return calc_fugacity_coefficient(i);
 }
 
-//virtual double AbstractState::isothermal_compressibility(void){
-//	return 1.0/(_rho*dpdrho_constT());
-//}
-//virtual double AbstractState::isobaric_expansion_coefficient(void){
-//	return -1.0/(_rho*_rho)*drhodT_constp();
-//}
+double AbstractState::isothermal_compressibility(void){
+	return _HUGE;//1.0/(_rhomolar*calc_dpdrho_constT());
+}
+double AbstractState::isobaric_expansion_coefficient(void){
+	return _HUGE;//-1.0/(_rhomolar*_rhomolar)*drhodT_constp();
+}
 
 //	// ----------------------------------------
 //	// Smoothing functions for density

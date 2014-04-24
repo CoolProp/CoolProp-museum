@@ -119,7 +119,7 @@ void ExcessTerm::construct(const std::vector<CoolPropFluid*> &components)
             CAS[1] = components[j]->CAS;
             std::sort(CAS.begin(), CAS.end());
 
-            std::vector<Dictionary> & vd = mixtureexcesslibrary.excess_map.at(CAS);
+            std::vector<Dictionary> & vd = mixtureexcesslibrary.excess_map[CAS];
             if (vd.size() != 1) { throw NotImplementedError(); }
             // Get a reference to the dictionary itself to save a few dereferences
             Dictionary &dic = vd[0];

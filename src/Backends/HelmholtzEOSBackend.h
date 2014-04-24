@@ -23,7 +23,6 @@ public:
     HelmholtzEOSBackend();
     HelmholtzEOSBackend(CoolPropFluid *pFluid){set_components(std::vector<CoolPropFluid*>(1,pFluid));};
     virtual ~HelmholtzEOSBackend(){};
-    
 };
 
 } /* namespace CoolProp */
