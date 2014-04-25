@@ -69,10 +69,10 @@ int main()
     }
     if (0)
     {
-        AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
+        AbstractState *MixRP = AbstractState::factory("REFPROP/propane");
         MixRP->update(DmolarT_INPUTS, 800, 300);
 
-        AbstractState *Mix = AbstractState::factory("CORE-R410A");
+        AbstractState *Mix = AbstractState::factory("CORE/R410A");
         Mix->update(QT_INPUTS, 0, 330);
         delete Mix; delete MixRP;
     }
@@ -81,7 +81,7 @@ int main()
 
         double T = 300;
         
-        AbstractState *MixRP = AbstractState::factory("REFPROP-propane");
+        AbstractState *MixRP = AbstractState::factory("REFPROP/propane");
         {
             long N = 100000;
             double t1 = clock(), summer = 0;
@@ -99,7 +99,7 @@ int main()
         double cp2 = MixRP->cpmolar();
         double T2 = MixRP->T();
 
-        AbstractState *Mix = AbstractState::factory("CORE-n-Propane");
+        AbstractState *Mix = AbstractState::factory("CORE/n-Propane");
         {
             long N = 100000;
             double t1 = clock(), summer = 0;
@@ -128,7 +128,7 @@ int main()
 
         int inputs = PQ_INPUTS; double val1 = p, val2 = Q;
 
-        AbstractState *MixRP = AbstractState::factory("REFPROP-Ethane|propane");
+        AbstractState *MixRP = AbstractState::factory("REFPROP/Ethane|propane");
         MixRP->set_mole_fractions(z);
         MixRP->update(inputs, val1, val2);
         double p2 = MixRP->p();
@@ -141,7 +141,7 @@ int main()
         double phi20 = MixRP->fugacity_coefficient(0);
         double phi21 = MixRP->fugacity_coefficient(1);
 
-        AbstractState *Mix = AbstractState::factory("CORE-Ethane|n-Propane");
+        AbstractState *Mix = AbstractState::factory("CORE/Ethane|n-Propane");
         Mix->set_mole_fractions(z);
         Mix->update(inputs, val1, val2);
         double p1 = Mix->p();
@@ -162,7 +162,7 @@ int main()
         std::vector<long double> z(N, 1.0/N);
         double Q = 0, T = 250, p = 300000;
 
-        AbstractState *Mix = AbstractState::factory("CORE-Ethane|n-Propane");
+        AbstractState *Mix = AbstractState::factory("CORE/Ethane|n-Propane");
         Mix->set_mole_fractions(z);
         
         for (double T = 210; ;T += 0.1)
@@ -177,7 +177,7 @@ int main()
         time_t t1,t2;
         
         std::size_t N = 1000000;
-        AbstractState *State = AbstractState::factory("CORE-Water");
+        AbstractState *State = AbstractState::factory("CORE/Water");
         double p = State->p();
         double summer = 0;
         t1 = clock();

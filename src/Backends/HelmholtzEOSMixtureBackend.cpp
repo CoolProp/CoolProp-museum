@@ -174,7 +174,7 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
         }
         default:
         {
-            throw ValueError(format("This pair of inputs [%s] is not yet supported",get_input_pair_short_desc(input_pair).c_str()));
+            throw ValueError(format("This pair of inputs [%s] is not yet supported", get_input_pair_short_desc(input_pair).c_str()));
         }
     }
     // Check the values that must always be set

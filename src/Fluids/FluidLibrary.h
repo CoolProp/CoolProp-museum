@@ -306,6 +306,12 @@ public:
 
         // Add name->index mapping
         string_to_index_map[fluid.name] = index;
+        
+        // Add the aliases
+        for (std::size_t i = 0; i < fluid.aliases.size(); ++i)
+        {
+            string_to_index_map[fluid.aliases[i]] = index;
+        }
 
     };
     /// Get a CoolPropFluid instance stored in this library
