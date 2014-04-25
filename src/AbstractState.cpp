@@ -23,7 +23,7 @@ AbstractState::~AbstractState() {
 
 AbstractState * AbstractState::factory(std::string fluid_string)
 {
-    if (fluid_string.find("CORE-") == 0)
+    if (fluid_string.find("CORE/") == 0)
     {
         // Remove the "CORE-"
         std::string fluids = fluid_string.substr(5,fluid_string.size()-5);
@@ -40,8 +40,8 @@ AbstractState * AbstractState::factory(std::string fluid_string)
             return new HelmholtzEOSMixtureBackend(components);
         }
     }
-    // fluid_string starts with "REFPROP-" - more specificically, the first place that "REFPROP-" is found is at index 0
-    else if (fluid_string.find("REFPROP-") == 0)
+    // fluid_string starts with "REFPROP/" - more specificically, the first place that "REFPROP/" is found is at index 0
+    else if (fluid_string.find("REFPROP/") == 0)
     {
         // Remove the "REFPROP-"
         std::string fluids = fluid_string.substr(8,fluid_string.size()-8);
@@ -58,11 +58,11 @@ AbstractState * AbstractState::factory(std::string fluid_string)
             return new REFPROPMixtureBackend(components);
         }
     }
-    else if (fluid_string.find("BRINE-") == 0)
+    else if (fluid_string.find("BRINE/") == 0)
     {
         throw ValueError("BRINE backend not yet implemented");
     }
-    else if (fluid_string.find("TREND-") == 0)
+    else if (fluid_string.find("TREND/") == 0)
     {
         throw ValueError("TREND backend not yet implemented");
     }
