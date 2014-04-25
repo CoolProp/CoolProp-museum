@@ -84,13 +84,11 @@
     {
         set_backend("REFPROP-CO2");
         int inputs[] = {
-            CoolProp::DmolarT_INPUTS, CoolProp::DmolarP_INPUTS, CoolProp::HmolarP_INPUTS, 
+            CoolProp::DmolarT_INPUTS, CoolProp::DmolarP_INPUTS, CoolProp::HmolarP_INPUTS,
             CoolProp::PSmolar_INPUTS, CoolProp::HmolarSmolar_INPUTS, CoolProp::SmolarT_INPUTS,
             CoolProp::HmolarT_INPUTS, CoolProp::TUmolar_INPUTS, CoolProp::PUmolar_INPUTS,
-            //CoolProp::SmolarUmolar_INPUTS,
-            //CoolProp::DmolarHmolar_INPUTS,
-            //CoolProp::DmolarSmolar_INPUTS,
-            //CoolProp::DmolarUmolar_INPUTS,
+            CoolProp::DmolarHmolar_INPUTS, CoolProp::DmolarSmolar_INPUTS, CoolProp::DmolarUmolar_INPUTS,
+            CoolProp::SmolarUmolar_INPUTS
         };
 
         int N = sizeof(inputs)/sizeof(int);

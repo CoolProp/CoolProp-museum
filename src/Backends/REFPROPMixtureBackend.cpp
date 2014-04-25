@@ -679,7 +679,8 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case DmassT_INPUTS:
         {
-            // Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
+            // Call again, but this time with molar units
+            // D: [kg/m^3] / [kg/mol] -> [mol/m^3]
             update(DmolarT_INPUTS, value1 / (double)_molar_mass, value2);
             return;
         }
@@ -708,8 +709,99 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case DmassP_INPUTS:
         {
-            // Call again, but this time with molar units [kg/m^3] * [mol/kg] -> [mol/m^3]
+            // Call again, but this time with molar units
+            // D: [kg/m^3] / [kg/mol] -> [mol/m^3]
             update(DmolarP_INPUTS, value1 / (double)_molar_mass, value2);
+            return;
+        }
+        case DmolarHmolar_INPUTS:
+        {
+            // Unit conversion for REFPROP
+            _rhomolar = value1; rho_mol_L = 0.001*value1; hmol = value2; // Want rho in [mol/L] in REFPROP
+
+            // Use flash routine to find properties
+            // from REFPROP: subroutine DHFLSH (D,h,z,t,p,Dl,Dv,x,y,q,e,s,cv,cp,w,ierr,herr)
+            DHFLSHdll(&rho_mol_L,&hmol,&(mole_fractions[0]),&_T,&p_kPa,
+                      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                      &q,&emol,&smol,&cvmol,&cpmol,&w,
+                      &ierr,herr,errormessagelength); 
+            if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+            
+            // Set all cache values that can be set with unit conversion to SI
+            _p = p_kPa*1000;
+            if (0)
+            {
+                _rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+                _rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            }
+            break;
+        }
+        case DmassHmass_INPUTS:
+        {
+            // Call again, but this time with molar units
+            // D: [kg/m^3] / [kg/mol] -> [mol/m^3]
+            // H: [J/kg] * [kg/mol] -> [J/mol]
+            update(DmolarHmolar_INPUTS, value1 / (double)_molar_mass, value2 * (double)_molar_mass);
+            return;
+        }
+        case DmolarSmolar_INPUTS:
+        {
+            // Unit conversion for REFPROP
+            _rhomolar = value1; rho_mol_L = 0.001*value1; smol = value2; // Want rho in [mol/L] in REFPROP
+
+            // Use flash routine to find properties
+            // from REFPROP: subroutine DSFLSH (D,s,z,t,p,Dl,Dv,x,y,q,e,h,cv,cp,w,ierr,herr)
+            DSFLSHdll(&rho_mol_L,&smol,&(mole_fractions[0]),&_T,&p_kPa,
+                      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                      &q,&emol,&hmol,&cvmol,&cpmol,&w,
+                      &ierr,herr,errormessagelength); 
+            if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+            
+            // Set all cache values that can be set with unit conversion to SI
+            _p = p_kPa*1000;
+            if (0)
+            {
+                _rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+                _rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            }
+            break;
+        }
+        case DmassSmass_INPUTS:
+        {
+            // Call again, but this time with molar units
+            // D: [kg/m^3] / [kg/mol] -> [mol/m^3]
+            // S: [J/kg/K] * [kg/mol] -> [J/mol/K]
+            update(DmolarSmolar_INPUTS, value1 / (double)_molar_mass, value2 * (double)_molar_mass );
+            return;
+        }
+        case DmolarUmolar_INPUTS:
+        {
+            // Unit conversion for REFPROP
+            _rhomolar = value1; rho_mol_L = 0.001*value1; umol = value2; // Want rho in [mol/L] in REFPROP
+
+            // Use flash routine to find properties
+            // from REFPROP: subroutine DEFLSH (D,e,z,t,p,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
+            DEFLSHdll(&rho_mol_L,&umol,&(mole_fractions[0]),&_T,&p_kPa,
+                      &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                      &q,&emol,&hmol,&cvmol,&cpmol,&w,
+                      &ierr,herr,errormessagelength); 
+            if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+            
+            // Set all cache values that can be set with unit conversion to SI
+            _p = p_kPa*1000;
+            if (0)
+            {
+                _rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+                _rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            }
+            break;
+        }
+        case DmassUmass_INPUTS:
+        {
+            // Call again, but this time with molar units
+            // D: [kg/m^3] / [kg/mol] -> [mol/m^3]
+            // U: [J/mol] * [kg/mol] -> [J/mol]
+            update(DmolarUmolar_INPUTS, value1 / (double)_molar_mass, value2 * (double)_molar_mass);
             return;
         }
         case HmolarP_INPUTS:
@@ -736,7 +828,8 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case HmassP_INPUTS:
         {
-            // Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
+            // Call again, but this time with molar units
+            // H: [J/kg] * [kg/mol] -> [J/mol]
             update(HmolarP_INPUTS, value1 * (double)_molar_mass, value2); 
             return;
         }
@@ -765,7 +858,8 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case PSmass_INPUTS:
         {
-            // Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K]
+            // Call again, but this time with molar units
+            // S: [J/kg/K] * [kg/mol] -> [J/mol/K]
             update(PSmolar_INPUTS, value1, value2*(double)_molar_mass); 
             return;
         }
@@ -795,7 +889,8 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case PUmass_INPUTS:
         {
-            // Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
+            // Call again, but this time with molar units 
+            // U: [J/kg] * [kg/mol] -> [J/mol]
             update(PUmolar_INPUTS, value1, value2*(double)_molar_mass); 
             return;
         }
@@ -823,8 +918,41 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case HmassSmass_INPUTS:
         {
-            // Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K], same for enthalpy
+            // Call again, but this time with molar units 
+            // H: [J/kg] * [kg/mol] -> [J/mol/K]
+            // S: [J/kg/K] * [kg/mol] -> [J/mol/K]
             update(HmolarSmolar_INPUTS, value1 * (double)_molar_mass, value2 * (double)_molar_mass); 
+            return;
+        }
+        case SmolarUmolar_INPUTS:
+        {
+            // Unit conversion for REFPROP
+            umol = value1; smol = value2;
+
+            // from REFPROP: subroutine ESFLSH (e,s,z,t,p,D,Dl,Dv,x,y,q,h,cv,cp,w,ierr,herr)
+            ESFLSHdll(&umol,&smol,&(mole_fractions[0]),&_T,&p_kPa,&rho_mol_L,
+                &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                &q,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+                &ierr,herr,errormessagelength); // Error terms
+
+            if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+            // Set all cache values that can be set with unit conversion to SI
+            _p = p_kPa*1000; // 1000 for conversion from kPa to Pa
+            _rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            if (0)
+            {
+                _rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+                _rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            }
+            break;
+        }
+        case SmassUmass_INPUTS:
+        {
+            // Call again, but this time with molar units 
+            // S: [J/kg/K] * [kg/mol] -> [J/mol/K], 
+            // U: [J/kg] * [kg/mol] -> [J/mol]
+            update(SmolarUmolar_INPUTS, value1 * (double)_molar_mass, value2 * (double)_molar_mass); 
             return;
         }
         case SmolarT_INPUTS:
@@ -860,7 +988,8 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case SmassT_INPUTS:
         {
-            // Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K]
+            // Call again, but this time with molar units 
+            // S: [J/kg/K] * [kg/mol] -> [J/mol/K]
             update(SmolarT_INPUTS, value1 * (double)_molar_mass, value2 ); 
             return;
         }
@@ -897,7 +1026,8 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case HmassT_INPUTS:
         {
-            // Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
+            // Call again, but this time with molar units 
+            // H: [J/kg] * [kg/mol] -> [J/mol]
             update(HmolarT_INPUTS, value1 * (double)_molar_mass, value2 ); 
             return;
         }
@@ -934,16 +1064,11 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         case TUmass_INPUTS:
         {
-            // Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
+            // Call again, but this time with molar units 
+            // U: [J/kg] * [kg/mol] -> [J/mol]
             update(TUmolar_INPUTS, value1, value2 * (double)_molar_mass); 
             return;
         }
-
-      //subroutine ESFLSH (e,s,z,t,p,D,Dl,Dv,x,y,q,h,cv,cp,w,ierr,herr)
-      //subroutine DHFLSH (D,h,z,t,p,Dl,Dv,x,y,q,e,s,cv,cp,w,ierr,herr)
-      //subroutine DSFLSH (D,s,z,t,p,Dl,Dv,x,y,q,e,h,cv,cp,w,ierr,herr)
-      //subroutine DEFLSH (D,e,z,t,p,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
-
         case PQ_INPUTS:
         {
             /* From REFPROP:
