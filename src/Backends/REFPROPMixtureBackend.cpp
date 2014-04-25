@@ -621,7 +621,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 {
     double T=_HUGE, rho_mol_L=_HUGE, rhoLmol_L=_HUGE, rhoVmol_L=_HUGE,
         hmol=_HUGE,emol=_HUGE,smol=_HUGE,cvmol=_HUGE,cpmol=_HUGE,
-        w=_HUGE,q=_HUGE,mm=_HUGE,p_kPa = _HUGE, umol = _HUGE;
+        w=_HUGE,q=_HUGE, mm=_HUGE, p_kPa = _HUGE;
     long ierr;
     char herr[255];
 
@@ -777,11 +777,11 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         case DmolarUmolar_INPUTS:
         {
             // Unit conversion for REFPROP
-            _rhomolar = value1; rho_mol_L = 0.001*value1; umol = value2; // Want rho in [mol/L] in REFPROP
+            _rhomolar = value1; rho_mol_L = 0.001*value1; emol = value2; // Want rho in [mol/L] in REFPROP
 
             // Use flash routine to find properties
             // from REFPROP: subroutine DEFLSH (D,e,z,t,p,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
-            DEFLSHdll(&rho_mol_L,&umol,&(mole_fractions[0]),&_T,&p_kPa,
+            DEFLSHdll(&rho_mol_L,&emol,&(mole_fractions[0]),&_T,&p_kPa,
                       &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
                       &q,&emol,&hmol,&cvmol,&cpmol,&w,
                       &ierr,herr,errormessagelength); 
@@ -866,11 +866,11 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         case PUmolar_INPUTS:
         {
             // Unit conversion for REFPROP
-            p_kPa = 0.001*value1; umol = value2; // Want p in [kPa] in REFPROP
+            p_kPa = 0.001*value1; emol = value2; // Want p in [kPa] in REFPROP
 
             // Use flash routine to find properties
             // from REFPROP: subroutine PEFLSH (p,e,z,t,D,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
-            PEFLSHdll(&p_kPa,&umol,&(mole_fractions[0]),&_T,&rho_mol_L,
+            PEFLSHdll(&p_kPa,&emol,&(mole_fractions[0]),&_T,&rho_mol_L,
                 &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
                 &q,&hmol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
                 &ierr,herr,errormessagelength); // Error terms
@@ -927,10 +927,10 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         case SmolarUmolar_INPUTS:
         {
             // Unit conversion for REFPROP
-            umol = value1; smol = value2;
+            emol = value1; smol = value2;
 
             // from REFPROP: subroutine ESFLSH (e,s,z,t,p,D,Dl,Dv,x,y,q,h,cv,cp,w,ierr,herr)
-            ESFLSHdll(&umol,&smol,&(mole_fractions[0]),&_T,&p_kPa,&rho_mol_L,
+            ESFLSHdll(&emol,&smol,&(mole_fractions[0]),&_T,&p_kPa,&rho_mol_L,
                 &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
                 &q,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
                 &ierr,herr,errormessagelength); // Error terms
@@ -1034,7 +1034,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         case TUmolar_INPUTS:
         {
             // Unit conversion for REFPROP
-            _T = value1; umol = value2;
+            _T = value1; emol = value2;
 
             /*
             c  additional input--only for THFLSH, TSFLSH, and TEFLSH
@@ -1045,7 +1045,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
             long kr = 1;
 
             // from REFPROP: subroutine TEFLSH (t,e,z,kr,p,D,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
-            TEFLSHdll(&_T,&umol,&(mole_fractions[0]),&kr,&p_kPa,&rho_mol_L,
+            TEFLSHdll(&_T,&emol,&(mole_fractions[0]),&kr,&p_kPa,&rho_mol_L,
                 &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
                 &q,&hmol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
                 &ierr,herr,errormessagelength); // Error terms
