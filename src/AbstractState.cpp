@@ -79,6 +79,7 @@ bool AbstractState::clear() {
     this->_phase = iphase_unknown;
     this->_forceSinglePhase = false;
     this->_forceTwoPhase = false;
+    this->_R = _HUGE;
 
     this->_critical.T = -_HUGE;
     this->_critical.hmolar = -_HUGE;
@@ -94,6 +95,10 @@ bool AbstractState::clear() {
 
     /// Bulk values
     this->_rhomolar = -_HUGE;
+    this->_umolar = -_HUGE;
+    this->_cpmolar = -_HUGE;
+    this->_cvmolar = -_HUGE;
+    this->_speed_sound = -_HUGE;
     this->_T = -_HUGE;
     this->_p = -_HUGE;
     this->_Q = -_HUGE;

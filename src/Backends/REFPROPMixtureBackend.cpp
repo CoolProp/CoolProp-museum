@@ -579,10 +579,6 @@ long double REFPROPMixtureBackend::calc_viscosity(void)
     _conductivity = tcx;
     return static_cast<double>(_viscosity);
 }
-long double REFPROPMixtureBackend::calc_umolar(void)
-{
-    return static_cast<long double>(_hmolar.pt()-_p/_rhomolar);
-}
 long double REFPROPMixtureBackend::calc_conductivity(void)
 {
     // Calling viscosity also caches conductivity, use that to save calls
@@ -624,6 +620,8 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         w=_HUGE,q=_HUGE, mm=_HUGE, p_kPa = _HUGE;
     long ierr;
     char herr[255];
+
+    clear();
 
     // Get the molar mass of the fluid for the given composition
     WMOLdll(&(mole_fractions[0]), &mm); // returns mole mass in kg/kmol
@@ -687,7 +685,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         case DmolarP_INPUTS:
         {
             // Unit conversion for REFPROP
-            rho_mol_L = 0.001*value1; p_kPa = 0.001*value1; // Want p in [kPa] in REFPROP
+            rho_mol_L = 0.001*value1; p_kPa = 0.001*value2; // Want p in [kPa] in REFPROP
 
             // Use flash routine to find properties
             // from REFPROP: subroutine PDFLSH (p,D,z,t,Dl,Dv,x,y,q,e,h,s,cv,cp,w,ierr,herr)
@@ -783,7 +781,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
             // from REFPROP: subroutine DEFLSH (D,e,z,t,p,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
             DEFLSHdll(&rho_mol_L,&emol,&(mole_fractions[0]),&_T,&p_kPa,
                       &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
-                      &q,&emol,&hmol,&cvmol,&cpmol,&w,
+                      &q,&hmol,&hmol,&cvmol,&cpmol,&w,
                       &ierr,herr,errormessagelength); 
             if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
             
@@ -927,7 +925,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         case SmolarUmolar_INPUTS:
         {
             // Unit conversion for REFPROP
-            emol = value1; smol = value2;
+            smol = value1; emol = value2; 
 
             // from REFPROP: subroutine ESFLSH (e,s,z,t,p,D,Dl,Dv,x,y,q,h,cv,cp,w,ierr,herr)
             ESFLSHdll(&emol,&smol,&(mole_fractions[0]),&_T,&p_kPa,&rho_mol_L,
@@ -1140,6 +1138,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
     // Set these common variables that are used in every flash calculation
     _hmolar = hmol;
     _smolar = smol;
+    _umolar = emol;
     _cvmolar = cvmol;
     _cpmolar = cpmol;
     _speed_sound = w;
