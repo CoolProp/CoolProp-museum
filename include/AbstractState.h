@@ -8,12 +8,11 @@
 #ifndef ABSTRACTSTATE_H_
 #define ABSTRACTSTATE_H_
 
-#include "Cache/CachedElement.h"
+#include "CachedElement.h"
 #include "Exceptions.h"
 #include "DataStructures.h"
-#include "l10n/english.h"
 
-#include "Fluids/CoolPropFluid.h"
+#include <numeric>
 
 namespace CoolProp {
 
@@ -43,15 +42,15 @@ protected:
     long _phase;
     bool _forceSinglePhase, _forceTwoPhase;
 
-    bool isCompressibleFluid(void){
-        return !(_fluid_type == FLUID_TYPE_INCOMPRESSIBLE_LIQUID
-              || _fluid_type == FLUID_TYPE_INCOMPRESSIBLE_SOLUTION);
-    }
+    //~ bool isCompressibleFluid(void){
+        //~ return !(_fluid_type == FLUID_TYPE_INCOMPRESSIBLE_LIQUID
+              //~ || _fluid_type == FLUID_TYPE_INCOMPRESSIBLE_SOLUTION);
+    //~ }
 
-    bool checkCompressible(void){
-        if (!this->isCompressibleFluid()){throw ValueError(ERR_NOT_COMPRESSIBLE);}
-        return true;
-    }
+    //~ bool checkCompressible(void){
+        //~ if (!this->isCompressibleFluid()){throw ValueError(ERR_NOT_COMPRESSIBLE);}
+        //~ return true;
+    //~ }
 
     bool isHomogeneousPhase(void){
         return (this->_phase==iphase_liquid || this->_phase==iphase_gas || this->_phase == iphase_supercritical);
@@ -61,16 +60,16 @@ protected:
         return (this->_phase==iphase_twophase);
     }
 
-    bool checkTwoPhase(void){
-        if (!this->isCompressibleFluid()){throw ValueError(ERR_NOT_A_TWO_PHASE_FLUID);}
-        if (!this->isTwoPhase()&&!_forceTwoPhase){throw ValueError(ERR_NOT_A_TWO_PHASE_STATE);}
-        return true;
-    }
+    //~ bool checkTwoPhase(void){
+        //~ if (!this->isCompressibleFluid()){throw ValueError(ERR_NOT_A_TWO_PHASE_FLUID);}
+        //~ if (!this->isTwoPhase()&&!_forceTwoPhase){throw ValueError(ERR_NOT_A_TWO_PHASE_STATE);}
+        //~ return true;
+    //~ }
 
-    bool checkSinglePhase(void){
-        if (!this->isHomogeneousPhase()||!_forceSinglePhase){throw ValueError(ERR_NOT_A_TWO_PHASE_FUNCTION);}
-        return true;
-    }
+    //~ bool checkSinglePhase(void){
+        //~ if (!this->isHomogeneousPhase()||!_forceSinglePhase){throw ValueError(ERR_NOT_A_TWO_PHASE_FUNCTION);}
+        //~ return true;
+    //~ }
 
     /// Two important points
     SimpleState _critical, _reducing;
@@ -87,7 +86,7 @@ protected:
     /// Transport properties
     CachedElement _viscosity, _conductivity, _surface_tension;
 
-    CachedElement _hmolar, _smolar, _logp, _logrhomolar, _cpmolar, _cvmolar, _speed_sound;
+    CachedElement _hmolar, _smolar, _umolar, _logp, _logrhomolar, _cpmolar, _cvmolar, _speed_sound;
 
     CachedElement _fugacity_coefficient;
 
@@ -115,6 +114,8 @@ protected:
     virtual long double calc_hmolar(void){throw NotImplementedError("calc_hmolar is not implemented for this backend");};
     /// Using this backend, calculate the molar entropy in J/mol/K
     virtual long double calc_smolar(void){throw NotImplementedError("calc_smolar is not implemented for this backend");};
+    /// Using this backend, calculate the molar internal energy in J/mol
+    virtual long double calc_umolar(void){throw NotImplementedError("calc_umolar is not implemented for this backend");};
     /// Using this backend, calculate the molar constant-pressure specific heat in J/mol/K
     virtual long double calc_cpmolar(void){throw NotImplementedError("calc_cpmolar is not implemented for this backend");};
     /// Using this backend, calculate the molar constant-volume specific heat in J/mol/K
@@ -220,6 +221,7 @@ public:
 
     double hmolar(void);
     double smolar(void);
+    double umolar(void);
     double cpmolar(void);
     double cvmolar(void);
     double speed_sound(void);

@@ -8,8 +8,8 @@
 #ifndef CACHEDELEMENT_H_
 #define CACHEDELEMENT_H_
 
-#include "../CoolPropTools.h"
-#include "../DataStructures.h"
+#include "CoolPropTools.h"
+#include "DataStructures.h"
 
 namespace CoolProp {
 

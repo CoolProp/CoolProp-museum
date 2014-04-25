@@ -8,7 +8,8 @@
 #ifndef REFPROPMIXTUREBACKEND_H_
 #define REFPROPMIXTUREBACKEND_H_
 
-#include "../AbstractState.h"
+#include "AbstractState.h"
+
 #include <vector>
 
 namespace CoolProp {
@@ -73,6 +74,9 @@ public:
 	long double calc_conductivity(void);
 	/// Get the surface tension [N/m] (based on the temperature in the state class).  Invalid for temperatures above critical point or below triple point temperature
 	long double calc_surface_tension(void);
+
+    //Re-implemented from base class
+	long double calc_umolar(void);
 
     long double calc_fugacity_coefficient(int i);
 };

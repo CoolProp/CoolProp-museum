@@ -19,8 +19,8 @@
 
 #include "HelmholtzEOSMixtureBackend.h"
 #include "../Fluids/FluidLibrary.h"
-#include "../Solvers.h"
-#include "../MatrixMath.h"
+#include "Solvers.h"
+#include "MatrixMath.h"
 
 namespace CoolProp {
 
@@ -173,7 +173,9 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
             break;
         }
         default:
-            throw ValueError(format("This input pair index [%d] is invalid", input_pair));
+        {
+            throw ValueError(format("This pair of inputs [%s] is not yet supported",get_input_pair_short_desc(input_pair).c_str()));
+        }
     }
     // Check the values that must always be set
     if (!ValidNumber(_p)){ throw ValueError("p is not a valid number");}
@@ -598,6 +600,23 @@ long double HelmholtzEOSMixtureBackend::calc_smolar(void)
     _smolar = R_u*(_tau*(da0_dTau+dar_dTau) - a0 - ar);
 
     return static_cast<long double>(_smolar);
+}
+long double HelmholtzEOSMixtureBackend::calc_umolar(void)
+{
+    // Calculate the reducing parameters
+    _delta = _rhomolar/_reducing.rhomolar;
+    _tau = _reducing.T/_T;
+
+    // Calculate derivatives if needed, or just use cached values
+    long double da0_dTau = dalpha0_dTau();
+    long double dar_dTau = dalphar_dTau();
+    long double dar_dDelta = dalphar_dDelta();
+    long double R_u = gas_constant();
+
+    // Get molar internal energy
+    _umolar = R_u*_T*_tau*(da0_dTau+dar_dTau);
+
+    return static_cast<long double>(_umolar);
 }
 long double HelmholtzEOSMixtureBackend::calc_cvmolar(void)
 {

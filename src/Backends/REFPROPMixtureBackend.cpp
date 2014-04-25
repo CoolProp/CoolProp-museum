@@ -40,7 +40,7 @@ surface tension                 N/m
 #include <iostream>
 #include <assert.h>
 
-#include "../CoolPropTools.h"
+#include "CoolPropTools.h"
 
 #if defined(__ISWINDOWS__)
     #include <windows.h>
@@ -381,15 +381,15 @@ bool load_REFPROP()
         {
             #if defined(__ISWINDOWS__)
                               printf("Could not load refprop.dll \n\n");
-                throw AttributeError("Could not load refprop.dll, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.");
+                throw CoolProp::AttributeError("Could not load refprop.dll, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.");
             #elif defined(__ISLINUX__)
                 fputs (dlerror(), stderr);
                               printf("Could not load librefprop.so \n\n");
-                throw AttributeError("Could not load librefprop.so, make sure it is in your system search path.");
+                throw CoolProp::AttributeError("Could not load librefprop.so, make sure it is in your system search path.");
             #elif defined(__ISAPPLE__)
                 fputs (dlerror(), stderr);
                               printf("Could not load librefprop.dylib \n\n");
-                throw AttributeError("Could not load librefprop.dylib, make sure it is in your system search path.");
+                throw CoolProp::AttributeError("Could not load librefprop.dylib, make sure it is in your system search path.");
             #else
                 throw NotImplementedError("Something is wrong with the platform definition, you should not end up here.");
             #endif
@@ -403,12 +403,12 @@ bool load_REFPROP()
         #ifdef __MINGW32__
             struct stat buf;
             if ( stat( "c:\\Program Files\\REFPROP\\fluids", &buf) != 0){
-                throw ValueError("REFPROP fluid files must be copied to c:\\Program Files\\REFPROP\\fluids");
+                throw CoolProp::ValueError("REFPROP fluid files must be copied to c:\\Program Files\\REFPROP\\fluids");
             }
         #else
             struct _stat buf;
             if ( _stat( "c:\\Program Files\\REFPROP\\fluids", &buf) != 0){
-                throw ValueError("REFPROP fluid files must be copied to c:\\Program Files\\REFPROP\\fluids");
+                throw CoolProp::ValueError("REFPROP fluid files must be copied to c:\\Program Files\\REFPROP\\fluids");
             }
         #endif
         #endif
@@ -416,7 +416,7 @@ bool load_REFPROP()
         if (setFunctionPointers()!=COOLPROP_OK)
         {
                           printf("There was an error setting the REFPROP function pointers, check types and names in header file.\n");
-            throw AttributeError("There was an error setting the REFPROP function pointers, check types and names in header file.");
+            throw CoolProp::AttributeError("There was an error setting the REFPROP function pointers, check types and names in header file.");
             return false;
         }
         return true;
@@ -579,6 +579,10 @@ long double REFPROPMixtureBackend::calc_viscosity(void)
     _conductivity = tcx;
     return static_cast<double>(_viscosity);
 }
+long double REFPROPMixtureBackend::calc_umolar(void)
+{
+    return static_cast<long double>(_hmolar.pt()-_p/_rhomolar);
+}
 long double REFPROPMixtureBackend::calc_conductivity(void)
 {
     // Calling viscosity also caches conductivity, use that to save calls
@@ -636,7 +640,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
             p_kPa = 0.001*value1; _T = value2; // Want p in [kPa] in REFPROP
 
             // Use flash routine to find properties
-            TPFLSHdll(&T,&p_kPa,&(mole_fractions[0]),&rho_mol_L,
+            TPFLSHdll(&_T,&p_kPa,&(mole_fractions[0]),&rho_mol_L,
                       &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions[0]), // Saturation terms
                       &q,&emol,&hmol,&smol,&cvmol,&cpmol,&w,
                       &ierr,herr,errormessagelength); //
@@ -857,7 +861,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
         }
         default:
         {
-            throw ValueError(format("This pair of inputs [%d] is not yet supported",input_pair));
+            throw ValueError(format("This pair of inputs [%s] is not yet supported", get_input_pair_short_desc(input_pair).c_str()));
         }
         
     };

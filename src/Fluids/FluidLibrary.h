@@ -2,10 +2,14 @@
 #ifndef FLUIDLIBRARY_H
 #define FLUIDLIBRARY_H
 
+#include "CoolPropFluid.h"
+
+#include "rapidjson/rapidjson_include.h"
+
 #include <map>
 #include <algorithm>
-#include "../rapidjson/rapidjson_include.h"
-#include "CoolPropFluid.h"
+
+
 
 namespace CoolProp{
 

@@ -5,6 +5,10 @@
  *      Author: jowr
  */
 
+#include "REFPROPBackend.h"
+
+#include "CoolPropTools.h"
+
 #if defined(_MSC_VER)
 #define _CRTDBG_MAP_ALLOC
 #define _CRT_SECURE_NO_WARNINGS
@@ -15,10 +19,6 @@
 #endif
 
 #include <string>
-//#include "CoolProp.h"
-#include "../CoolPropTools.h"
-
-#include "REFPROPBackend.h"
 
 namespace CoolProp {
 

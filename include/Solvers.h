@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "CPExceptions.h"
+#include "Exceptions.h"
 
 namespace CoolProp
 {

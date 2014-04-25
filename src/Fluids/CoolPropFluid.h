@@ -8,15 +8,15 @@
 #ifndef COOLPROPFLUID_H_
 #define COOLPROPFLUID_H_
 
+#include "DataStructures.h"
+#include "Helmholtz.h"
+
 #include <numeric>
 #include <string>
 #include <vector>
 #include <map>
 #include <assert.h>
 #include <iterator>
-
-#include "../DataStructures.h"
-#include "../Helmholtz.h"
 
 namespace CoolProp {
 

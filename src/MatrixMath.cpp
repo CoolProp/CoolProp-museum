@@ -1,13 +1,14 @@
 
+#include "MatrixMath.h"
+
+#include "CoolPropTools.h"
+#include "Exceptions.h"
+
 #include <string>
 #include <sstream>
 #include <vector>
 #include <numeric>
 #include <math.h>
-#include "CoolPropTools.h"
-#include "CPExceptions.h"
-
-#include "MatrixMath.h"
 
 namespace CoolProp{
 

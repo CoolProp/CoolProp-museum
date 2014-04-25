@@ -8,7 +8,8 @@ typedef unsigned int UINT32;
 #define RAPIDJSON_NO_INT64DEFINE
 #endif
 
-#include <assert.h>
+#include "Exceptions.h"
+#include "CoolPropTools.h"
 
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/document.h"
@@ -16,17 +17,16 @@ typedef unsigned int UINT32;
 #include "rapidjson/prettywriter.h"	// for stringify JSON
 #include "rapidjson/stringbuffer.h" // for string buffer
 
-#include "../Exceptions.h"
-#include "../CoolPropTools.h"
+#include <assert.h>
 
 namespace cpjson
 {
 	/// A convenience function to get a double from a JSON value, including error checking
 	inline double get_double(rapidjson::Value &v, std::string m)
 	{
-		if (!v.HasMember(m.c_str())){ throw ValueError(format("Does not have member [%s]",m.c_str())); }
+		if (!v.HasMember(m.c_str())){ throw CoolProp::ValueError(format("Does not have member [%s]",m.c_str())); }
 		rapidjson::Value &el = v[m.c_str()];
-		if (!el.IsNumber()){  throw ValueError(format("Member [%s] is not a number",m.c_str())); }
+		if (!el.IsNumber()){  throw CoolProp::ValueError(format("Member [%s] is not a number",m.c_str())); }
 		else
 		{
 			return el.GetDouble();
@@ -35,9 +35,9 @@ namespace cpjson
     /// A convenience function to get a bool from a JSON value, including error checking
 	inline bool get_bool(rapidjson::Value &v, std::string m)
 	{
-		if (!v.HasMember(m.c_str())){ throw ValueError(format("Does not have member [%s]",m.c_str())); }
+		if (!v.HasMember(m.c_str())){ throw CoolProp::ValueError(format("Does not have member [%s]",m.c_str())); }
 		rapidjson::Value &el = v[m.c_str()];
-        if (!el.IsBool()){  throw ValueError(format("Member [%s] is not a boolean",m.c_str())); }
+        if (!el.IsBool()){  throw CoolProp::ValueError(format("Member [%s] is not a boolean",m.c_str())); }
 		else
 		{
             return el.GetBool();
@@ -46,9 +46,9 @@ namespace cpjson
      /// A convenience function to get a string from a JSON value, including error checking
 	inline std::string get_string(rapidjson::Value &v, std::string m)
 	{
-		if (!v.HasMember(m.c_str())){ throw ValueError(format("Does not have member [%s]",m.c_str())); }
+		if (!v.HasMember(m.c_str())){ throw CoolProp::ValueError(format("Does not have member [%s]",m.c_str())); }
 		rapidjson::Value &el = v[m.c_str()];
-        if (!el.IsString()){  throw ValueError(format("Member [%s] is not a string",m.c_str())); }
+        if (!el.IsString()){  throw CoolProp::ValueError(format("Member [%s] is not a string",m.c_str())); }
 		else
 		{
             return el.GetString();
@@ -59,7 +59,7 @@ namespace cpjson
 	inline std::vector<double> get_double_array(rapidjson::Value &v)
 	{
 		std::vector<double> out;
-		if (!v.IsArray()) { throw ValueError("input is not an array"); }
+		if (!v.IsArray()) { throw CoolProp::ValueError("input is not an array"); }
 		for (rapidjson::Value::ValueIterator itr = v.Begin(); itr != v.End(); ++itr)
 		{
 			out.push_back(itr->GetDouble());
@@ -71,7 +71,7 @@ namespace cpjson
 	inline std::vector<long double> get_long_double_array(rapidjson::Value &v)
 	{
 		std::vector<long double> out;
-		if (!v.IsArray()) { throw ValueError("input is not an array"); }
+		if (!v.IsArray()) { throw CoolProp::ValueError("input is not an array"); }
 		for (rapidjson::Value::ValueIterator itr = v.Begin(); itr != v.End(); ++itr)
 		{
 			out.push_back(itr->GetDouble());
@@ -83,7 +83,7 @@ namespace cpjson
 	inline std::vector<std::string> get_string_array(rapidjson::Value &v)
 	{
 		std::vector<std::string> out;
-		if (!v.IsArray()) { throw ValueError("input is not an array"); }
+		if (!v.IsArray()) { throw CoolProp::ValueError("input is not an array"); }
 		for (rapidjson::Value::ValueIterator itr = v.Begin(); itr != v.End(); ++itr)
 		{
 			out.push_back(itr->GetString());

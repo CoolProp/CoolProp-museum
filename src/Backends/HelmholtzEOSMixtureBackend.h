@@ -8,12 +8,12 @@
 #ifndef HELMHOLTZEOSMIXTUREBACKEND_H_
 #define HELMHOLTZEOSMIXTUREBACKEND_H_
 
-#include "../AbstractState.h"
+#include "AbstractState.h"
 #include "../Fluids/CoolPropFluid.h"
 #include <vector>
 #include "ReducingFunctions.h"
 #include "ExcessHEFunction.h"
-#include "../Solvers.h"
+#include "Solvers.h"
 
 namespace CoolProp {
 
@@ -86,6 +86,7 @@ public:
     long double calc_cpmolar(void);
     long double calc_hmolar(void);
     long double calc_smolar(void);
+    long double calc_umolar(void);
     long double calc_speed_sound(void);
     long double calc_fugacity_coefficient(int i);
 

@@ -10,7 +10,7 @@
 // are respected and should be accounted for.
 */
 // Get the platform identifiers
-#include "../CoolPropTools.h"
+#include "CoolPropTools.h"
 
 // Do some manual changes to the function names
 // if needed, uses CoolProp platform detection.

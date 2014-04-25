@@ -147,6 +147,10 @@ double AbstractState::smolar(void){
     if (!_smolar) _smolar = calc_smolar();
     return _smolar;
 }
+double AbstractState::umolar(void){
+    if (!_umolar) _umolar = calc_umolar();
+    return _umolar;
+}
 double AbstractState::cpmolar(void){
     if (!_cpmolar) _cpmolar = calc_cpmolar();
     return _cpmolar;

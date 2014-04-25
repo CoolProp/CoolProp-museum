@@ -11,10 +11,14 @@ using namespace CoolProp;
 
 #include "rapidjson/rapidjson_include.h"
 #include "Fluids\FluidLibrary.h"
+#include "Tests.h"
 
 int main()
 {
-
+    if (1)
+    {
+        run_tests();
+    }
     if (0)
     {
         struct element
