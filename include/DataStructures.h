@@ -74,8 +74,8 @@ enum input_pairs{
     HmassT_INPUTS, ///< Enthalpy in J/kg, Temperature in K
     SmolarT_INPUTS, ///< Entropy in J/mol/K, Temperature in K
     SmassT_INPUTS, ///< Entropy in J/kg/K, Temperature in K
-    TUmolar_INPUTS, ///< Internal energy in J/mol, Temperature in K
-    TUmass_INPUTS, ///< Internal energy in J/kg, Temperature in K
+    TUmolar_INPUTS, ///< Temperature in K, Internal energy in J/mol
+    TUmass_INPUTS, ///< Temperature in K, Internal energy in J/kg
                  
     DmassP_INPUTS, ///< Mass density in kg/m^3, Pressure in Pa
     DmolarP_INPUTS, ///< Molar density in mol/m^3, Pressure in Pa

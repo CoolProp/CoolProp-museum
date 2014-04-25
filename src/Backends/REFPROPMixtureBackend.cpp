@@ -621,7 +621,7 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
 {
     double T=_HUGE, rho_mol_L=_HUGE, rhoLmol_L=_HUGE, rhoVmol_L=_HUGE,
         hmol=_HUGE,emol=_HUGE,smol=_HUGE,cvmol=_HUGE,cpmol=_HUGE,
-        w=_HUGE,q=_HUGE,mm=_HUGE,p_kPa = _HUGE;
+        w=_HUGE,q=_HUGE,mm=_HUGE,p_kPa = _HUGE, umol = _HUGE;
     long ierr;
     char herr[255];
 
@@ -769,6 +769,36 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
             update(PSmolar_INPUTS, value1, value2*(double)_molar_mass); 
             return;
         }
+        case PUmolar_INPUTS:
+        {
+            // Unit conversion for REFPROP
+            p_kPa = 0.001*value1; umol = value2; // Want p in [kPa] in REFPROP
+
+            // Use flash routine to find properties
+            // from REFPROP: subroutine PEFLSH (p,e,z,t,D,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
+            PEFLSHdll(&p_kPa,&umol,&(mole_fractions[0]),&_T,&rho_mol_L,
+                &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                &q,&hmol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+                &ierr,herr,errormessagelength); // Error terms
+
+            if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+            // Set all cache values that can be set with unit conversion to SI
+            _p = value1;
+            _rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            if (0)
+            {
+                _rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+                _rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            }
+            break;
+        }
+        case PUmass_INPUTS:
+        {
+            // Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
+            update(PUmolar_INPUTS, value1, value2*(double)_molar_mass); 
+            return;
+        }
         case HmolarSmolar_INPUTS:
         {
             // Unit conversion for REFPROP
@@ -797,6 +827,123 @@ void REFPROPMixtureBackend::update(long input_pair, double value1, double value2
             update(HmolarSmolar_INPUTS, value1 * (double)_molar_mass, value2 * (double)_molar_mass); 
             return;
         }
+        case SmolarT_INPUTS:
+        {
+            // Unit conversion for REFPROP
+            smol = value1; _T = value2;
+
+            /*
+            c  additional input--only for THFLSH, TSFLSH, and TEFLSH
+            c       kr--flag specifying desired root for multi-valued inputs:
+            c           1 = return lower density root
+            c           2 = return higher density root
+            */
+            long kr = 1;
+
+            // from REFPROP: subroutine TSFLSH (t,s,z,kr,p,D,Dl,Dv,x,y,q,e,h,cv,cp,w,ierr,herr)
+            TSFLSHdll(&_T,&smol,&(mole_fractions[0]),&kr,&p_kPa,&rho_mol_L,
+                &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                &q,&emol,&hmol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+                &ierr,herr,errormessagelength); // Error terms
+
+            if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+            // Set all cache values that can be set with unit conversion to SI
+            _p = p_kPa*1000; // 1000 for conversion from kPa to Pa
+            _rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            if (0)
+            {
+                _rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+                _rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            }
+            break;
+        }
+        case SmassT_INPUTS:
+        {
+            // Call again, but this time with molar units [J/mol/K] * [mol/kg] -> [J/kg/K]
+            update(SmolarT_INPUTS, value1 * (double)_molar_mass, value2 ); 
+            return;
+        }
+        case HmolarT_INPUTS:
+        {
+            // Unit conversion for REFPROP
+            hmol = value1; _T = value2;
+
+            /*
+            c  additional input--only for THFLSH, TSFLSH, and TEFLSH
+            c       kr--flag specifying desired root for multi-valued inputs:
+            c           1 = return lower density root
+            c           2 = return higher density root
+            */
+            long kr = 1;
+
+            // from REFPROP: subroutine THFLSH (t,h,z,kr,p,D,Dl,Dv,x,y,q,e,s,cv,cp,w,ierr,herr)
+            THFLSHdll(&_T,&hmol,&(mole_fractions[0]),&kr,&p_kPa,&rho_mol_L,
+                &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                &q,&emol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+                &ierr,herr,errormessagelength); // Error terms
+
+            if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+            // Set all cache values that can be set with unit conversion to SI
+            _p = p_kPa*1000; // 1000 for conversion from kPa to Pa
+            _rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            if (0)
+            {
+                _rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+                _rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            }
+            break;
+        }
+        case HmassT_INPUTS:
+        {
+            // Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
+            update(HmolarT_INPUTS, value1 * (double)_molar_mass, value2 ); 
+            return;
+        }
+        case TUmolar_INPUTS:
+        {
+            // Unit conversion for REFPROP
+            _T = value1; umol = value2;
+
+            /*
+            c  additional input--only for THFLSH, TSFLSH, and TEFLSH
+            c       kr--flag specifying desired root for multi-valued inputs:
+            c           1 = return lower density root
+            c           2 = return higher density root
+            */
+            long kr = 1;
+
+            // from REFPROP: subroutine TEFLSH (t,e,z,kr,p,D,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
+            TEFLSHdll(&_T,&umol,&(mole_fractions[0]),&kr,&p_kPa,&rho_mol_L,
+                &rhoLmol_L,&rhoVmol_L,&(mole_fractions_liq[0]),&(mole_fractions_vap[0]), // Saturation terms
+                &q,&hmol,&smol,&cvmol,&cpmol,&w, // Other thermodynamic terms
+                &ierr,herr,errormessagelength); // Error terms
+
+            if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); }// TODO: else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+
+            // Set all cache values that can be set with unit conversion to SI
+            _p = p_kPa*1000; // 1000 for conversion from kPa to Pa
+            _rhomolar = rho_mol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            if (0)
+            {
+                _rhoLmolar = rhoLmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+                _rhoVmolar = rhoVmol_L*1000; // 1000 for conversion from mol/L to mol/m3
+            }
+            break;
+        }
+        case TUmass_INPUTS:
+        {
+            // Call again, but this time with molar units [J/mol] * [mol/kg] -> [J/kg]
+            update(TUmolar_INPUTS, value1, value2 * (double)_molar_mass); 
+            return;
+        }
+
+      //subroutine ESFLSH (e,s,z,t,p,D,Dl,Dv,x,y,q,h,cv,cp,w,ierr,herr)
+      //subroutine DHFLSH (D,h,z,t,p,Dl,Dv,x,y,q,e,s,cv,cp,w,ierr,herr)
+      //subroutine DSFLSH (D,s,z,t,p,Dl,Dv,x,y,q,e,h,cv,cp,w,ierr,herr)
+      //subroutine DEFLSH (D,e,z,t,p,Dl,Dv,x,y,q,h,s,cv,cp,w,ierr,herr)
+
         case PQ_INPUTS:
         {
             /* From REFPROP:

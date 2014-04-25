@@ -17,20 +17,16 @@
         CoolProp::AbstractState *pState;
         int pair;
     public:
-        ConsistencyFixture()
-        {
+        ConsistencyFixture(){
             pState = NULL;
         }
-        ~ConsistencyFixture()
-        {
+        ~ConsistencyFixture(){
             delete pState;
         }
-        void set_backend(std::string backend_string)
-        {
+        void set_backend(std::string backend_string){
             pState = CoolProp::AbstractState::factory(backend_string);
         }
-        void set_pair(int pair)
-        {
+        void set_pair(int pair){ 
             this->pair = pair;
         }
         bool single_phase_consistency_check(long double T, long double p)
@@ -49,7 +45,7 @@
             case CoolProp::SmolarT_INPUTS:
                 State.update(pair, smolar, T); break;
             case CoolProp::TUmolar_INPUTS:
-                State.update(pair, umolar, T); break;
+                State.update(pair, T, umolar); break;
             case CoolProp::DmolarT_INPUTS:
                 State.update(pair, rhomolar, T); break;
 
@@ -84,27 +80,21 @@
         }
     };
 
-    TEST_CASE_METHOD(ConsistencyFixture, "Test all input pairs for water using all valid backends", "[]")
+    TEST_CASE_METHOD(ConsistencyFixture, "Test all input pairs for CO2 using all valid backends", "[]")
     {
-        set_backend("REFPROP-Water");
+        set_backend("REFPROP-CO2");
         int inputs[] = {
-            CoolProp::DmolarT_INPUTS, ///< Molar density in mol/m^3, Temperature in K
-            CoolProp::HmolarT_INPUTS, ///< Enthalpy in J/mol, Temperature in K
-            CoolProp::SmolarT_INPUTS, ///< Entropy in J/mol/K, Temperature in K
-            CoolProp::TUmolar_INPUTS, ///< Internal energy in J/mol, Temperature in K             
-            CoolProp::DmolarP_INPUTS, ///< Molar density in mol/m^3, Pressure in Pa
-            CoolProp::HmolarP_INPUTS, ///< Enthalpy in J/mol, Pressure in Pa
-            CoolProp::PSmolar_INPUTS, ///< Pressure in Pa, Entropy in J/mol/K 
-            CoolProp::PUmolar_INPUTS, ///< Pressure in Pa, Internal energy in J/mol
-            CoolProp::HmolarSmolar_INPUTS, ///< Enthalpy in J/mol, Entropy in J/mol/K
-            CoolProp::SmolarUmolar_INPUTS, ///< Entropy in J/mol/K, Internal energy in J/mol
-            CoolProp::DmolarHmolar_INPUTS, ///< Molar density in mol/m^3, Enthalpy in J/mol
-            CoolProp::DmolarSmolar_INPUTS, ///< Molar density in mol/m^3, Entropy in J/mol/K
-            CoolProp::DmolarUmolar_INPUTS, ///< Molar density in mol/m^3, Internal energy in J/mol
+            CoolProp::DmolarT_INPUTS, CoolProp::DmolarP_INPUTS, CoolProp::HmolarP_INPUTS, 
+            CoolProp::PSmolar_INPUTS, CoolProp::HmolarSmolar_INPUTS, CoolProp::SmolarT_INPUTS,
+            CoolProp::HmolarT_INPUTS, CoolProp::TUmolar_INPUTS, CoolProp::PUmolar_INPUTS,
+            //CoolProp::SmolarUmolar_INPUTS,
+            //CoolProp::DmolarHmolar_INPUTS,
+            //CoolProp::DmolarSmolar_INPUTS,
+            //CoolProp::DmolarUmolar_INPUTS,
         };
 
         int N = sizeof(inputs)/sizeof(int);
-        for (double T = 300; T < 400; T += 10)
+        for (double T = 300; T < 350; T += 10)
         {
             for (int i = 0; i < N; i++)
             {
@@ -113,7 +103,7 @@
                 set_pair(pair);
                 CAPTURE(pair_desc);
                 CAPTURE(T);
-                CHECK_NOTHROW(single_phase_consistency_check(T, 10000));
+                CHECK_NOTHROW(single_phase_consistency_check(T, 3e6));
             }
         }
     }
