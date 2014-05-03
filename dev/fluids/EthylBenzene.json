@@ -1,6 +1,55 @@
 {
+  "CAS": "100-41-4", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 2741.016, 
+        "p": 3622400, 
+        "T": 617.12, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 60000000, 
+      "alpha0": [
+        {
+          "a1": 5.70409, 
+          "a2": -0.52414353, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": 4.2557889, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            0.9479517759917034, 
+            7.16230230749287, 
+            2.710980036297641
+          ], 
+          "n": [
+            9.7329909, 
+            11.201832, 
+            25.440749
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Zhou-JPCRD-2012", 
+      "ptriple": 4.002961391981792, 
+      "T_max": 700, 
+      "Ttriple": 178.2, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.304, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 2.702209571410398e-06, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -107,57 +156,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 5.70409, 
-          "a2": -0.52414353, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": 4.2557889, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            0.9479517759917034, 
-            7.16230230749287, 
-            2.710980036297641
-          ], 
-          "n": [
-            9.7329909, 
-            11.201832, 
-            25.440749
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 2741.016, 
-        "p": 3622400, 
-        "T": 617.12, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 9123.237141963473, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 4.002961391981792, 
       "T_max_units": "K", 
       "molar_mass": 0.106165, 
-      "pseudo_pure": false, 
-      "accentric": 0.304, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 700, 
-      "Ttriple": 178.2, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 60000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "EthylBenzene", 
-  "CAS": "100-41-4", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 178.2, 
@@ -264,6 +269,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "EthylBenzene", 
   "ALIASES": [
     "ethylbenzene", 
     "ETHYLBENZENE"

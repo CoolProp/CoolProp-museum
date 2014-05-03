@@ -1,6 +1,57 @@
 {
+  "CAS": "463-82-1", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 3270, 
+        "p": 3196000, 
+        "T": 433.74, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 200000000, 
+      "alpha0": [
+        {
+          "a1": 0.8702452614, 
+          "a2": 1.6071746358, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": 3, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            1.636925346982063, 
+            3.977036934569097, 
+            7.562133997325587, 
+            17.9531516576751
+          ], 
+          "n": [
+            14.422, 
+            12.868, 
+            17.247, 
+            12.663
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Lemmon-JCED-2006", 
+      "ptriple": 35400947.32708782, 
+      "T_max": 550, 
+      "Ttriple": 256.6, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.1961, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 16.95177504859362, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -62,59 +113,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 0.8702452614, 
-          "a2": 1.6071746358, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": 3, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            1.636925346982063, 
-            3.977036934569097, 
-            7.562133997325587, 
-            17.9531516576751
-          ], 
-          "n": [
-            14.422, 
-            12.868, 
-            17.247, 
-            12.663
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 3270, 
-        "p": 3196000, 
-        "T": 433.74, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 8701.706626683947, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 35400947.32708782, 
       "T_max_units": "K", 
       "molar_mass": 0.07214878, 
-      "pseudo_pure": false, 
-      "accentric": 0.1961, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 550, 
-      "Ttriple": 256.6, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 200000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "Neopentane", 
-  "CAS": "463-82-1", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 256.6, 
@@ -221,6 +226,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "Neopentane", 
   "ALIASES": [
     "neopentn", 
     "NEOPENTANE"

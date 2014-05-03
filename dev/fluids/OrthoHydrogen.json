@@ -1,6 +1,57 @@
 {
+  "CAS": "1333-74-0o", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 15444.54031369981, 
+        "p": 1310650, 
+        "T": 33.22, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 2000000000, 
+      "alpha0": [
+        {
+          "a1": -1.4675442336, 
+          "a2": 1.8845068862, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": 1.5, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            25.7676098736, 
+            43.4677904877, 
+            66.044551475, 
+            209.7531607465
+          ], 
+          "n": [
+            2.54151, 
+            -2.3661, 
+            1.00365, 
+            1.22447
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Leachman-JPCRD-2009", 
+      "ptriple": 7559882.341056906, 
+      "T_max": 1000, 
+      "Ttriple": 14.008, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": -0.219, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 65.87296564338153, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -102,59 +153,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": -1.4675442336, 
-          "a2": 1.8845068862, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": 1.5, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            25.7676098736, 
-            43.4677904877, 
-            66.044551475, 
-            209.7531607465
-          ], 
-          "n": [
-            2.54151, 
-            -2.3661, 
-            1.00365, 
-            1.22447
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 15444.54031369981, 
-        "p": 1310650, 
-        "T": 33.22, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 38198.76565183698, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 7559882.341056906, 
       "T_max_units": "K", 
       "molar_mass": 0.00201594, 
-      "pseudo_pure": false, 
-      "accentric": -0.219, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 1000, 
-      "Ttriple": 14.008, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 2000000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "OrthoHydrogen", 
-  "CAS": "1333-74-0o", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 14.00800000000001, 
@@ -261,6 +266,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "OrthoHydrogen", 
   "ALIASES": [
     "Orthohydrogen", 
     "orthohydrogen", 

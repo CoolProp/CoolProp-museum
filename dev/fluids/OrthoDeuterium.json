@@ -1,6 +1,73 @@
 {
+  "CAS": "7782-39-0o", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 17230, 
+        "p": 1679600, 
+        "T": 38.34, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 2000000000, 
+      "alpha0": [
+        {
+          "a1": -2.0672670563, 
+          "a2": 2.4234599781, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": 1.5, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            41.49713093375065, 
+            12.56129368805425, 
+            12.32133541992697, 
+            9.447052686489306, 
+            53.15597287428273, 
+            12.08137715179969, 
+            12.81429316640584, 
+            70.77203964527908, 
+            16.13458528951487, 
+            225.4042775169536, 
+            25.08346374543558, 
+            6.604068857589984
+          ], 
+          "n": [
+            4.04482, 
+            -4.65391, 
+            -4.65342, 
+            3.46313, 
+            -4.58637, 
+            -4.6503, 
+            -4.65124, 
+            2.67024, 
+            15.20455, 
+            0.87164, 
+            -4.7608, 
+            4.32447
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Richardson-JPCRD-2013", 
+      "ptriple": 17189101.9732537, 
+      "T_max": 600, 
+      "Ttriple": 18.724, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.3144621, 
+      "accentric": -0.136290274128, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 113.0018950964478, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -136,75 +203,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": -2.0672670563, 
-          "a2": 2.4234599781, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": 1.5, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            41.49713093375065, 
-            12.56129368805425, 
-            12.32133541992697, 
-            9.447052686489306, 
-            53.15597287428273, 
-            12.08137715179969, 
-            12.81429316640584, 
-            70.77203964527908, 
-            16.13458528951487, 
-            225.4042775169536, 
-            25.08346374543558, 
-            6.604068857589984
-          ], 
-          "n": [
-            4.04482, 
-            -4.65391, 
-            -4.65342, 
-            3.46313, 
-            -4.58637, 
-            -4.6503, 
-            -4.65124, 
-            2.67024, 
-            15.20455, 
-            0.87164, 
-            -4.7608, 
-            4.32447
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 17230, 
-        "p": 1679600, 
-        "T": 38.34, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 43350.35393172985, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.3144621, 
-      "ptriple": 17189101.9732537, 
       "T_max_units": "K", 
       "molar_mass": 0.0040282, 
-      "pseudo_pure": false, 
-      "accentric": -0.136290274128, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 600, 
-      "Ttriple": 18.724, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 2000000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "OrthoDeuterium", 
-  "CAS": "7782-39-0o", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 18.72400000000001, 
@@ -311,6 +316,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "OrthoDeuterium", 
   "ALIASES": [
     "orthodeuterium", 
     "ORTHODEUTERIUM"

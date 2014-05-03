@@ -1,6 +1,57 @@
 {
+  "CAS": "616-38-6", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 4000, 
+        "p": 4908800, 
+        "T": 557, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 60000000, 
+      "alpha0": [
+        {
+          "a1": 4.9916462, 
+          "a2": -0.1709449, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": 8.28421, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            0.03770197486535009, 
+            2.405745062836625, 
+            3.001795332136445, 
+            13.27648114901257
+          ], 
+          "n": [
+            1.48525, 
+            0.822585, 
+            16.2453, 
+            1.15925
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Zhou-JPCRD-2011", 
+      "ptriple": 2226523.726360071, 
+      "T_max": 600, 
+      "Ttriple": 277.06, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.346, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 0.9680689047177409, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -121,59 +172,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 4.9916462, 
-          "a2": -0.1709449, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": 8.28421, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            0.03770197486535009, 
-            2.405745062836625, 
-            3.001795332136445, 
-            13.27648114901257
-          ], 
-          "n": [
-            1.48525, 
-            0.822585, 
-            16.2453, 
-            1.15925
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 4000, 
-        "p": 4908800, 
-        "T": 557, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 12111.18713006095, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 2226523.726360071, 
       "T_max_units": "K", 
       "molar_mass": 0.0900779, 
-      "pseudo_pure": false, 
-      "accentric": 0.346, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 600, 
-      "Ttriple": 277.06, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 60000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "DimethylCarbonate", 
-  "CAS": "616-38-6", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 277.06, 
@@ -280,6 +285,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "DimethylCarbonate", 
   "ALIASES": [
     "DMC", 
     "dimethylcarbonate", 

@@ -1,6 +1,64 @@
 {
+  "CAS": "R407C.PPF", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 5260.000046401775, 
+        "p": 4631700, 
+        "T": 359.345, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 50000000, 
+      "alpha0": [
+        {
+          "a1": 2.13194, 
+          "a2": 8.05008, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPower", 
+          "t": [
+            -0.4
+          ], 
+          "n": [
+            -14.3914
+          ]
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            2.40437, 
+            5.25122, 
+            13.3632
+          ], 
+          "n": [
+            1.4245, 
+            3.9419, 
+            3.1209
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Lemmon-IJT-2003", 
+      "ptriple": 11311511.23477146, 
+      "T_max": 450, 
+      "Ttriple": 200, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.363, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 6.864730526475812, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -98,66 +156,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 2.13194, 
-          "a2": 8.05008, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPower", 
-          "t": [
-            -0.4
-          ], 
-          "n": [
-            -14.3914
-          ]
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            2.40437, 
-            5.25122, 
-            13.3632
-          ], 
-          "n": [
-            1.4245, 
-            3.9419, 
-            3.1209
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 5260.000046401775, 
-        "p": 4631700, 
-        "T": 359.345, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 17036.32270806373, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 11311511.23477146, 
       "T_max_units": "K", 
       "molar_mass": 0.08620359999999999, 
-      "pseudo_pure": true, 
-      "accentric": 0.363, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 450, 
-      "Ttriple": 200, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 50000000
+      "pseudo_pure": true
     }
   ], 
-  "NAME": "R407C", 
-  "CAS": "R407C.PPF", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 200.0, 
@@ -264,6 +269,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "R407C", 
   "ALIASES": [
     "R407c"
   ]

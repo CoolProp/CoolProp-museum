@@ -1,6 +1,91 @@
 {
+  "CAS": "AIR.PPF", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 10447.7, 
+        "p": 3785020, 
+        "T": 132.6312, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 2000000000, 
+      "alpha0": [
+        {
+          "a1": 0, 
+          "a2": 0, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPower", 
+          "t": [
+            -3, 
+            -2, 
+            -1, 
+            0, 
+            1
+          ], 
+          "n": [
+            6.057194e-08, 
+            -2.10274769e-05, 
+            -0.000158860716, 
+            -13.841928076, 
+            17.275266575
+          ]
+        }, 
+        {
+          "type": "IdealGasHelmholtzPower", 
+          "t": [
+            1.5
+          ], 
+          "n": [
+            -0.00019536342
+          ]
+        }, 
+        {
+          "a": 2.490888032, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            25.36365, 
+            16.90741
+          ], 
+          "n": [
+            0.791309509, 
+            0.212236768
+          ]
+        }, 
+        {
+          "c": [
+            0.6666666666666666
+          ], 
+          "type": "IdealGasHelmholtzPlanckEinstein2", 
+          "t": [
+            87.31279
+          ], 
+          "n": [
+            -0.197938904
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Lemmon-JPCRD-2000", 
+      "ptriple": 2431633.658884503, 
+      "T_max": 2000, 
+      "Ttriple": 59.75, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.31451, 
+      "accentric": 0.0816749632704, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 3.452387774956794e+100, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -90,93 +175,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 0, 
-          "a2": 0, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPower", 
-          "t": [
-            -3, 
-            -2, 
-            -1, 
-            0, 
-            1
-          ], 
-          "n": [
-            6.057194e-08, 
-            -2.10274769e-05, 
-            -0.000158860716, 
-            -13.841928076, 
-            17.275266575
-          ]
-        }, 
-        {
-          "type": "IdealGasHelmholtzPower", 
-          "t": [
-            1.5
-          ], 
-          "n": [
-            -0.00019536342
-          ]
-        }, 
-        {
-          "a": 2.490888032, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            25.36365, 
-            16.90741
-          ], 
-          "n": [
-            0.791309509, 
-            0.212236768
-          ]
-        }, 
-        {
-          "c": [
-            0.6666666666666666
-          ], 
-          "type": "IdealGasHelmholtzPlanckEinstein2", 
-          "t": [
-            87.31279
-          ], 
-          "n": [
-            -0.197938904
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 10447.7, 
-        "p": 3785020, 
-        "T": 132.6312, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 3.452387774956794e+100, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.31451, 
-      "ptriple": 2431633.658884503, 
       "T_max_units": "K", 
       "molar_mass": 0.02896546, 
-      "pseudo_pure": true, 
-      "accentric": 0.0816749632704, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 2000, 
-      "Ttriple": 59.75, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 2000000000
+      "pseudo_pure": true
     }
   ], 
-  "NAME": "Air", 
-  "CAS": "AIR.PPF", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 59.75000000000001, 
@@ -283,6 +288,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "Air", 
   "ALIASES": [
     "air", 
     "AIR"

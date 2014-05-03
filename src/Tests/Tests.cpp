@@ -12,11 +12,16 @@
     #include "Catch.hpp"
 
     static int inputs[] = {
-        CoolProp::DmolarT_INPUTS, CoolProp::DmolarP_INPUTS, CoolProp::HmolarP_INPUTS,
-        CoolProp::PSmolar_INPUTS, CoolProp::HmolarSmolar_INPUTS, CoolProp::SmolarT_INPUTS,
-        CoolProp::HmolarT_INPUTS, CoolProp::TUmolar_INPUTS, CoolProp::PUmolar_INPUTS,
-        CoolProp::DmolarHmolar_INPUTS, CoolProp::DmolarSmolar_INPUTS, CoolProp::DmolarUmolar_INPUTS,
-        CoolProp::SmolarUmolar_INPUTS 
+        CoolProp::DmolarT_INPUTS,
+        //CoolProp::SmolarT_INPUTS,
+        //CoolProp::HmolarT_INPUTS, 
+        //CoolProp::TUmolar_INPUTS, 
+        
+        /*CoolProp::DmolarP_INPUTS, CoolProp::HmolarP_INPUTS,
+        CoolProp::PSmolar_INPUTS, CoolProp::HmolarSmolar_INPUTS, 
+        CoolProp::PUmolar_INPUTS, CoolProp::DmolarHmolar_INPUTS, 
+        CoolProp::DmolarSmolar_INPUTS, CoolProp::DmolarUmolar_INPUTS,
+        CoolProp::SmolarUmolar_INPUTS */
     };
 
     class ConsistencyFixture
@@ -83,26 +88,29 @@
 
             // Make sure we end up back at the same temperature and pressure we started out with
             if(fabs(T-State.T()) > 1e-2) throw CoolProp::ValueError(format("Error on T [%g K] is greater than 1e-2",fabs(State.T()-T)));
-            if(fabs(p-State.p())/p > 1e-2)  throw CoolProp::ValueError(format("Error on p [%g %%] is greater than 1e-2",fabs(p-State.p())/p ));
+            if(fabs(p-State.p())/p*100 > 1e-2)  throw CoolProp::ValueError(format("Error on p [%g %%] is greater than 1e-2 %%",fabs(p-State.p())/p ));
             return true;
         }
     };
 
     TEST_CASE_METHOD(ConsistencyFixture, "Test all input pairs for CO2 using all valid backends", "[]")
     {
-        set_backend("REFPROP","CO2");
+        set_backend("HEOS", "CO2");
         
         int N = sizeof(inputs)/sizeof(inputs[0]);
-        for (double T = 300; T < 350; T += 10)
+        for (double p = 100; p < 800000000.0; p *= 5)
         {
-            for (int i = 0; i < N; i++)
+            for (double T = 220; T < 2000; T += 10)
             {
-                int pair = inputs[i];
-                std::string pair_desc = CoolProp::get_input_pair_short_desc(pair);
-                set_pair(pair);
-                CAPTURE(pair_desc);
-                CAPTURE(T);
-                CHECK_NOTHROW(single_phase_consistency_check(T, 3e6));
+                for (int i = 0; i < N; i++)
+                {
+                    int pair = inputs[i];
+                    std::string pair_desc = CoolProp::get_input_pair_short_desc(pair);
+                    set_pair(pair);
+                    CAPTURE(pair_desc);
+                    CAPTURE(T);
+                    CHECK_NOTHROW(single_phase_consistency_check(T, p));
+                }
             }
         }
     }

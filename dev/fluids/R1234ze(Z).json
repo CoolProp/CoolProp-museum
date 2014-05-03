@@ -1,6 +1,59 @@
 {
+  "CAS": "29118-25-0", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 4126.696132921778, 
+        "p": 3533000, 
+        "T": 423.27, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 6000000, 
+      "alpha0": [
+        {
+          "a1": 0, 
+          "a2": 0, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "c": [
+            -1.6994, 
+            0.05794646443168663, 
+            -5.539762719017151e-05, 
+            1.998892498570471e-08
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT", 
+          "t": [
+            0, 
+            1, 
+            2, 
+            3
+          ], 
+          "T0": 298, 
+          "Tc": 423.27
+        }
+      ], 
+      "BibTeX_EOS": "Akasaka-DELFT-2013", 
+      "ptriple": 67802939.3595567, 
+      "T_max": 430, 
+      "Ttriple": 273, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.3274, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 31.07753309192204, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -82,61 +135,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 0, 
-          "a2": 0, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "c": [
-            -1.6994, 
-            0.05794646443168663, 
-            -5.539762719017151e-05, 
-            1.998892498570471e-08
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            0, 
-            1, 
-            2, 
-            3
-          ], 
-          "T0": 298, 
-          "Tc": 423.27
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 4126.696132921778, 
-        "p": 3533000, 
-        "T": 423.27, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 11250.73553652318, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 67802939.3595567, 
       "T_max_units": "K", 
       "molar_mass": 0.1140415928, 
-      "pseudo_pure": false, 
-      "accentric": 0.3274, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 430, 
-      "Ttriple": 273, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 6000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "R1234ze(Z)", 
-  "CAS": "29118-25-0", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 273.0, 
@@ -243,6 +248,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "R1234ze(Z)", 
   "ALIASES": [
     "R1234ZE(Z)"
   ]

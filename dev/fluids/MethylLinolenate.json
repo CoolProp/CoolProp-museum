@@ -1,6 +1,66 @@
 {
+  "CAS": "301-00-8", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 847.3000000000001, 
+        "p": 1369000, 
+        "T": 772, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 50000000, 
+      "alpha0": [
+        {
+          "a1": -1, 
+          "a2": 0, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "c": [
+            9.572622290387171
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT", 
+          "t": [
+            0.214648
+          ], 
+          "T0": 298, 
+          "Tc": 772
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            1.571554404145078, 
+            0.7496787564766839, 
+            3.626670984455958
+          ], 
+          "n": [
+            34.92452677692582, 
+            9.794043446174333, 
+            57.11499178781286
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Huber-EF-2009", 
+      "ptriple": 8.28138374195477e-09, 
+      "T_max": 700, 
+      "Ttriple": 218.65, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 1.142605258673496, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 4.556783070257036e-15, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -92,68 +152,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": -1, 
-          "a2": 0, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "c": [
-            9.572622290387171
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            0.214648
-          ], 
-          "T0": 298, 
-          "Tc": 772
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            1.571554404145078, 
-            0.7496787564766839, 
-            3.626670984455958
-          ], 
-          "n": [
-            34.92452677692582, 
-            9.794043446174333, 
-            57.11499178781286
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 847.3000000000001, 
-        "p": 1369000, 
-        "T": 772, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 3281.983110581293, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 8.28138374195477e-09, 
       "T_max_units": "K", 
       "molar_mass": 0.29245618, 
-      "pseudo_pure": false, 
-      "accentric": 1.142605258673496, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 700, 
-      "Ttriple": 218.65, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 50000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "MethylLinolenate", 
-  "CAS": "301-00-8", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 260.0, 
@@ -260,6 +265,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "MethylLinolenate", 
   "ALIASES": [
     "METHYLLINOLENATE"
   ]

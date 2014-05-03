@@ -1,6 +1,180 @@
 {
+  "ALIASES": [], 
+  "ANCILLARIES": {
+    "pL": {
+      "T_r": 471.06, 
+      "Tmax": 471.059999999999, 
+      "Tmin": 162.68, 
+      "description": "p' = pc*exp(Tc/T*sum(n_i*theta^t_i))", 
+      "max_abserror_percentage": 0.2990936295608648, 
+      "n": [
+        0.15114864227309924, 
+        -1.0362484013166429, 
+        -9.85652324799686, 
+        5.929859019171377, 
+        -3.5450486869633306, 
+        -1.2411439744310455
+      ], 
+      "reducing_value": 4394000.0, 
+      "t": [
+        0.304, 
+        0.575, 
+        1.226, 
+        1.624, 
+        3.082, 
+        5.897
+      ], 
+      "type": "pL", 
+      "using_tau_r": true
+    }, 
+    "pV": {
+      "T_r": 471.06, 
+      "Tmax": 471.059999999999, 
+      "Tmin": 162.68, 
+      "description": "p'' = pc*exp(Tc/T*sum(n_i*theta^t_i))", 
+      "max_abserror_percentage": 0.19454432710005465, 
+      "n": [
+        0.026052457505876248, 
+        -0.033251769926668874, 
+        -6.052567442811702, 
+        -1.7491910863188018, 
+        -2.0497996257474944, 
+        21.07044968037653
+      ], 
+      "reducing_value": 4394000.0, 
+      "t": [
+        0.093, 
+        0.18, 
+        0.971, 
+        3.426, 
+        5.452, 
+        19.676
+      ], 
+      "type": "pV", 
+      "using_tau_r": true
+    }, 
+    "rhoL": {
+      "T_r": 471.06, 
+      "Tmax": 471.059999999999, 
+      "Tmin": 162.68, 
+      "description": "rho' = rhoc*(1+sum(n_i*theta^t_i))", 
+      "max_abserror_percentage": 4.003831744982589, 
+      "n": [
+        -233.14334396615303, 
+        275.8122390016742, 
+        -42.633467921464685, 
+        4.723326547469123, 
+        -6.867921570223379, 
+        7.76091118506622
+      ], 
+      "reducing_value": 4113.0394269407725, 
+      "t": [
+        0.46, 
+        0.473, 
+        0.584, 
+        1.778, 
+        4.107, 
+        6.191
+      ], 
+      "type": "rhoLnoexp", 
+      "using_tau_r": false
+    }, 
+    "rhoV": {
+      "T_r": 471.06, 
+      "Tmax": 471.059999999999, 
+      "Tmin": 162.68, 
+      "description": "rho'' = rhoc*exp(Tc/T*sum(n_i*theta^t_i))", 
+      "max_abserror_percentage": 4.960628784139631, 
+      "n": [
+        -4.24333237177487, 
+        -0.4078731288745647, 
+        -2.249917886647205, 
+        -5.523383725068134, 
+        815.8186908904237, 
+        -2149.920110111276
+      ], 
+      "reducing_value": 4113.0394269407725, 
+      "t": [
+        0.506, 
+        0.881, 
+        2.875, 
+        5.942, 
+        17.127, 
+        19.889
+      ], 
+      "type": "rhoV", 
+      "using_tau_r": true
+    }, 
+    "surface_tension": {
+      "BibTeX": "Mulero-JPCRD-2012", 
+      "Tc": 471.11, 
+      "a": [
+        0.06212
+      ], 
+      "description": "sigma = sum(a_i*(1-T/Tc)^n_i)", 
+      "n": [
+        1.247
+      ]
+    }
+  }, 
+  "CAS": "75-69-4", 
   "EOS": [
     {
+      "BibTeX_CP0": "Jacobsen-FPE-1992", 
+      "BibTeX_EOS": "Span-IJT-2003C", 
+      "T_max": 595, 
+      "T_max_units": "K", 
+      "Ttriple": 162.68, 
+      "Ttriple_units": "K", 
+      "accentric": 0.1887506482528083, 
+      "accentric_units": "-", 
+      "alpha0": [
+        {
+          "a1": 0, 
+          "a2": 0, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "T0": 298, 
+          "Tc": 471.11, 
+          "cp_over_R": 4.00564923248634, 
+          "type": "IdealGasHelmholtzCP0Constant"
+        }, 
+        {
+          "T0": 298, 
+          "Tc": 471.11, 
+          "c": [
+            0.0002228874581905608
+          ], 
+          "t": [
+            1
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT"
+        }, 
+        {
+          "n": [
+            1, 
+            2, 
+            1, 
+            2, 
+            1, 
+            2
+          ], 
+          "t": [
+            3.313613168898983, 
+            2.586756086688884, 
+            1.634512228566577, 
+            1.215500498821931, 
+            1.06738046316147, 
+            0.7360191462715714
+          ], 
+          "type": "IdealGasHelmholtzPlanckEinstein"
+        }
+      ], 
       "alphar": [
         {
           "d": [
@@ -17,21 +191,6 @@
             4, 
             2
           ], 
-          "n": [
-            1.0656383, 
-            -3.2495206, 
-            0.87823894, 
-            0.087611569, 
-            0.00029950049, 
-            0.42896949, 
-            0.70828452, 
-            -0.017391823, 
-            -0.37626522, 
-            0.011605284, 
-            -0.089550567, 
-            -0.030063991
-          ], 
-          "type": "ResidualHelmholtzPower", 
           "l": [
             0, 
             0, 
@@ -46,6 +205,20 @@
             2, 
             3
           ], 
+          "n": [
+            1.0656383, 
+            -3.2495206, 
+            0.87823894, 
+            0.087611569, 
+            0.00029950049, 
+            0.42896949, 
+            0.70828452, 
+            -0.017391823, 
+            -0.37626522, 
+            0.011605284, 
+            -0.089550567, 
+            -0.030063991
+          ], 
           "t": [
             0.25, 
             1.25, 
@@ -59,199 +232,32 @@
             6.5, 
             4.75, 
             12.5
-          ]
+          ], 
+          "type": "ResidualHelmholtzPower"
         }
       ], 
+      "gas_constant": 8.31451, 
+      "gas_constant_units": "J/mol/K", 
+      "molar_mass": 0.137368, 
+      "molar_mass_units": "kg/mol", 
+      "p_max": 100000000, 
+      "p_max_units": "Pa", 
+      "pseudo_pure": false, 
+      "ptriple": 6691.548080564487, 
       "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 0, 
-          "a2": 0, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "cp_over_R": 4.00564923248634, 
-          "type": "IdealGasHelmholtzCP0Constant", 
-          "Tc": 471.11, 
-          "T0": 298
-        }, 
-        {
-          "c": [
-            0.0002228874581905608
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            1
-          ], 
-          "T0": 298, 
-          "Tc": 471.11
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            3.313613168898983, 
-            2.586756086688884, 
-            1.634512228566577, 
-            1.215500498821931, 
-            1.06738046316147, 
-            0.7360191462715714
-          ], 
-          "n": [
-            1, 
-            2, 
-            1, 
-            2, 
-            1, 
-            2
-          ]
-        }
-      ], 
       "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 4113.039426940773, 
-        "p": 4394000, 
         "T": 471.06, 
         "T_units": "K", 
-        "p_units": "Pa"
+        "p": 4394000, 
+        "p_units": "Pa", 
+        "rhomolar": 4113.039426940773, 
+        "rhomolar_units": "mol/m^3"
       }, 
-      "Ttriple_units": "K", 
-      "gas_constant": 8.31451, 
-      "ptriple": 6691.548080564487, 
-      "T_max_units": "K", 
-      "molar_mass": 0.137368, 
-      "pseudo_pure": false, 
-      "accentric": 0.1887506482528083, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 595, 
-      "Ttriple": 162.68, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 100000000
+      "rhoLtriple": 12962.56328885987, 
+      "rhoLtriple_units": "mol/m^3", 
+      "rhoVtriple": 0.004947861179952363, 
+      "rhoVtriple_units": "mol/m^3"
     }
   ], 
-  "CAS": "75-69-4", 
-  "ANCILLARIES": {
-    "surface_tension": {
-      "a": [
-        0.06212
-      ], 
-      "n": [
-        1.247
-      ], 
-      "BibTeX": "Mulero-JPCRD-2012", 
-      "description": "sigma = sum(a_i*(1-T/Tc)^n_i)", 
-      "Tc": 471.11
-    }, 
-    "pV": {
-      "Tmin": 162.68, 
-      "description": "p'' = pc*exp(Tc/T*sum(n_i*theta^t_i))", 
-      "Tmax": 471.059999999999, 
-      "using_tau_r": true, 
-      "max_abserror_percentage": 0.19454432710005465, 
-      "t": [
-        0.093, 
-        0.18, 
-        0.971, 
-        3.426, 
-        5.452, 
-        19.676
-      ], 
-      "reducing_value": 4394000.0, 
-      "T_r": 471.06, 
-      "n": [
-        0.026052457505876248, 
-        -0.033251769926668874, 
-        -6.052567442811702, 
-        -1.7491910863188018, 
-        -2.0497996257474944, 
-        21.07044968037653
-      ], 
-      "type": "pV"
-    }, 
-    "rhoV": {
-      "Tmin": 162.68, 
-      "description": "rho'' = rhoc*exp(Tc/T*sum(n_i*theta^t_i))", 
-      "Tmax": 471.059999999999, 
-      "using_tau_r": true, 
-      "max_abserror_percentage": 4.960628784139631, 
-      "t": [
-        0.506, 
-        0.881, 
-        2.875, 
-        5.942, 
-        17.127, 
-        19.889
-      ], 
-      "reducing_value": 4113.0394269407725, 
-      "T_r": 471.06, 
-      "n": [
-        -4.24333237177487, 
-        -0.4078731288745647, 
-        -2.249917886647205, 
-        -5.523383725068134, 
-        815.8186908904237, 
-        -2149.920110111276
-      ], 
-      "type": "rhoV"
-    }, 
-    "pL": {
-      "Tmin": 162.68, 
-      "description": "p' = pc*exp(Tc/T*sum(n_i*theta^t_i))", 
-      "Tmax": 471.059999999999, 
-      "using_tau_r": true, 
-      "max_abserror_percentage": 0.2990936295608648, 
-      "t": [
-        0.304, 
-        0.575, 
-        1.226, 
-        1.624, 
-        3.082, 
-        5.897
-      ], 
-      "reducing_value": 4394000.0, 
-      "T_r": 471.06, 
-      "n": [
-        0.15114864227309924, 
-        -1.0362484013166429, 
-        -9.85652324799686, 
-        5.929859019171377, 
-        -3.5450486869633306, 
-        -1.2411439744310455
-      ], 
-      "type": "pL"
-    }, 
-    "rhoL": {
-      "Tmin": 162.68, 
-      "description": "rho' = rhoc*(1+sum(n_i*theta^t_i))", 
-      "Tmax": 471.059999999999, 
-      "using_tau_r": false, 
-      "max_abserror_percentage": 4.003831744982589, 
-      "t": [
-        0.46, 
-        0.473, 
-        0.584, 
-        1.778, 
-        4.107, 
-        6.191
-      ], 
-      "reducing_value": 4113.0394269407725, 
-      "T_r": 471.06, 
-      "n": [
-        -233.14334396615303, 
-        275.8122390016742, 
-        -42.633467921464685, 
-        4.723326547469123, 
-        -6.867921570223379, 
-        7.76091118506622
-      ], 
-      "type": "rhoLnoexp"
-    }
-  }, 
-  "NAME": "R11", 
-  "ALIASES": []
+  "NAME": "R11"
 }

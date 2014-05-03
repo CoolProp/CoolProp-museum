@@ -196,6 +196,7 @@ protected:
         EOS.accentric = cpjson::get_double(EOS_json,"accentric");
         EOS.Ttriple = cpjson::get_double(EOS_json, "Ttriple");
         EOS.ptriple = cpjson::get_double(EOS_json, "ptriple");
+        EOS.rhoLtriple = cpjson::get_double(EOS_json, "rhoLtriple");
         EOS.pseudo_pure = cpjson::get_bool(EOS_json, "pseudo_pure");
 
         rapidjson::Value &reducing_state = EOS_json["reducing_state"];
@@ -239,10 +240,10 @@ protected:
     void parse_ancillaries(rapidjson::Value &ancillaries, CoolPropFluid & fluid)
     {
         if (!ancillaries.HasMember("pL") || !ancillaries.HasMember("pV") || !ancillaries.HasMember("rhoL") || !ancillaries.HasMember("rhoV")){throw ValueError("Ancillary curves are missing");};
-        fluid.ancillaries.pL = AncillaryFunction(ancillaries["pL"]);
-        fluid.ancillaries.pV = AncillaryFunction(ancillaries["pV"]);
-        fluid.ancillaries.rhoL = AncillaryFunction(ancillaries["rhoL"]);
-        fluid.ancillaries.rhoV = AncillaryFunction(ancillaries["rhoV"]);
+        fluid.ancillaries.pL = SaturationAncillaryFunction(ancillaries["pL"]);
+        fluid.ancillaries.pV = SaturationAncillaryFunction(ancillaries["pV"]);
+        fluid.ancillaries.rhoL = SaturationAncillaryFunction(ancillaries["rhoL"]);
+        fluid.ancillaries.rhoV = SaturationAncillaryFunction(ancillaries["rhoV"]);
     };
 
     /// Parse the surface_tension

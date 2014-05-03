@@ -113,6 +113,7 @@ double Secant(FuncWrapper1D &f, double x0, double dx, double tol, int maxiter, s
         if (iter==2){x2=x0+dx; x=x2;}
         if (iter>2) {x=x2;}
 			fval=f.call(x);
+            if (!ValidNumber(fval)){throw ValueError("Residual function in secant returned invalid number");};
         if (iter==1){y1=fval;}
         if (iter>1)
         {

@@ -1,6 +1,63 @@
 {
+  "CAS": "1120-21-4", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 1514.916863638556, 
+        "p": 1990400, 
+        "T": 638.8, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 500000000, 
+      "alpha0": [
+        {
+          "a1": 0, 
+          "a2": 0, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "c": [
+            -1158848, 
+            20321.8, 
+            -119.4274, 
+            0.4284215, 
+            -0.0004157728, 
+            1.61828e-07
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT", 
+          "t": [
+            -2, 
+            -1, 
+            0, 
+            1, 
+            2, 
+            3
+          ], 
+          "T0": 298.15, 
+          "Tc": 638.8
+        }
+      ], 
+      "BibTeX_EOS": "Aleksandrov-TE-2011", 
+      "ptriple": 446.055918552166, 
+      "T_max": 700, 
+      "Ttriple": 247.541, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.5390371013718567, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 0.0002167513070507905, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -70,65 +127,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 0, 
-          "a2": 0, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "c": [
-            -1158848, 
-            20321.8, 
-            -119.4274, 
-            0.4284215, 
-            -0.0004157728, 
-            1.61828e-07
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            -2, 
-            -1, 
-            0, 
-            1, 
-            2, 
-            3
-          ], 
-          "T0": 298.15, 
-          "Tc": 638.8
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 1514.916863638556, 
-        "p": 1990400, 
-        "T": 638.8, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 4962.061358602959, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 446.055918552166, 
       "T_max_units": "K", 
       "molar_mass": 0.15630826, 
-      "pseudo_pure": false, 
-      "accentric": 0.5390371013718567, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 700, 
-      "Ttriple": 247.541, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 500000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "n-Undecane", 
-  "CAS": "1120-21-4", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 247.541, 
@@ -235,6 +240,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "n-Undecane", 
   "ALIASES": [
     "Undecane", 
     "UNDECANE", 

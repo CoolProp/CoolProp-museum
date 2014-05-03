@@ -299,5 +299,5 @@ if __name__=='__main__':
         j['ANCILLARIES']['surface_tension'] = j_st
         
         fp = open(fname, 'w')
-        fp.write(json.dumps(j, indent = 2))
+        fp.write(json.dumps(j, indent = 2, sort_keys = True))
         fp.close()

@@ -1,6 +1,54 @@
 {
+  "CAS": "141-63-9", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 685.7981626999992, 
+        "p": 945000, 
+        "T": 628.36, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 30000000, 
+      "alpha0": [
+        {
+          "a1": -7.835183629103501, 
+          "a2": 8.367692358068204, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "c": [
+            55.71009199381512, 
+            115.1245683430048, 
+            2117.1, 
+            88.79697953159261, 
+            908.5
+          ], 
+          "type": "IdealGasHelmholtzCP0AlyLee", 
+          "Tc": 628.36, 
+          "T0": 503.022623775204
+        }
+      ], 
+      "BibTeX_EOS": "Colonna-FPE-2008", 
+      "ptriple": 0.0002057747643530664, 
+      "T_max": 673, 
+      "Ttriple": 192, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.722, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 1.289360613297565e-10, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -62,56 +110,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": -7.835183629103501, 
-          "a2": 8.367692358068204, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "c": [
-            55.71009199381512, 
-            115.1245683430048, 
-            2117.1, 
-            88.79697953159261, 
-            908.5
-          ], 
-          "type": "IdealGasHelmholtzCP0AlyLee", 
-          "Tc": 628.36, 
-          "T0": 503.022623775204
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 685.7981626999992, 
-        "p": 945000, 
-        "T": 628.36, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 2541.796114376564, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 0.0002057747643530664, 
       "T_max_units": "K", 
       "molar_mass": 0.384839, 
-      "pseudo_pure": false, 
-      "accentric": 0.722, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 673, 
-      "Ttriple": 192, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 30000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "MD3M", 
-  "CAS": "141-63-9", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 192.0, 
@@ -218,6 +223,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "MD3M", 
   "ALIASES": [
     "Dodecamethylpentasiloxane", 
     "DODECAMETHYLPENTASILOXANE"

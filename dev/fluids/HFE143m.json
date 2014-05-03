@@ -1,6 +1,81 @@
 {
+  "CAS": "421-14-7", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 4648.140744, 
+        "p": 3635000, 
+        "T": 377.921, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 7200000, 
+      "alpha0": [
+        {
+          "a1": -17.97705674077087, 
+          "a2": 12.92642879298097, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "cp_over_R": 2.449945107759098, 
+          "type": "IdealGasHelmholtzCP0Constant", 
+          "Tc": 377.921, 
+          "T0": 273.15
+        }, 
+        {
+          "c": [
+            0.03509543360059424
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT", 
+          "t": [
+            1
+          ], 
+          "T0": 273.15, 
+          "Tc": 377.921
+        }, 
+        {
+          "c": [
+            -2.345308276941699e-05
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT", 
+          "t": [
+            2
+          ], 
+          "T0": 273.15, 
+          "Tc": 377.921
+        }, 
+        {
+          "c": [
+            5.592658198860973e-09
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT", 
+          "t": [
+            3
+          ], 
+          "T0": 273.15, 
+          "Tc": 377.921
+        }
+      ], 
+      "BibTeX_EOS": "Akasaka-IJR-2012", 
+      "ptriple": 65359393.00696849, 
+      "T_max": 4220, 
+      "Ttriple": 240, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.2888713656700324, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 34.01957819070063, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -82,83 +157,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": -17.97705674077087, 
-          "a2": 12.92642879298097, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "cp_over_R": 2.449945107759098, 
-          "type": "IdealGasHelmholtzCP0Constant", 
-          "Tc": 377.921, 
-          "T0": 273.15
-        }, 
-        {
-          "c": [
-            0.03509543360059424
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            1
-          ], 
-          "T0": 273.15, 
-          "Tc": 377.921
-        }, 
-        {
-          "c": [
-            -2.345308276941699e-05
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            2
-          ], 
-          "T0": 273.15, 
-          "Tc": 377.921
-        }, 
-        {
-          "c": [
-            5.592658198860973e-09
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            3
-          ], 
-          "T0": 273.15, 
-          "Tc": 377.921
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 4648.140744, 
-        "p": 3635000, 
-        "T": 377.921, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 12615.3284879174, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 65359393.00696849, 
       "T_max_units": "K", 
       "molar_mass": 0.10004, 
-      "pseudo_pure": false, 
-      "accentric": 0.2888713656700324, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 4220, 
-      "Ttriple": 240, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 7200000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "HFE143m", 
-  "CAS": "421-14-7", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 240.0, 
@@ -265,6 +270,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "HFE143m", 
   "ALIASES": [
     "HFE-143m", 
     "HFE143M", 

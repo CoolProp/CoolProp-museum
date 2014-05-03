@@ -1,6 +1,57 @@
 {
+  "CAS": "590-18-1", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 4244, 
+        "p": 4225500, 
+        "T": 435.75, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 50000000, 
+      "alpha0": [
+        {
+          "a1": 0.2591542, 
+          "a2": 2.4189888, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": 2.9687, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            0.5691336775674125, 
+            2.714859437751004, 
+            4.800917957544463, 
+            10.09064830751578
+          ], 
+          "n": [
+            3.2375, 
+            7.0437, 
+            11.414, 
+            7.3722
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Lemmon-FPE-2005", 
+      "ptriple": 263.6496649525091, 
+      "T_max": 525, 
+      "Ttriple": 134.3, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.20235958587, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 0.0002361583020722408, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -62,59 +113,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 0.2591542, 
-          "a2": 2.4189888, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": 2.9687, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            0.5691336775674125, 
-            2.714859437751004, 
-            4.800917957544463, 
-            10.09064830751578
-          ], 
-          "n": [
-            3.2375, 
-            7.0437, 
-            11.414, 
-            7.3722
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 4244, 
-        "p": 4225500, 
-        "T": 435.75, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 14083.99244573583, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 263.6496649525091, 
       "T_max_units": "K", 
       "molar_mass": 0.05610631999999999, 
-      "pseudo_pure": false, 
-      "accentric": 0.20235958587, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 525, 
-      "Ttriple": 134.3, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 50000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "cis-2-Butene", 
-  "CAS": "590-18-1", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 134.3, 
@@ -221,6 +226,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "cis-2-Butene", 
   "ALIASES": [
     "Cis-2-Butene", 
     "CIS-2-BUTENE"

@@ -1,6 +1,57 @@
 {
+  "CAS": "106-42-3", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 2693.92, 
+        "p": 3531500, 
+        "T": 616.168, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 200000000, 
+      "alpha0": [
+        {
+          "a1": 5.9815241, 
+          "a2": -0.52477835, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": 4.2430504, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            0.6718946780748107, 
+            2.038405110294595, 
+            4.299152179275782, 
+            10.84282208748263
+          ], 
+          "n": [
+            5.2291378, 
+            19.549862, 
+            16.656178, 
+            5.9390291
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Zhou-JPCRD-2012", 
+      "ptriple": 580085.0024867811, 
+      "T_max": 700, 
+      "Ttriple": 286.4, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.324, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 0.2438612134796824, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -107,59 +158,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 5.9815241, 
-          "a2": -0.52477835, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": 4.2430504, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            0.6718946780748107, 
-            2.038405110294595, 
-            4.299152179275782, 
-            10.84282208748263
-          ], 
-          "n": [
-            5.2291378, 
-            19.549862, 
-            16.656178, 
-            5.9390291
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 2693.92, 
-        "p": 3531500, 
-        "T": 616.168, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 8164.996595154399, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 580085.0024867811, 
       "T_max_units": "K", 
       "molar_mass": 0.106165, 
-      "pseudo_pure": false, 
-      "accentric": 0.324, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 700, 
-      "Ttriple": 286.4, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 200000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "p-Xylene", 
-  "CAS": "106-42-3", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 286.4, 
@@ -266,6 +271,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "p-Xylene", 
   "ALIASES": [
     "pXylene", 
     "p-xylene", 

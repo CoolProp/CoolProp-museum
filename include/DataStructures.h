@@ -23,7 +23,7 @@ struct SimpleState
 /// The structure is taken directly from the AbstractState class.
 enum params {
     // Bulk properties
-    iT, iD, iP, iQ, iH, iS, iCp, iCv, ispeed_sound, iisothermal_compressibility, iisobaric_expansion_coefficient,
+    iT, iDmolar, iP, iQ, iHmolar, iSmolar, iCpmolar, iCvmolar, iUmolar, ispeed_sound, iisothermal_compressibility, iisobaric_expansion_coefficient,
 
     // Smoothing functions for density
     idrhodh_constp_smoothed, idrhodp_consth_smoothed, irho_smoothed,

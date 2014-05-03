@@ -31,11 +31,13 @@ void generate_melting_curve_data(const char* file_name, const char *fluid_name, 
             {
                 double rr = 0;
             }
-            printf("%g,%g,%g\n",T,pp,rho);
+            //printf("%g,%g,%g\n",T,pp,rho);
             fprintf(fp, "%g,%g,%g\n",T,pp,rho);
         }
-        catch(std::exception &)
+        catch(std::exception &e)
         {
+            
+            std::cout << fluid_name << " " << e.what() << std::endl;
             break;
         }
     }
@@ -43,31 +45,33 @@ void generate_melting_curve_data(const char* file_name, const char *fluid_name, 
     delete State;
 }
 int main()
-{
-    
+{   
     if (0)
     {
-        // From Reeves, 1964
-        generate_melting_curve_data("n-Propane.mlt","propane",85.53,650);
-        generate_melting_curve_data("n-Butane.mlt","butane",134.9,575);
-        generate_melting_curve_data("n-Pentane.mlt","pentane",143.5,600);
-        generate_melting_curve_data("IsoButane-I.mlt","isobutan",113.73,2000);
-        generate_melting_curve_data("Isopentane.mlt","ipentane",112.66,500);
-        generate_melting_curve_data("Ethylene.mlt","ethylene",103.99,450);
+        generate_melting_curve_data("Ethylene-I.mlt","ethylene",103.989,110.369);
+        generate_melting_curve_data("Ethylene-II.mlt","ethylene",110.369,450);
         generate_melting_curve_data("Propylene-I.mlt","propylen",87.953,109.6);
         generate_melting_curve_data("Propylene-II.mlt","propylen",109.6,575);
-
+        generate_melting_curve_data("ParaHydrogen-I.mlt","parahyd",13.8033,22);
+        generate_melting_curve_data("ParaHydrogen-II.mlt","parahyd",22,2000);
+        
+        generate_melting_curve_data("n-Propane.mlt","propane",85.53,2000);
+        generate_melting_curve_data("n-Butane.mlt","butane",134.9,2000);
+        generate_melting_curve_data("n-Pentane.mlt","pentane",143.5,2000);
+        generate_melting_curve_data("IsoButane.mlt","isobutan",113.73,2000);
+        generate_melting_curve_data("Isopentane.mlt","ipentane",112.66,2000);
         generate_melting_curve_data("Argon.mlt","argon",83.8058,2000);
         generate_melting_curve_data("Ethane.mlt","ethane",90.37,2000);
         generate_melting_curve_data("Nitrogen.mlt","nitrogen",63.151,2000);
         generate_melting_curve_data("Fluorine.mlt","fluorine",53.4811,2000);
         generate_melting_curve_data("Methane.mlt","methane",90.70,2000);
-
         generate_melting_curve_data("Methanol.mlt","methanol",175.61,2000);
-
+        generate_melting_curve_data("Krypton.mlt","krypton",115.775,2000);
+        generate_melting_curve_data("Xenon.mlt","xenon",161.405,2000);
+        generate_melting_curve_data("CarbonMonoxide.mlt","co",68.16,2000);
+        generate_melting_curve_data("Oxygen.mlt","oxygen",54.361,2000);
         generate_melting_curve_data("CycloHexane.mlt","cyclohex",279.7,2000);
         generate_melting_curve_data("CarbonDioxide.mlt","CO2",217,2000);
-        
     }
 
     if (1)
@@ -122,13 +126,13 @@ int main()
         printf("%g %g\n",elap, summer);
         
     }
-    if (1)
+    if (0)
     {
         AbstractState *MixRP = AbstractState::factory("REFPROP","propane");
         MixRP->update(QT_INPUTS, 0, 330);
         long double s1 = MixRP->surface_tension();
 
-        AbstractState *Mix = AbstractState::factory("CORE","propane");
+        AbstractState *Mix = AbstractState::factory("HEOS","propane");
         Mix->update(QT_INPUTS, 0, 330);
         long double s2 = Mix->surface_tension();
         delete Mix; delete MixRP;

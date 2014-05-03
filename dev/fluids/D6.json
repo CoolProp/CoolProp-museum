@@ -1,6 +1,54 @@
 {
+  "CAS": "540-97-6", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 627.2885477999996, 
+        "p": 961000, 
+        "T": 645.78, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 30000000, 
+      "alpha0": [
+        {
+          "a1": -7.938561730464921, 
+          "a2": 8.452340963237452, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "c": [
+            56.37158920013201, 
+            118.0111016069331, 
+            1792.1, 
+            82.5909330141469, 
+            786.8
+          ], 
+          "type": "IdealGasHelmholtzCP0AlyLee", 
+          "Tc": 645.78, 
+          "T0": 518.109977174843
+        }
+      ], 
+      "BibTeX_EOS": "Colonna-FPE-2008", 
+      "ptriple": 159.7530381992841, 
+      "T_max": 673, 
+      "Ttriple": 270.2, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.736, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 7.111827573678096e-05, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -62,56 +110,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": -7.938561730464921, 
-          "a2": 8.452340963237452, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "c": [
-            56.37158920013201, 
-            118.0111016069331, 
-            1792.1, 
-            82.5909330141469, 
-            786.8
-          ], 
-          "type": "IdealGasHelmholtzCP0AlyLee", 
-          "Tc": 645.78, 
-          "T0": 518.109977174843
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 627.2885477999996, 
-        "p": 961000, 
-        "T": 645.78, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 2245.073821584233, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 159.7530381992841, 
       "T_max_units": "K", 
       "molar_mass": 0.444924, 
-      "pseudo_pure": false, 
-      "accentric": 0.736, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 673, 
-      "Ttriple": 270.2, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 30000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "D6", 
-  "CAS": "540-97-6", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 270.2, 
@@ -218,6 +223,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "D6", 
   "ALIASES": [
     "Dodecamethylcyclohexasiloxane", 
     "DODECAMETHYLCYCLOHEXASILOXANE"

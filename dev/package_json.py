@@ -15,7 +15,7 @@ def package_json():
         master += [fluid]
 
     fp = open('all_fluids_verbose.json','w')
-    fp.write(json.dumps(master, indent = 2))
+    fp.write(json.dumps(master, indent = 2, sort_keys = True))
     fp.close()
     
     fp = open('all_fluids.json','w')

@@ -147,12 +147,8 @@ public:
     // *************  PHASE DETERMINATION ROUTINES  ******************
     // ***************************************************************
     // *************************************************************** 
-    void DmolarT_phase_determination_pure_or_pseudopure();
+    void T_phase_determination_pure_or_pseudopure(int other, long double value);
     void DmolarP_phase_determination();
-    void PT_phase_determination();
-
-
-
 
 
 
@@ -164,6 +160,7 @@ public:
     // ***************************************************************
     // *************************************************************** 
     void DmolarT_flash();
+    void SmolarT_flash();
     void DmolarP_flash();
     void PT_flash();
     void PQ_flash();

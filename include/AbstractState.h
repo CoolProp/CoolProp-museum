@@ -71,6 +71,7 @@ protected:
         //~ return true;
     //~ }
 
+    
     /// Two important points
     SimpleState _critical, _reducing;
 
@@ -87,6 +88,9 @@ protected:
     CachedElement _viscosity, _conductivity, _surface_tension;
 
     CachedElement _hmolar, _smolar, _umolar, _logp, _logrhomolar, _cpmolar, _cvmolar, _speed_sound;
+
+    /// Ancillary values
+    CachedElement _rhoLanc, _rhoVanc, _pLanc, _pVanc;
 
     CachedElement _fugacity_coefficient;
 

@@ -1,6 +1,63 @@
 {
+  "CAS": "541-02-6", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 789.0902699999999, 
+        "p": 1161460, 
+        "T": 619.23462341, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 30000000, 
+      "alpha0": [
+        {
+          "a1": -7.87509994783932, 
+          "a2": 8.32698146948877, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "cp_over_R": -4.19725991019033, 
+          "type": "IdealGasHelmholtzCP0Constant", 
+          "Tc": 619.23462341, 
+          "T0": 484.050286854327
+        }, 
+        {
+          "c": [
+            0.223886736283434, 
+            -0.000168790032608204, 
+            6.01361096651718e-08
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT", 
+          "t": [
+            1, 
+            2, 
+            3
+          ], 
+          "T0": 484.050286854327, 
+          "Tc": 619.23462341
+        }
+      ], 
+      "BibTeX_EOS": "Colonna-FPE-2006", 
+      "ptriple": 27511.66528172533, 
+      "T_max": 673, 
+      "Ttriple": 226, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.658, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 2.69709202235242e+99, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -62,65 +119,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": -7.87509994783932, 
-          "a2": 8.32698146948877, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "cp_over_R": -4.19725991019033, 
-          "type": "IdealGasHelmholtzCP0Constant", 
-          "Tc": 619.23462341, 
-          "T0": 484.050286854327
-        }, 
-        {
-          "c": [
-            0.223886736283434, 
-            -0.000168790032608204, 
-            6.01361096651718e-08
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            1, 
-            2, 
-            3
-          ], 
-          "T0": 484.050286854327, 
-          "Tc": 619.23462341
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 789.0902699999999, 
-        "p": 1161460, 
-        "T": 619.23462341, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 2.69709202235242e+99, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 27511.66528172533, 
       "T_max_units": "K", 
       "molar_mass": 0.3707697, 
-      "pseudo_pure": false, 
-      "accentric": 0.658, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 673, 
-      "Ttriple": 226, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 30000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "D5", 
-  "CAS": "541-02-6", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 300.0, 
@@ -227,6 +232,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "D5", 
   "ALIASES": [
     "Decamethylcyclopentasiloxane", 
     "DECAMETHYLCYCLOPENTASILOXANE"

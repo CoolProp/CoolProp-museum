@@ -1,6 +1,61 @@
 {
+  "CAS": "75-19-4", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 6142.9149, 
+        "p": 5579700, 
+        "T": 398.3, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 28000000, 
+      "alpha0": [
+        {
+          "a1": 0, 
+          "a2": 0, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": -1, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "c": [
+            6.378038040672545, 
+            -0.04582023302189515, 
+            0.0002558503477107775, 
+            -3.908517142596848e-07, 
+            2.051746651955177e-10
+          ], 
+          "type": "IdealGasHelmholtzCP0PolyT", 
+          "t": [
+            0, 
+            1, 
+            2, 
+            3, 
+            4
+          ], 
+          "T0": 298.15, 
+          "Tc": 398.3
+        }
+      ], 
+      "BibTeX_EOS": "Polt-CT-1992", 
+      "ptriple": 342702203.7357092, 
+      "T_max": 473, 
+      "Ttriple": 145.7, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.3143, 
+      "accentric": 0.1305495663687517, 
+      "BibTeX_CP0": "Polt-CT-1992", 
+      "rhoVtriple": 2.376369382856871e+100, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -102,63 +157,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 0, 
-          "a2": 0, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": -1, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "c": [
-            6.378038040672545, 
-            -0.04582023302189515, 
-            0.0002558503477107775, 
-            -3.908517142596848e-07, 
-            2.051746651955177e-10
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT", 
-          "t": [
-            0, 
-            1, 
-            2, 
-            3, 
-            4
-          ], 
-          "T0": 298.15, 
-          "Tc": 398.3
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 6142.9149, 
-        "p": 5579700, 
-        "T": 398.3, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 2.376369382856871e+100, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.3143, 
-      "ptriple": 342702203.7357092, 
       "T_max_units": "K", 
       "molar_mass": 0.042081, 
-      "pseudo_pure": false, 
-      "accentric": 0.1305495663687517, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 473, 
-      "Ttriple": 145.7, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 28000000
+      "pseudo_pure": false
     }
   ], 
-  "NAME": "CycloPropane", 
-  "CAS": "75-19-4", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 273.0, 
@@ -265,6 +270,7 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "CycloPropane", 
   "ALIASES": [
     "cyclopropane", 
     "Cyclopropane", 

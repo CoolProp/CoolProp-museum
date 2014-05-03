@@ -1,6 +1,51 @@
 {
+  "CAS": "SES36.ppf", 
   "EOS": [
     {
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "rhomolar_units": "mol/m^3", 
+        "rhomolar": 2800, 
+        "p": 2849000, 
+        "T": 450.7, 
+        "T_units": "K", 
+        "p_units": "Pa"
+      }, 
+      "accentric_units": "-", 
+      "p_max_units": "Pa", 
+      "gas_constant_units": "J/mol/K", 
+      "p_max": 500000000, 
+      "alpha0": [
+        {
+          "a1": 0, 
+          "a2": 0, 
+          "type": "IdealGasHelmholtzLead"
+        }, 
+        {
+          "a": 12.09, 
+          "type": "IdealGasHelmholtzLogTau"
+        }, 
+        {
+          "type": "IdealGasHelmholtzPlanckEinstein", 
+          "t": [
+            4.874639449744842
+          ], 
+          "n": [
+            85.26
+          ]
+        }
+      ], 
+      "BibTeX_EOS": "Thol-2012", 
+      "ptriple": 573289.8712226774, 
+      "T_max": 725, 
+      "Ttriple": 200, 
+      "rhoLtriple_units": "mol/m^3", 
+      "gas_constant": 8.314472, 
+      "accentric": 0.352, 
+      "BibTeX_CP0": "", 
+      "rhoVtriple": 5.409791723018664e+99, 
+      "molar_mass_units": "kg/mol", 
+      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
           "l": [
@@ -99,53 +144,13 @@
           ]
         }
       ], 
-      "ptriple_units": "Pa", 
-      "alpha0": [
-        {
-          "a1": 0, 
-          "a2": 0, 
-          "type": "IdealGasHelmholtzLead"
-        }, 
-        {
-          "a": 12.09, 
-          "type": "IdealGasHelmholtzLogTau"
-        }, 
-        {
-          "type": "IdealGasHelmholtzPlanckEinstein", 
-          "t": [
-            4.874639449744842
-          ], 
-          "n": [
-            85.26
-          ]
-        }
-      ], 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 2800, 
-        "p": 2849000, 
-        "T": 450.7, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "rhoLtriple": 5.409791723018664e+99, 
       "Ttriple_units": "K", 
-      "gas_constant": 8.314472, 
-      "ptriple": 573289.8712226774, 
       "T_max_units": "K", 
       "molar_mass": 0.18485, 
-      "pseudo_pure": true, 
-      "accentric": 0.352, 
-      "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "T_max": 725, 
-      "Ttriple": 200, 
-      "molar_mass_units": "kg/mol", 
-      "p_max": 500000000
+      "pseudo_pure": true
     }
   ], 
-  "NAME": "SES36", 
-  "CAS": "SES36.ppf", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 200.0, 
@@ -252,5 +257,6 @@
       "type": "rhoLnoexp"
     }
   }, 
+  "NAME": "SES36", 
   "ALIASES": []
 }

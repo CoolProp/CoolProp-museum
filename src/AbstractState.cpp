@@ -23,7 +23,7 @@ AbstractState::~AbstractState() {
 
 AbstractState * AbstractState::factory(std::string backend, std::string fluid_string)
 {
-    if (!backend.compare("CORE"))
+    if (!backend.compare("HEOS"))
     {
         if (fluid_string.find('|') == -1)
         {
@@ -61,7 +61,7 @@ AbstractState * AbstractState::factory(std::string backend, std::string fluid_st
     }
     else
     {
-        throw ValueError("Invalid input to factory function");
+        throw ValueError(format("Invalid backend name [%s] to factory function",backend.c_str()));
     }
 }
 
@@ -73,6 +73,12 @@ bool AbstractState::clear() {
     this->_forceSinglePhase = false;
     this->_forceTwoPhase = false;
     this->_R = _HUGE;
+
+    /// Ancillary curve values
+    this->_rhoLanc.clear();
+    this->_rhoVanc.clear();
+    this->_pVanc.clear();
+    this->_pLanc.clear();
 
     this->_critical.T = -_HUGE;
     this->_critical.hmolar = -_HUGE;

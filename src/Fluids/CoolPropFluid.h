@@ -66,10 +66,9 @@ of the form
 \sigma = \sum_{i=0}^{k-1}a_i\left(1-\frac{T}{\tilde T_c}\right)^{n_i}
 \f]
 
-where \f$ \tilde T_c \f$ is the critical temperature used for the correlation which is almost always, but not always,
-equal to the critical temperature of the equation of state.
-
-The coefficients from Mulero are divided by 1000 in order to yield a surface tension in N/m
+where \f$ \tilde T_c \f$ is the critical temperature used for the correlation which is 
+almost always equal to the critical temperature of the equation of state.  Result for 
+surface tension is in N/m
 */
 class SurfaceTensionCorrelation
 {
@@ -103,7 +102,7 @@ public:
 };
 /**
 */
-class AncillaryFunction
+class SaturationAncillaryFunction
 {
 private:
     std::vector<double> n, t, s;
@@ -114,8 +113,8 @@ private:
     std::size_t N;
 public:
     
-    AncillaryFunction(){};
-    AncillaryFunction(rapidjson::Value &json_code)
+    SaturationAncillaryFunction(){};
+    SaturationAncillaryFunction(rapidjson::Value &json_code)
     {
         n = cpjson::get_double_array(json_code["n"]);
         t = cpjson::get_double_array(json_code["t"]);
@@ -158,16 +157,13 @@ public:
     }
 };
 
-class SurfaceTension
-{
-};
 class MeltingLine
 {
 };
 
 struct Ancillaries
 {
-    AncillaryFunction pL, pV, rhoL, rhoV;
+    SaturationAncillaryFunction pL, pV, rhoL, rhoV;
     MeltingLine melting_line;
     SurfaceTensionCorrelation surface_tension;
 };
@@ -186,11 +182,13 @@ public:
     ~EquationOfState(){};
     SimpleState reduce; ///< Reducing state used for the EOS (usually, but not always, the critical point)
     EOSLimits limits; ///< Limits on the EOS
-    double R_u; ///< The universal gas constant used for this EOS (usually, but not always, 8.314472 J/mol/K)
-    double molar_mass; ///< The molar mass in kg/mol (note NOT kg/kmol)
-    double accentric; ///< The accentric factor \f$ \omega = -log_{10}\left(\frac{p_s(T/T_c=0.7)}{p_c}\right)-1\f$
-    double Ttriple; ///< Triple point temperature (K)
-    double ptriple; ///< Triple point pressure (Pa)
+    double R_u, ///< The universal gas constant used for this EOS (usually, but not always, 8.314472 J/mol/K)
+           molar_mass, ///< The molar mass in kg/mol (note NOT kg/kmol)
+           accentric, ///< The accentric factor \f$ \omega = -log_{10}\left(\frac{p_s(T/T_c=0.7)}{p_c}\right)-1\f$
+           Ttriple, ///< Triple point temperature (K)
+           ptriple, ///< Triple point pressure (Pa)
+           rhoLtriple, ///< Density of liquid at triple point pressure (mol/m^3)
+           rhoVtriple; ///< Density of vapor at triple point pressure (mol/m^3)
     bool pseudo_pure; ///< Is a pseudo-pure fluid (true) or pure fluid (false)
     ResidualHelmholtzContainer alphar; ///< The residual Helmholtz energy
     IdealHelmholtzContainer alpha0; ///< The ideal Helmholtz energy
