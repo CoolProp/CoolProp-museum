@@ -16,7 +16,7 @@
         CoolProp::PSmolar_INPUTS, CoolProp::HmolarSmolar_INPUTS, CoolProp::SmolarT_INPUTS,
         CoolProp::HmolarT_INPUTS, CoolProp::TUmolar_INPUTS, CoolProp::PUmolar_INPUTS,
         CoolProp::DmolarHmolar_INPUTS, CoolProp::DmolarSmolar_INPUTS, CoolProp::DmolarUmolar_INPUTS,
-        CoolProp::SmolarUmolar_INPUTS
+        CoolProp::SmolarUmolar_INPUTS 
     };
 
     class ConsistencyFixture
@@ -31,8 +31,8 @@
         ~ConsistencyFixture(){
             delete pState;
         }
-        void set_backend(std::string backend_string){
-            pState = CoolProp::AbstractState::factory(backend_string);
+        void set_backend(std::string backend, std::string fluid_name){
+            pState = CoolProp::AbstractState::factory(backend, fluid_name);
         }
         void set_pair(int pair){ 
             this->pair = pair;
@@ -67,7 +67,7 @@
             case CoolProp::PUmolar_INPUTS:
                 State.update(pair, p, umolar); break;
 
-            /// In this group, density is one of the known inputs (a bit harder)
+            /// In this group, density is one of the known inputs (harder)
             case CoolProp::DmolarHmolar_INPUTS:
                 State.update(pair, rhomolar, hmolar); break;
             case CoolProp::DmolarSmolar_INPUTS:
@@ -90,9 +90,9 @@
 
     TEST_CASE_METHOD(ConsistencyFixture, "Test all input pairs for CO2 using all valid backends", "[]")
     {
-        set_backend("REFPROP/CO2");
+        set_backend("REFPROP","CO2");
         
-        int N = sizeof(inputs)/sizeof(int);
+        int N = sizeof(inputs)/sizeof(inputs[0]);
         for (double T = 300; T < 350; T += 10)
         {
             for (int i = 0; i < N; i++)

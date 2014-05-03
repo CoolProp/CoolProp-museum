@@ -62,6 +62,7 @@ namespace cpjson
 		if (!v.IsArray()) { throw CoolProp::ValueError("input is not an array"); }
 		for (rapidjson::Value::ValueIterator itr = v.Begin(); itr != v.End(); ++itr)
 		{
+            if (!itr->IsNumber()){throw CoolProp::ValueError("input is not a number");}
 			out.push_back(itr->GetDouble());
 		}
 		return out;
@@ -74,6 +75,7 @@ namespace cpjson
 		if (!v.IsArray()) { throw CoolProp::ValueError("input is not an array"); }
 		for (rapidjson::Value::ValueIterator itr = v.Begin(); itr != v.End(); ++itr)
 		{
+            if (!itr->IsNumber()){throw CoolProp::ValueError("input is not a number");}
 			out.push_back(itr->GetDouble());
 		}
 		return out;

@@ -58,9 +58,48 @@ public:
     double critical(double T, double rhomolar);
 };
 
+/**
+The surface tension correlation class uses correlations for the surface tension that are all
+of the form
+
+\f[
+\sigma = \sum_{i=0}^{k-1}a_i\left(1-\frac{T}{\tilde T_c}\right)^{n_i}
+\f]
+
+where \f$ \tilde T_c \f$ is the critical temperature used for the correlation which is almost always, but not always,
+equal to the critical temperature of the equation of state.
+
+The coefficients from Mulero are divided by 1000 in order to yield a surface tension in N/m
+*/
 class SurfaceTensionCorrelation
 {
-
+    std::vector<long double> a, n, s;
+    long double Tmin, Tmax, Tc;
+    std::string BibTeX;
+    std::size_t N;
+public:
+    
+    SurfaceTensionCorrelation(){};
+    SurfaceTensionCorrelation(rapidjson::Value &json_code)
+    {
+        a = cpjson::get_long_double_array(json_code["a"]);
+        n = cpjson::get_long_double_array(json_code["n"]);
+        
+        Tc = cpjson::get_double(json_code,"Tc");
+        BibTeX = cpjson::get_string(json_code,"BibTeX");
+        
+        this->N = n.size();
+        s = n;
+    };
+    long double evaluate(long double T)
+    {
+        long double THETA = 1-T/Tc;
+        for (std::size_t i = 0; i < N; ++i)
+        {
+            s[i] = a[i]*pow(THETA, n[i]);
+        }
+        return std::accumulate(s.begin(), s.end(), 0.0);
+    }
 };
 /**
 */
@@ -119,9 +158,18 @@ public:
     }
 };
 
+class SurfaceTension
+{
+};
+class MeltingLine
+{
+};
+
 struct Ancillaries
 {
     AncillaryFunction pL, pV, rhoL, rhoV;
+    MeltingLine melting_line;
+    SurfaceTensionCorrelation surface_tension;
 };
 
 /// The core class for an equation of state

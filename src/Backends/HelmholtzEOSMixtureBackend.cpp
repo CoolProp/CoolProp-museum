@@ -114,6 +114,17 @@ long double HelmholtzEOSMixtureBackend::calc_molar_mass(void)
     }
     return summer;
 }
+long double HelmholtzEOSMixtureBackend::calc_surface_tension(void)
+{
+    if (is_pure_or_pseudopure)
+    {
+        return components[0]->ancillaries.surface_tension.evaluate(_T);
+    }
+    else
+    {
+        throw NotImplementedError(format("surface tension not implemented for mixtures"));
+    }
+}
 
 void HelmholtzEOSMixtureBackend::update_TP_guessrho(long double T, long double p, long double rho_guess)
 {

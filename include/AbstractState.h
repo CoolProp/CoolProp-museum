@@ -171,8 +171,15 @@ protected:
     virtual long double calc_d2alpha0_dTau2(void){throw NotImplementedError("calc_d2alpha0_dTau2 is not implemented for this backend");};
 
     virtual void calc_reducing_state(void){throw NotImplementedError("calc_reducing_state is not implemented for this backend");};
+
+    
     
 public:
+
+    virtual long double calc_melt_p_T(long double T){throw NotImplementedError("calc_melt_p_T is not implemented for this backend");};
+    virtual long double calc_melt_T_p(long double p){throw NotImplementedError("calc_melt_T_p is not implemented for this backend");};
+    virtual long double calc_melt_rho_T(long double T){throw NotImplementedError("calc_melt_rho_T is not implemented for this backend");};
+
     AbstractState();
     virtual ~AbstractState();
 
@@ -193,7 +200,7 @@ public:
     4. If it starts with "BICUBIC", the BICUBIC backend will be used, yielding a BICUBICBackend instance
 
     */
-    static AbstractState * factory(std::string fluid_string);
+    static AbstractState * factory(std::string backend, std::string fluid_string);
     
     bool clear();
     virtual void update(long input_pair, double Value1, double Value2) = 0;

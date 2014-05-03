@@ -104,6 +104,8 @@ public:
     long double calc_d2alpha0_dDelta_dTau(void);
     long double calc_d2alpha0_dTau2(void);
 
+    long double calc_surface_tension(void);
+
     long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<long double> & mole_fractions, const long double &tau, const long double &delta);
     
     /**

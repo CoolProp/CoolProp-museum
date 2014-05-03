@@ -565,6 +565,48 @@ void REFPROPMixtureBackend::check_status(void)
 {
     if (!_mole_fractions_set){ throw ValueError("Mole fractions not yet set");}
 }
+double REFPROPMixtureBackend::calc_melt_Tmax()
+{
+    long ierr, index = 1;
+    char herr[255];
+    double tmin,tmax,Dmax_mol_L,pmax_kPa, Tmax_melt;
+    char htyp[3] = {'E','O','S'};
+    LIMITSdll(htyp, &(mole_fractions[0]), &tmin, &tmax, &Dmax_mol_L, &pmax_kPa, 3);
+    // Get the maximum temperature for the melting curve by using the maximum pressure
+    MELTPdll(&pmax_kPa, &(mole_fractions[0]),
+             &Tmax_melt,
+             &ierr,herr,errormessagelength);      // Error message
+    if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } 
+    //else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+    return Tmax_melt;
+}
+long double REFPROPMixtureBackend::calc_melt_p_T(long double T)
+{
+    double _T = static_cast<double>(T), p_kPa;
+    long ierr;
+    char herr[255];
+
+    if (T > calc_melt_Tmax())
+    {
+        throw ValueError(format("Melting temperature [%g] is out of range",T));
+    }
+
+    MELTTdll(&_T, &(mole_fractions[0]),
+             &p_kPa,
+             &ierr,herr,errormessagelength);      // Error message
+    if (ierr > 0) { throw ValueError(format("%s",herr).c_str()); } 
+    //else if (ierr < 0) {set_warning(format("%s",herr).c_str());}
+    return p_kPa*1000;
+}
+long double REFPROPMixtureBackend::calc_melt_T_p(long double p)
+{
+    throw NotImplementedError();
+}
+long double REFPROPMixtureBackend::calc_melt_rho_T(long double T)
+{
+    throw NotImplementedError();
+}
+
 long double REFPROPMixtureBackend::calc_viscosity(void)
 {
     double eta, tcx, rhomol_L = 0.001*_rhomolar;

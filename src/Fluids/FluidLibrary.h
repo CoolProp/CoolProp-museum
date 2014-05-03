@@ -245,6 +245,12 @@ protected:
         fluid.ancillaries.rhoV = AncillaryFunction(ancillaries["rhoV"]);
     };
 
+    /// Parse the surface_tension
+    void parse_surface_tension(rapidjson::Value &surface_tension, CoolPropFluid & fluid)
+    {
+        fluid.ancillaries.surface_tension = SurfaceTensionCorrelation(surface_tension);
+    };
+
     /// Validate the fluid file that was just constructed
     void validate(CoolPropFluid & fluid)
     {
@@ -295,9 +301,20 @@ public:
         // Validate the fluid
         validate(fluid);
 
-        // Ancillaries
+        // Ancillaries for saturation 
         if (!fluid_json.HasMember("ANCILLARIES")){throw ValueError(format("Ancillary curves are missing for fluid [%s]",fluid.name.c_str()));};
         parse_ancillaries(fluid_json["ANCILLARIES"],fluid);
+
+        // Surface tension
+        if (!(fluid_json["ANCILLARIES"].HasMember("surface_tension")))
+        {
+            std::cout << format("Surface tension curves are missing for fluid [%s]\n", fluid.name.c_str()) ;
+        }
+        else
+        {
+            parse_surface_tension(fluid_json["ANCILLARIES"]["surface_tension"], fluid);
+        }
+
         
         // If the fluid is ok...
 

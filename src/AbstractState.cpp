@@ -21,48 +21,41 @@ AbstractState::~AbstractState() {
     // TODO Auto-generated destructor stub
 }
 
-AbstractState * AbstractState::factory(std::string fluid_string)
+AbstractState * AbstractState::factory(std::string backend, std::string fluid_string)
 {
-    if (fluid_string.find("CORE/") == 0)
+    if (!backend.compare("CORE"))
     {
-        // Remove the "CORE-"
-        std::string fluids = fluid_string.substr(5,fluid_string.size()-5);
-
-        if (fluids.find('|') == -1)
+        if (fluid_string.find('|') == -1)
         {
-            return new HelmholtzEOSBackend(&(get_library().get(fluids)));
+            return new HelmholtzEOSBackend(&(get_library().get(fluid_string)));
         }
         else
         {
             // Split at the '|'
-            std::vector<std::string> components = strsplit(fluids,'|');
+            std::vector<std::string> components = strsplit(fluid_string,'|');
 
             return new HelmholtzEOSMixtureBackend(components);
         }
     }
-    // fluid_string starts with "REFPROP/" - more specificically, the first place that "REFPROP/" is found is at index 0
-    else if (fluid_string.find("REFPROP/") == 0)
+    else if (!backend.compare("REFPROP"))
     {
-        // Remove the "REFPROP-"
-        std::string fluids = fluid_string.substr(8,fluid_string.size()-8);
-
-        if (fluids.find('|') == -1)
+        if (fluid_string.find('|') == -1)
         {
-            return new REFPROPBackend(fluids);
+            return new REFPROPBackend(fluid_string);
         }
         else
         {
             // Split at the '|'
-            std::vector<std::string> components = strsplit(fluids,'|');
+            std::vector<std::string> components = strsplit(fluid_string,'|');
 
             return new REFPROPMixtureBackend(components);
         }
     }
-    else if (fluid_string.find("BRINE/") == 0)
+    else if (!backend.compare("BRINE"))
     {
         throw ValueError("BRINE backend not yet implemented");
     }
-    else if (fluid_string.find("TREND/") == 0)
+    else if (!backend.compare("TREND"))
     {
         throw ValueError("TREND backend not yet implemented");
     }
