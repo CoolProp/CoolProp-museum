@@ -86,6 +86,9 @@ public:
     long double calc_cpmolar(void);
     long double calc_hmolar(void);
     long double calc_smolar(void);
+    long double calc_smolar_nocache(long double T, long double rhomolar);
+    long double calc_hmolar_nocache(long double T, long double rhomolar);
+    long double calc_umolar_nocache(long double T, long double rhomolar);
     long double calc_umolar(void);
     long double calc_speed_sound(void);
     long double calc_fugacity_coefficient(int i);
@@ -139,8 +142,7 @@ public:
 
     double p_rhoT(long double rhomolar, long double T);
 
-
-
+    void mass_to_molar_inputs(long &input_pair, double &value1, double &value2);
 
     // *************************************************************** 
     // ***************************************************************
@@ -148,9 +150,8 @@ public:
     // ***************************************************************
     // *************************************************************** 
     void T_phase_determination_pure_or_pseudopure(int other, long double value);
+    void p_phase_determination_pure_or_pseudopure(int other, long double value);
     void DmolarP_phase_determination();
-
-
 
 
 
@@ -159,13 +160,22 @@ public:
     // *******************  FLASH ROUTINES  **************************
     // ***************************************************************
     // *************************************************************** 
-    void DmolarT_flash();
-    void SmolarT_flash();
-    void DmolarP_flash();
-    void PT_flash();
+    
+    /// Flash for given pressure and (molar) quality
     void PQ_flash();
+    /// Flash for given temperature and (molar) quality
     void QT_flash();
-
+    /// Flash for given temperature and pressure
+    void PT_flash();
+    /// A generic flash routine for the pairs (T,D), (T,H), (T,S), and (T,U).  Similar analysis is needed
+    /// @param other The index for the other input, see CoolProp::parameters; allowed values are iDmolar, iHmolar, iSmolar, iUmolar
+    void DHSU_T_flash(int other);
+    /// A generic flash routine for the pairs (P,H), (P,S), and (P,U).  Similar analysis is needed
+    /// @param other The index for the other input, see CoolProp::parameters; allowed values are iHmolar, iSmolar, iUmolar
+    void HSU_P_flash(int other);
+    /// A generic flash routine for the pairs (D,P), (D,H), (D,S) and (D,U).  Similar analysis is needed
+    /// @param other The index for the other input, see CoolProp::parameters; allowed values are iP, iHmolar, iSmolar, iUmolar
+    void PHSU_D_flash(int other);
 
 
 
@@ -188,7 +198,7 @@ public:
     long double solver_rho_Tp_SRK(long double T, long double p, int phase);
 
 
-
+    long double solver_for_rho_given_T_oneof_HSU(long double T, long double value, int other);
 
 
 
@@ -435,6 +445,10 @@ namespace SaturationSolvers
         bool use_guesses;
         long double omega, rhoL, rhoV, pL, pV;
     };
+    struct saturation_D_pure_options{
+        bool use_guesses;
+        long double omega, rhoL, rhoV, pL, pV;
+    };
 
     enum sstype_enum {imposed_T, imposed_p};
     struct mixture_VLE_IO
@@ -458,6 +472,7 @@ namespace SaturationSolvers
         return log(EOS->reduce.p/p)+5.373*(1 + EOS->accentric)*(1-EOS->reduce.T/T);
     };
 
+    static void saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, saturation_D_pure_options &options);
     static void saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options);
     static void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
     static void saturation_p_pure(HelmholtzEOSMixtureBackend *HEOS, long double p, saturation_p_pure_options &options);

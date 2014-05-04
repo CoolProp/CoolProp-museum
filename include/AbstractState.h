@@ -90,7 +90,7 @@ protected:
     CachedElement _hmolar, _smolar, _umolar, _logp, _logrhomolar, _cpmolar, _cvmolar, _speed_sound;
 
     /// Ancillary values
-    CachedElement _rhoLanc, _rhoVanc, _pLanc, _pVanc;
+    CachedElement _rhoLanc, _rhoVanc, _pLanc, _pVanc, _TLanc, _TVanc;
 
     CachedElement _fugacity_coefficient;
 

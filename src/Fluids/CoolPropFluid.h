@@ -10,6 +10,7 @@
 
 #include "DataStructures.h"
 #include "Helmholtz.h"
+#include "Solvers.h"
 
 #include <numeric>
 #include <string>
@@ -154,6 +155,31 @@ public:
                 tau_r_value = 1.0;
             return reducing_value*exp(tau_r_value*summer);
         }
+    }
+    double invert(double value)
+    {
+        // Invert the ancillary curve to get the temperature as a function of the output variable
+        // Define the residual to be driven to zero
+        class solver_resid : public FuncWrapper1D
+        {
+        public:
+            int other;
+            long double T, value, r, current_value;
+            SaturationAncillaryFunction *anc;
+
+            solver_resid(SaturationAncillaryFunction *anc, long double value) : anc(anc), value(value){};
+                
+            double call(double T){ 
+                this->T = T;
+                current_value = anc->evaluate(T);
+                r = current_value - value;
+                return r;
+            };
+        };
+        solver_resid resid(this, value);
+        std::string errstring;
+
+        return Brent(resid,Tmin,Tmax,DBL_EPSILON,1e-12,100,errstring);
     }
 };
 

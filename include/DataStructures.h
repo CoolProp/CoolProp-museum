@@ -13,7 +13,7 @@ namespace CoolProp {
 
 struct SimpleState
 {
-    double rhomolar, T, p, hmolar, smolar;
+    double rhomolar, T, p, hmolar, smolar, umolar;
 };
 
 /// --------------------------------------------------
@@ -21,7 +21,7 @@ struct SimpleState
 /// --------------------------------------------------
 /// These are constants for the input and output parameters
 /// The structure is taken directly from the AbstractState class.
-enum params {
+enum parameters{
     // Bulk properties
     iT, iDmolar, iP, iQ, iHmolar, iSmolar, iCpmolar, iCvmolar, iUmolar, ispeed_sound, iisothermal_compressibility, iisobaric_expansion_coefficient,
 
@@ -47,6 +47,7 @@ enum params {
     idsdp_constT, idsdrho_constp, idsdrho_constT, idsdT_constp, idsdT_constrho,
     id2sdp2_constT,	id2sdrho2_constT, id2sdrhodT, id2sdT2_constp, id2sdT2_constrho,
     id2sdTdp,
+
     // Fundamental derivative of gas dynamics
     ifundamental_derivative_of_gas_dynamics, id2pdv2_consts,
 

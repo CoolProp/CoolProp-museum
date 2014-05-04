@@ -220,6 +220,16 @@
 	    return L0*f0+L1*f1+L2*f2+L3*f3;
     };
 
+    template<class T> T is_in_closed_range( T x1, T x2, T x)
+    {
+        if (x1 > x2)
+        {
+            std::swap(x1, x2);
+        }
+
+	    return (x >= x1 && x <= x2);
+    };
+
 	void solve_cubic(double a, double b, double c, double d, int &N, double &x0, double &x1, double &x2);
 	
 	inline double min3(double x1, double x2, double x3){return std::min(std::min(x1, x2), x3);};

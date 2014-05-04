@@ -79,6 +79,8 @@ bool AbstractState::clear() {
     this->_rhoVanc.clear();
     this->_pVanc.clear();
     this->_pLanc.clear();
+    this->_TVanc.clear();
+    this->_TLanc.clear();
 
     this->_critical.T = -_HUGE;
     this->_critical.hmolar = -_HUGE;
@@ -94,15 +96,16 @@ bool AbstractState::clear() {
 
     /// Bulk values
     this->_rhomolar = -_HUGE;
-    this->_umolar = -_HUGE;
-    this->_cpmolar = -_HUGE;
-    this->_cvmolar = -_HUGE;
-    this->_speed_sound = -_HUGE;
     this->_T = -_HUGE;
     this->_p = -_HUGE;
     this->_Q = -_HUGE;
     this->_tau = -_HUGE;
     this->_delta = -_HUGE;
+
+    this->_umolar.clear();
+    this->_cpmolar.clear();
+    this->_cvmolar.clear();
+    this->_speed_sound.clear();
     this->_hmolar.clear();
     this->_smolar.clear();
     this->_logp.clear();

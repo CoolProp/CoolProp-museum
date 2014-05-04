@@ -13,15 +13,26 @@
 
     static int inputs[] = {
         CoolProp::DmolarT_INPUTS,
-        //CoolProp::SmolarT_INPUTS,
-        //CoolProp::HmolarT_INPUTS, 
-        //CoolProp::TUmolar_INPUTS, 
+        CoolProp::SmolarT_INPUTS,
+        CoolProp::HmolarT_INPUTS, 
+        CoolProp::TUmolar_INPUTS, 
         
-        /*CoolProp::DmolarP_INPUTS, CoolProp::HmolarP_INPUTS,
-        CoolProp::PSmolar_INPUTS, CoolProp::HmolarSmolar_INPUTS, 
-        CoolProp::PUmolar_INPUTS, CoolProp::DmolarHmolar_INPUTS, 
-        CoolProp::DmolarSmolar_INPUTS, CoolProp::DmolarUmolar_INPUTS,
-        CoolProp::SmolarUmolar_INPUTS */
+        CoolProp::DmolarP_INPUTS, 
+        CoolProp::DmolarHmolar_INPUTS, 
+        CoolProp::DmolarSmolar_INPUTS, 
+        CoolProp::DmolarUmolar_INPUTS,
+        
+        /*
+        CoolProp::HmolarP_INPUTS,
+        CoolProp::PSmolar_INPUTS,
+        CoolProp::PUmolar_INPUTS, 
+        */
+
+        /*
+        CoolProp::HmolarSmolar_INPUTS, 
+        CoolProp::HmolarUmolar_INPUTS, 
+        CoolProp::SmolarUmolar_INPUTS 
+        */
     };
 
     class ConsistencyFixture
@@ -98,7 +109,7 @@
         set_backend("HEOS", "CO2");
         
         int N = sizeof(inputs)/sizeof(inputs[0]);
-        for (double p = 100; p < 800000000.0; p *= 5)
+        for (double p = 600000; p < 800000000.0; p *= 5)
         {
             for (double T = 220; T < 2000; T += 10)
             {
@@ -109,6 +120,7 @@
                     set_pair(pair);
                     CAPTURE(pair_desc);
                     CAPTURE(T);
+                    CAPTURE(p);
                     CHECK_NOTHROW(single_phase_consistency_check(T, p));
                 }
             }
@@ -165,6 +177,7 @@
     {
         Catch::ConfigData &config = session.configData();
         config.testsOrTags.clear();
+        //config.shouldDebugBreak = true;
         session.useConfigData(config);
         session.run();
     }
