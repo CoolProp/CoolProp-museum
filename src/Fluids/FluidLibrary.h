@@ -197,7 +197,10 @@ protected:
         EOS.Ttriple = cpjson::get_double(EOS_json, "Ttriple");
         EOS.ptriple = cpjson::get_double(EOS_json, "ptriple");
         EOS.rhoLtriple = cpjson::get_double(EOS_json, "rhoLtriple");
+        EOS.rhoVtriple = cpjson::get_double(EOS_json, "rhoVtriple");
         EOS.pseudo_pure = cpjson::get_bool(EOS_json, "pseudo_pure");
+        EOS.limits.Tmax = cpjson::get_double(EOS_json, "T_max");
+        EOS.limits.pmax = cpjson::get_double(EOS_json, "p_max");
 
         rapidjson::Value &reducing_state = EOS_json["reducing_state"];
         
@@ -205,6 +208,7 @@ protected:
         EOS.reduce.T = cpjson::get_double(reducing_state,"T");
         EOS.reduce.rhomolar = cpjson::get_double(reducing_state,"rhomolar");
         EOS.reduce.p = cpjson::get_double(reducing_state,"p");
+        
         
         parse_alphar(EOS_json["alphar"], EOS);
         parse_alpha0(EOS_json["alpha0"], EOS);

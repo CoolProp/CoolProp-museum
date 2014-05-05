@@ -110,6 +110,9 @@ public:
 
     long double calc_surface_tension(void);
 
+    long double calc_Tmax(void);
+    long double calc_pmax(void);
+
     long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<long double> & mole_fractions, const long double &tau, const long double &delta);
     
     /**
@@ -448,7 +451,7 @@ namespace SaturationSolvers
     };
     struct saturation_D_pure_options{
         enum imposed_rho_options{IMPOSED_RHOL, IMPOSED_RHOV};
-        bool use_guesses;
+        bool use_guesses, only_ancillaries;
         long double omega, rhoL, rhoV, pL, pV;
         int imposed_rho;
     };

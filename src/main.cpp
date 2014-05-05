@@ -76,15 +76,15 @@ int main()
 
     if (1)
     {
-        AbstractState *propane = AbstractState::factory("HEOS","CO2");
-        propane->update(DmolarP_INPUTS,20000,1e7);
-        double d1 = propane->rhomolar();
-        AbstractState *propaneRP = AbstractState::factory("REFPROP","propane");
-        propaneRP->update(QT_INPUTS,1,85.525);
-        double d2 = propaneRP->rhomolar();
-        double rr = (d2/d1-1)*100;
-        delete(propane); delete(propaneRP);
-        //run_tests();
+        //AbstractState *propane = AbstractState::factory("HEOS","CO2");
+        //propane->update(DmolarP_INPUTS,203.69, 600000);
+        //double d1 = propane->rhomolar();
+        //AbstractState *propaneRP = AbstractState::factory("REFPROP","propane");
+        //propaneRP->update(QT_INPUTS,1,85.525);
+        //double d2 = propaneRP->rhomolar();
+        //double rr = (d2/d1-1)*100;
+        //delete(propane); delete(propaneRP);
+        run_tests();
     }
     if (0)
     {

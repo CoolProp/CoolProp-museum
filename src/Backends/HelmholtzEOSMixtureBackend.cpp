@@ -125,6 +125,24 @@ long double HelmholtzEOSMixtureBackend::calc_surface_tension(void)
         throw NotImplementedError(format("surface tension not implemented for mixtures"));
     }
 }
+long double HelmholtzEOSMixtureBackend::calc_Tmax(void)
+{
+    double summer = 0;
+    for (unsigned int i = 0; i < components.size(); ++i)
+    {
+        summer += mole_fractions[i]*components[i]->pEOS->limits.Tmax;
+    }
+    return summer;
+}
+long double HelmholtzEOSMixtureBackend::calc_pmax(void)
+{
+    double summer = 0;
+    for (unsigned int i = 0; i < components.size(); ++i)
+    {
+        summer += mole_fractions[i]*components[i]->pEOS->limits.pmax;
+    }
+    return summer;
+}
 
 void HelmholtzEOSMixtureBackend::update_TP_guessrho(long double T, long double p, long double rho_guess)
 {
@@ -865,6 +883,38 @@ void HelmholtzEOSMixtureBackend::PQ_flash()
 }
 void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
 {
+    // Define the residual to be driven to zero
+    class solver_resid : public FuncWrapper1D
+    {
+    public:
+        int other;
+        long double T, value, r, eos, rhomolar;
+        HelmholtzEOSMixtureBackend *HEOS;
+
+        solver_resid(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, long double value, int other) : HEOS(HEOS), rhomolar(rhomolar), value(value), other(other){};
+        double call(double T){
+            this->T = T;
+            switch(other)
+            {
+            case iP:
+                eos = HEOS->calc_pressure_nocache(T, rhomolar); break;
+            case iSmolar:
+                eos = HEOS->calc_smolar_nocache(T, rhomolar); break;
+            case iHmolar:
+                eos = HEOS->calc_hmolar_nocache(T, rhomolar); break;
+            case iUmolar:
+                eos = HEOS->calc_umolar_nocache(T, rhomolar); break;
+            default:
+                throw ValueError(format("Input not supported"));
+            }
+            
+            r = eos-value;
+            return r;
+        };
+    };
+    
+    std::string errstring;
+
     if (imposed_phase_index > -1) 
     {
         // Use the phase defined by the imposed phase
@@ -874,14 +924,16 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
     {
         if (is_pure_or_pseudopure)
         {
-            long double rhoLtriple = components[0]->pEOS->rhoLtriple;
-            long double rhoVtriple = components[0]->pEOS->rhoVtriple;
+            CoolPropFluid * component = components[0];
+            HelmholtzEOSMixtureBackend *Sat;
+            long double rhoLtriple = component->pEOS->rhoLtriple;
+            long double rhoVtriple = component->pEOS->rhoVtriple;
             // Check if in the "normal" region
             if (_rhomolar >= rhoVtriple && _rhomolar <= rhoLtriple)
             {
-                long double yL, yV, value, y_solid, y_sat;
-                long double TLtriple = components[0]->pEOS->Ttriple; //TODO: separate TL and TV for ppure
-                long double TVtriple = components[0]->pEOS->Ttriple; //TODO: separate TL and TV for ppure
+                long double yL, yV, value, y_solid;
+                long double TLtriple = component->pEOS->Ttriple; //TODO: separate TL and TV for ppure
+                long double TVtriple = component->pEOS->Ttriple; //TODO: separate TL and TV for ppure
                 
                 // First check if solid (below the line connecting the triple point values) - this is an error for now
                 switch (other)
@@ -908,20 +960,26 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
                     options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOL;
                     SaturationSolvers::saturation_D_pure(this, _rhomolar, options);
                     // SatL and SatV have the saturation values
-                    y_sat = SatL->keyed_output(other);
+                    Sat = SatL;
                 }
                 else
                 {
                     options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOV;
                     SaturationSolvers::saturation_D_pure(this, _rhomolar, options);
                     // SatL and SatV have the saturation values
-                    y_sat = SatV->keyed_output(other);
+                    Sat = SatV;
                 }
 
                 // If it is above, it is not two-phase and either liquid, vapor or supercritical
-                if (value > y_sat)
+                if (value > Sat->keyed_output(other))
                 {
-                    throw NotImplementedError("single-phase for PHSU_D_flash not supported yet");
+                    
+                    solver_resid resid(this, _rhomolar, value, other);
+
+                    _T = Brent(resid, Sat->keyed_output(iT), this->Tmax(), DBL_EPSILON, 1e-12, 100, errstring);
+                    _Q = 10000;
+                    calc_pressure();
+
                 }
                 else
                 {
@@ -930,14 +988,15 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
 
             }
             // Check if vapor/solid region below triple point vapor density
-            else if (_rhomolar < components[0]->pEOS->rhoVtriple)
+            else if (_rhomolar < component->pEOS->rhoVtriple)
             {
-                NotImplementedError("PHSU_D_flash V/S not ready yet");
+                // If value is above the value calculated from X(Ttriple, _rhomolar), it is vapor
+                throw NotImplementedError("PHSU_D_flash V/S not ready yet");
             }
             // Check in the liquid/solid region above the triple point density
             else 
             {
-                NotImplementedError("PHSU_D_flash L/S not ready yet");
+                throw NotImplementedError("PHSU_D_flash L/S not ready yet");
             }
         }
         else 
@@ -1016,6 +1075,10 @@ long double HelmholtzEOSMixtureBackend::calc_pressure_nocache(long double T, lon
     // Get pressure
     return rhomolar*gas_constant()*T*(1+delta*dalphar_dDelta);
 }
+//long double HelmholtzEOSMixtureBackend::solver_for_T_given_rho_oneof_PHSU(long double T, long double value, int other, int rhomin, int rhomax)
+//{
+//
+//}
 long double HelmholtzEOSMixtureBackend::solver_for_rho_given_T_oneof_HSU(long double T, long double value, int other)
 {
     long double ymelt, yc, ymin, y;
@@ -2059,7 +2122,7 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
         error = sqrt(pow(r[0], 2)+pow(r[1], 2));
         iter++;
         if (iter > 100){
-            throw SolutionError(format("Akasaka solver did not converge after 100 iterations"));
+            throw SolutionError(format("saturation_D_pure solver did not converge after 100 iterations with rho: %g mol/m^3",rhomolar));
         }
     }
     while (error > 1e-10);

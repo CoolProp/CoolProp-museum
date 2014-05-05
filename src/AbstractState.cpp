@@ -154,11 +154,24 @@ double AbstractState::keyed_output(int key)
         return T();
     case iP:
         return p();
+    case iDmolar:
+        return rhomolar();
     case iHmolar:
         return hmolar();
+    case iSmolar:
+        return smolar();
+    case iUmolar:
+        return umolar();
     default:
         throw ValueError(format("This input [%d:%s] is not valid to keyed_output",key,"TODO"));
     }
+}
+
+double AbstractState::Tmax(void){
+    return calc_Tmax();
+}
+double AbstractState::pmax(void){
+    return calc_pmax();
 }
 
 double AbstractState::hmolar(void){

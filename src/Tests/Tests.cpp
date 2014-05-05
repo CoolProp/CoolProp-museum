@@ -13,9 +13,9 @@
 
     static int inputs[] = {
         CoolProp::DmolarT_INPUTS,
-        CoolProp::SmolarT_INPUTS,
+        /*CoolProp::SmolarT_INPUTS,
         CoolProp::HmolarT_INPUTS, 
-        CoolProp::TUmolar_INPUTS, 
+        CoolProp::TUmolar_INPUTS, */
         
         CoolProp::DmolarP_INPUTS, 
         CoolProp::DmolarHmolar_INPUTS, 
@@ -59,43 +59,47 @@
 
             // Start with T,P as inputs, cycle through all the other pairs that are supported
             State.update(CoolProp::PT_INPUTS, p, T);
-            long double hmolar = State.hmolar(), smolar = State.smolar(), rhomolar = State.rhomolar(), umolar = State.umolar();
-
+            long double hmolar = State.hmolar(), smolar = State.smolar(), rhomolar = State.rhomolar(), umolar = State.umolar(), x1, x2;
+            
             switch (pair)
             {
             /// In this group, T is one of the known inputs, iterate for the other one (easy)
             case CoolProp::HmolarT_INPUTS:
-                State.update(pair, hmolar, T); break;
+                x1 = hmolar; x2 = T;  break;
             case CoolProp::SmolarT_INPUTS:
-                State.update(pair, smolar, T); break;
+                x1 = smolar; x2 = T; break;
             case CoolProp::TUmolar_INPUTS:
-                State.update(pair, T, umolar); break;
+                x1 = T; x2 = umolar; break;
             case CoolProp::DmolarT_INPUTS:
-                State.update(pair, rhomolar, T); break;
+                x1 = rhomolar; x2 = T; break;
+
+            /// In this group, D is one of the known inputs, iterate for the other one (a little bit harder)
+            case CoolProp::DmolarHmolar_INPUTS:
+                x1 = rhomolar; x2 = hmolar; break;
+            case CoolProp::DmolarSmolar_INPUTS:
+                x1 = rhomolar; x2 = smolar; break;
+            case CoolProp::DmolarUmolar_INPUTS:
+                x1 = rhomolar; x2 = umolar; break;
+            case CoolProp::DmolarP_INPUTS:
+                x1 = rhomolar; x2 = p; break;
 
             /// In this group, p is one of the known inputs (a little less easy)
-            case CoolProp::DmolarP_INPUTS:
-                State.update(pair, rhomolar, p); break;
             case CoolProp::HmolarP_INPUTS:
-                State.update(pair, hmolar, p); break;
+                x1 = hmolar; x2 = p; break;
             case CoolProp::PSmolar_INPUTS:
-                State.update(pair, p, smolar); break;
+                x1 = p; x2 = smolar; break;
             case CoolProp::PUmolar_INPUTS:
-                State.update(pair, p, umolar); break;
-
-            /// In this group, density is one of the known inputs (harder)
-            case CoolProp::DmolarHmolar_INPUTS:
-                State.update(pair, rhomolar, hmolar); break;
-            case CoolProp::DmolarSmolar_INPUTS:
-                State.update(pair, rhomolar, smolar); break;
-            case CoolProp::DmolarUmolar_INPUTS:
-                State.update(pair, rhomolar, umolar); break;
+                x1 = p; x2 = umolar; break;
 
             case CoolProp::HmolarSmolar_INPUTS:
-                State.update(pair, hmolar, smolar); break;
+                x1 = hmolar; x2 = smolar; break;
             case CoolProp::SmolarUmolar_INPUTS:
-                State.update(pair, smolar, umolar); break;
+                x1 = smolar; x2 = umolar; break;
             }
+            CAPTURE(x1);
+            CAPTURE(x2);
+            //std::cout << format("input values were : %g, %g\n", x1, x2);
+            State.update(pair, x1, x2);
 
             // Make sure we end up back at the same temperature and pressure we started out with
             if(fabs(T-State.T()) > 1e-2) throw CoolProp::ValueError(format("Error on T [%g K] is greater than 1e-2",fabs(State.T()-T)));
@@ -111,7 +115,7 @@
         int N = sizeof(inputs)/sizeof(inputs[0]);
         for (double p = 600000; p < 800000000.0; p *= 5)
         {
-            for (double T = 220; T < 2000; T += 10)
+            for (double T = 220; T < pState->Tmax(); T += 10)
             {
                 for (int i = 0; i < N; i++)
                 {

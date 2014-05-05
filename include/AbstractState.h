@@ -176,7 +176,10 @@ protected:
 
     virtual void calc_reducing_state(void){throw NotImplementedError("calc_reducing_state is not implemented for this backend");};
 
-    
+    /// Using this backend, calculate the maximum temperature in K
+    virtual long double calc_Tmax(void){throw NotImplementedError("calc_Tmax is not implemented for this backend");};
+    /// Using this backend, calculate the maximum pressure in Pa
+    virtual long double calc_pmax(void){throw NotImplementedError("calc_pmax is not implemented for this backend");};
     
 public:
 
@@ -219,6 +222,10 @@ public:
     const CoolProp::SimpleState & get_reducing(){return _reducing;};
 
     double keyed_output(int key);
+
+    // Limits
+    double Tmax(void);
+    double pmax(void);
     // ----------------------------------------
     // Bulk properties - temperature and density are directly calculated every time
     // All other parameters are calculated on an as-needed basis
