@@ -249,8 +249,11 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
             throw ValueError(format("This pair of inputs [%s] is not yet supported", get_input_pair_short_desc(input_pair).c_str()));
     }
     // Check the values that must always be set
+    if (_p < 0){ throw ValueError("p is less than zero");}
     if (!ValidNumber(_p)){ throw ValueError("p is not a valid number");}
+    if (_T < 0){ throw ValueError("T is less than zero");}
     if (!ValidNumber(_T)){ throw ValueError("T is not a valid number");}
+    if (_rhomolar < 0){ throw ValueError("rhomolar is less than zero");}
     if (!ValidNumber(_rhomolar)){ throw ValueError("rhomolar is not a valid number");}
     if (!ValidNumber(_Q)){ throw ValueError("Q is not a valid number");}
 }
@@ -955,6 +958,8 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
 
                 // Check if other is above the saturation value.
                 SaturationSolvers::saturation_D_pure_options options;
+                options.omega = 1;
+                options.use_logdelta = false;
                 if (_rhomolar > _crit.rhomolar)
                 {
                     options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOL;
@@ -973,13 +978,11 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
                 // If it is above, it is not two-phase and either liquid, vapor or supercritical
                 if (value > Sat->keyed_output(other))
                 {
-                    
                     solver_resid resid(this, _rhomolar, value, other);
 
                     _T = Brent(resid, Sat->keyed_output(iT), this->Tmax(), DBL_EPSILON, 1e-12, 100, errstring);
                     _Q = 10000;
                     calc_pressure();
-
                 }
                 else
                 {
@@ -990,13 +993,69 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
             // Check if vapor/solid region below triple point vapor density
             else if (_rhomolar < component->pEOS->rhoVtriple)
             {
+                long double y, value;
+                long double TVtriple = component->pEOS->Ttriple; //TODO: separate TL and TV for ppure
+
                 // If value is above the value calculated from X(Ttriple, _rhomolar), it is vapor
-                throw NotImplementedError("PHSU_D_flash V/S not ready yet");
+                switch (other)
+                {
+                    case iSmolar:
+                        y = calc_smolar_nocache(TVtriple, _rhomolar); value = _smolar; break;
+                    case iHmolar:
+                        y = calc_hmolar_nocache(TVtriple, _rhomolar); value = _hmolar; break;
+                    case iUmolar:
+                        y = calc_umolar_nocache(TVtriple, _rhomolar); value = _umolar; break;
+                    case iP:
+                        y = calc_pressure_nocache(TVtriple, _rhomolar); value = _p; break;
+                    default:
+                        throw ValueError(format("Input is invalid"));
+                }
+                if (value > y)
+                {
+                    solver_resid resid(this, _rhomolar, value, other);
+
+                    _T = Brent(resid, TVtriple, this->Tmax(), DBL_EPSILON, 1e-12, 100, errstring);
+                    _Q = 10000;
+                    calc_pressure();
+                }
+                else
+                {
+                    throw ValueError(format("D < DLtriple"));
+                }
+
             }
             // Check in the liquid/solid region above the triple point density
             else 
             {
-                throw NotImplementedError("PHSU_D_flash L/S not ready yet");
+                long double y, value;
+                long double TLtriple = component->pEOS->Ttriple; //TODO: separate TL and TV for ppure
+
+                // If value is above the value calculated from X(Ttriple, _rhomolar), it is vapor
+                switch (other)
+                {
+                    case iSmolar:
+                        y = calc_smolar_nocache(TLtriple, _rhomolar); value = _smolar; break;
+                    case iHmolar:
+                        y = calc_hmolar_nocache(TLtriple, _rhomolar); value = _hmolar; break;
+                    case iUmolar:
+                        y = calc_umolar_nocache(TLtriple, _rhomolar); value = _umolar; break;
+                    case iP:
+                        y = calc_pressure_nocache(TLtriple, _rhomolar); value = _p; break;
+                    default:
+                        throw ValueError(format("Input is invalid"));
+                }
+                if (value > y)
+                {
+                    solver_resid resid(this, _rhomolar, value, other);
+
+                    _T = Brent(resid, TLtriple, this->Tmax(), DBL_EPSILON, 1e-12, 100, errstring);
+                    _Q = 10000;
+                    calc_pressure();
+                }
+                else
+                {
+                    throw ValueError(format("D < DLtriple"));
+                }
             }
         }
         else 
@@ -2060,6 +2119,7 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
     {
         throw e;
     }
+    double T0 = T, rhoL0 = rhoL, rhoV0 = rhoV;
 
     do{
         /*if (get_debug_level()>8){
@@ -2080,8 +2140,9 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
         double d2alphar_ddelta_dtauV = SatV->d2alphar_dDelta_dTau();
         double alpharL = SatL->alphar();
         double alpharV = SatV->alphar();
-        double dalphar_ddeltaV = SatV->dalphar_dDelta();
         double dalphar_ddeltaL = SatL->dalphar_dDelta();
+        double dalphar_ddeltaV = SatV->dalphar_dDelta();
+        
         
         // -r_1
         r[0] = -(deltaV*(1+deltaV*dalphar_ddeltaV)-deltaL*(1+deltaL*dalphar_ddeltaL));
@@ -2091,29 +2152,57 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
         // dr1_dtau
         J[0][0] = pow(deltaV,2)*d2alphar_ddelta_dtauV-pow(deltaL,2)*d2alphar_ddelta_dtauL;
         // dr2_dtau
-        J[1][0] = deltaV*d2alphar_ddelta_dtauV+deltaV*dalphar_dtauV-deltaL*d2alphar_ddelta_dtauL-deltaL*dalphar_dtauL;
+        J[1][0] = deltaV*d2alphar_ddelta_dtauV+dalphar_dtauV-deltaL*d2alphar_ddelta_dtauL-dalphar_dtauL;
 
         if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOL)
         {
             double d2alphar_ddelta2V = SatV->d2alphar_dDelta2();
-            J[0][1] = deltaV+2*pow(deltaV,2)*dalphar_ddeltaV+pow(deltaV,3)*d2alphar_ddelta2V;
-            J[1][1] = pow(deltaV,2)*d2alphar_ddelta2V+2*deltaV*dalphar_ddeltaV+1;
+            if (options.use_logdelta)
+            {
+                J[0][1] = deltaV+2*pow(deltaV,2)*dalphar_ddeltaV+pow(deltaV,3)*d2alphar_ddelta2V;
+                J[1][1] = pow(deltaV,2)*d2alphar_ddelta2V+2*deltaV*dalphar_ddeltaV+1;
+            }
+            else
+            {
+                J[0][1] = 1+2*deltaV*dalphar_ddeltaV+pow(deltaV,2)*d2alphar_ddelta2V;
+                J[1][1] = deltaV*d2alphar_ddelta2V+2*dalphar_ddeltaV+1/deltaV;
+            }
         }
         else if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOV)
         {
             double d2alphar_ddelta2L = SatL->d2alphar_dDelta2();
-            J[0][1] = -deltaL-2*pow(deltaL,2)*dalphar_ddeltaL-pow(deltaL,3)*d2alphar_ddelta2L;
-            J[1][1] = -pow(deltaL,2)*d2alphar_ddelta2L-2*deltaL*dalphar_ddeltaL-1;
+            if (options.use_logdelta)
+            {
+                J[0][1] = -deltaL-2*pow(deltaL,2)*dalphar_ddeltaL-pow(deltaL,3)*d2alphar_ddelta2L;
+                J[1][1] = -pow(deltaL,2)*d2alphar_ddelta2L-2*deltaL*dalphar_ddeltaL-1;
+            }
+            else
+            {
+                J[0][1] = -1-2*deltaL*dalphar_ddeltaL-pow(deltaL,2)*d2alphar_ddelta2L;
+                J[1][1] = -deltaL*d2alphar_ddelta2L-2*dalphar_ddeltaL-1/deltaL;
+            }
         }
+
+        double DET = J[0][0]*J[1][1]-J[0][1]*J[1][0];
 
         v = linsolve(J, r);
 
-        tau += v[0];
+        tau += options.omega*v[0];
 
         if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOL)
-            deltaV = exp(log(deltaV)+v[1]);
+        {
+            if (options.use_logdelta)
+                deltaV = exp(log(deltaV)+options.omega*v[1]);
+            else
+                deltaV += v[1];
+        }
         else
-            deltaL = exp(log(deltaL)+v[1]);
+        {
+            if (options.use_logdelta)
+                deltaL = exp(log(deltaL)+options.omega*v[1]);
+            else
+                deltaL += v[1];
+        }
 
         rhoL = deltaL*reduce.rhomolar;
         rhoV = deltaV*reduce.rhomolar;
@@ -2121,11 +2210,15 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
         
         error = sqrt(pow(r[0], 2)+pow(r[1], 2));
         iter++;
-        if (iter > 100){
+        if (T < 0)
+        {
+            throw SolutionError(format("saturation_D_pure solver T < 0"));
+        }
+        if (iter > 200){
             throw SolutionError(format("saturation_D_pure solver did not converge after 100 iterations with rho: %g mol/m^3",rhomolar));
         }
     }
-    while (error > 1e-10);
+    while (error > 1e-9);
 
 }
 void SaturationSolvers::saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options)

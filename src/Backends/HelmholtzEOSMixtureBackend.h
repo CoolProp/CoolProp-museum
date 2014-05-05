@@ -438,11 +438,11 @@ public:
 namespace SaturationSolvers
 {
     struct saturation_T_pure_Akasaka_options{
-        bool use_guesses;
+        bool use_guesses; ///< true to start off at the values specified by rhoL, rhoV
         long double omega, rhoL, rhoV, pL, pV;
     };
     struct saturation_T_pure_options{
-        bool use_guesses;
+        bool use_guesses; ///< true to start off at the values specified by rhoL, rhoV
         long double omega, rhoL, rhoV, pL, pV;
     };
     struct saturation_p_pure_options{
@@ -451,9 +451,11 @@ namespace SaturationSolvers
     };
     struct saturation_D_pure_options{
         enum imposed_rho_options{IMPOSED_RHOL, IMPOSED_RHOV};
-        bool use_guesses, only_ancillaries;
+        bool use_guesses, ///< True to start off at the values specified by rhoL, rhoV, T
+             use_logdelta; ///< True to use partials with respect to log(delta) rather than delta
         long double omega, rhoL, rhoV, pL, pV;
         int imposed_rho;
+        saturation_D_pure_options(){ use_logdelta = true; omega = 1.0;} // Defaults
     };
 
     enum sstype_enum {imposed_T, imposed_p};
