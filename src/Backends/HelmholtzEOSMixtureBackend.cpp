@@ -210,7 +210,7 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
         case TUmolar_INPUTS:
             _T = value1; _umolar = value2; DHSU_T_flash(iUmolar); break;
         case DmolarP_INPUTS:
-            _rhomolar = value1; _p = value2; PHSU_D_flash(iDmolar); break;
+            _rhomolar = value1; _p = value2; PHSU_D_flash(iP); break;
         case DmolarHmolar_INPUTS:
             _rhomolar = value1; _hmolar = value2; PHSU_D_flash(iHmolar); break;
         case DmolarSmolar_INPUTS:
@@ -893,6 +893,8 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
                         yL = calc_hmolar_nocache(TLtriple, rhoLtriple); yV = calc_hmolar_nocache(TVtriple, rhoVtriple); value = _hmolar; break;
                     case iUmolar:
                         yL = calc_umolar_nocache(TLtriple, rhoLtriple); yV = calc_umolar_nocache(TVtriple, rhoVtriple); value = _umolar; break;
+                    case iP:
+                        yL = calc_pressure_nocache(TLtriple, rhoLtriple); yV = calc_pressure_nocache(TVtriple, rhoVtriple); value = _p; break;
                     default:
                         throw ValueError(format("Input is invalid"));
                 }
@@ -901,7 +903,14 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
                 if (value < y_solid){ throw ValueError(format("Other input [%d:%g] is solid", other, value));}
 
                 // Check if other is above the saturation value.
-                // If it is above, it is not two-phase and either liquid, vapor of supercritical
+                SaturationSolvers::saturation_D_pure_options options;
+                if (_rhomolar > _crit.rhomolar)
+                    options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOL;
+                else
+                    options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOV;
+                SaturationSolvers::saturation_D_pure(this, _rhomolar, options);
+
+                // If it is above, it is not two-phase and either liquid, vapor or supercritical
 
             }
             // Check if vapor/solid region below triple point vapor density
@@ -978,8 +987,7 @@ void HelmholtzEOSMixtureBackend::DHSU_T_flash(int other)
     }
 }
 
-// TODO: no cache
-double HelmholtzEOSMixtureBackend::p_rhoT(long double rhomolar, long double T)
+long double HelmholtzEOSMixtureBackend::calc_pressure_nocache(long double T, long double rhomolar)
 {
     SimpleState reducing = calc_reducing_state_nocache(mole_fractions);
     long double delta = rhomolar/reducing.rhomolar;
@@ -1148,7 +1156,7 @@ long double HelmholtzEOSMixtureBackend::solver_rho_Tp(long double T, long double
         };
         double call(double rhomolar){ 
             this->rhomolar = rhomolar;
-            peos = HEOS->p_rhoT(rhomolar,T);
+            peos = HEOS->calc_pressure_nocache(T, rhomolar);
             r = (peos-p)/p;
             return r;
         };
@@ -1280,9 +1288,9 @@ long double HelmholtzEOSMixtureBackend::calc_pressure(void)
     _p = _rhomolar*R_u*_T*(1+_delta*dar_dDelta);
 
     //std::cout << format("p: %13.12f %13.12f %10.9f %10.9f %10.9f %10.9f %g\n",_T,_rhomolar,_tau,_delta,mole_fractions[0],dar_dDelta,_p);
-    if (_p < 0){
-        throw ValueError("Pressure is less than zero");
-    }
+    //if (_p < 0){
+    //    throw ValueError("Pressure is less than zero");
+    //}
 
     return static_cast<long double>(_p);
 }
@@ -1300,7 +1308,7 @@ long double HelmholtzEOSMixtureBackend::calc_hmolar_nocache(long double T, long 
     long double R_u = gas_constant();
 
     // Get molar enthalpy
-    return R_u*_T*(1 + tau*(da0_dTau+dar_dTau) + delta*dar_dDelta);
+    return R_u*T*(1 + tau*(da0_dTau+dar_dTau) + delta*dar_dDelta);
 }
 long double HelmholtzEOSMixtureBackend::calc_hmolar(void)
 {
@@ -1919,6 +1927,126 @@ long double HelmholtzEOSMixtureBackend::mixderiv_d_ndalphardni_dTau(int i)
 
 void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, saturation_D_pure_options &options)
 {
+    /*
+    This function is inspired by the method of Akasaka:
+
+    R. Akasaka,"A Reliable and Useful Method to Determine the Saturation State from 
+    Helmholtz Energy Equations of State", 
+    Journal of Thermal Science and Technology v3 n3,2008
+
+    Ancillary equations are used to get a sensible starting point
+    */
+    std::vector<long double> r(2,_HUGE), v;
+    std::vector<std::vector<long double> > J(2, std::vector<long double>(2,_HUGE));
+    
+    HEOS->calc_reducing_state();
+    const SimpleState & reduce = HEOS->get_reducing();
+    long double R_u = HEOS->calc_gas_constant();
+    HelmholtzEOSMixtureBackend *SatL = HEOS->SatL, *SatV = HEOS->SatV;
+    const std::vector<long double> & mole_fractions = HEOS->get_mole_fractions();
+    
+    long double T, rhoL,rhoV,JL,JV,KL,KV,dJL,dJV,dKL,dKV;
+    long double DELTA, deltaL=0, deltaV=0, tau=0, error, PL, PV, stepL, stepV;
+    int iter=0;
+
+    // Use the density ancillary function as the starting point for the solver
+    try
+    {
+        if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOL)
+        {
+            // Invert liquid density ancillary to get temperature 
+            // TODO: fit inverse ancillaries too
+            T = HEOS->get_components()[0]->ancillaries.rhoL.invert(rhomolar);
+            rhoV = HEOS->get_components()[0]->ancillaries.rhoV.evaluate(T);
+            rhoL = rhomolar;
+        }
+        else if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOV)
+        {
+            // Invert vapor density ancillary to get temperature 
+            // TODO: fit inverse ancillaries too
+            T = HEOS->get_components()[0]->ancillaries.rhoV.invert(rhomolar);
+            rhoL = HEOS->get_components()[0]->ancillaries.rhoL.evaluate(T);
+            rhoV = rhomolar;
+        }
+        else
+        {
+            throw ValueError(format("imposed rho to saturation_D_pure [%d%] is invalid",options.imposed_rho));
+        }
+
+        deltaL = rhoL/reduce.rhomolar;
+        deltaV = rhoV/reduce.rhomolar;
+        tau = reduce.T/T;
+    }
+    catch(NotImplementedError &e)
+    {
+        throw e;
+    }
+
+    do{
+        /*if (get_debug_level()>8){
+            std::cout << format("%s:%d: right before the derivs with deltaL = %g deltaV = %g tau = %g\n",__FILE__,__LINE__,deltaL, deltaV, tau).c_str();
+        }*/
+
+        // Calculate once to save on calls to EOS
+        SatL->update(DmolarT_INPUTS, rhoL, T);
+        SatV->update(DmolarT_INPUTS, rhoV, T);
+
+        double pL = SatL->p();
+        double pV = SatV->p();
+        
+        // These derivatives are needed for both cases
+        double dalphar_dtauL = SatL->dalphar_dTau();
+        double dalphar_dtauV = SatV->dalphar_dTau();
+        double d2alphar_ddelta_dtauL = SatL->d2alphar_dDelta_dTau();
+        double d2alphar_ddelta_dtauV = SatV->d2alphar_dDelta_dTau();
+        double alpharL = SatL->alphar();
+        double alpharV = SatV->alphar();
+        double dalphar_ddeltaV = SatV->dalphar_dDelta();
+        double dalphar_ddeltaL = SatL->dalphar_dDelta();
+        
+        // -r_1
+        r[0] = -(deltaV*(1+deltaV*dalphar_ddeltaV)-deltaL*(1+deltaL*dalphar_ddeltaL));
+        // -r_2
+        r[1] =  -(deltaV*dalphar_ddeltaV+alpharV+log(deltaV)-deltaL*dalphar_ddeltaL-alpharL-log(deltaL));
+
+        // dr1_dtau
+        J[0][0] = pow(deltaV,2)*d2alphar_ddelta_dtauV-pow(deltaL,2)*d2alphar_ddelta_dtauL;
+        // dr2_dtau
+        J[1][0] = deltaV*d2alphar_ddelta_dtauV+deltaV*dalphar_dtauV-deltaL*d2alphar_ddelta_dtauL-deltaL*dalphar_dtauL;
+
+        if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOL)
+        {
+            double d2alphar_ddelta2V = SatV->d2alphar_dDelta2();
+            J[0][1] = 1+2*deltaV*dalphar_ddeltaV+pow(deltaV,2)*d2alphar_ddelta2V;
+            J[1][1] = deltaV*d2alphar_ddelta2V+2*dalphar_ddeltaV+1/deltaV;
+        }
+        else if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOV)
+        {
+            double d2alphar_ddelta2L = SatL->d2alphar_dDelta2();
+            J[0][1] = -1-2*deltaL*dalphar_ddeltaL-pow(deltaL,2)*d2alphar_ddelta2L;
+            J[1][1] = -deltaL*d2alphar_ddelta2L-2*dalphar_ddeltaL-1/deltaL;
+        }
+
+        v = linsolve(J, r);
+
+        tau += v[0];
+
+        if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOL)
+            deltaV += v[1];
+        else
+            deltaL += v[1];
+
+        rhoL = deltaL*reduce.rhomolar;
+        rhoV = deltaV*reduce.rhomolar;
+        T = reduce.T/tau;
+        
+        error = sqrt(pow(r[0], 2)+pow(r[1], 2));
+        iter++;
+        if (iter > 100){
+            throw SolutionError(format("Akasaka solver did not converge after 100 iterations"));
+        }
+    }
+    while (error > 1e-10);
 
 }
 void SaturationSolvers::saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options)
@@ -1958,7 +2086,7 @@ void SaturationSolvers::saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HE
     {
         if (options.use_guesses)
         {
-            // Use the guesses provided in the options structure
+            // Use the guesses provided in the options structure            
             rhoL = options.rhoL;
             rhoV = options.rhoV;
         }

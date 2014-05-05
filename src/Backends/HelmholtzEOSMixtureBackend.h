@@ -86,6 +86,7 @@ public:
     long double calc_cpmolar(void);
     long double calc_hmolar(void);
     long double calc_smolar(void);
+    long double calc_pressure_nocache(long double T, long double rhomolar);
     long double calc_smolar_nocache(long double T, long double rhomolar);
     long double calc_hmolar_nocache(long double T, long double rhomolar);
     long double calc_umolar_nocache(long double T, long double rhomolar);
@@ -140,7 +141,7 @@ public:
     void calc_reducing_state(void);
     SimpleState calc_reducing_state_nocache(const std::vector<long double> & mole_fractions);
 
-    double p_rhoT(long double rhomolar, long double T);
+    
 
     void mass_to_molar_inputs(long &input_pair, double &value1, double &value2);
 
@@ -446,8 +447,10 @@ namespace SaturationSolvers
         long double omega, rhoL, rhoV, pL, pV;
     };
     struct saturation_D_pure_options{
+        enum imposed_rho_options{IMPOSED_RHOL, IMPOSED_RHOV};
         bool use_guesses;
         long double omega, rhoL, rhoV, pL, pV;
+        int imposed_rho;
     };
 
     enum sstype_enum {imposed_T, imposed_p};
