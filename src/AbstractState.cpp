@@ -146,6 +146,21 @@ bool AbstractState::clear() {
     return true;
 }
 
+double AbstractState::keyed_output(int key)
+{
+    switch (key)
+    {
+    case iT:
+        return T();
+    case iP:
+        return p();
+    case iHmolar:
+        return hmolar();
+    default:
+        throw ValueError(format("This input [%d:%s] is not valid to keyed_output",key,"TODO"));
+    }
+}
+
 double AbstractState::hmolar(void){
     if (!_hmolar) _hmolar = calc_hmolar();
     return _hmolar;

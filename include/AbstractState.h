@@ -218,6 +218,7 @@ public:
 
     const CoolProp::SimpleState & get_reducing(){return _reducing;};
 
+    double keyed_output(int key);
     // ----------------------------------------
     // Bulk properties - temperature and density are directly calculated every time
     // All other parameters are calculated on an as-needed basis
