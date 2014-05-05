@@ -356,11 +356,12 @@ public:
         if (!_d2alpha0_dTau2) _d2alpha0_dTau2 = calc_d2alpha0_dTau2();
         return _d2alpha0_dTau2;
     };
-    /*virtual double d3alpha0_dDelta3(void) = 0;
+    /*
+    virtual double d3alpha0_dDelta3(void) = 0;
     virtual double d3alpha0_dDelta2_dTau(void) = 0;
     virtual double d3alpha0_dDelta_dTau2(void) = 0;
     virtual double d3alpha0_dTau3(void) = 0;
-*/
+    */
 
     long double alphar(void){
         if (!_alphar) _alphar = calc_alphar();

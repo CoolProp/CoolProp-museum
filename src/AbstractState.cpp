@@ -156,14 +156,22 @@ double AbstractState::keyed_output(int key)
         return p();
     case iDmolar:
         return rhomolar();
+    case iDmass:
+        return rhomolar()*molar_mass();
     case iHmolar:
         return hmolar();
+    case iHmass:
+        return hmolar()/molar_mass();
     case iSmolar:
         return smolar();
+    case iSmass:
+        return smolar()/molar_mass();
     case iUmolar:
         return umolar();
+    case iUmass:
+        return umolar()/molar_mass();   
     default:
-        throw ValueError(format("This input [%d:%s] is not valid to keyed_output",key,"TODO"));
+        throw ValueError(format("This input [%d: \"%s\"] is not valid for keyed_output",key,get_parameter_information(key,"short").c_str()));
     }
 }
 

@@ -7,6 +7,7 @@
 #include "AbstractState.h"
 #include "DataStructures.h"
 #include <cstdio>
+#include "CoolProp.h"
 using namespace CoolProp;
 
 #include "rapidjson/rapidjson_include.h"
@@ -75,6 +76,12 @@ int main()
     }
 
     if (1)
+    {
+        double rr = PropsSI("Dmass","T",298,"P",101325,"Nitrogen");
+        double tt = 0;
+    }
+
+    if (0)
     {
         //AbstractState *propane = AbstractState::factory("HEOS","CO2");
         //propane->update(DmolarP_INPUTS,203.69, 600000);
