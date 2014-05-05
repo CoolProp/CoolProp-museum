@@ -13,10 +13,10 @@
 
     static int inputs[] = {
         CoolProp::DmolarT_INPUTS,
-        /*CoolProp::SmolarT_INPUTS,
+        CoolProp::SmolarT_INPUTS,
         CoolProp::HmolarT_INPUTS, 
-        CoolProp::TUmolar_INPUTS, */
-        
+        CoolProp::TUmolar_INPUTS,
+
         CoolProp::DmolarP_INPUTS, 
         CoolProp::DmolarHmolar_INPUTS, 
         CoolProp::DmolarSmolar_INPUTS, 
@@ -38,6 +38,7 @@
     class ConsistencyFixture
     {
     protected:
+        long double hmolar, pmolar, smolar, umolar, rhomolar, T, p, x1, x2;
         CoolProp::AbstractState *pState;
         int pair;
     public:
@@ -53,13 +54,20 @@
         void set_pair(int pair){ 
             this->pair = pair;
         }
-        bool single_phase_consistency_check(long double T, long double p)
+        void set_TP(long double T, long double p)
         {
+            this->T = T; this->p = p;
             CoolProp::AbstractState &State = *pState;
 
             // Start with T,P as inputs, cycle through all the other pairs that are supported
             State.update(CoolProp::PT_INPUTS, p, T);
-            long double hmolar = State.hmolar(), smolar = State.smolar(), rhomolar = State.rhomolar(), umolar = State.umolar(), x1, x2;
+            
+            // Set the other state variables
+            rhomolar = State.rhomolar(); hmolar = State.hmolar(); smolar = State.smolar(); umolar = State.umolar();
+        }
+        void get_variables()
+        {
+            CoolProp::AbstractState &State = *pState;
             
             switch (pair)
             {
@@ -96,28 +104,30 @@
             case CoolProp::SmolarUmolar_INPUTS:
                 x1 = smolar; x2 = umolar; break;
             }
-            CAPTURE(x1);
-            CAPTURE(x2);
-            //std::cout << format("input values were : %g, %g\n", x1, x2);
+        }
+        void single_phase_consistency_check()
+        {
+            CoolProp::AbstractState &State = *pState;
             State.update(pair, x1, x2);
 
             // Make sure we end up back at the same temperature and pressure we started out with
             if(fabs(T-State.T()) > 1e-2) throw CoolProp::ValueError(format("Error on T [%g K] is greater than 1e-2",fabs(State.T()-T)));
             if(fabs(p-State.p())/p*100 > 1e-2)  throw CoolProp::ValueError(format("Error on p [%g %%] is greater than 1e-2 %%",fabs(p-State.p())/p ));
-            return true;
         }
     };
 
     TEST_CASE_METHOD(ConsistencyFixture, "Test all input pairs for CO2 using all valid backends", "[]")
     {
-        set_backend("HEOS", "CO2");
+        CHECK_NOTHROW(set_backend("HEOS", "CO2"));
         
-        int N = sizeof(inputs)/sizeof(inputs[0]);
+        int inputsN = sizeof(inputs)/sizeof(inputs[0]);
         for (double p = 600000; p < 800000000.0; p *= 5)
         {
-            for (double T = 220; T < pState->Tmax(); T += 10)
+            for (double T = 220; T < pState->Tmax(); T += 5)
             {
-                for (int i = 0; i < N; i++)
+                CHECK_NOTHROW(set_TP(T, p));
+
+                for (int i = 0; i < inputsN; ++i)
                 {
                     int pair = inputs[i];
                     std::string pair_desc = CoolProp::get_input_pair_short_desc(pair);
@@ -125,7 +135,10 @@
                     CAPTURE(pair_desc);
                     CAPTURE(T);
                     CAPTURE(p);
-                    CHECK_NOTHROW(single_phase_consistency_check(T, p));
+                    get_variables();
+                    CAPTURE(x1);
+                    CAPTURE(x2);
+                    CHECK_NOTHROW(single_phase_consistency_check());
                 }
             }
         }
