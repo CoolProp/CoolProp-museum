@@ -234,8 +234,7 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
     if (!ValidNumber(_p)){ throw ValueError("p is not a valid number");}
     if (!ValidNumber(_T)){ throw ValueError("T is not a valid number");}
     if (!ValidNumber(_rhomolar)){ throw ValueError("rhomolar is not a valid number");}
-    if (!ValidNumber(_Q)){ 
-        throw ValueError("Q is not a valid number");}
+    if (!ValidNumber(_Q)){ throw ValueError("Q is not a valid number");}
 }
 void HelmholtzEOSMixtureBackend::p_phase_determination_pure_or_pseudopure(int other, long double value)
 {
@@ -1945,8 +1944,8 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
     HelmholtzEOSMixtureBackend *SatL = HEOS->SatL, *SatV = HEOS->SatV;
     const std::vector<long double> & mole_fractions = HEOS->get_mole_fractions();
     
-    long double T, rhoL,rhoV,JL,JV,KL,KV,dJL,dJV,dKL,dKV;
-    long double DELTA, deltaL=0, deltaV=0, tau=0, error, PL, PV, stepL, stepV;
+    long double T, rhoL,rhoV;
+    long double deltaL=0, deltaV=0, tau=0, error;
     int iter=0;
 
     // Use the density ancillary function as the starting point for the solver
@@ -2017,14 +2016,14 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
         if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOL)
         {
             double d2alphar_ddelta2V = SatV->d2alphar_dDelta2();
-            J[0][1] = 1+2*deltaV*dalphar_ddeltaV+pow(deltaV,2)*d2alphar_ddelta2V;
-            J[1][1] = deltaV*d2alphar_ddelta2V+2*dalphar_ddeltaV+1/deltaV;
+            J[0][1] = deltaV+2*pow(deltaV,2)*dalphar_ddeltaV+pow(deltaV,3)*d2alphar_ddelta2V;
+            J[1][1] = pow(deltaV,2)*d2alphar_ddelta2V+2*deltaV*dalphar_ddeltaV+1;
         }
         else if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOV)
         {
             double d2alphar_ddelta2L = SatL->d2alphar_dDelta2();
-            J[0][1] = -1-2*deltaL*dalphar_ddeltaL-pow(deltaL,2)*d2alphar_ddelta2L;
-            J[1][1] = -deltaL*d2alphar_ddelta2L-2*dalphar_ddeltaL-1/deltaL;
+            J[0][1] = -deltaL-2*pow(deltaL,2)*dalphar_ddeltaL-pow(deltaL,3)*d2alphar_ddelta2L;
+            J[1][1] = -pow(deltaL,2)*d2alphar_ddelta2L-2*deltaL*dalphar_ddeltaL-1;
         }
 
         v = linsolve(J, r);
@@ -2032,9 +2031,9 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
         tau += v[0];
 
         if (options.imposed_rho == saturation_D_pure_options::IMPOSED_RHOL)
-            deltaV += v[1];
+            deltaV = exp(log(deltaV)+v[1]);
         else
-            deltaL += v[1];
+            deltaL = exp(log(deltaL)+v[1]);
 
         rhoL = deltaL*reduce.rhomolar;
         rhoV = deltaV*reduce.rhomolar;
