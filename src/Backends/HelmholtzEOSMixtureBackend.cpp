@@ -879,7 +879,7 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
             // Check if in the "normal" region
             if (_rhomolar >= rhoVtriple && _rhomolar <= rhoLtriple)
             {
-                long double yL, yV, value, y_solid;
+                long double yL, yV, value, y_solid, y_sat;
                 long double TLtriple = components[0]->pEOS->Ttriple; //TODO: separate TL and TV for ppure
                 long double TVtriple = components[0]->pEOS->Ttriple; //TODO: separate TL and TV for ppure
                 
@@ -904,12 +904,29 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
                 // Check if other is above the saturation value.
                 SaturationSolvers::saturation_D_pure_options options;
                 if (_rhomolar > _crit.rhomolar)
+                {
                     options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOL;
+                    SaturationSolvers::saturation_D_pure(this, _rhomolar, options);
+                    // SatL and SatV have the saturation values
+                    y_sat = SatL->keyed_output(other);
+                }
                 else
+                {
                     options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOV;
-                SaturationSolvers::saturation_D_pure(this, _rhomolar, options);
+                    SaturationSolvers::saturation_D_pure(this, _rhomolar, options);
+                    // SatL and SatV have the saturation values
+                    y_sat = SatV->keyed_output(other);
+                }
 
                 // If it is above, it is not two-phase and either liquid, vapor or supercritical
+                if (value > y_sat)
+                {
+                    throw NotImplementedError("single-phase for PHSU_D_flash not supported yet");
+                }
+                else
+                {
+                    throw NotImplementedError("Two-phase for PHSU_D_flash not supported yet");
+                }
 
             }
             // Check if vapor/solid region below triple point vapor density

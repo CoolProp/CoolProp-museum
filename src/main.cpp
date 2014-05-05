@@ -77,7 +77,7 @@ int main()
     if (1)
     {
         AbstractState *propane = AbstractState::factory("HEOS","CO2");
-        propane->update(DmolarP_INPUTS,20000,1e6);
+        propane->update(DmolarP_INPUTS,20000,1e7);
         double d1 = propane->rhomolar();
         AbstractState *propaneRP = AbstractState::factory("REFPROP","propane");
         propaneRP->update(QT_INPUTS,1,85.525);
