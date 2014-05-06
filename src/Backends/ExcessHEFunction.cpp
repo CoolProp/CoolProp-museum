@@ -1,4 +1,5 @@
 #include "ExcessHEFunction.h"
+#include "mixture_excess_term_JSON.h"
 
 namespace CoolProp{
 
@@ -8,8 +9,7 @@ MixtureExcessHELibrary::MixtureExcessHELibrary()
 {
     rapidjson::Document dd;
 
-    // TODO: HARD CODED for now
-    dd.Parse<0>(get_file_contents("mixture_excess_term.json").c_str());
+    dd.Parse<0>(mixture_excess_term_JSON.c_str());
     if (dd.HasParseError()){throw ValueError();}
 
     // Iterate over the papers in the listing

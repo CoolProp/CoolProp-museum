@@ -1,5 +1,5 @@
 #include "ReducingFunctions.h"
-
+#include "mixture_reducing_parameters_JSON.h" // Creates the variable mixture_reducing_parameters_JSON
 namespace CoolProp{
 
 static MixingParameterLibrary mixturelibrary;
@@ -8,8 +8,7 @@ MixingParameterLibrary::MixingParameterLibrary()
 {
     rapidjson::Document dd;
 
-    // TODO: HARD CODED for now
-    dd.Parse<0>(get_file_contents("mixture_reducing_parameters.json").c_str());
+    dd.Parse<0>(mixture_reducing_parameters_JSON.c_str());
     if (dd.HasParseError()){throw ValueError();}
 
     // Iterate over the papers in the listing
