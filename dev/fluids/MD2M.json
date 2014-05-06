@@ -1,5 +1,4 @@
 {
-  "CAS": "141-62-8", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -117,6 +116,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "MD2M", 
+  "CAS": "141-62-8", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 205.2, 
@@ -223,7 +224,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "MD2M", 
   "ALIASES": [
     "Decamethyltetrasiloxane", 
     "DECAMETHYLTETRASILOXANE"

@@ -1,5 +1,4 @@
 {
-  "CAS": "R407F.ppf", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -134,6 +133,8 @@
       "pseudo_pure": true
     }
   ], 
+  "NAME": "R407F", 
+  "CAS": "R407F.ppf", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 200.0, 
@@ -240,6 +241,5 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "R407F", 
   "ALIASES": []
 }

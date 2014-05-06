@@ -1,5 +1,4 @@
 {
-  "CAS": "100-41-4", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -163,6 +162,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "EthylBenzene", 
+  "CAS": "100-41-4", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 178.2, 
@@ -269,7 +270,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "EthylBenzene", 
   "ALIASES": [
     "ethylbenzene", 
     "ETHYLBENZENE"

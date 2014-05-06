@@ -1,5 +1,4 @@
 {
-  "CAS": "112-62-9", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -159,6 +158,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "MethylOleate", 
+  "CAS": "112-62-9", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 253.47, 
@@ -265,7 +266,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "MethylOleate", 
   "ALIASES": [
     "METHYLOLEATE"
   ]

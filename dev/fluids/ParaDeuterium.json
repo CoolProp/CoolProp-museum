@@ -1,5 +1,4 @@
 {
-  "CAS": "7782-39-0p", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -208,6 +207,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "ParaDeuterium", 
+  "CAS": "7782-39-0p", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 18.72400000000001, 
@@ -314,7 +315,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "ParaDeuterium", 
   "ALIASES": [
     "paradeuterium", 
     "PARADEUTERIUM"

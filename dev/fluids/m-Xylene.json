@@ -1,5 +1,4 @@
 {
-  "CAS": "108-38-3", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -161,6 +160,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "m-Xylene", 
+  "CAS": "108-38-3", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 225.3, 
@@ -267,7 +268,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "m-Xylene", 
   "ALIASES": [
     "mXylene", 
     "m-xylene", 

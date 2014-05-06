@@ -1,5 +1,4 @@
 {
-  "CAS": "29118-25-0", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -142,6 +141,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "R1234ze(Z)", 
+  "CAS": "29118-25-0", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 273.0, 
@@ -248,7 +249,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "R1234ze(Z)", 
   "ALIASES": [
     "R1234ZE(Z)"
   ]

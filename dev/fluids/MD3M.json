@@ -1,5 +1,4 @@
 {
-  "CAS": "141-63-9", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -117,6 +116,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "MD3M", 
+  "CAS": "141-63-9", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 192.0, 
@@ -223,7 +224,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "MD3M", 
   "ALIASES": [
     "Dodecamethylpentasiloxane", 
     "DODECAMETHYLPENTASILOXANE"

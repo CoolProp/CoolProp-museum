@@ -1,5 +1,4 @@
 {
-  "CAS": "590-18-1", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -120,6 +119,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "cis-2-Butene", 
+  "CAS": "590-18-1", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 134.3, 
@@ -226,7 +227,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "cis-2-Butene", 
   "ALIASES": [
     "Cis-2-Butene", 
     "CIS-2-BUTENE"

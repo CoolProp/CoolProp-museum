@@ -1,5 +1,4 @@
 {
-  "CAS": "95-47-6", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -165,6 +164,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "o-Xylene", 
+  "CAS": "95-47-6", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 247.985, 
@@ -271,7 +272,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "o-Xylene", 
   "ALIASES": [
     "oXylene", 
     "o-xylene", 

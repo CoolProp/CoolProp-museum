@@ -1,5 +1,4 @@
 {
-  "CAS": "75-19-4", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -164,6 +163,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "CycloPropane", 
+  "CAS": "75-19-4", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 273.0, 
@@ -270,7 +271,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "CycloPropane", 
   "ALIASES": [
     "cyclopropane", 
     "Cyclopropane", 

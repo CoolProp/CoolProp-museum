@@ -1,5 +1,4 @@
 {
-  "CAS": "R407C.PPF", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -163,6 +162,8 @@
       "pseudo_pure": true
     }
   ], 
+  "NAME": "R407C", 
+  "CAS": "R407C.PPF", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 200.0, 
@@ -269,7 +270,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "R407C", 
   "ALIASES": [
     "R407c"
   ]

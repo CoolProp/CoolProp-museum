@@ -1,5 +1,4 @@
 {
-  "CAS": "463-82-1", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -120,6 +119,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "Neopentane", 
+  "CAS": "463-82-1", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 256.6, 
@@ -226,7 +227,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "Neopentane", 
   "ALIASES": [
     "neopentn", 
     "NEOPENTANE"

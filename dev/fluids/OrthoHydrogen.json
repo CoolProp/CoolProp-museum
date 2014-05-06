@@ -1,5 +1,4 @@
 {
-  "CAS": "1333-74-0o", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -160,6 +159,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "OrthoHydrogen", 
+  "CAS": "1333-74-0o", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 14.00800000000001, 
@@ -266,7 +267,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "OrthoHydrogen", 
   "ALIASES": [
     "Orthohydrogen", 
     "orthohydrogen", 

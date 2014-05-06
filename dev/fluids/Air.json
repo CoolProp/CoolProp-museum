@@ -1,5 +1,4 @@
 {
-  "CAS": "AIR.PPF", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -182,6 +181,8 @@
       "pseudo_pure": true
     }
   ], 
+  "NAME": "Air", 
+  "CAS": "AIR.PPF", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 59.75000000000001, 
@@ -288,7 +289,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "Air", 
   "ALIASES": [
     "air", 
     "AIR"

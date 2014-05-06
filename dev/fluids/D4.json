@@ -1,5 +1,4 @@
 {
-  "CAS": "556-67-2", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -126,6 +125,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "D4", 
+  "CAS": "556-67-2", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 290.25, 
@@ -232,7 +233,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "D4", 
   "ALIASES": [
     "Octamethylcyclotetrasiloxane", 
     "OCTAMETHYLCYCLOTETRASILOXANE"

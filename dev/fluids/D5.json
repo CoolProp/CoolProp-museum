@@ -1,5 +1,4 @@
 {
-  "CAS": "541-02-6", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -126,6 +125,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "D5", 
+  "CAS": "541-02-6", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 300.0, 
@@ -232,7 +233,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "D5", 
   "ALIASES": [
     "Decamethylcyclopentasiloxane", 
     "DECAMETHYLCYCLOPENTASILOXANE"

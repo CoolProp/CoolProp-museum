@@ -1,5 +1,4 @@
 {
-  "CAS": "SES36.ppf", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -151,6 +150,8 @@
       "pseudo_pure": true
     }
   ], 
+  "NAME": "SES36", 
+  "CAS": "SES36.ppf", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 200.0, 
@@ -257,6 +258,5 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "SES36", 
   "ALIASES": []
 }

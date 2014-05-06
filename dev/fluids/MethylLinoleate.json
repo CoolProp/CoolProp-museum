@@ -1,5 +1,4 @@
 {
-  "CAS": "112-63-0", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -155,6 +154,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "MethylLinoleate", 
+  "CAS": "112-63-0", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 260.0, 
@@ -261,7 +262,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "MethylLinoleate", 
   "ALIASES": [
     "METHYLLINOLEATE"
   ]

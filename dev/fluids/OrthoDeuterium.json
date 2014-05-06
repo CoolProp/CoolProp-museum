@@ -1,5 +1,4 @@
 {
-  "CAS": "7782-39-0o", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -210,6 +209,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "OrthoDeuterium", 
+  "CAS": "7782-39-0o", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 18.72400000000001, 
@@ -316,7 +317,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "OrthoDeuterium", 
   "ALIASES": [
     "orthodeuterium", 
     "ORTHODEUTERIUM"

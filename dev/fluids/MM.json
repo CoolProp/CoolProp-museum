@@ -1,5 +1,4 @@
 {
-  "CAS": "107-46-0", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -126,6 +125,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "MM", 
+  "CAS": "107-46-0", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 273.0, 
@@ -232,7 +233,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "MM", 
   "ALIASES": [
     "Hexamethyldisiloxane", 
     "HEXAMETHYLDISILOXANE"

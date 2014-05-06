@@ -1,5 +1,4 @@
 {
-  "CAS": "R507A.PPF", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -167,6 +166,8 @@
       "pseudo_pure": true
     }
   ], 
+  "NAME": "R507A", 
+  "CAS": "R507A.PPF", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 200.0, 
@@ -273,7 +274,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "R507A", 
   "ALIASES": [
     "R507a"
   ]

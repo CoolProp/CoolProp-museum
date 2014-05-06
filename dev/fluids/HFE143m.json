@@ -1,5 +1,4 @@
 {
-  "CAS": "421-14-7", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -164,6 +163,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "HFE143m", 
+  "CAS": "421-14-7", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 240.0, 
@@ -270,7 +271,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "HFE143m", 
   "ALIASES": [
     "HFE-143m", 
     "HFE143M", 

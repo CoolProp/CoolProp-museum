@@ -1,5 +1,4 @@
 {
-  "CAS": "R410A.PPF", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -163,6 +162,8 @@
       "pseudo_pure": true
     }
   ], 
+  "NAME": "R410A", 
+  "CAS": "R410A.PPF", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 200.0, 
@@ -269,7 +270,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "R410A", 
   "ALIASES": [
     "R410a"
   ]

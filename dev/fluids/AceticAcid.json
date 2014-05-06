@@ -1,5 +1,4 @@
 {
-  "CAS": "64-19-7", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -161,6 +160,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "AceticAcid", 
+  "CAS": "64-19-7", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 289.8, 
@@ -267,7 +268,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "AceticAcid", 
   "ALIASES": [
     "ACETICACID"
   ]

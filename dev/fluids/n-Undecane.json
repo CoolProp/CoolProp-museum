@@ -1,5 +1,4 @@
 {
-  "CAS": "1120-21-4", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -134,6 +133,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "n-Undecane", 
+  "CAS": "1120-21-4", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 247.541, 
@@ -240,7 +241,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "n-Undecane", 
   "ALIASES": [
     "Undecane", 
     "UNDECANE", 

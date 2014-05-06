@@ -1,5 +1,4 @@
 {
-  "CAS": "616-38-6", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -179,6 +178,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "DimethylCarbonate", 
+  "CAS": "616-38-6", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 277.06, 
@@ -285,7 +286,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "DimethylCarbonate", 
   "ALIASES": [
     "DMC", 
     "dimethylcarbonate", 

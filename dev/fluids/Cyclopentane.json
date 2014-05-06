@@ -1,5 +1,4 @@
 {
-  "CAS": "287-92-3", 
   "EOS": [
     {
       "ptriple_units": "Pa", 
@@ -157,6 +156,8 @@
       "pseudo_pure": false
     }
   ], 
+  "NAME": "Cyclopentane", 
+  "CAS": "287-92-3", 
   "ANCILLARIES": {
     "pV": {
       "Tmin": 179.7, 
@@ -263,7 +264,6 @@
       "type": "rhoLnoexp"
     }
   }, 
-  "NAME": "Cyclopentane", 
   "ALIASES": [
     "CycloPentane", 
     "cyclopentane", 
