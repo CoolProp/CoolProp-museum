@@ -534,6 +534,7 @@ void REFPROPMixtureBackend::set_REFPROP_fluids(const std::vector<std::string> &f
 
         if (ierr == 0) // Success
         {
+            Ncomp = N;
             mole_fractions.resize(N);
             mole_fractions_liq.resize(N);
             mole_fractions_vap.resize(N);
@@ -550,6 +551,10 @@ void REFPROPMixtureBackend::set_REFPROP_fluids(const std::vector<std::string> &f
 }
 void REFPROPMixtureBackend::set_mole_fractions(const std::vector<long double> &mole_fractions)
 {
+    if (mole_fractions.size() != Ncomp)
+    {
+        throw ValueError(format("size of mole fraction vector [%d] does not equal that of component vector [%d]",mole_fractions.size(), Ncomp));
+    }
     this->mole_fractions.resize(mole_fractions.size());
     for (std::size_t i = 0; i < mole_fractions.size(); ++i)
     {
@@ -567,10 +572,10 @@ void REFPROPMixtureBackend::check_status(void)
 }
 double REFPROPMixtureBackend::calc_melt_Tmax()
 {
-    long ierr, index = 1;
+    long ierr;
     char herr[255];
     double tmin,tmax,Dmax_mol_L,pmax_kPa, Tmax_melt;
-    char htyp[3] = {'E','O','S'};
+    char htyp[] = "EOS";
     LIMITSdll(htyp, &(mole_fractions[0]), &tmin, &tmax, &Dmax_mol_L, &pmax_kPa, 3);
     // Get the maximum temperature for the melting curve by using the maximum pressure
     MELTPdll(&pmax_kPa, &(mole_fractions[0]),
@@ -657,20 +662,22 @@ long double REFPROPMixtureBackend::calc_fugacity_coefficient(int i)
     
 void REFPROPMixtureBackend::update(long input_pair, double value1, double value2)
 {
-    double T=_HUGE, rho_mol_L=_HUGE, rhoLmol_L=_HUGE, rhoVmol_L=_HUGE,
+    double rho_mol_L=_HUGE, rhoLmol_L=_HUGE, rhoVmol_L=_HUGE,
         hmol=_HUGE,emol=_HUGE,smol=_HUGE,cvmol=_HUGE,cpmol=_HUGE,
         w=_HUGE,q=_HUGE, mm=_HUGE, p_kPa = _HUGE;
     long ierr;
     char herr[255];
 
     clear();
+    
+    // Check that mole fractions have been set, etc.
+    check_status();
 
     // Get the molar mass of the fluid for the given composition
     WMOLdll(&(mole_fractions[0]), &mm); // returns mole mass in kg/kmol
     _molar_mass = 0.001*mm; // [kg/mol]
 
-    // Check that mole fractions have been set, etc.
-    check_status();
+    
     
     switch(input_pair)
     {

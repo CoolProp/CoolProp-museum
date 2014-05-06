@@ -11,8 +11,8 @@
 #include <windows.h>
 #else
 #ifndef DBL_EPSILON
-	#include <limits>
-	#define DBL_EPSILON std::numeric_limits<double>::epsilon()
+    #include <limits>
+    #define DBL_EPSILON std::numeric_limits<double>::epsilon()
 #endif
 #endif
 
@@ -27,10 +27,6 @@
 
 namespace CoolProp
 {
-///// The lower-level methods that can throw exceptions
-//double _CoolProp_Fluid_PropsSI(long iOutput, long iName1, double Value1, long iName2, double Value2, Fluid *pFluid);
-double _PropsSI(std::string &Output,std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &Ref);
-//double _Props1SI(std::string FluidName, std::string Output);
 
 static std::string err_string;
 static std::string warning_string;
@@ -89,37 +85,6 @@ static std::string warning_string;
 //		global_SaturatedL = false;
 //		global_SaturatedV = true;
 //		global_Phase = iTwoPhase;
-//	}
-//}
-//
-//long get_Fluid_index(std::string FluidName)
-//{
-//	// Try to get the fluid from Fluids by name
-//	pFluid = Fluids.get_fluid(FluidName);
-//	// If NULL, didn't find it (or its alias)
-//	if (pFluid!=NULL)
-//	{
-//		// Find the fluid index
-//		return Fluids.get_fluid_index(pFluid);
-//	}
-//	else
-//		return -1;
-//}
-//
-//long get_param_index(std::string param)
-//{
-//	std::map<std::string,long>::iterator it;
-//	// Try to find using the map
-//	it = param_map.find(param);
-//	// If it is found the iterator will not be equal to end
-//	if (it != param_map.end() )
-//	{
-//		// Return the index of the parameter
-//		return (*it).second;
-//	}
-//	else
-//	{
-//		return -1;
 //	}
 //}
 //
@@ -388,45 +353,101 @@ static std::string warning_string;
 //	return _HUGE;
 //}
 
-double PropsSI(std::string Output, std::string Name1, double Prop1, std::string Name2, double Prop2, std::string Ref)
+bool has_fractions_in_string(std::string &fluid_string)
 {
-    // In this function the error catching happens;
-	try{
-		return _PropsSI(Output,Name1,Prop1,Name2,Prop2,Ref);
-	}
-	catch(const std::exception& e){
-        std::cout << e.what() << std::endl;
-        //set_err_string(e.what());
-		return _HUGE;
-	}
-	catch(...){
-		//set_err_string(std::string("CoolProp error: Indeterminate error"));
-		return _HUGE;
-	}
-	return _HUGE;
+    // Start at the "::" if it is found to chop off the delimiter between backend and fluid
+    std::size_t i = fluid_string.find("::");
+    // If can find both "&" and "]", it must have mole fractions encoded as string
+    return fluid_string.find("&",i+2) != -1 && fluid_string.find("]",i+2);
+}
+void extract_fractions(std::string &fluid_string, std::vector<double> &fractions)
+{
+    fractions.clear();
+    std::vector<std::string> names;
+    std::string all_pairs, backend_string;
+    // Start at the "::" if it is found to chop off the delimiter between backend and fluid
+    int i = fluid_string.find("::");
+    
+    // If no backend/fluid delimiter
+    if (i < 0){
+        // Just use the full string
+        backend_string = "";
+        all_pairs = fluid_string;
+    }
+    else{
+        // Part including the ::
+        backend_string = fluid_string.substr(0, i+2);
+        // Keep the part after "::"
+        all_pairs = fluid_string.substr(i+2);
+    }
+
+    // Break up into pairs (like "Methane[0.5]")
+    std::vector<std::string> pairs = strsplit(all_pairs, '&');
+
+    for (std::size_t i = 0; i < pairs.size(); ++i)
+    {
+        std::string fluid = pairs[i];
+        
+        // Must end with ']'
+        if (fluid[fluid.size()-1] != ']') 
+            throw ValueError(format("Fluid entry [%s] must end with ']' character",pairs[i].c_str()));
+
+        // Split at '[', but first remove the ']' from the end by taking a substring
+        std::vector<std::string> name_fraction = strsplit(fluid.substr(0, fluid.size()-1), '[');
+
+        if (name_fraction.size() != 2){throw ValueError(format("Could not break [%s] into name/fraction", fluid.substr(0, fluid.size()-1).c_str()));}
+
+        // Convert fraction to a double
+        char *pEnd;
+        std::string &name = name_fraction[0], &fraction = name_fraction[1];
+        double f = strtod(fraction.c_str(), &pEnd);
+
+        // If pEnd points to the last character in the string, it wasn't able to do the conversion
+        if (pEnd == &(fraction[fraction.size()-1])){throw ValueError(format("Could not convert [%s] into number", fraction.c_str()));}
+
+        // And add to vector
+        fractions.push_back(f);
+        
+        // Add name
+        names.push_back(name);
+    }
+
+    // Join fluids back together
+    fluid_string = backend_string + strjoin(names, "&");
 }
 
 // Internal function to do the actual calculations, make this a wrapped function so
 // that error bubbling can be done properly
-double _PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &Ref)
+double _PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &Ref, const std::vector<double> &z)
 {
+    static std::string unknown_backend = "?";
     double x1, x2;
-	/*if (get_debug_level()>5){
-		std::cout << format("%s:%d: _Props(%s,%s,%g,%s,%g,%s)\n",__FILE__,__LINE__,Output.c_str(),Name1.c_str(),Prop1,Name2.c_str(),Prop2,Ref.c_str()).c_str();
-	}*/
+    /*if (get_debug_level()>5){
+        std::cout << format("%s:%d: _PropsSI(%s,%s,%g,%s,%g,%s)\n",__FILE__,__LINE__,Output.c_str(),Name1.c_str(),Prop1,Name2.c_str(),Prop2,Ref.c_str()).c_str();
+    }*/
 
     // Convert all the input and output parameters to integers
-	long iOutput = get_parameter_index(Output);
-	long iName1 = get_parameter_index(Name1);
-	long iName2 = get_parameter_index(Name2);
+    long iOutput = get_parameter_index(Output);
+    long iName1 = get_parameter_index(Name1);
+    long iName2 = get_parameter_index(Name2);
 
     // The state we are going to use
     AbstractState *State = NULL;
     try
     {
-        // Generate the State class pointer using the factory function
-        // TODO: need to parse ref string to obtain the backend, or use "?" if unknown
-        State = AbstractState::factory("HEOS", Ref);
+        // We are going to let the factory function determine which backend to use
+        //
+        // Generate the State class pointer using the factory function with unknown backend
+        State = AbstractState::factory(unknown_backend, Ref);
+
+        if (State == NULL){ throw ValueError("unable to instantiate AbstractState*");}
+
+        if (State->using_mole_fractions()){
+            State->set_mole_fractions(z);
+        }
+        else{
+            State->set_mass_fractions(z);
+        }
 
         // Obtain the input pair
         long pair = generate_update_pair(iName1, Prop1, iName2, Prop2, x1, x2);
@@ -444,138 +465,50 @@ double _PropsSI(std::string &Output, std::string &Name1, double Prop1, std::stri
         State->update(pair, x1, x2);
 
         // Return the desired output
-        return State->keyed_output(iOutput);
+        double val = State->keyed_output(iOutput);
+        
+        // Free the pointer to the State class
+        delete (State);
+
+        // Return the value
+        return val;
     }
     catch(...){	
         delete(State); throw;
-	}
+    }
+}
+double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &Ref, const std::vector<double> &z)
+{
+    CATCH_ALL_ERRORS_RETURN_HUGE(return _PropsSI(Output,Name1,Prop1,Name2,Prop2,Ref,z);)
+}
+double PropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char *FluidName, const std::vector<double> &x)
+{
+    std::string _Output = Output, _Name1 = Name1, _Name2 = Name2, _FluidName = FluidName;
+    return PropsSI(_Output,_Name1,Prop1,_Name2,Prop2,_FluidName, x);
+}
+double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &Ref)
+{
+    // In this function the error catching happens;
+    try{          
+        // Extract fractions if they are encoded in the fluid string
+        if (has_fractions_in_string(Ref))
+        {
+            std::vector<double> fractions;
+            // Extract the fractions and reformulate the list of fluids REFPROP::Methane[0.5]&Ethane[0.5] -> REFPROP::Methane&Ethane and [0.5,0.5]
+            extract_fractions(Ref, fractions);
+            return _PropsSI(Output, Name1, Prop1, Name2, Prop2, Ref, fractions);
+        }
+        else
+        {
+            // Here it must be a pure fluid since the fractions are not coded in the string.  If not, it will fail internally
+            return _PropsSI(Output, Name1, Prop1, Name2, Prop2, Ref, std::vector<double>(1,1));
+        }
+    }
+    catch(const std::exception& e){ std::cout << e.what() << std::endl; return _HUGE; }
+    catch(...){ return _HUGE; }
 }
 
- ///* 
- //   If the fluid name is not actually a refrigerant name, but a string beginning with "REFPROP-",
- //   then REFPROP is used to calculate the desired property.
- //   */
- //   if (IsREFPROP(Ref))  // First eight characters match "REFPROP-"
- //   {
- //   	if (get_debug_level()>7) std::cout<<__FILE__<<": Identified Refprop fluid - "<<Ref.c_str()<<std::endl;
- //       // Stop here if there is no REFPROP support
- //   	if (REFPROPFluidClass::refpropSupported()) {
-	//		return REFPROPSI(iOutput,iName1,Prop1,iName2,Prop2,Ref);
- //   	} else {
- //   		throw AttributeError(format("Your fluid [%s] is from REFPROP, but CoolProp does not support REFPROP on this platform, yet.",Ref.c_str()));
- //   		return -_HUGE;
- //   	}
- //   }
-	//else if (IsCoolPropFluid(Ref))
-	//{
-	//	if (get_debug_level()>7) std::cout << format("%s:%d: Identified CoolProp fluid - %s\n",__FILE__,__LINE__,Ref.c_str()).c_str();
-	//	pFluid = Fluids.get_fluid(Ref);
-	//	// Call the internal method that uses the parameters converted to longs
-	//	return _CoolProp_Fluid_PropsSI(iOutput,iName1,Prop1,iName2,Prop2,pFluid);
-	//}
-
- //   // It's a brine, call the brine routine // TODO Solutions: remove this part
-	//else if (IsBrine(Ref.c_str()))
- //   {
-	//	if (get_debug_level()>7) std::cout<<__FILE__<<": Identified brine - "<<Ref.c_str()<<std::endl;
-	//	//Enthalpy and pressure are the inputs
-	//	if ((iName1 == iH && iName2 == iP) || (iName2 == iH && iName1 == iP))
- //       {
-	//		if (iName2 == iH && iName1 == iP)
-	//		{
-	//			std::swap(Prop1,Prop2);
-	//			std::swap(Name1,Name2);
-	//		}
-	//		// Start with a guess of 10 K below max temp of fluid
-	//		double Tguess = SecFluids("Tmax",Prop1,Prop2,Ref)-10;
-	//		// Solve for the temperature
-	//		double T =_T_hp_secant(Ref,Prop1,Prop2,Tguess);
-	//		// Return whatever property is desired
-	//		return SecFluidsSI(Output,T,Prop2,Ref);
-	//	}
-	//	else if ((iName1 == iT && iName2 == iP) || (iName1 == iP && iName2 == iT))
- //       {
-	//		if (iName1 == iP && iName2 == iT){
-	//			std::swap(Prop1,Prop2);
-	//		}
-	//		return SecFluidsSI(Output,Prop1,Prop2,Ref);
-	//	}
-	//	else
-	//	{
-	//		throw ValueError("For brine, inputs must be (order does not matter) 'T' and 'P', or 'H' and 'P'");
-	//	}
- //   }
-
-	//// It's an incompressible liquid, call the routine
-	//else if (IsIncompressibleLiquid(Ref))
- //   {
-	//	if (get_debug_level()>7) std::cout<<__FILE__<<": Identified incompressible liquid - "<<Ref.c_str()<<std::endl;
-	//	//Enthalpy and pressure are the inputs
-	//	if ((iName1 == iH && iName2 == iP) || (iName2 == iH && iName1 == iP))
- //       {
-	//		if (iName2 == iH && iName1 == iP)
-	//		{
-	//			std::swap(Prop1,Prop2);
-	//			std::swap(Name1,Name2);
-	//		}
-	//		
-	//		// Solve for the temperature
-	//		double Tma     = IncompLiquidSI(get_param_index("Tmax"),0.0,0.0,Ref);
-	//		double T_guess = Tma - 10.0 ;
-	//		double T =_T_hp_secant(Ref,Prop1,Prop2,T_guess);
-	//		// Return whatever property is desired
-	//		return IncompLiquidSI(iOutput,T,Prop2,Ref);
-	//	}
-	//	else if ((iName1 == iT && iName2 == iP) || (iName1 == iP && iName2 == iT))
- //       {
-	//		if (iName1 == iP && iName2 == iT){
-	//			std::swap(Prop1, Prop2);
-	//		}
-	//		return IncompLiquidSI(iOutput,Prop1,Prop2,Ref);
-	//	}
-	//	else
-	//	{
-	//		throw ValueError("For incompressible fluids, inputs must be (order does not matter) 'T' and 'P', or 'H' and 'P'");
-	//	}
- //   }
- //   // It's an incompressible solution, call the routine
-	//else if (IsIncompressibleSolution(Ref))
-	//{
-	//	if (get_debug_level()>7) std::cout<<__FILE__<<": Identified incompressible solution - "<<Ref.c_str()<<std::endl;
-	//	//Enthalpy and pressure are the inputs
-	//	if ((iName1 == iH && iName2 == iP) || (iName2 == iH && iName1 == iP))
-	//	{
-	//		if (iName2 == iH && iName1 == iP)
-	//		{
-	//			std::swap(Prop1,Prop2);
-	//			std::swap(Name1,Name2);
-	//		}
-
-	//		// Solve for the temperature
-	//		double Tma     = IncompSolutionSI(get_param_index("Tmax"),0.0,0.0,Ref);
-	//		double Tmi     = IncompSolutionSI(get_param_index("Tmin"),0.0,0.0,Ref);
-	//		double T_guess = (Tma+Tmi)/2.0 ;
-	//		double T =_T_hp_secant(Ref,Prop1,Prop2,T_guess);
-	//		// Return whatever property is desired
-	//		return IncompSolutionSI(iOutput,T,Prop2,Ref);
-	//	}
-	//	else if ((iName1 == iT && iName2 == iP) || (iName1 == iP && iName2 == iT))
-	//	{
-	//		if (iName1 == iP && iName2 == iT){
-	//			std::swap(Prop1,Prop2);
-	//		}
-	//		return IncompSolutionSI(iOutput,Prop1,Prop2,Ref);
-	//	}
-	//	else
-	//	{
-	//		throw ValueError("For incompressible solutions, inputs must be (order does not matter) 'T' and 'P', or 'H' and 'P'");
-	//	}
-	//}
-	//else
-	//{
-	//	throw ValueError(format("Your fluid name [%s] is not a CoolProp fluid, a REFPROP fluid, a brine or a liquid",Ref.c_str()));
-	//}
-//}
+ 
 //EXPORT_CODE double CONVENTION IProps(long iOutput, long iName1, double Prop1, long iName2, double Prop2, long iFluid)
 //{
 //    Prop1 = convert_from_unit_system_to_SI(iName1, Prop1, get_standard_unit_system());
@@ -702,18 +635,6 @@ double _PropsSI(std::string &Output, std::string &Name1, double Prop1, std::stri
 //			return _HUGE;
 //		}
 //	}
-//}
-
-
-//
-//double Props(std::string Output, std::string Name1, double Prop1, std::string Name2, double Prop2, std::string Ref)
-//{
-//	// Go to the std::string version
-//    return PropsS(Output.c_str(),Name1.c_str(),Prop1,Name2.c_str(),Prop2,Ref.c_str());
-//}
-//double Props(std::string Output,char Name1, double Prop1, char Name2, double Prop2, std::string Ref)
-//{
-//    return Props(Output, std::string(1,Name1), Prop1, std::string(1,Name2), Prop2, Ref);
 //}
 
 ///// Calculate some interesting derivatives

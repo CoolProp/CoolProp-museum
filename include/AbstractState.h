@@ -187,8 +187,8 @@ public:
     virtual long double calc_melt_T_p(long double p){throw NotImplementedError("calc_melt_T_p is not implemented for this backend");};
     virtual long double calc_melt_rho_T(long double T){throw NotImplementedError("calc_melt_rho_T is not implemented for this backend");};
 
-    AbstractState();
-    virtual ~AbstractState();
+    AbstractState(){};
+    virtual ~AbstractState(){};
 
     double _tau, _delta;
     
@@ -207,7 +207,7 @@ public:
     4. If it starts with "BICUBIC", the BICUBIC backend will be used, yielding a BICUBICBackend instance
 
     */
-    static AbstractState * factory(std::string backend, std::string fluid_string);
+    static AbstractState * factory(const std::string &backend, const std::string &fluid_string);
     
     bool clear();
     virtual void update(long input_pair, double Value1, double Value2) = 0;
@@ -216,8 +216,9 @@ public:
 
     void set_mole_fractions(const std::vector<double> &mole_fractions){set_mole_fractions(std::vector<long double>(mole_fractions.begin(), mole_fractions.end()));};
     void set_mass_fractions(const std::vector<double> &mass_fractions){set_mass_fractions(std::vector<long double>(mass_fractions.begin(), mass_fractions.end()));};
-
-    double sum(const std::vector<double> &m){ return std::accumulate(m.begin(), m.end(), 0.0);};
+    
+    // The derived classes must implement this function to define whether they use mole fractions (true) or mass fractions (false)
+    virtual bool using_mole_fractions(void) = 0;
 
     const CoolProp::SimpleState & get_reducing(){return _reducing;};
 

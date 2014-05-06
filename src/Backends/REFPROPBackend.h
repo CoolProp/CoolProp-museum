@@ -19,11 +19,12 @@ and exposes just the pure fluid interface.
 */
 class REFPROPBackend : public REFPROPMixtureBackend  {
 private:
+    /// DISABLED: Setting mole or mass fraction not allowed since pure and pseudo-pure have single component with mole fraction of 1
+	void set_mole_fractions(const std::vector<long double> &mole_fractions){throw NotImplementedError();};
 	/// DISABLED: Setting mole or mass fraction not allowed since pure and pseudo-pure have single component with mole fraction of 1
-	void set_mole_fractions(const std::vector<double> &mole_fractions){throw NotImplementedError();};
-	/// DISABLED: Setting mole or mass fraction not allowed since pure and pseudo-pure have single component with mole fraction of 1
-	void set_mass_fractions(const std::vector<double> &mass_fractions){throw NotImplementedError();};
+	void set_mass_fractions(const std::vector<long double> &mass_fractions){throw NotImplementedError();};
 public:
+    
 	REFPROPBackend();
 	REFPROPBackend(const std::string &fluid_name);
 	

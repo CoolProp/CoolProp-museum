@@ -8,6 +8,7 @@
 #ifndef DATASTRUCTURES_H_
 #define DATASTRUCTURES_H_
 
+#include "Exceptions.h"
 #include <map>
 namespace CoolProp {
 
@@ -21,6 +22,8 @@ struct SimpleState
 /// --------------------------------------------------
 /// These are constants for the input and output parameters
 /// The structure is taken directly from the AbstractState class.
+//
+// !! If you add a parameter, update the map in the corresponding CPP file !!
 enum parameters{
     // Bulk properties
     iT,  iP, iQ, 
@@ -30,9 +33,6 @@ enum parameters{
 
     // Mass specific thermodynamic properties
     iDmass, iHmass, iSmass, iCpmass, iCvmass, iUmass, 
-    
-    // Derivative-based terms
-    ispeed_sound, iisothermal_compressibility, iisobaric_expansion_coefficient,
 
     // Smoothing functions for density
     idrhodh_constp_smoothed, idrhodp_consth_smoothed, irho_smoothed,
@@ -40,29 +40,16 @@ enum parameters{
     // Transport properties
     iviscosity, iconductivity, isurface_tension,
 
-    // Derivatives of properties
-    idvdp_constT, idvdT_constp,
-    // Density
-    idrhodh_constp, idrhodp_consth, idrhodp_constT, idrhodT_constp, id2rhodh2_constp,
-    id2rhodhdp, id2rhodhdQ, id2rhodp2_constT, id2rhodpdQ, id2rhodT2_constp, id2rhodTdp,
-    // Pressure
-    idpdrho_consth, idpdrho_constT, idpdT_consth, idpdT_constrho, id2pdrho2_constT,
-    id2pdrhodT, id2pdT2_constrho,
-    // Enthalpy
-    idhdp_constrho, idhdp_constT, idhdrho_constp, idhdrho_constT, idhdT_constp,
-    idhdT_constrho, id2hdp2_constT, id2hdrho2_constT, id2hdrhodT, id2hdT2_constp,
-    id2hdT2_constrho, id2hdTdp,
-    // Entropy
-    idsdp_constT, idsdrho_constp, idsdrho_constT, idsdT_constp, idsdT_constrho,
-    id2sdp2_constT,	id2sdrho2_constT, id2sdrhodT, id2sdT2_constp, id2sdT2_constrho,
-    id2sdTdp,
-
+    // Derivative-based terms
+    ispeed_sound, iisothermal_compressibility, iisobaric_expansion_coefficient,
+    
     // Fundamental derivative of gas dynamics
     ifundamental_derivative_of_gas_dynamics, id2pdv2_consts,
 
     // Other functions and derivatives
-    iB, iC, iZ, idBdT, idCdT, idZdDelta, idZdTau
+    iBvirial, iCvirial, iZ, idBdT, idCdT, idZdDelta, idZdTau
 };
+// !! If you add a parameter, update the map in the corresponding CPP file !!
 
 /// Return information about the parameter
 /// @param key The key, one of iT, iP, etc.
@@ -135,6 +122,9 @@ template<class T> long generate_update_pair(long key1, T value1, long key2, T va
         }
         else if (match_pair(key1, key2, iP, iT, swap)){
             pair = PT_INPUTS; ///< Pressure in Pa, Temperature in K
+        }
+        else if (match_pair(key1, key2, iDmolar, iT, swap)){
+            pair = DmolarT_INPUTS; // Molar density in mol/m^3, Temperature in K
         }
         else if (match_pair(key1, key2, iDmass, iT, swap)){
             pair = DmassT_INPUTS; // Mass density in kg/m^3, Temperature in K

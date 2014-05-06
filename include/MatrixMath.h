@@ -1,8 +1,12 @@
 #ifndef MATRIXMATH_H
 #define MATRIXMATH_H
 
+#include "CoolPropTools.h"
+#include "Exceptions.h"
+
 #include <vector>
 #include <string>
+#include <numeric> // inner_product
 #include <sstream>
 #include "float.h"
 
@@ -38,6 +42,43 @@ namespace CoolProp{
 //
 //template<class T> std::string vec_to_string(            std::vector<T>   const& a, const char *fmt);
 //template<class T> std::string vec_to_string(std::vector<std::vector<T> > const& A, const char *fmt);
+
+// Forward definitions
+template<class T> std::size_t         num_rows  (std::vector<std::vector<T> > const& in);
+template<class T> std::size_t         max_cols  (std::vector<std::vector<T> > const& in);
+
+template<class T> bool                is_squared(std::vector<std::vector<T> > const& in){
+	std::size_t cols = max_cols(in);
+	if (cols!=num_rows(in)) { return false;}
+	else {
+		for (std::size_t i = 0; i < in.size(); i++) {
+			if (cols!=in[i].size()) {return false; }
+		}
+	}
+	return true;
+};
+template<class T> std::size_t         max_cols  (std::vector<std::vector<T> > const& in){
+	std::size_t cols = 0;
+	std::size_t col  = 0;
+	for (std::size_t i = 0; i < in.size(); i++) {
+		col = in[i].size();
+		if (cols<col) {cols = col;}
+    }
+	return cols;
+};
+/// Some shortcuts and regularly needed operations
+template<class T> std::size_t         num_rows  (std::vector<std::vector<T> > const& in){ return in.size(); }
+template<class T> std::size_t         num_cols  (std::vector<std::vector<T> > const& in){
+	if (num_rows(in)>0) {
+		if (is_squared(in)) {
+			return in[0].size();
+		} else {
+			return max_cols(in);
+		}
+	} else {
+		return 0;
+	}
+};
 
 
 /*
@@ -231,28 +272,7 @@ template<class T> std::vector<T>               linsolve(std::vector<std::vector<
 };
 
 
-/// Some shortcuts and regularly needed operations
-template<class T> std::size_t         num_rows  (std::vector<std::vector<T> > const& in){ return in.size(); }
-template<class T> std::size_t         num_cols  (std::vector<std::vector<T> > const& in){
-	if (num_rows(in)>0) {
-		if (is_squared(in)) {
-			return in[0].size();
-		} else {
-			return max_cols(in);
-		}
-	} else {
-		return 0;
-	}
-};
-template<class T> std::size_t         max_cols  (std::vector<std::vector<T> > const& in){
-	std::size_t cols = 0;
-	std::size_t col  = 0;
-	for (std::size_t i = 0; i < in.size(); i++) {
-		col = in[i].size();
-		if (cols<col) {cols = col;}
-    }
-	return cols;
-};
+
 template<class T> std::vector<T> get_row(std::vector< std::vector<T> > const& in, size_t row) { return in[row]; };
 template<class T> std::vector<T> get_col(std::vector< std::vector<T> > const& in, size_t col) {
 	std::size_t sizeX  = in.size();
@@ -267,16 +287,7 @@ template<class T> std::vector<T> get_col(std::vector< std::vector<T> > const& in
 	}
 	return out;
 };
-template<class T> bool                is_squared(std::vector<std::vector<T> > const& in){
-	std::size_t cols = max_cols(in);
-	if (cols!=num_rows(in)) { return false;}
-	else {
-		for (std::size_t i = 0; i < in.size(); i++) {
-			if (cols!=in[i].size()) {return false; }
-		}
-	}
-	return true;
-};
+
 template<class T> std::vector<std::vector<T> > make_squared(std::vector<std::vector<T> > const& in){
 	std::size_t cols   = max_cols(in);
 	std::size_t rows   = num_rows(in);

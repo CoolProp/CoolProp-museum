@@ -641,7 +641,7 @@ public:
     IdealHelmholtzEnthalpyEntropyOffset(){enabled = false;};
 
     // Constructor
-    IdealHelmholtzEnthalpyEntropyOffset(long double a1, long double a2){a1=a1; a2=a2; enabled = true;};
+    IdealHelmholtzEnthalpyEntropyOffset(long double a1, long double a2):a1(a1), a2(a2){enabled = true;};
 
     //Destructor
     ~IdealHelmholtzEnthalpyEntropyOffset(){};

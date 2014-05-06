@@ -24,7 +24,7 @@
 
 namespace CoolProp {
 
-HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<std::string> component_names, bool generate_SatL_and_SatV) {
+HelmholtzEOSMixtureBackend::HelmholtzEOSMixtureBackend(std::vector<std::string> &component_names, bool generate_SatL_and_SatV) {
     std::vector<CoolPropFluid*> components;
     components.resize(component_names.size());
 
@@ -890,9 +890,10 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
     class solver_resid : public FuncWrapper1D
     {
     public:
-        int other;
-        long double T, value, r, eos, rhomolar;
+        
         HelmholtzEOSMixtureBackend *HEOS;
+        long double r, eos, rhomolar, value, T;
+        int other;
 
         solver_resid(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, long double value, int other) : HEOS(HEOS), rhomolar(rhomolar), value(value), other(other){};
         double call(double T){
@@ -1211,10 +1212,6 @@ long double HelmholtzEOSMixtureBackend::solver_for_rho_given_T_oneof_HSU(long do
             default:
                 throw ValueError();
         }
-        if (T >= 490)
-        {
-            double rr = 0;
-        }
         
         if (is_in_closed_range(ymelt, yc, y))
         {
@@ -1493,7 +1490,6 @@ long double HelmholtzEOSMixtureBackend::calc_smolar(void)
     long double ar = alphar();
     long double a0 = alpha0();
     long double dar_dTau = dalphar_dTau();
-    long double dar_dDelta = dalphar_dDelta();
     long double R_u = gas_constant();
 
     // Get molar entropy
@@ -1524,7 +1520,6 @@ long double HelmholtzEOSMixtureBackend::calc_umolar(void)
     // Calculate derivatives if needed, or just use cached values
     long double da0_dTau = dalpha0_dTau();
     long double dar_dTau = dalphar_dTau();
-    long double dar_dDelta = dalphar_dDelta();
     long double R_u = gas_constant();
 
     // Get molar internal energy
@@ -2079,7 +2074,6 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
     
     HEOS->calc_reducing_state();
     const SimpleState & reduce = HEOS->get_reducing();
-    long double R_u = HEOS->calc_gas_constant();
     HelmholtzEOSMixtureBackend *SatL = HEOS->SatL, *SatV = HEOS->SatV;
     const std::vector<long double> & mole_fractions = HEOS->get_mole_fractions();
     
@@ -2119,7 +2113,6 @@ void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long
     {
         throw e;
     }
-    double T0 = T, rhoL0 = rhoL, rhoV0 = rhoV;
 
     do{
         /*if (get_debug_level()>8){
@@ -2248,7 +2241,6 @@ void SaturationSolvers::saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HE
     const SimpleState & reduce = HEOS->get_reducing();
     long double R_u = HEOS->calc_gas_constant();
     HelmholtzEOSMixtureBackend *SatL = HEOS->SatL, *SatV = HEOS->SatV;
-    const std::vector<long double> & mole_fractions = HEOS->get_mole_fractions();
 
     long double rhoL,rhoV,JL,JV,KL,KV,dJL,dJV,dKL,dKV;
     long double DELTA, deltaL=0, deltaV=0, tau=0, error, PL, PV, stepL, stepV;
@@ -2709,7 +2701,6 @@ void PhaseEnvelope::PhaseEnvelope_GV::build(HelmholtzEOSMixtureBackend *HEOS, co
     for (;;)
     {
         if (iter > 0){ IO_NRVLE.rhomolar_vap += factor;}
-        double p = IO_NRVLE.p;
         if (iter == 2 || (factor > 2 && factor < 0.24))
         {
             long double x = log(IO_NRVLE.rhomolar_vap);

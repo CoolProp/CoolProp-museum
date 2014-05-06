@@ -22,27 +22,8 @@ You might want to start by looking at CoolProp.h
 
 	#include "CoolPropDLL.h"
 
-	/// Return a fluid value that does not depend on the thermodynamic state
-	/// @param FluidName The name of the fluid
-	/// @param Output The name of the output parameter, some options are "Ttriple", "Tcrit", "pcrit", "Tmin", "molemass", "rhocrit", "accentric" (not all parameters are valid for all fluids)
-	/// @returns val The value, or _HUGE if not valid
-	double Props1(std::string FluidName,std::string Output);
-    /// Return a value that depends on the thermodynamic state
-	/// @param Output The output parameter, one of "T","D","H",etc.
-	/// @param Name1 The first state variable name, one of "T","D","H",etc.
-	/// @param Prop1 The first state variable value
-	/// @param Name2 The second state variable name, one of "T","D","H",etc.
-	/// @param Prop2 The second state variable value
-	/// @param FluidName The fluid name
-    double Props(std::string Output,std::string Name1, double Prop1, std::string Name2, double Prop2, std::string FluidName);
-	/// Return a value that depends on the thermodynamic state
-	/// @param Output The output parameter, one of "T","D","H",etc.
-	/// @param Name1 The first state variable name, one of "T","D","H",etc.
-	/// @param Prop1 The first state variable value
-	/// @param Name2 The second state variable name, one of "T","D","H",etc.
-	/// @param Prop2 The second state variable value
-	/// @param FluidName The fluid name
-	double Props(std::string Output,char Name1, double Prop1, char Name2, double Prop2, std::string FluidName);
+    namespace CoolProp {
+
     /// Return a fluid value that does not depend on the thermodynamic state
 	/// @param FluidName The name of the fluid
 	/// @param Output The name of the output parameter, some options are "Ttriple", "Tcrit", "pcrit", "Tmin", "molemass", "rhocrit", "accentric" (not all parameters are valid for all fluids)
@@ -55,20 +36,22 @@ You might want to start by looking at CoolProp.h
 	/// @param Name2 The second state variable name, one of "T","D","H",etc.
 	/// @param Prop2 The second state variable value
 	/// @param FluidName The fluid name
-    double PropsSI(std::string Output,std::string Name1, double Prop1, std::string Name2, double Prop2, std::string FluidName);
+    double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &FluidName);
+    /// Return a value that depends on the thermodynamic state
+	/// @param Output The output parameter, one of "T","D","H",etc.
+	/// @param Name1 The first state variable name, one of "T","D","H",etc.
+	/// @param Prop1 The first state variable value
+	/// @param Name2 The second state variable name, one of "T","D","H",etc.
+	/// @param Prop2 The second state variable value
+	/// @param FluidName The fluid name
+    /// @param x The mole or mass fractions depending on the requirements of the backend
+    double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &FluidName, const std::vector<double> &x);
 
-	/*/// Return some low level derivative terms, see source for a complete list
-	/// @param Term String, some options are "phir" (residual Helmholtz energy),"dphir_dDelta", "dphir_dTau", etc.
-	/// @param T Temperature [K]
-	/// @param rho Density [kg/m^3]
-	/// @param FluidName String
-	double DerivTerms(std::string Term, double T, double rho, std::string FluidName);
-	/// Return some low level derivative terms, see source for a complete list
-	/// @param iTerm long desired output
-	/// @param T Temperature [K]
-	/// @param rho Density [kg/m^3]
-	/// @param pFluid Pointer to Fluid instance
-	double DerivTerms(long iTerm, double T, double rho, Fluid * pFluid);*/
+    /**
+    \overload 
+    \sa PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &FluidName, const std::vector<double> &x);
+    */
+    double PropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char *FluidName, const std::vector<double> &x);
 
 	/// Get a long that represents the fluid type
 	/// @param FluidName The fluid name as a string
@@ -84,24 +67,7 @@ You might want to start by looking at CoolProp.h
 	/// @param ParamName A string, one of "aliases", "CAS", "CAS_number", "ASHRAE34", "REFPROPName","REFPROP_name", "TTSE_mode"		
 	/// @returns str The string, or an error message if not valid input
 	std::string get_fluid_param_string(std::string FluidName, std::string ParamName);
-	/// Return the phase of the given state point with temperature, pressure as inputs
-	/// @param FluidName The name of the fluid
-	/// @param T Temperature [K]
-	/// @param p Pressure [kPa]
-	/// @returns Phase as string, one of ""Two-Phase","Supercritical","Gas","Liquid"
-	std::string Phase(std::string FluidName, double T, double p);
-	/// Return the phase of the given state point with temperature, density as inputs
-	/// @param FluidName The name of the fluid
-	/// @param T Temperature [K]
-	/// @param rho Density [kg/m^3]
-	/// @returns Phase as string, one of ""Two-Phase","Supercritical","Gas","Liquid"
-	std::string Phase_Trho(std::string FluidName, double T, double rho);
-	/// Return the phase of the given state point with temperature, pressure as inputs
-	/// @param FluidName The name of the fluid
-	/// @param T Temperature [K]
-	/// @param p Pressure [kPa]
-	/// @returns Phase as string, one of ""Two-Phase","Supercritical","Gas","Liquid"
-	std::string Phase_Tp(std::string FluidName, double T, double p);
+	
 	/// Returns the BibTeX key from the bibtex library of CoolProp corresponding to the item requested
 	/// @param FluidName The name of the fluid
 	/// @param item String, one of "EOS","CP0", "VISCOSITY", "CONDUCTIVITY", "ECS_LENNARD_JONES", "ECS_FITS", "SURFACE_TENSION"
@@ -140,6 +106,59 @@ You might want to start by looking at CoolProp.h
 	/// @param s0 Entropy at references state [kJ/kg/K]
 	//int set_reference_stateD(std::string FluidName, double T, double rho, double h0, double s0);
 
+    /*
+    /// Return the phase of the given state point with temperature, pressure as inputs
+	/// @param FluidName The name of the fluid
+	/// @param T Temperature [K]
+	/// @param p Pressure [kPa]
+	/// @returns Phase as string, one of ""Two-Phase","Supercritical","Gas","Liquid"
+	std::string Phase(std::string FluidName, double T, double p);
+	/// Return the phase of the given state point with temperature, density as inputs
+	/// @param FluidName The name of the fluid
+	/// @param T Temperature [K]
+	/// @param rho Density [kg/m^3]
+	/// @returns Phase as string, one of ""Two-Phase","Supercritical","Gas","Liquid"
+	std::string Phase_Trho(std::string FluidName, double T, double rho);
+	/// Return the phase of the given state point with temperature, pressure as inputs
+	/// @param FluidName The name of the fluid
+	/// @param T Temperature [K]
+	/// @param p Pressure [kPa]
+	/// @returns Phase as string, one of ""Two-Phase","Supercritical","Gas","Liquid"
+	std::string Phase_Tp(std::string FluidName, double T, double p);
+    /// Return some low level derivative terms, see source for a complete list
+	/// @param Term String, some options are "phir" (residual Helmholtz energy),"dphir_dDelta", "dphir_dTau", etc.
+	/// @param T Temperature [K]
+	/// @param rho Density [kg/m^3]
+	/// @param FluidName String
+	double DerivTerms(std::string Term, double T, double rho, std::string FluidName);
+	/// Return some low level derivative terms, see source for a complete list
+	/// @param iTerm long desired output
+	/// @param T Temperature [K]
+	/// @param rho Density [kg/m^3]
+	/// @param pFluid Pointer to Fluid instance
+	double DerivTerms(long iTerm, double T, double rho, Fluid * pFluid);*/
+    /*/// Return a fluid value that does not depend on the thermodynamic state
+	/// @param FluidName The name of the fluid
+	/// @param Output The name of the output parameter, some options are "Ttriple", "Tcrit", "pcrit", "Tmin", "molemass", "rhocrit", "accentric" (not all parameters are valid for all fluids)
+	/// @returns val The value, or _HUGE if not valid
+	double Props1(std::string FluidName,std::string Output);
+    /// Return a value that depends on the thermodynamic state
+	/// @param Output The output parameter, one of "T","D","H",etc.
+	/// @param Name1 The first state variable name, one of "T","D","H",etc.
+	/// @param Prop1 The first state variable value
+	/// @param Name2 The second state variable name, one of "T","D","H",etc.
+	/// @param Prop2 The second state variable value
+	/// @param FluidName The fluid name
+    double Props(std::string Output,std::string Name1, double Prop1, std::string Name2, double Prop2, std::string FluidName);
+	/// Return a value that depends on the thermodynamic state
+	/// @param Output The output parameter, one of "T","D","H",etc.
+	/// @param Name1 The first state variable name, one of "T","D","H",etc.
+	/// @param Prop1 The first state variable value
+	/// @param Name2 The second state variable name, one of "T","D","H",etc.
+	/// @param Prop2 The second state variable value
+	/// @param FluidName The fluid name
+	double Props(std::string Output,char Name1, double Prop1, char Name2, double Prop2, std::string FluidName);*/
+
 	/// An internal function to set the global warning string (API for warnings is not formalized)
 	/// @param warning The string to set as the warning string
 	void set_warning(std::string warning);
@@ -148,5 +167,6 @@ You might want to start by looking at CoolProp.h
 	/// Nearly deprecated function
 	void set_phase(std::string Phase_str);
 
+    } /* namespace CoolProp */
 #endif
 

@@ -10,10 +10,11 @@
 
 #include "AbstractState.h"
 #include "../Fluids/CoolPropFluid.h"
-#include <vector>
 #include "ReducingFunctions.h"
 #include "ExcessHEFunction.h"
 #include "Solvers.h"
+
+#include <vector>
 
 namespace CoolProp {
 
@@ -33,10 +34,13 @@ protected:
 public:
     HelmholtzEOSMixtureBackend(){SatL = NULL; SatV = NULL; imposed_phase_index = -1;};
     HelmholtzEOSMixtureBackend(std::vector<CoolPropFluid*> components, bool generate_SatL_and_SatV = true);
-    HelmholtzEOSMixtureBackend(std::vector<std::string> component_names, bool generate_SatL_and_SatV = true);
+    HelmholtzEOSMixtureBackend(std::vector<std::string> &component_names, bool generate_SatL_and_SatV = true);
     virtual ~HelmholtzEOSMixtureBackend(){};
     ReducingFunctionContainer Reducing;
     ExcessTerm Excess;
+
+    // Helmholtz EOS backend uses mole fractions
+    bool using_mole_fractions(){return true;}
 
     const std::vector<CoolPropFluid*> &get_components(){return components;};
     std::vector<long double> &get_K(){return K;};
@@ -480,12 +484,12 @@ namespace SaturationSolvers
         return log(EOS->reduce.p/p)+5.373*(1 + EOS->accentric)*(1-EOS->reduce.T/T);
     };
 
-    static void saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, saturation_D_pure_options &options);
-    static void saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options);
-    static void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
-    static void saturation_p_pure(HelmholtzEOSMixtureBackend *HEOS, long double p, saturation_p_pure_options &options);
-    static long double successive_substitution(HelmholtzEOSMixtureBackend *HEOS, const long double beta, long double T, long double p, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &options);
-    static void x_and_y_from_K(long double beta, const std::vector<long double> &K, const std::vector<long double> &z, std::vector<long double> &x, std::vector<long double> &y);
+    void saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, saturation_D_pure_options &options);
+    void saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options);
+    void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
+    void saturation_p_pure(HelmholtzEOSMixtureBackend *HEOS, long double p, saturation_p_pure_options &options);
+    long double successive_substitution(HelmholtzEOSMixtureBackend *HEOS, const long double beta, long double T, long double p, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &options);
+    void x_and_y_from_K(long double beta, const std::vector<long double> &K, const std::vector<long double> &z, std::vector<long double> &x, std::vector<long double> &y);
 
     /*! A wrapper function around the residual to find the initial guess for the bubble point temperature
     \f[
@@ -525,7 +529,7 @@ namespace SaturationSolvers
 		    return summer;
 	    };
     };
-    static double saturation_preconditioner(HelmholtzEOSMixtureBackend *HEOS, double input_value, int input_type, const std::vector<long double> &z)
+    inline double saturation_preconditioner(HelmholtzEOSMixtureBackend *HEOS, double input_value, int input_type, const std::vector<long double> &z)
     {
 	    double ptriple = 0, pcrit = 0, Ttriple = 0, Tcrit = 0;
 	    
@@ -549,7 +553,7 @@ namespace SaturationSolvers
         }
         else{ throw ValueError();}
     }
-    static double saturation_Wilson(HelmholtzEOSMixtureBackend *HEOS, double beta, double input_value, int input_type, const std::vector<long double> &z, double guess)
+    inline double saturation_Wilson(HelmholtzEOSMixtureBackend *HEOS, double beta, double input_value, int input_type, const std::vector<long double> &z, double guess)
     {
 	    double T;
 

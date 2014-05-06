@@ -74,7 +74,7 @@ surface tension is in N/m
 class SurfaceTensionCorrelation
 {
     std::vector<long double> a, n, s;
-    long double Tmin, Tmax, Tc;
+    long double Tc;
     std::string BibTeX;
     std::size_t N;
 public:
@@ -164,8 +164,8 @@ public:
         {
         public:
             int other;
-            long double T, value, r, current_value;
             SaturationAncillaryFunction *anc;
+            long double T, value, r, current_value;
 
             solver_resid(SaturationAncillaryFunction *anc, long double value) : anc(anc), value(value){};
                 

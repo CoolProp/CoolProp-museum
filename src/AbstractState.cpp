@@ -13,43 +13,41 @@
 
 namespace CoolProp {
 
-AbstractState::AbstractState() {
-    // TODO Auto-generated constructor stub
-}
-
-AbstractState::~AbstractState() {
-    // TODO Auto-generated destructor stub
-}
-
-AbstractState * AbstractState::factory(std::string backend, std::string fluid_string)
+AbstractState * AbstractState::factory(const std::string &backend, const std::string &fluid_string)
 {
+    static std::string HEOS_string = "HEOS";
     if (!backend.compare("HEOS"))
     {
-        if (fluid_string.find('|') == -1)
+        if (fluid_string.find('&') == -1)
         {
+            // TODO this call is a hot mess and not obvious at all
             return new HelmholtzEOSBackend(&(get_library().get(fluid_string)));
         }
         else
         {
-            // Split at the '|'
-            std::vector<std::string> components = strsplit(fluid_string,'|');
+            // Split at the '&'
+            std::vector<std::string> components = strsplit(fluid_string,'&');
 
             return new HelmholtzEOSMixtureBackend(components);
         }
     }
     else if (!backend.compare("REFPROP"))
     {
-        if (fluid_string.find('|') == -1)
+        if (fluid_string.find('&') == -1)
         {
             return new REFPROPBackend(fluid_string);
         }
         else
         {
-            // Split at the '|'
-            std::vector<std::string> components = strsplit(fluid_string,'|');
+            // Split at the '&'
+            std::vector<std::string> components = strsplit(fluid_string,'&');
 
             return new REFPROPMixtureBackend(components);
         }
+    }
+    else if (!backend.compare("INCOMP"))
+    {
+        throw ValueError("INCOMP backend not yet implemented");
     }
     else if (!backend.compare("BRINE"))
     {
@@ -58,6 +56,22 @@ AbstractState * AbstractState::factory(std::string backend, std::string fluid_st
     else if (!backend.compare("TREND"))
     {
         throw ValueError("TREND backend not yet implemented");
+    }
+    else if (!backend.compare("?"))
+    {
+        std::size_t idel = fluid_string.find("::");
+        // Backend has not been specified, and we have to figure out what the backend is by parsing the string
+        if (idel == -1) // No '::' found, no backend specified, try HEOS, otherwise a failure
+        {
+            // Figure out what backend to use
+            return factory(HEOS_string, fluid_string);
+        }
+        else
+        {
+            // Split string at the '::' into two std::string, call again
+            return factory(std::string(fluid_string.begin(), fluid_string.begin() + idel), std::string(fluid_string.begin()+idel+2, fluid_string.end()));
+        }
+
     }
     else
     {
@@ -169,7 +183,7 @@ double AbstractState::keyed_output(int key)
     case iUmolar:
         return umolar();
     case iUmass:
-        return umolar()/molar_mass();   
+        return umolar()/molar_mass();
     default:
         throw ValueError(format("This input [%d: \"%s\"] is not valid for keyed_output",key,get_parameter_information(key,"short").c_str()));
     }
