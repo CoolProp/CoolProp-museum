@@ -47,6 +47,16 @@ You might want to start by looking at CoolProp.h
     /// @param x The mole or mass fractions depending on the requirements of the backend
     double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &FluidName, const std::vector<double> &x);
 
+    /// Return a value that depends on the thermodynamic state
+	/// @param Output The output parameter, one of "T","D","H",etc.
+	/// @param Name1 The first state variable name, one of "T","D","H",etc.
+	/// @param Prop1 The first state variable value
+	/// @param Name2 The second state variable name, one of "T","D","H",etc.
+	/// @param Prop2 The second state variable value
+	/// @param FluidName The fluid name
+    /// @param x The mole or mass fractions depending on the requirements of the backend
+    std::vector<double> PropsSI(std::string &Output, std::string &Name1, const std::vector<double> &Prop1, std::string &Name2, const std::vector<double> Prop2, std::string &Ref, const std::vector<double> &z);
+
     /**
     \overload 
     \sa PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &FluidName, const std::vector<double> &x);

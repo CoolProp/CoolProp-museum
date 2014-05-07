@@ -507,6 +507,15 @@ double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::strin
     catch(const std::exception& e){ std::cout << e.what() << std::endl; return _HUGE; }
     catch(...){ return _HUGE; }
 }
+std::vector<double> PropsSI(std::string &Output, std::string &Name1, const std::vector<double> &Prop1, std::string &Name2, const std::vector<double> Prop2, std::string &Ref, const std::vector<double> &z)
+{
+    std::vector<double> out(Prop1.size(), _HUGE);
+    for (std::size_t i = 0; i < Prop1.size(); ++i)
+    {
+        out[i] = PropsSI(Output,Name1,Prop1[i],Name2,Prop2[i],Ref,z);
+    }
+    return out;
+}
 
  
 //EXPORT_CODE double CONVENTION IProps(long iOutput, long iName1, double Prop1, long iName2, double Prop2, long iFluid)
