@@ -510,6 +510,11 @@ double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::strin
 std::vector<double> PropsSI(std::string &Output, std::string &Name1, const std::vector<double> &Prop1, std::string &Name2, const std::vector<double> Prop2, std::string &Ref, const std::vector<double> &z)
 {
     std::vector<double> out(Prop1.size(), _HUGE);
+    if (Prop1.size() != Prop2.size())
+    {
+        std::cout << format("Sizes of Prop1 [%d] and Prop2 [%d] to PropsSI are not the same", Prop1.size(), Prop2.size()) << std::endl;
+        return out;
+    }
     for (std::size_t i = 0; i < Prop1.size(); ++i)
     {
         out[i] = PropsSI(Output,Name1,Prop1[i],Name2,Prop2[i],Ref,z);

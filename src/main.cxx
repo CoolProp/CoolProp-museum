@@ -74,7 +74,14 @@ int main()
         generate_melting_curve_data("CycloHexane.mlt","cyclohex",279.7,2000);
         generate_melting_curve_data("CarbonDioxide.mlt","CO2",217,2000);
     }
-
+    if (1)
+    {
+        std::vector<double> T(2,300), P(2,101325), o, z(1,1);
+        std::string in1 = "Dmass", in2 = "T", in3 = "P", Ref = "Nitrogen";
+        T[1] = 400;
+        o = PropsSI(in1,in2,T,in3,z,Ref,z);
+        double tr = 0;
+    }
     if (1)
     {
         // First type (slowest, most string processing, exposed in DLL)
