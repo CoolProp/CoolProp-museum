@@ -220,7 +220,7 @@ def inject_ancillaries():
         fluid.update(anc)
         # Write fluid back to file
         fp = open(os.path.join('fluids', fluid_name+'.json'),'w')
-        fp.write(json.dumps(fluid, indent = 2))
+        fp.write(json.dumps(fluid, indent = 2, sort_keys = True))
 
 def package_json():
 

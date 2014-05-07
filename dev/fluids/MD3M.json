@@ -1,19 +1,125 @@
 {
+  "ALIASES": [
+    "Dodecamethylpentasiloxane", 
+    "DODECAMETHYLPENTASILOXANE"
+  ], 
+  "ANCILLARIES": {
+    "pL": {
+      "T_r": 628.36, 
+      "Tmax": 628.3599999999988, 
+      "Tmin": 192.0, 
+      "description": "p' = pc*exp(Tc/T*sum(n_i*theta^t_i))", 
+      "max_abserror_percentage": 0.025890264817562958, 
+      "n": [
+        -10.453673923336904, 
+        2.481740868042947, 
+        -11.432996001913109, 
+        6.601821622186919, 
+        -5.964966309512551, 
+        -7.694099935065695
+      ], 
+      "reducing_value": 945000.0, 
+      "t": [
+        1.015, 
+        1.281, 
+        2.914, 
+        3.079, 
+        4.049, 
+        12.555
+      ], 
+      "type": "pL", 
+      "using_tau_r": true
+    }, 
+    "pV": {
+      "T_r": 628.36, 
+      "Tmax": 628.3599999999988, 
+      "Tmin": 192.0, 
+      "description": "p'' = pc*exp(Tc/T*sum(n_i*theta^t_i))", 
+      "max_abserror_percentage": 0.062049678581188594, 
+      "n": [
+        -8.949699956067297, 
+        0.4122742171095244, 
+        -9.899582759727936, 
+        1.1051818846570594, 
+        -10.457795793253178, 
+        11.86348703188236
+      ], 
+      "reducing_value": 945000.0, 
+      "t": [
+        0.991, 
+        1.154, 
+        3.408, 
+        7.711, 
+        11.313, 
+        18.134
+      ], 
+      "type": "pV", 
+      "using_tau_r": true
+    }, 
+    "rhoL": {
+      "T_r": 628.36, 
+      "Tmax": 628.3599999999988, 
+      "Tmin": 192.0, 
+      "description": "rho' = rhoc*(1+sum(n_i*theta^t_i))", 
+      "max_abserror_percentage": 0.9412402880123238, 
+      "n": [
+        3.908835698000551, 
+        -1.7671208917208399, 
+        9.16107326877534, 
+        -11.915428003947813, 
+        5.425025736986464, 
+        -2.1727181064864802
+      ], 
+      "reducing_value": 685.7981626999992, 
+      "t": [
+        0.371, 
+        0.453, 
+        1.774, 
+        2.156, 
+        3.401, 
+        7.268
+      ], 
+      "type": "rhoLnoexp", 
+      "using_tau_r": false
+    }, 
+    "rhoV": {
+      "T_r": 628.36, 
+      "Tmax": 628.3599999999988, 
+      "Tmin": 192.0, 
+      "description": "rho'' = rhoc*exp(Tc/T*sum(n_i*theta^t_i))", 
+      "max_abserror_percentage": 1.090311933515531, 
+      "n": [
+        0.01880314261439147, 
+        -2.1886134791566874, 
+        -5.398887457148687, 
+        9.132545382573525, 
+        -19.85612989152667, 
+        -35.776997465430505
+      ], 
+      "reducing_value": 685.7981626999992, 
+      "t": [
+        0.071, 
+        0.343, 
+        0.856, 
+        2.418, 
+        2.94, 
+        16.829
+      ], 
+      "type": "rhoV", 
+      "using_tau_r": true
+    }
+  }, 
+  "CAS": "141-63-9", 
   "EOS": [
     {
-      "ptriple_units": "Pa", 
-      "reducing_state": {
-        "rhomolar_units": "mol/m^3", 
-        "rhomolar": 685.7981626999992, 
-        "p": 945000, 
-        "T": 628.36, 
-        "T_units": "K", 
-        "p_units": "Pa"
-      }, 
+      "BibTeX_CP0": "", 
+      "BibTeX_EOS": "Colonna-FPE-2008", 
+      "T_max": 673, 
+      "T_max_units": "K", 
+      "Ttriple": 192, 
+      "Ttriple_units": "K", 
+      "accentric": 0.722, 
       "accentric_units": "-", 
-      "p_max_units": "Pa", 
-      "gas_constant_units": "J/mol/K", 
-      "p_max": 30000000, 
       "alpha0": [
         {
           "a1": -7.835183629103501, 
@@ -25,6 +131,8 @@
           "type": "IdealGasHelmholtzLogTau"
         }, 
         {
+          "T0": 503.022623775204, 
+          "Tc": 628.36, 
           "c": [
             55.71009199381512, 
             115.1245683430048, 
@@ -32,24 +140,25 @@
             88.79697953159261, 
             908.5
           ], 
-          "type": "IdealGasHelmholtzCP0AlyLee", 
-          "Tc": 628.36, 
-          "T0": 503.022623775204
+          "type": "IdealGasHelmholtzCP0AlyLee"
         }
       ], 
-      "BibTeX_EOS": "Colonna-FPE-2008", 
-      "ptriple": 0.0002057747643530664, 
-      "T_max": 673, 
-      "Ttriple": 192, 
-      "rhoLtriple_units": "mol/m^3", 
-      "gas_constant": 8.314472, 
-      "accentric": 0.722, 
-      "BibTeX_CP0": "", 
-      "rhoVtriple": 1.289360613297565e-10, 
-      "molar_mass_units": "kg/mol", 
-      "rhoVtriple_units": "mol/m^3", 
       "alphar": [
         {
+          "d": [
+            1, 
+            1, 
+            1, 
+            2, 
+            3, 
+            7, 
+            2, 
+            5, 
+            1, 
+            4, 
+            3, 
+            4
+          ], 
           "l": [
             0, 
             0, 
@@ -63,6 +172,20 @@
             2, 
             3, 
             3
+          ], 
+          "n": [
+            1.20540386, 
+            -2.42914797, 
+            0.69016432, 
+            -0.69268041, 
+            0.18506046, 
+            0.00031161436, 
+            0.99862519, 
+            0.074229034, 
+            -0.80259136, 
+            -0.20865337, 
+            -0.036461791, 
+            0.019174051
           ], 
           "t": [
             0.25, 
@@ -78,154 +201,31 @@
             14.5, 
             12
           ], 
-          "type": "ResidualHelmholtzPower", 
-          "d": [
-            1, 
-            1, 
-            1, 
-            2, 
-            3, 
-            7, 
-            2, 
-            5, 
-            1, 
-            4, 
-            3, 
-            4
-          ], 
-          "n": [
-            1.20540386, 
-            -2.42914797, 
-            0.69016432, 
-            -0.69268041, 
-            0.18506046, 
-            0.00031161436, 
-            0.99862519, 
-            0.074229034, 
-            -0.80259136, 
-            -0.20865337, 
-            -0.036461791, 
-            0.019174051
-          ]
+          "type": "ResidualHelmholtzPower"
         }
       ], 
-      "rhoLtriple": 2541.796114376564, 
-      "Ttriple_units": "K", 
-      "T_max_units": "K", 
+      "gas_constant": 8.314472, 
+      "gas_constant_units": "J/mol/K", 
       "molar_mass": 0.384839, 
-      "pseudo_pure": false
+      "molar_mass_units": "kg/mol", 
+      "p_max": 30000000, 
+      "p_max_units": "Pa", 
+      "pseudo_pure": false, 
+      "ptriple": 0.0002057747643530664, 
+      "ptriple_units": "Pa", 
+      "reducing_state": {
+        "T": 628.36, 
+        "T_units": "K", 
+        "p": 945000, 
+        "p_units": "Pa", 
+        "rhomolar": 685.7981626999992, 
+        "rhomolar_units": "mol/m^3"
+      }, 
+      "rhoLtriple": 2541.796114376564, 
+      "rhoLtriple_units": "mol/m^3", 
+      "rhoVtriple": 1.289360613297565e-10, 
+      "rhoVtriple_units": "mol/m^3"
     }
   ], 
-  "NAME": "MD3M", 
-  "CAS": "141-63-9", 
-  "ANCILLARIES": {
-    "pV": {
-      "Tmin": 192.0, 
-      "description": "p'' = pc*exp(Tc/T*sum(n_i*theta^t_i))", 
-      "Tmax": 628.3599999999988, 
-      "using_tau_r": true, 
-      "max_abserror_percentage": 0.062049678581188594, 
-      "t": [
-        0.991, 
-        1.154, 
-        3.408, 
-        7.711, 
-        11.313, 
-        18.134
-      ], 
-      "reducing_value": 945000.0, 
-      "T_r": 628.36, 
-      "n": [
-        -8.949699956067297, 
-        0.4122742171095244, 
-        -9.899582759727936, 
-        1.1051818846570594, 
-        -10.457795793253178, 
-        11.86348703188236
-      ], 
-      "type": "pV"
-    }, 
-    "rhoV": {
-      "Tmin": 192.0, 
-      "description": "rho'' = rhoc*exp(Tc/T*sum(n_i*theta^t_i))", 
-      "Tmax": 628.3599999999988, 
-      "using_tau_r": true, 
-      "max_abserror_percentage": 1.090311933515531, 
-      "t": [
-        0.071, 
-        0.343, 
-        0.856, 
-        2.418, 
-        2.94, 
-        16.829
-      ], 
-      "reducing_value": 685.7981626999992, 
-      "T_r": 628.36, 
-      "n": [
-        0.01880314261439147, 
-        -2.1886134791566874, 
-        -5.398887457148687, 
-        9.132545382573525, 
-        -19.85612989152667, 
-        -35.776997465430505
-      ], 
-      "type": "rhoV"
-    }, 
-    "pL": {
-      "Tmin": 192.0, 
-      "description": "p' = pc*exp(Tc/T*sum(n_i*theta^t_i))", 
-      "Tmax": 628.3599999999988, 
-      "using_tau_r": true, 
-      "max_abserror_percentage": 0.025890264817562958, 
-      "t": [
-        1.015, 
-        1.281, 
-        2.914, 
-        3.079, 
-        4.049, 
-        12.555
-      ], 
-      "reducing_value": 945000.0, 
-      "T_r": 628.36, 
-      "n": [
-        -10.453673923336904, 
-        2.481740868042947, 
-        -11.432996001913109, 
-        6.601821622186919, 
-        -5.964966309512551, 
-        -7.694099935065695
-      ], 
-      "type": "pL"
-    }, 
-    "rhoL": {
-      "Tmin": 192.0, 
-      "description": "rho' = rhoc*(1+sum(n_i*theta^t_i))", 
-      "Tmax": 628.3599999999988, 
-      "using_tau_r": false, 
-      "max_abserror_percentage": 0.9412402880123238, 
-      "t": [
-        0.371, 
-        0.453, 
-        1.774, 
-        2.156, 
-        3.401, 
-        7.268
-      ], 
-      "reducing_value": 685.7981626999992, 
-      "T_r": 628.36, 
-      "n": [
-        3.908835698000551, 
-        -1.7671208917208399, 
-        9.16107326877534, 
-        -11.915428003947813, 
-        5.425025736986464, 
-        -2.1727181064864802
-      ], 
-      "type": "rhoLnoexp"
-    }
-  }, 
-  "ALIASES": [
-    "Dodecamethylpentasiloxane", 
-    "DODECAMETHYLPENTASILOXANE"
-  ]
+  "NAME": "MD3M"
 }
