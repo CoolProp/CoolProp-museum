@@ -18,11 +18,6 @@ REFPROP.  It hides all the implementation of mixture properties
 and exposes just the pure fluid interface.
 */
 class REFPROPBackend : public REFPROPMixtureBackend  {
-private:
-    /// DISABLED: Setting mole or mass fraction not allowed since pure and pseudo-pure have single component with mole fraction of 1
-	void set_mole_fractions(const std::vector<long double> &mole_fractions){throw NotImplementedError();};
-	/// DISABLED: Setting mole or mass fraction not allowed since pure and pseudo-pure have single component with mole fraction of 1
-	void set_mass_fractions(const std::vector<long double> &mass_fractions){throw NotImplementedError();};
 public:
     
 	REFPROPBackend();
