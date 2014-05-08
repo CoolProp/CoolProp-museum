@@ -121,6 +121,17 @@
     }
   }, 
   "CAS": "115-11-7", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 4, 
+    "GWP100": -1.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 1, 
+    "Name": "Isobutene", 
+    "ODP": -1.0, 
+    "PH": 2
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

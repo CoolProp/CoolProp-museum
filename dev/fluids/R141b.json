@@ -122,6 +122,17 @@
     }
   }, 
   "CAS": "1717-00-6", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 1, 
+    "GWP100": 725.0, 
+    "GWP20": 2250.0, 
+    "GWP500": 220.0, 
+    "HH": 1, 
+    "Name": "R141b", 
+    "ODP": 0.12, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

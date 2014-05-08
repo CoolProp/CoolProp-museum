@@ -122,6 +122,17 @@
     }
   }, 
   "CAS": "7782-39-0", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": -1, 
+    "GWP100": 0.0, 
+    "GWP20": 0.0, 
+    "GWP500": 0.0, 
+    "HH": -1, 
+    "Name": "Deuterium", 
+    "ODP": -1.0, 
+    "PH": -1
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

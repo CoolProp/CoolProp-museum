@@ -121,6 +121,17 @@
     }
   }, 
   "CAS": "74-85-1", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "A3", 
+    "FH": 4, 
+    "GWP100": 6.8, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 2, 
+    "Name": "Ethylene", 
+    "ODP": -1.0, 
+    "PH": 2
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

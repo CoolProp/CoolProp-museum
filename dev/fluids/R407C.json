@@ -109,6 +109,17 @@
     }
   }, 
   "CAS": "R407C.PPF", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "A1", 
+    "FH": 1, 
+    "GWP100": 1800.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 1, 
+    "Name": "R407C", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

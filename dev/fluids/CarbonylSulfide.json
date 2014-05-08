@@ -121,6 +121,17 @@
     }
   }, 
   "CAS": "463-58-1", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 4, 
+    "GWP100": 27.0, 
+    "GWP20": 97.0, 
+    "GWP500": -1.0, 
+    "HH": 3, 
+    "Name": "CarbonylSulfide", 
+    "ODP": -1.0, 
+    "PH": 1
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

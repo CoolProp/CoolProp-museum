@@ -1,5 +1,7 @@
 import os, json, glob, textwrap
 
+json_options = {'indent' : 2, 'sort_keys' : True}
+
 # Data from Mulero, JPCRD, 2012
 # CAS codes added from CoolProp 4.2, and wikipedia where necessary
 Mulero_data = """67-64-1 Acetone 0.0633 1.160
@@ -202,9 +204,22 @@ def inject_surface_tension():
         j['ANCILLARIES']['surface_tension'] = j_st
         
         fp = open(fname, 'w')
-        fp.write(json.dumps(j, indent = 2, sort_keys = True))
+        fp.write(json.dumps(j, **json_options))
         fp.close()
 
+def inject_environmental_data():
+    j = json.load(open('environmental_data_from_DTU/DTU_environmental.json','r'))
+    
+    for CAS, data in j.iteritems():
+        fname = os.path.join('fluids',data['Name']+'.json')
+        if os.path.isfile(fname):
+            fluid = json.load(open(fname,'r'))
+            fluid['ENVIRONMENTAL'] = data
+            fp = open(fname, 'w')
+            fp.write(json.dumps(fluid, **json_options))
+        else:
+            print 'Could not inject environmental data for ',data['Name']
+    
 def inject_ancillaries():
     master = []
 
@@ -220,7 +235,7 @@ def inject_ancillaries():
         fluid.update(anc)
         # Write fluid back to file
         fp = open(os.path.join('fluids', fluid_name+'.json'),'w')
-        fp.write(json.dumps(fluid, indent = 2, sort_keys = True))
+        fp.write(json.dumps(fluid, **json_options))
 
 def package_json():
 
@@ -237,7 +252,7 @@ def package_json():
         master += [fluid]
 
     fp = open('all_fluids_verbose.json','w')
-    fp.write(json.dumps(master, indent = 2, sort_keys = True))
+    fp.write(json.dumps(master, **json_options))
     fp.close()
     
     fp = open('all_fluids.json','w')
@@ -247,4 +262,5 @@ def package_json():
 if __name__=='__main__':
     inject_ancillaries()
     inject_surface_tension()
+    inject_environmental_data()
     package_json()

@@ -122,6 +122,17 @@
     }
   }, 
   "CAS": "7782-44-7", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 0, 
+    "GWP100": -1.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 0, 
+    "Name": "Oxygen", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

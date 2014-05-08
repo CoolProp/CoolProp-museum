@@ -121,6 +121,17 @@
     }
   }, 
   "CAS": "10024-97-2", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 0, 
+    "GWP100": 320.0, 
+    "GWP20": 290.0, 
+    "GWP500": 180.0, 
+    "HH": 1, 
+    "Name": "NitrousOxide", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

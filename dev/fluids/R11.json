@@ -118,6 +118,17 @@
     }
   }, 
   "CAS": "75-69-4", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "A1", 
+    "FH": 1, 
+    "GWP100": 4750.0, 
+    "GWP20": 6730.0, 
+    "GWP500": 1620.0, 
+    "HH": 1, 
+    "Name": "R11", 
+    "ODP": 1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "Jacobsen-FPE-1992", 

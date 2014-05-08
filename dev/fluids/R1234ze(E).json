@@ -111,6 +111,17 @@
     }
   }, 
   "CAS": "29118-24-9", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 2, 
+    "GWP100": 6.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 1, 
+    "Name": "R1234ze(E)", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

@@ -121,6 +121,17 @@
     }
   }, 
   "CAS": "108-88-3", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 3, 
+    "GWP100": 3.3, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 2, 
+    "Name": "Toluene", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

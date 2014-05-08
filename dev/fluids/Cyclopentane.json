@@ -111,6 +111,17 @@
     }
   }, 
   "CAS": "287-92-3", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 3, 
+    "GWP100": -1.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 2, 
+    "Name": "Cyclopentane", 
+    "ODP": -1.0, 
+    "PH": 1
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

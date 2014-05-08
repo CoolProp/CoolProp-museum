@@ -120,6 +120,17 @@
     }
   }, 
   "CAS": "406-58-6", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": -1, 
+    "GWP100": 794.0, 
+    "GWP20": 2520.0, 
+    "GWP500": 241.0, 
+    "HH": -1, 
+    "Name": "R365MFC", 
+    "ODP": -1.0, 
+    "PH": -1
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

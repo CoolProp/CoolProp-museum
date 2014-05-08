@@ -125,6 +125,17 @@
     }
   }, 
   "CAS": "142-82-5", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 3, 
+    "GWP100": -1.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 1, 
+    "Name": "n-Heptane", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "Jaeschke-IJT-1995", 

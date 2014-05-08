@@ -123,6 +123,17 @@
     }
   }, 
   "CAS": "2551-62-4", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 0, 
+    "GWP100": 22800.0, 
+    "GWP20": 16300.0, 
+    "GWP500": 32600.0, 
+    "HH": 1, 
+    "Name": "SulfurHexafluoride", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

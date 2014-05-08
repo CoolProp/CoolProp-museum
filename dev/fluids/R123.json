@@ -118,6 +118,17 @@
     }
   }, 
   "CAS": "306-83-2", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "B1", 
+    "FH": 1, 
+    "GWP100": 77.0, 
+    "GWP20": 273.0, 
+    "GWP500": 24.0, 
+    "HH": 2, 
+    "Name": "R123", 
+    "ODP": 0.02, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "Younglove-JPCRD-1994", 

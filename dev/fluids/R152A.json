@@ -120,6 +120,17 @@
     }
   }, 
   "CAS": "75-37-6", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "A2", 
+    "FH": 4, 
+    "GWP100": 124.0, 
+    "GWP20": 437.0, 
+    "GWP500": 38.0, 
+    "HH": 1, 
+    "Name": "R152A", 
+    "ODP": -1.0, 
+    "PH": 1
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "TillnerRoth-IJT-1995", 

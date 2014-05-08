@@ -126,6 +126,17 @@
     }
   }, 
   "CAS": "74-82-8", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "A3", 
+    "FH": 4, 
+    "GWP100": 25.0, 
+    "GWP20": 72.0, 
+    "GWP500": 7.6, 
+    "HH": 0, 
+    "Name": "Methane", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

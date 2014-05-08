@@ -124,6 +124,17 @@
     }
   }, 
   "CAS": "7440-63-3", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 0, 
+    "GWP100": -1.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 0, 
+    "Name": "Xenon", 
+    "ODP": -1.0, 
+    "PH": 3
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

@@ -125,6 +125,17 @@
     }
   }, 
   "CAS": "7446-09-5", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "B1", 
+    "FH": 0, 
+    "GWP100": -1.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 3, 
+    "Name": "SulfurDioxide", 
+    "ODP": -1.0, 
+    "PH": 0
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 

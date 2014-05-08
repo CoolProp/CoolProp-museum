@@ -118,6 +118,17 @@
     }
   }, 
   "CAS": "75-43-4", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "B1", 
+    "FH": -1, 
+    "GWP100": 151.0, 
+    "GWP20": 530.0, 
+    "GWP500": 46.0, 
+    "HH": -1, 
+    "Name": "R21", 
+    "ODP": -1.0, 
+    "PH": -1
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "Platzer-BOOK-1990", 

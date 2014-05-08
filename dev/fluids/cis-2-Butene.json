@@ -110,6 +110,17 @@
     }
   }, 
   "CAS": "590-18-1", 
+  "ENVIRONMENTAL": {
+    "ASHRAE34": "UNKNOWN", 
+    "FH": 4, 
+    "GWP100": -1.0, 
+    "GWP20": -1.0, 
+    "GWP500": -1.0, 
+    "HH": 0, 
+    "Name": "cis-2-Butene", 
+    "ODP": -1.0, 
+    "PH": 1
+  }, 
   "EOS": [
     {
       "BibTeX_CP0": "", 
