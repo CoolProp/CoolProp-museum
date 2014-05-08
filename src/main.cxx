@@ -79,7 +79,7 @@ int main()
         std::vector<double> T(2,300), P(2,101325), o, z(1,1);
         std::string in1 = "Dmass", in2 = "T", in3 = "P", Ref = "Nitrogen";
         T[1] = 400;
-        o = PropsSI(in1,in2,T,in3,z,Ref,z);
+        o = PropsSI(in1,in2,T,in3,P,Ref,z);
         double tr = 0;
     }
     if (1)

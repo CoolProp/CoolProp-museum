@@ -56,7 +56,7 @@ enum parameters{
 /// @param info The thing you want, one of "IO" ("IO" if input/output, "O" if output only), "short" (very short description), "long" (a longer description), "units"
 std::string get_parameter_information(int key, std::string info);
 /// Return the integer key corresponding to the parameter name ("Dmolar" for instance)
-int get_parameter_index(std::string &param_name);
+int get_parameter_index(const std::string &param_name);
 
 /// These are constants for the phases of the fluid
 enum phases {iphase_liquid, iphase_supercritical, iphase_gas, iphase_twophase, iphase_unknown};

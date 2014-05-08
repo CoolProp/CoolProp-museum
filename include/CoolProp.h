@@ -24,11 +24,11 @@ You might want to start by looking at CoolProp.h
 
     namespace CoolProp {
 
-    /// Return a fluid value that does not depend on the thermodynamic state
+    /*/// Return a fluid value that does not depend on the thermodynamic state
 	/// @param FluidName The name of the fluid
 	/// @param Output The name of the output parameter, some options are "Ttriple", "Tcrit", "pcrit", "Tmin", "molemass", "rhocrit", "accentric" (not all parameters are valid for all fluids)
 	/// @returns val The value, or _HUGE if not valid
-	double Props1SI(std::string FluidName,std::string Output);
+	double Props1SI(std::string FluidName,std::string Output);*/
     /// Return a value that depends on the thermodynamic state
 	/// @param Output The output parameter, one of "T","D","H",etc.
 	/// @param Name1 The first state variable name, one of "T","D","H",etc.
@@ -36,7 +36,7 @@ You might want to start by looking at CoolProp.h
 	/// @param Name2 The second state variable name, one of "T","D","H",etc.
 	/// @param Prop2 The second state variable value
 	/// @param FluidName The fluid name
-    double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &FluidName);
+    double PropsSI(const std::string &Output, const std::string &Name1, double Prop1, const std::string &Name2, double Prop2, const std::string &FluidName);
     /// Return a value that depends on the thermodynamic state
 	/// @param Output The output parameter, one of "T","D","H",etc.
 	/// @param Name1 The first state variable name, one of "T","D","H",etc.
@@ -45,7 +45,7 @@ You might want to start by looking at CoolProp.h
 	/// @param Prop2 The second state variable value
 	/// @param FluidName The fluid name
     /// @param x The mole or mass fractions depending on the requirements of the backend
-    double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &FluidName, const std::vector<double> &x);
+    double PropsSI(const std::string &Output, const std::string &Name1, double Prop1, const std::string &Name2, double Prop2, const std::string &FluidName, const std::vector<double> &x);
 
     /// Return a value that depends on the thermodynamic state
 	/// @param Output The output parameter, one of "T","D","H",etc.
@@ -55,7 +55,7 @@ You might want to start by looking at CoolProp.h
 	/// @param Prop2 The second state variable value
 	/// @param FluidName The fluid name
     /// @param x The mole or mass fractions depending on the requirements of the backend
-    std::vector<double> PropsSI(std::string &Output, std::string &Name1, const std::vector<double> &Prop1, std::string &Name2, const std::vector<double> Prop2, std::string &Ref, const std::vector<double> &z);
+    std::vector<double> PropsSI(const std::string &Output, const std::string &Name1, const std::vector<double> &Prop1, const std::string &Name2, const std::vector<double> Prop2, const std::string &Ref, const std::vector<double> &z);
 
     /**
     \overload 
@@ -63,7 +63,7 @@ You might want to start by looking at CoolProp.h
     */
     double PropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char *FluidName, const std::vector<double> &x);
 
-	/// Get a long that represents the fluid type
+	/*/// Get a long that represents the fluid type
 	/// @param FluidName The fluid name as a string
 	/// @returns long element from global type enumeration
 	long getFluidType(std::string FluidName);
@@ -92,7 +92,7 @@ You might want to start by looking at CoolProp.h
 	/// Get the fluid index for a given fluid name
 	/// @param FluidName The name for a fluid
 	/// @returns index The fluid index (for use in IProps or elsewhere); -1 if not found
-	long get_Fluid_index(std::string FluidName);
+	long get_Fluid_index(std::string FluidName);*/
 	/*/// Get a pointer to a fluid that has been loaded
 	/// @param iFluid The integer index for the fluid (get from get_Fluid_index)
 	/// @returns pFluid A pointer to a Fluid instance
@@ -169,13 +169,13 @@ You might want to start by looking at CoolProp.h
 	/// @param FluidName The fluid name
 	double Props(std::string Output,char Name1, double Prop1, char Name2, double Prop2, std::string FluidName);*/
 
-	/// An internal function to set the global warning string (API for warnings is not formalized)
-	/// @param warning The string to set as the warning string
-	void set_warning(std::string warning);
+	///// An internal function to set the global warning string (API for warnings is not formalized)
+	///// @param warning The string to set as the warning string
+	//void set_warning(std::string warning);
 
-	//    **************** DEPRECATION WARNING ***********************
-	/// Nearly deprecated function
-	void set_phase(std::string Phase_str);
+	////    **************** DEPRECATION WARNING ***********************
+	///// Nearly deprecated function
+	//void set_phase(std::string Phase_str);
 
     } /* namespace CoolProp */
 #endif

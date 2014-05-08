@@ -353,14 +353,14 @@ static std::string warning_string;
 //	return _HUGE;
 //}
 
-bool has_fractions_in_string(std::string &fluid_string)
+bool has_fractions_in_string(const std::string &fluid_string)
 {
     // Start at the "::" if it is found to chop off the delimiter between backend and fluid
     std::size_t i = fluid_string.find("::");
     // If can find both "&" and "]", it must have mole fractions encoded as string
     return fluid_string.find("&",i+2) != -1 && fluid_string.find("]",i+2);
 }
-void extract_fractions(std::string &fluid_string, std::vector<double> &fractions)
+std::string extract_fractions(const std::string &fluid_string, std::vector<double> &fractions)
 {
     fractions.clear();
     std::vector<std::string> names;
@@ -413,12 +413,12 @@ void extract_fractions(std::string &fluid_string, std::vector<double> &fractions
     }
 
     // Join fluids back together
-    fluid_string = backend_string + strjoin(names, "&");
+    return backend_string + strjoin(names, "&");
 }
 
 // Internal function to do the actual calculations, make this a wrapped function so
 // that error bubbling can be done properly
-double _PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &Ref, const std::vector<double> &z)
+double _PropsSI(const std::string &Output, const std::string &Name1, double Prop1, const std::string &Name2, double Prop2, const std::string &Ref, const std::vector<double> &z)
 {
     static std::string unknown_backend = "?";
     double x1, x2;
@@ -477,7 +477,7 @@ double _PropsSI(std::string &Output, std::string &Name1, double Prop1, std::stri
         delete(State); throw;
     }
 }
-double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &Ref, const std::vector<double> &z)
+double PropsSI(const std::string &Output, const std::string &Name1, double Prop1, const std::string &Name2, double Prop2, const std::string &Ref, const std::vector<double> &z)
 {
     CATCH_ALL_ERRORS_RETURN_HUGE(return _PropsSI(Output,Name1,Prop1,Name2,Prop2,Ref,z);)
 }
@@ -486,7 +486,7 @@ double PropsSI(const char *Output, const char *Name1, double Prop1, const char *
     std::string _Output = Output, _Name1 = Name1, _Name2 = Name2, _FluidName = FluidName;
     return PropsSI(_Output,_Name1,Prop1,_Name2,Prop2,_FluidName, x);
 }
-double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::string &Name2, double Prop2, std::string &Ref)
+double PropsSI(const std::string &Output, const std::string &Name1, double Prop1, const std::string &Name2, double Prop2, const std::string &Ref)
 {
     // In this function the error catching happens;
     try{          
@@ -495,8 +495,8 @@ double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::strin
         {
             std::vector<double> fractions;
             // Extract the fractions and reformulate the list of fluids REFPROP::Methane[0.5]&Ethane[0.5] -> REFPROP::Methane&Ethane and [0.5,0.5]
-            extract_fractions(Ref, fractions);
-            return _PropsSI(Output, Name1, Prop1, Name2, Prop2, Ref, fractions);
+            std::string Ref2 = extract_fractions(Ref, fractions);
+            return _PropsSI(Output, Name1, Prop1, Name2, Prop2, Ref2, fractions);
         }
         else
         {
@@ -507,7 +507,7 @@ double PropsSI(std::string &Output, std::string &Name1, double Prop1, std::strin
     catch(const std::exception& e){ std::cout << e.what() << std::endl; return _HUGE; }
     catch(...){ return _HUGE; }
 }
-std::vector<double> PropsSI(std::string &Output, std::string &Name1, const std::vector<double> &Prop1, std::string &Name2, const std::vector<double> Prop2, std::string &Ref, const std::vector<double> &z)
+std::vector<double> PropsSI(const std::string &Output, const std::string &Name1, const std::vector<double> &Prop1, const std::string &Name2, const std::vector<double> Prop2, const std::string &Ref, const std::vector<double> &z)
 {
     std::vector<double> out(Prop1.size(), _HUGE);
     if (Prop1.size() != Prop2.size())

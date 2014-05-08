@@ -91,7 +91,7 @@ std::string get_parameter_information(int key, std::string info)
     }
 }
 
-int get_parameter_index(std::string &param_name)
+int get_parameter_index(const std::string &param_name)
 {
     std::map<std::string, int>::iterator it;
     // Try to find it
