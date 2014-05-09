@@ -182,6 +182,19 @@ protected:
         }
     };
 
+    /// Parse the environmental parameters (ODP, GWP, etc.)
+    void parse_environmental(rapidjson::Value &json, CoolPropFluid &fluid)
+    {
+        fluid.environment.ASHRAE34 = cpjson::get_string(json,"ASHRAE34");
+        fluid.environment.GWP20 = cpjson::get_double(json,"GWP20");
+        fluid.environment.GWP100 = cpjson::get_double(json,"GWP100");
+        fluid.environment.GWP500 = cpjson::get_double(json,"GWP500");
+        fluid.environment.HH = cpjson::get_double(json,"HH");
+        fluid.environment.FH = cpjson::get_double(json,"FH");
+        fluid.environment.PH = cpjson::get_double(json,"PH");
+        fluid.environment.ODP = cpjson::get_double(json,"ODP");
+    }
+
     /// Parse the Equation of state JSON entry
     void parse_EOS(rapidjson::Value &EOS_json, CoolPropFluid &fluid)
     {
@@ -320,6 +333,15 @@ public:
             parse_surface_tension(fluid_json["ANCILLARIES"]["surface_tension"], fluid);
         }
 
+        // Parse the environmental parameters
+        if (!(fluid_json.HasMember("ENVIRONMENTAL")))
+        {
+            std::cout << format("Environmental data are missing for fluid [%s]\n", fluid.name.c_str()) ;
+        }
+        else
+        {
+            parse_environmental(fluid_json["ENVIRONMENTAL"], fluid);
+        }
         
         // If the fluid is ok...
 

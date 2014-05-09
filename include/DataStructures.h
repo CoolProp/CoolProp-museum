@@ -47,7 +47,10 @@ enum parameters{
     ifundamental_derivative_of_gas_dynamics, id2pdv2_consts,
 
     // Other functions and derivatives
-    iBvirial, iCvirial, iZ, idBdT, idCdT, idZdDelta, idZdTau
+    iBvirial, iCvirial, iZ, idBdT, idCdT, idZdDelta, idZdTau,
+
+    // Environmental parameters
+    iGWP20, iGWP100, iGWP500, iFH, iHH, iPH, iODP
 };
 // !! If you add a parameter, update the map in the corresponding CPP file !!
 

@@ -180,6 +180,21 @@ protected:
     virtual long double calc_Tmax(void){throw NotImplementedError("calc_Tmax is not implemented for this backend");};
     /// Using this backend, calculate the maximum pressure in Pa
     virtual long double calc_pmax(void){throw NotImplementedError("calc_pmax is not implemented for this backend");};
+
+    /// Using this backend, calculate the 20-year global warming potential (GWP)
+    virtual long double calc_GWP20(void){throw NotImplementedError("calc_GWP20 is not implemented for this backend");};
+    /// Using this backend, calculate the 100-year global warming potential (GWP)
+    virtual long double calc_GWP100(void){throw NotImplementedError("calc_GWP100 is not implemented for this backend");};
+    /// Using this backend, calculate the 500-year global warming potential (GWP)
+    virtual long double calc_GWP500(void){throw NotImplementedError("calc_GWP500 is not implemented for this backend");};
+    /// Using this backend, calculate the ozone depletion potential (ODP)
+    virtual long double calc_ODP(void){throw NotImplementedError("calc_ODP is not implemented for this backend");};
+    /// Using this backend, calculate the flame hazard
+    virtual long double calc_flame_hazard(void){throw NotImplementedError("calc_flame_hazard is not implemented for this backend");};
+    /// Using this backend, calculate the health hazard
+    virtual long double calc_health_hazard(void){throw NotImplementedError("calc_health_hazard is not implemented for this backend");};
+    /// Using this backend, calculate the physical hazard
+    virtual long double calc_physical_hazard(void){throw NotImplementedError("calc_physical_hazard is not implemented for this backend");};
     
 public:
 
@@ -256,61 +271,6 @@ public:
     double conductivity(void);
     double surface_tension(void);
 
-    //// ----------------------------------------
-    //// Derivatives of properties
-    //// ----------------------------------------
-    //virtual double dvdp_constT(void);
-    //virtual double dvdT_constp(void);
-
-    //// Density
-    //virtual double drhodh_constp(void);
-    //virtual double drhodp_consth(void);
-    //virtual double drhodp_constT(void);
-    //virtual double drhodT_constp(void);
-    //virtual double d2rhodh2_constp(void);
-    //virtual double d2rhodhdp(void);
-    //virtual double d2rhodhdQ(void);
-    //virtual double d2rhodp2_constT(void);
-    //virtual double d2rhodpdQ(void);
-    //virtual double d2rhodT2_constp(void);
-    //virtual double d2rhodTdp(void);
-
-    //// Pressure
-    //virtual double dpdrho_consth(void);
-    //virtual double dpdrho_constT(void);
-    //virtual double dpdT_consth(void);
-    //virtual double dpdT_constrho(void);
-    //virtual double d2pdrho2_constT(void);
-    //virtual double d2pdrhodT(void);
-    //virtual double d2pdT2_constrho(void);
-
-    //// Enthalpy
-    //virtual double dhdp_constrho(void);
-    //virtual double dhdp_constT(void);
-    //virtual double dhdrho_constp(void);
-    //virtual double dhdrho_constT(void);
-    //virtual double dhdT_constp(void);
-    //virtual double dhdT_constrho(void);
-    //virtual double d2hdp2_constT(void);
-    //virtual double d2hdrho2_constT(void);
-    //virtual double d2hdrhodT(void);
-    //virtual double d2hdT2_constp(void);
-    //virtual double d2hdT2_constrho(void);
-    //virtual double d2hdTdp(void);
-
-    //// Entropy
-    //virtual double dsdp_constT(void);
-    //virtual double dsdrho_constp(void);
-    //virtual double dsdrho_constT(void);
-    //virtual double dsdT_constp(void);
-    //virtual double dsdT_constrho(void);
-    //virtual double d2sdp2_constT(void);
-    //virtual double d2sdrho2_constT(void);
-    //virtual double d2sdrhodT(void);
-    //virtual double d2sdT2_constp(void);
-    //virtual double d2sdT2_constrho(void);
-    //virtual double d2sdTdp(void);
-
     //// Fundamental derivative of gas dynamics
     //virtual double fundamental_derivative_of_gas_dynamics(void);
     //virtual double d2pdv2_consts(void);
@@ -320,14 +280,6 @@ public:
     //virtual double B(void);
     //virtual double C(void);
     //virtual double Z(void);
-
-    //virtual double dAdT_constrho(void);
-    //virtual double dAdrho_constT(void);
-    //// TODO: Add constXX qualifier
-    //virtual double dBdT(void);
-    //virtual double dCdT(void);
-    //virtual double dZdDelta(void);
-    //virtual double dZdTau(void);
 
     // ----------------------------------------
     // Helmholtz energy and derivatives

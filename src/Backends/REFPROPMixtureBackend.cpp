@@ -25,23 +25,7 @@ dipole moment                   debye
 surface tension                 N/m
 */
 
-#if defined(_MSC_VER)
-#define _CRTDBG_MAP_ALLOC
-#define _CRT_SECURE_NO_WARNINGS
-#include <crtdbg.h>
-#include <sys/stat.h>
-#else
-#include <sys/stat.h>
-#endif
-
-#include <stdlib.h>
-#include <string>
-#include <stdio.h>
-#include <iostream>
-#include <assert.h>
-
 #include "CoolPropTools.h"
-
 #if defined(__ISWINDOWS__)
     #include <windows.h>
     HINSTANCE RefpropdllInstance=NULL;
@@ -58,8 +42,26 @@ surface tension                 N/m
     #pragma error
 #endif
 
-#include "REFPROPMixtureBackend.h"
 #include "REFPROP_lib.h"
+#include "REFPROPMixtureBackend.h"
+#include "Exceptions.h"
+
+#include <stdlib.h>
+#include <string>
+#include <stdio.h>
+#include <iostream>
+#include <assert.h>
+
+
+
+#if defined(_MSC_VER)
+#define _CRTDBG_MAP_ALLOC
+#define _CRT_SECURE_NO_WARNINGS
+#include <crtdbg.h>
+#include <sys/stat.h>
+#else
+#include <sys/stat.h>
+#endif
 
 // Some constants for REFPROP... defined by macros for ease of use 
 #define refpropcharlength 255
@@ -216,7 +218,7 @@ void *getFunctionPointer(char * name)
     #elif defined(__ISAPPLE__)
         return dlsym(RefpropdllInstance,name);
     #else
-        throw NotImplementedError("This function should not be called.");
+        throw CoolProp::NotImplementedError("This function should not be called.");
         return NULL;
     #endif
 }
@@ -336,7 +338,7 @@ double setFunctionPointers()
 
 std::string get_REFPROP_fluid_path()
 {
-    std::string rpPath (refpropPath);
+    std::string rpPath = refpropPath;
     #if defined(__ISWINDOWS__)
         return rpPath;
     #elif defined(__ISLINUX__)
@@ -344,7 +346,7 @@ std::string get_REFPROP_fluid_path()
     #elif defined(__ISAPPLE__)
         return rpPath + std::string("/fluids/");
     #else
-        throw NotImplementedError("This function should not be called.");
+        throw CoolProp::NotImplementedError("This function should not be called.");
         return rpPath;
     #endif
 }
@@ -373,7 +375,7 @@ bool load_REFPROP()
         #elif defined(__ISAPPLE__)
             RefpropdllInstance = dlopen ("librefprop.dylib", RTLD_LAZY);
         #else
-            throw NotImplementedError("We should not reach this point.");
+            throw CoolProp::NotImplementedError("We should not reach this point.");
             RefpropdllInstance = NULL;
         #endif
 
@@ -391,7 +393,7 @@ bool load_REFPROP()
                               printf("Could not load librefprop.dylib \n\n");
                 throw CoolProp::AttributeError("Could not load librefprop.dylib, make sure it is in your system search path.");
             #else
-                throw NotImplementedError("Something is wrong with the platform definition, you should not end up here.");
+                throw CoolProp::NotImplementedError("Something is wrong with the platform definition, you should not end up here.");
             #endif
             return false;
         }

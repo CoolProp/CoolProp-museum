@@ -32,6 +32,13 @@ parameter_info parameter_info_list[] = {
     parameter_info(iCpmass, "Cpmass","O","J/kg/K","Mass specific constant presssure specific heat"),
     parameter_info(iCvmolar, "Cvmolar","O","J/mol/K","Molar specific constant volume specific heat"),
     parameter_info(iCvmass, "Cvmass","O","J/kg/K","Mass specific constant volume specific heat"),
+    parameter_info(iGWP20, "GWP20","O","-","20-year gobal warming potential"),
+    parameter_info(iGWP100, "GWP100","O","-","100-year gobal warming potential"),
+    parameter_info(iGWP500, "GWP500","O","-","500-year gobal warming potential"),
+    parameter_info(iFH, "FH","O","-","Flammability hazard"),
+    parameter_info(iHH, "HH","O","-","Health hazard"),
+    parameter_info(iPH, "PH","O","-","Physical hazard"),
+    parameter_info(iODP, "ODP","O","-","Ozone depletion potential"),
 };
 
 class ParameterInformation
