@@ -79,14 +79,14 @@ int main()
         AbstractState *AS = AbstractState::factory("HEOS","Nitrogen");
 
         AS->update(DmolarT_INPUTS, 40, 300);
-        double p1 = AS->p();
+        double p1 = AS->umolar();
         double d1 = AS->rhomolar();
-        double T1 = AS->T();
-        double dpdT_constrho = AS->first_partial_deriv(iDmolar,iT,iP);
-        AS->update(DmolarT_INPUTS, 40, 300+1e-6);
-        double p2 = AS->p();
+        double T1 = AS->delta();
+        double dpdT_constrho = AS->first_partial_deriv(iUmolar, iDelta, iTau);
+        AS->update(DmolarT_INPUTS, 40+1e-6, 300);
+        double p2 = AS->umolar();
         double d2 = AS->rhomolar();
-        double T2 = AS->T();
+        double T2 = AS->delta();
         
         double dpdT_constrho2 = (p2-p1)/(T2-T1);
 

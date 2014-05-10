@@ -783,9 +783,8 @@ void HelmholtzEOSMixtureBackend::T_phase_determination_pure_or_pseudopure(int ot
 
 void get_dtau_ddelta(HelmholtzEOSMixtureBackend *HEOS, int index, long double &dtau, long double &ddelta)
 {
-    long double Tr = HEOS->get_reducing().T, 
-                rhor = HEOS->get_reducing().rhomolar,
-                dT_dtau = -pow(HEOS->T(), 2)/Tr,
+    long double rhor = HEOS->get_reducing().rhomolar,
+                dT_dtau = -pow(HEOS->T(), 2)/HEOS->get_reducing().T,
                 R = HEOS->gas_constant(),
                 delta = HEOS->delta(),
                 tau = HEOS->tau(),
@@ -794,20 +793,33 @@ void get_dtau_ddelta(HelmholtzEOSMixtureBackend *HEOS, int index, long double &d
     switch (index)
     {
     case iT:
-        dtau = dT_dtau; ddelta = 0; /*??*/ break;
+        dtau = dT_dtau; ddelta = 0; break;
     case iDmolar:
-        dtau = 0; /*??*/ ddelta = rhor; break;
+        dtau = 0; ddelta = rhor; break;
     case iP:
         // dp/ddelta|tau
         ddelta = rhor*R*HEOS->T()*(1+2*delta*HEOS->dalphar_dDelta()+pow(delta, 2)*HEOS->d2alphar_dDelta2());
         // dp/dtau|delta
-        dtau = dT_dtau*rho*R*(1+delta*HEOS->dalphar_dDelta()-tau*delta*HEOS->d2alphar_dDelta_dTau()); break;
-    /*case iHmolar:
-        dtau = HEOS->dh_dtau(); ddelta = HEOS->dh_ddelta(); break;
+        dtau = dT_dtau*rho*R*(1+delta*HEOS->dalphar_dDelta()-tau*delta*HEOS->d2alphar_dDelta_dTau()); 
+        break;
+    case iHmolar:
+        // dh/dtau|delta
+        dtau = dT_dtau*R*(-pow(tau,2)*(HEOS->d2alpha0_dTau2()+HEOS->d2alphar_dTau2()) + (1+delta*HEOS->dalphar_dDelta()-tau*delta*HEOS->d2alphar_dDelta_dTau())); 
+        // dh/ddelta|tau
+        ddelta = rhor*HEOS->T()*R/rho*(tau*delta*HEOS->d2alphar_dDelta_dTau()+delta*HEOS->dalphar_dDelta()+pow(delta,2)*HEOS->d2alphar_dDelta2());
+        break;
     case iSmolar:
-        dtau = HEOS->ds_dtau(); ddelta = HEOS->ds_ddelta(); break;
+        // ds/dtau|delta
+        dtau = dT_dtau*R/HEOS->T()*(-pow(tau,2)*(HEOS->d2alpha0_dTau2()+HEOS->d2alphar_dTau2()));
+        // ds/ddelta|tau
+        ddelta = rhor*R/rho*(-(1+delta*HEOS->dalphar_dDelta()-tau*delta*HEOS->d2alphar_dDelta_dTau()));
+        break;
     case iUmolar:
-        dtau = HEOS->du_dtau(); ddelta = HEOS->du_ddelta(); break;*/
+        // du/dtau|delta
+        dtau = dT_dtau*R*(-pow(tau,2)*(HEOS->d2alpha0_dTau2()+HEOS->d2alphar_dTau2()));
+        // du/ddelta|tau
+        ddelta = rhor*HEOS->T()*R/rho*(tau*delta*HEOS->d2alphar_dDelta_dTau());
+        break;
     case iTau:
         dtau = 1; ddelta = 0; break;
     case iDelta:
