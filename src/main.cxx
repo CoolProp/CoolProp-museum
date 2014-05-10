@@ -76,6 +76,23 @@ int main()
     }
     if (1)
     {
+        AbstractState *AS = AbstractState::factory("HEOS","Nitrogen");
+
+        AS->update(DmolarT_INPUTS, 40, 300);
+        double p1 = AS->p();
+        double d1 = AS->rhomolar();
+        double T1 = AS->T();
+        double dpdT_constrho = AS->first_partial_deriv(iDmolar,iT,iP);
+        AS->update(DmolarT_INPUTS, 40, 300+1e-6);
+        double p2 = AS->p();
+        double d2 = AS->rhomolar();
+        double T2 = AS->T();
+        
+        double dpdT_constrho2 = (p2-p1)/(T2-T1);
+
+        AS->update(PT_INPUTS, 101000, 300);
+
+
         std::vector<double> T(2,300), P(2,101325), o, z(1,1);
         std::string in1 = "Dmass", in2 = "T", in3 = "P", Ref = "Nitrogen";
         T[1] = 400;

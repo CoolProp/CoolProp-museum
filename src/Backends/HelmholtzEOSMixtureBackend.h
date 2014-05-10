@@ -148,7 +148,13 @@ public:
     void calc_reducing_state(void);
     SimpleState calc_reducing_state_nocache(const std::vector<long double> & mole_fractions);
 
-    
+    /**
+    In a general way we can calculate any first partial derivative based on calculating derivatives with respect to the fundamental variables of the EOS, \f$\tau\f$ and \f$\delta\f$
+    \f[
+    \left(\frac{\partial A}{\partial B}\right)_C = \frac{\left(\frac{\partial A}{\partial \tau}\right)_\delta\left(\frac{\partial C}{\partial \delta}\right)_\tau-\left(\frac{\partial A}{\partial \delta}\right)_\tau\left(\frac{\partial C}{\partial \tau}\right)_\delta}{\left(\frac{\partial B}{\partial \tau}\right)_\delta\left(\frac{\partial C}{\partial \delta}\right)_\tau-\left(\frac{\partial B}{\partial \delta}\right)_\tau\left(\frac{\partial C}{\partial \tau}\right)_\delta}
+    \f]
+    */
+    long double calc_first_partial_deriv(int Of, int Wrt, int Constant);
 
     void mass_to_molar_inputs(long &input_pair, double &value1, double &value2);
 

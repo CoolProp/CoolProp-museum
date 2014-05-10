@@ -113,8 +113,8 @@ bool AbstractState::clear() {
     this->_T = -_HUGE;
     this->_p = -_HUGE;
     this->_Q = -_HUGE;
-    this->_tau = -_HUGE;
-    this->_delta = -_HUGE;
+    this->_tau.clear();
+    this->_delta.clear();
 
     this->_umolar.clear();
     this->_cpmolar.clear();
@@ -189,6 +189,14 @@ double AbstractState::keyed_output(int key)
     }
 }
 
+double AbstractState::tau(void){
+    if (!_tau) _tau = calc_reciprocal_reduced_temperature();
+    return _tau;
+}
+double AbstractState::delta(void){
+    if (!_delta) _delta = calc_reduced_density();
+    return _delta;
+}
 double AbstractState::Tmax(void){
     return calc_Tmax();
 }

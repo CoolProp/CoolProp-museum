@@ -16,8 +16,8 @@ public:
 
 parameter_info parameter_info_list[] = {
     /// Input/Output parameters
-    parameter_info(iT,"T", "IO", "K", "Temperature"),
-    parameter_info(iP,"P", "IO", "Pa", "Pressure"),
+    parameter_info(iT, "T", "IO", "K", "Temperature"),
+    parameter_info(iP, "P", "IO", "Pa", "Pressure"),
     parameter_info(iDmolar, "Dmolar","IO","mol/m^3","Molar density"),
     parameter_info(iHmolar, "Hmolar","IO","J/mol","Molar specific enthalpy"),
     parameter_info(iSmolar, "Smolar","IO","J/mol/K","Molar specific entropy"),
@@ -27,6 +27,8 @@ parameter_info parameter_info_list[] = {
     parameter_info(iSmass, "Smass","IO","J/kg/K","Mass specific entropy"),
     parameter_info(iUmass, "Umass","IO","J/kg","Mass specific internal energy"),
     parameter_info(iQ, "Q","IO","mol/mol","Mass vapor quality"),
+    parameter_info(iDelta, "Delta","IO","-","Reduced density (rho/rhoc)"),
+    parameter_info(iTau, "Tau","IO","-","Reciprocal reduced temperature (Tc/T)"),
     /// Output only
     parameter_info(iCpmolar, "Cpmolar","O","J/mol/K","Molar specific constant presssure specific heat"),
     parameter_info(iCpmass, "Cpmass","O","J/kg/K","Mass specific constant presssure specific heat"),

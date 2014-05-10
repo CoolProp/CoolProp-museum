@@ -26,7 +26,7 @@ struct SimpleState
 // !! If you add a parameter, update the map in the corresponding CPP file !!
 enum parameters{
     // Bulk properties
-    iT,  iP, iQ, 
+    iT,  iP, iQ, iTau, iDelta,
 
     // Molar specific thermodynamic properties
     iDmolar, iHmolar, iSmolar, iCpmolar, iCvmolar, iUmolar, 

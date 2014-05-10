@@ -83,6 +83,8 @@ protected:
 
     /// Bulk values
     double _rhomolar, _T, _p, _Q, _R;
+        
+    CachedElement _tau, _delta;
 
     /// Transport properties
     CachedElement _viscosity, _conductivity, _surface_tension;
@@ -196,6 +198,14 @@ protected:
     /// Using this backend, calculate the physical hazard
     virtual long double calc_physical_hazard(void){throw NotImplementedError("calc_physical_hazard is not implemented for this backend");};
     
+    /// Calculate the first partial derivative for the desired derivative
+    virtual long double calc_first_partial_deriv(int Of, int Wrt, int Constant){throw NotImplementedError("calc_first_partial_deriv is not implemented for this backend");};
+
+    /// Using this backend, calculate the reduced density (rho/rhoc)
+    virtual long double calc_reduced_density(void){throw NotImplementedError("calc_reduced_density is not implemented for this backend");};
+    /// Using this backend, calculate the reciprocal reduced temperature (Tc/T)
+    virtual long double calc_reciprocal_reduced_temperature(void){throw NotImplementedError("calc_reciprocal_reduced_temperature is not implemented for this backend");};
+
 public:
 
     virtual long double calc_melt_p_T(long double T){throw NotImplementedError("calc_melt_p_T is not implemented for this backend");};
@@ -205,7 +215,7 @@ public:
     AbstractState(){};
     virtual ~AbstractState(){};
 
-    double _tau, _delta;
+    
     
     /// A factory function to return a pointer to a new-allocated instance of one of the backends.
     /**
@@ -239,9 +249,12 @@ public:
 
     double keyed_output(int key);
 
+    long double first_partial_deriv(int Of, int Wrt, int Constant){return calc_first_partial_deriv(Of,Wrt,Constant);};
+
     // Limits
     double Tmax(void);
     double pmax(void);
+
     // ----------------------------------------
     // Bulk properties - temperature and density are directly calculated every time
     // All other parameters are calculated on an as-needed basis
@@ -250,6 +263,9 @@ public:
     double rhomolar(void){return _rhomolar;};
     double p(void)  {return _p;};
     double Q(void)  {return _Q;};
+
+    double tau(void);
+    double delta(void);
 
     double molar_mass(void);
     double gas_constant(void);
@@ -263,6 +279,7 @@ public:
     double isothermal_compressibility(void);
     double isobaric_expansion_coefficient(void);
     double fugacity_coefficient(int i);
+    double fundamental_derivative_of_gas_dynamics(void);
 
     // ----------------------------------------
     // Transport properties
@@ -270,16 +287,6 @@ public:
     double viscosity(void);
     double conductivity(void);
     double surface_tension(void);
-
-    //// Fundamental derivative of gas dynamics
-    //virtual double fundamental_derivative_of_gas_dynamics(void);
-    //virtual double d2pdv2_consts(void);
-
-    //// Other functions and derivatives
-    //virtual double A(void);
-    //virtual double B(void);
-    //virtual double C(void);
-    //virtual double Z(void);
 
     // ----------------------------------------
     // Helmholtz energy and derivatives
