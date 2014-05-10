@@ -254,10 +254,10 @@ double AbstractState::fugacity_coefficient(int i){
 }
 
 double AbstractState::isothermal_compressibility(void){
-	return _HUGE;//1.0/(_rhomolar*calc_dpdrho_constT());
+	return 1.0/_rhomolar*first_partial_deriv(iDmolar, iP, iT);
 }
 double AbstractState::isobaric_expansion_coefficient(void){
-	return _HUGE;//-1.0/(_rhomolar*_rhomolar)*drhodT_constp();
+	return -1.0/pow(_rhomolar,2)*first_partial_deriv(iDmolar, iT, iP);
 }
 
 //	// ----------------------------------------
