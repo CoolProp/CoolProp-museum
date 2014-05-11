@@ -109,31 +109,4 @@
     /// @param level The level of the verbosity for the debugging output (0-10) 0: no debgging output
     EXPORT_CODE void CONVENTION set_debug_level(int level);
 
-    /// -------------------------------------------
-    /////     TTSE Tabular Taylor Series Expansion
-    ///// -------------------------------------------
-    ///// Enable the TTSE
-    //EXPORT_CODE bool CONVENTION enable_TTSE_LUT(const char *FluidName);
-    ///// Check if TTSE is enabled
-    //EXPORT_CODE bool CONVENTION isenabled_TTSE_LUT(const char *FluidName);
-    ///// Disable the TTSE
-    //EXPORT_CODE bool CONVENTION disable_TTSE_LUT(const char *FluidName);
-    ///// Enable the writing of TTSE tables to file for this fluid
-    //EXPORT_CODE bool CONVENTION enable_TTSE_LUT_writing(const char *FluidName);
-    ///// Check if the writing of TTSE tables to file is enabled
-    //EXPORT_CODE bool CONVENTION isenabled_TTSE_LUT_writing(const char *FluidName);
-    ///// Disable the writing of TTSE tables to file for this fluid
-    //EXPORT_CODE bool CONVENTION disable_TTSE_LUT_writing(const char *FluidName);
-    ///// Over-ride the default size of both of the saturation LUT
-    //EXPORT_CODE bool CONVENTION set_TTSESat_LUT_size(const char *FluidName, int);
-    ///// Over-ride the default size of the single-phase LUT
-    //EXPORT_CODE bool CONVENTION set_TTSESinglePhase_LUT_size(const char *FluidName, int Np, int Nh);
-    ///// Over-ride the default range of the single-phase LUT
-    //EXPORT_CODE bool CONVENTION set_TTSESinglePhase_LUT_range(const char *FluidName, double hmin, double hmax, double pmin, double pmax);
-    ///// Get the current range of the single-phase LUT
-    //EXPORT_CODE bool CONVENTION get_TTSESinglePhase_LUT_range(const char *FluidName, double *hmin, double *hmax, double *pmin, double *pmax);
-    ///// Set the TTSE mode (normal or bicubic)
-    //EXPORT_CODE int CONVENTION set_TTSE_mode(const char *FluidName, const char * Value);
-
-
 #endif

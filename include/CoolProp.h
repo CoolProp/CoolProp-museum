@@ -63,6 +63,20 @@ You might want to start by looking at CoolProp.h
     */
     double PropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char *FluidName, const std::vector<double> &x);
 
+    /// Get the debug level
+    /// @returns level The level of the verbosity for the debugging output (0-10) 0: no debgging output
+    int get_debug_level();
+    /// Set the debug level
+    /// @param level The level of the verbosity for the debugging output (0-10) 0: no debgging output
+    void set_debug_level(int level);
+
+    /// Set the global error string 
+	/// @param error The error string to use
+	void set_error_string(std::string error);
+    /// An internal function to set the global warning string
+	/// @param warning The string to set as the warning string
+	void set_warning_string(std::string warning);
+
 	/*/// Get a long that represents the fluid type
 	/// @param FluidName The fluid name as a string
 	/// @returns long element from global type enumeration
@@ -77,7 +91,6 @@ You might want to start by looking at CoolProp.h
 	/// @param ParamName A string, one of "aliases", "CAS", "CAS_number", "ASHRAE34", "REFPROPName","REFPROP_name", "TTSE_mode"		
 	/// @returns str The string, or an error message if not valid input
 	std::string get_fluid_param_string(std::string FluidName, std::string ParamName);
-	
 	/// Returns the BibTeX key from the bibtex library of CoolProp corresponding to the item requested
 	/// @param FluidName The name of the fluid
 	/// @param item String, one of "EOS","CP0", "VISCOSITY", "CONDUCTIVITY", "ECS_LENNARD_JONES", "ECS_FITS", "SURFACE_TENSION"
@@ -89,25 +102,15 @@ You might want to start by looking at CoolProp.h
 	/// @param param The string for an input or output parameter
 	/// @returns index The parameter index (for use in IProps or elsewhere); -1 if not found
 	long get_param_index(std::string param);
-	/// Get the fluid index for a given fluid name
-	/// @param FluidName The name for a fluid
-	/// @returns index The fluid index (for use in IProps or elsewhere); -1 if not found
-	long get_Fluid_index(std::string FluidName);*/
-	/*/// Get a pointer to a fluid that has been loaded
-	/// @param iFluid The integer index for the fluid (get from get_Fluid_index)
-	/// @returns pFluid A pointer to a Fluid instance
-	Fluid * get_fluid(long iFluid);*/
-	/// Set the global error string 
-	/// @param err_string The error string to use
-	//void set_err_string(std::string err_string);
+	
 	/*/// Set the reference state for a pointer to a fluid (not exposed)
 	/// @param pFluid A pointer to a Fluid instance
 	/// @param reference_state The reference state to use, one of "IIR" (h=200 kJ/kg, s=1 kJ/kg/K at 0C sat. liq.) "ASHRAE" (h=0,s=0 @ -40C sat liq), "NBP" (h=0,s=0 @ 1.0 bar sat liq.)
-	int set_reference_stateP(Fluid *pFluid, std::string reference_state);
+	//int set_reference_stateP(Fluid *pFluid, std::string reference_state);
 	/// Set the reference state based on a string representation (consistent naming with RFPROP)
 	/// @param FluidName The name of the fluid
 	/// @param reference_state The reference state to use, one of "IIR" (h=200 kJ/kg, s=1 kJ/kg/K at 0C sat. liq.) "ASHRAE" (h=0,s=0 @ -40C sat liq), "NBP" (h=0,s=0 @ 1.0 bar sat liq.)
-	int set_reference_stateS(std::string FluidName, std::string reference_state);*/
+	//int set_reference_stateS(std::string FluidName, std::string reference_state);*/
 	/// Set the reference state based on a state point
 	/// @param FluidName The name of the fluid
 	/// @param T Temperature at reference state [K]
@@ -169,9 +172,7 @@ You might want to start by looking at CoolProp.h
 	/// @param FluidName The fluid name
 	double Props(std::string Output,char Name1, double Prop1, char Name2, double Prop2, std::string FluidName);*/
 
-	///// An internal function to set the global warning string (API for warnings is not formalized)
-	///// @param warning The string to set as the warning string
-	//void set_warning(std::string warning);
+	
 
 	////    **************** DEPRECATION WARNING ***********************
 	///// Nearly deprecated function

@@ -28,65 +28,26 @@
 namespace CoolProp
 {
 
-static std::string err_string;
+static int debug_level = 0;
+static std::string error_string;
 static std::string warning_string;
+
+void set_debug_level(int level){debug_level = level;}
+int get_debug_level(void){return debug_level;}
 
 //// This is very hacky, but pull the git revision from the file
 //#include "gitrevision.h" // Contents are like "long gitrevision = "aa121435436ggregrea4t43t433";"
 //#include "version.h" // Contents are like "char version [] = "2.5";"
 
 //int global_Phase = -1;
-//bool global_SinglePhase = false;
-//bool global_SaturatedL = false;
-//bool global_SaturatedV = false;
 
-//void set_warning(std::string warning){ warning_string = warning; }
-//
-//FluidsContainer Fluids = FluidsContainer();
-//
-//void set_err_string(std::string error_string)
-//{
-//	err_string = error_string;
-//}
-//
-//void set_phase(std::string Phase_str){
-//	if (!Phase_str.compare("Two-Phase")){
-//		global_SinglePhase = false;
-//		global_SaturatedL = false;
-//		global_SaturatedV = false;
-//		global_Phase = iTwoPhase;
-//	}
-//	else if (!Phase_str.compare("Liquid")){
-//		global_SinglePhase = true;
-//		global_SaturatedL = false;
-//		global_SaturatedV = false;
-//		global_Phase = iLiquid;
-//	}
-//	else if (!Phase_str.compare("Gas")){
-//		global_SinglePhase = true;
-//		global_SaturatedL = false;
-//		global_SaturatedV = false;
-//		global_Phase = iGas;
-//	}
-//	else if (!Phase_str.compare("Supercritical")){
-//		global_SinglePhase = true;
-//		global_SaturatedL = false;
-//		global_SaturatedV = false;
-//		global_Phase = iSupercritical;
-//	}
-//	else if (!Phase_str.compare("SaturatedL")){
-//		global_SinglePhase = false;
-//		global_SaturatedL = true;
-//		global_SaturatedV = false;
-//		global_Phase = iTwoPhase;
-//	}
-//	else if (!Phase_str.compare("SaturatedV")){
-//		global_SinglePhase = false;
-//		global_SaturatedL = false;
-//		global_SaturatedV = true;
-//		global_Phase = iTwoPhase;
-//	}
-//}
+void set_warning_string(std::string warning){ 
+    warning_string = warning; 
+}
+void set_error_string(std::string error){
+    std::cout << error << std::endl;
+	error_string = error;
+}
 //
 //static int IsCoolPropFluid(std::string FluidName)
 //{
@@ -262,49 +223,6 @@ static std::string warning_string;
 // * Start with the internal functions to handle different inputs
 // * First we handle the constants: Props1
 // */
-//// Internal one to do the actual calculations
-//double _Props1SI(std::string FluidName, std::string Output)
-//{
-//    double out = _HUGE;
-//	// Try to load the CoolProp Fluid
-//	pFluid = Fluids.get_fluid(FluidName);
-//	if (pFluid != NULL)
-//	{
-//		// It's a CoolProp fluid
-//		// Convert the parameter to integer
-//		long iOutput = get_param_index(Output);
-//		if (iOutput < 0){
-//			throw ValueError(format("Your output key [%s] is not valid. (names are case sensitive)",Output.c_str()));
-//		}
-//		// Get the output using the conventional function
-//		return _CoolProp_Fluid_PropsSI(iOutput,0,0,0,0,pFluid);
-//	}
-//	else if (IsREFPROP(FluidName))
-//	{
-//		// REFPROP fluid
-//		long iOutput = get_param_index(Output);
-//		switch (iOutput)
-//		{
-//			case iTtriple:
-//			case iTcrit:
-//			case iPcrit:
-//			case iTmin:
-//			case iMM:
-//			case iRhocrit:
-//			case iAccentric:
-//				out = Props(Output,'T',0,'P',0,FluidName);
-//				break;
-//			default:
-//				throw ValueError(format("Output parameter \"%s\" is invalid for REFPROP fluid",Output.c_str()));
-//		}
-//        return convert_from_SI_to_unit_system(iOutput,out,get_standard_unit_system());
-//	}
-//	else
-//	{
-//		throw ValueError(format("Fluid \"%s\" is an invalid fluid",FluidName.c_str()));
-//	}
-//	return -_HUGE;
-//}
 //double _Props1(std::string FluidName, std::string Output)
 //{
 //    double val = _Props1SI(FluidName, Output);
@@ -521,6 +439,10 @@ std::vector<double> PropsSI(const std::string &Output, const std::string &Name1,
     }
     return out;
 }
+double Props1SI(std::string FluidName,std::string Output)
+{
+    return PropsSI(Output,"",0,"",0,FluidName);
+}
 
  
 //EXPORT_CODE double CONVENTION IProps(long iOutput, long iName1, double Prop1, long iName2, double Prop2, long iFluid)
@@ -590,8 +512,8 @@ std::vector<double> PropsSI(const std::string &Output, const std::string &Name1,
 //		case iTcrit:
 //		case iTtriple:
 //		case iPtriple:
-//        case iPmax:
-//        case iTmax:
+//      case iPmax:
+//      case iTmax:
 //		case iRhocrit:
 //		case iTmin:
 //		case iAccentric:
@@ -688,13 +610,6 @@ std::vector<double> PropsSI(const std::string &Output, const std::string &Name1,
 //		case iDERd2phi0_dDelta2:
 //		case iDERd2phi0_dDelta_dTau:
 //		case iDERd3phi0_dTau3:
-//		case iDERdp_dT__rho:
-//		case iDERdp_drho__T:
-//		case iDERdh_dT__rho:
-//		case iDERdh_drho__T:
-//		case iDERdrho_dT__p:
-//		case iDERdrho_dh__p:
-//		case iDERdrho_dp__h:
 //			{
 //			// Generate a State instance wrapped around the Fluid instance
 //			CoolPropStateClass CPS(pFluid);

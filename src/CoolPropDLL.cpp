@@ -5,11 +5,79 @@
 #endif
 
 #include "CoolProp.h"
+#include "DataStructures.h"
+#include "Exceptions.h"
 
-static int debug_level=0;
-
-EXPORT_CODE long CONVENTION redirect_stdout(const char* file)
+double convert_from_kSI_to_SI(long iInput, double value)
 {
+	if (get_debug_level() > 8){
+		std::cout << format("%s:%d: convert_from_kSI_to_SI(i=%d,value=%g)\n",__FILE__,__LINE__,iInput,value).c_str();
+	}
+
+	switch (iInput)
+	{
+    case CoolProp::iP:
+	case CoolProp::iCpmass:
+	case CoolProp::iCp0mass:
+	case CoolProp::iSmass:
+	case CoolProp::iGmass:
+	case CoolProp::iCvmass:
+	case CoolProp::iHmass:
+	case CoolProp::iUmass:
+	case CoolProp::iconductivity:
+        return value*1000.0;
+	case CoolProp::iDmass:
+	case CoolProp::ispeed_sound:
+	case CoolProp::iQ:
+	case CoolProp::iviscosity:
+	case CoolProp::iT:
+	case CoolProp::iPrandtl:
+	case CoolProp::iODP:
+	case CoolProp::iGWP100:
+	case CoolProp::isurface_tension:
+		return value;
+	default:
+		throw CoolProp::ValueError(format("index [%d] is invalid in convert_from_kSI_to_SI",iInput).c_str());
+		break;
+	}
+	return _HUGE;
+}
+
+double convert_from_SI_to_kSI(long iInput, double value)
+{
+	if (get_debug_level() > 8){
+		std::cout << format("%s:%d: convert_from_SI_to_kSI(%d,%g)\n",__FILE__,__LINE__,iInput,value).c_str();
+	}
+
+	switch (iInput)
+	{
+    case CoolProp::iP:
+	case CoolProp::iCpmass:
+	case CoolProp::iCp0mass:
+	case CoolProp::iSmass:
+	case CoolProp::iGmass:
+	case CoolProp::iCvmass:
+	case CoolProp::iHmass:
+	case CoolProp::iUmass:
+	case CoolProp::iconductivity:
+        return value/1000.0;
+	case CoolProp::iDmass:
+	case CoolProp::iQ:
+	case CoolProp::ispeed_sound:
+	case CoolProp::iviscosity:
+	case CoolProp::iT:
+	case CoolProp::iODP:
+	case CoolProp::iGWP100:
+	case CoolProp::isurface_tension:
+		return value;
+	default:
+		throw CoolProp::ValueError(format("index [%d] is invalid in convert_from_SI_to_kSI", iInput).c_str());
+		break;
+	}
+	return _HUGE;
+}
+
+EXPORT_CODE long CONVENTION redirect_stdout(const char* file){
 	freopen(file, "a+", stdout);
 	return 0;
 }
@@ -21,41 +89,42 @@ EXPORT_CODE long CONVENTION redirect_stdout(const char* file)
 //{
 //	return set_reference_stateD(std::string(Ref), T, rho, h0, s0);
 //}
-// All the function interfaces that point to the single-input Props function
-//EXPORT_CODE double CONVENTION Props1(const char *FluidName, const char *Output)
-//{
-//    return Props1(std::string(FluidName), std::string(Output));
-//}
-//EXPORT_CODE double CONVENTION Props1SI(const char *FluidName, const char *Output)
-//{
-//    return Props1SI(std::string(FluidName),std::string(Output));
-//}
-//EXPORT_CODE double CONVENTION PropsS(const char *Output,const char* Name1, double Prop1, const char* Name2, double Prop2, const char * Ref)
-//{
-//	double val = Props(Output,Name1[0],Prop1,Name2[0],Prop2,Ref);
-//	return val;
-//}
-//EXPORT_CODE double CONVENTION Props(const char *Output,char Name1, double Prop1, char Name2, double Prop2, const char * Ref)
-//{
-//    // Get parameter indices
-//    long iOutput = get_param_index(Output);
-//    long iName1 = get_param_index(std::string(1,Name1));
-//    long iName2 = get_param_index(std::string(1,Name2));
-//    char n1[] = "\0", n2[] = "\0";
-//    n1[0] = Name1;
-//    n2[0] = Name2;
-//
-//    // Convert inputs to SI
-//    Prop1 = convert_from_unit_system_to_SI(iName1, Prop1, get_standard_unit_system());
-//    Prop2 = convert_from_unit_system_to_SI(iName2, Prop2, get_standard_unit_system());
-//    
-//	// Call the SI function
-//    double val = PropsSI(Output,(const char*)n1,Prop1,(const char*)n2,Prop2,Ref);
-//
-//	// Convert back to unit system
-//    return convert_from_SI_to_unit_system(iOutput,val,get_standard_unit_system());
-//}
 
+// All the function interfaces that point to the single-input Props function
+EXPORT_CODE double CONVENTION Props1(const char *FluidName, const char *Output){
+    return PropsS(Output, "", 0, "", 0, FluidName);
+}
+EXPORT_CODE double CONVENTION PropsS(const char *Output, const char* Name1, double Prop1, const char* Name2, double Prop2, const char * Ref){
+	double val = Props(Output,Name1[0],Prop1,Name2[0],Prop2,Ref);
+	return val;
+}
+EXPORT_CODE double CONVENTION Props(const char *Output, char Name1, double Prop1, char Name2, double Prop2, const char * Ref)
+{
+    try
+    {
+        // Get parameter indices
+        std::string sName1 = std::string(1, Name1), sName2 = std::string(1, Name2);
+        long iOutput = get_param_index(Output);
+        long iName1 = CoolProp::get_parameter_index(sName1);
+        long iName2 = CoolProp::get_parameter_index(sName2);
+
+        // Convert inputs to SI
+        Prop1 = convert_from_kSI_to_SI(iName1, Prop1);
+        Prop2 = convert_from_kSI_to_SI(iName2, Prop2);
+    
+	    // Call the SI function
+        double val = PropsSI(Output, sName1.c_str(), Prop1, sName2.c_str(), Prop2, Ref);
+
+	    // Convert back to unit system
+        return convert_from_SI_to_kSI(iOutput, val);
+    }
+    catch(std::exception &e){CoolProp::set_error_string(e.what()); return _HUGE;}
+    catch(...){CoolProp::set_error_string("Undefined error"); return _HUGE;}
+}
+EXPORT_CODE double CONVENTION Props1SI(const char *FluidName, const char *Output)
+{
+    return PropsSI(Output, "", 0, "", 0, FluidName);
+}
 EXPORT_CODE double CONVENTION PropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char * FluidName)
 {
     std::string _Output = Output, _Name1 = Name1, _Name2 = Name2, _FluidName = FluidName;
@@ -66,31 +135,21 @@ EXPORT_CODE double CONVENTION PropsSIZ(const char *Output, const char *Name1, do
     std::string _Output = Output, _Name1 = Name1, _Name2 = Name2, _FluidName = FluidName;
     return CoolProp::PropsSI(_Output, _Name1, Prop1, _Name2, Prop2, _FluidName, std::vector<double>(z, z+n));
 }
-
-EXPORT_CODE double CONVENTION K2F(double T)
-{ return T * 9 / 5 - 459.67; }
-
-EXPORT_CODE double CONVENTION F2K(double T_F)
-{ return (T_F + 459.67) * 5 / 9;}
-
-//EXPORT_CODE double CONVENTION DerivTerms(const char *Term, double T, double rho, const char * Ref)
-//{
-//	// Go to the std::string, std::string version
-//	double val = DerivTerms(std::string(Term),T,rho,std::string(Ref));
-//	return val;
-//}
-
-//EXPORT_CODE int CONVENTION get_debug_level(){return debug_level;}
-//EXPORT_CODE void CONVENTION set_debug_level(int level){debug_level=level;}
-//EXPORT_CODE long CONVENTION get_Fluid_index(const char * param)
-//{
-//	return get_Fluid_index(std::string(param));
-//}
-//
-//EXPORT_CODE long CONVENTION get_param_index(const char * param)
-//{
-//	return get_param_index(std::string(param));
-//}
+EXPORT_CODE double CONVENTION K2F(double T){ 
+    return T * 9 / 5 - 459.67; 
+}
+EXPORT_CODE double CONVENTION F2K(double T_F){ 
+    return (T_F + 459.67) * 5 / 9;
+}
+EXPORT_CODE int CONVENTION get_debug_level(){
+    return CoolProp::get_debug_level();
+}
+EXPORT_CODE void CONVENTION set_debug_level(int level){
+    CoolProp::set_debug_level(level);
+}
+EXPORT_CODE long CONVENTION get_param_index(const char * param){
+    return CoolProp::get_parameter_index(param);
+}
 //#ifndef SWIG
 //EXPORT_CODE long CONVENTION get_global_param_string(const char *param, char * Output)
 //{
@@ -103,109 +162,3 @@ EXPORT_CODE double CONVENTION F2K(double T_F)
 //	return 0;
 //}
 //#endif
-
-
-//EXPORT_CODE int CONVENTION set_TTSE_mode(const char* fluid, const char *value)
-//{
-//	long iFluid = get_Fluid_index(fluid);
-//	if (iFluid > -1)
-//	{
-//		Fluid *pFluid = get_fluid(iFluid);
-//		
-//		// Try to build the LUT; Nothing will happen if the tables are already built
-//		CoolPropStateClass C(fluid);
-//		pFluid->build_TTSE_LUT();
-//
-//		if (!strcmp(value,"TTSE"))
-//		{
-//			pFluid->TTSESinglePhase.set_mode(TTSE_MODE_TTSE); return true;
-//		}
-//		else if (!strcmp(value,"BICUBIC"))
-//		{
-//			pFluid->TTSESinglePhase.set_mode(TTSE_MODE_BICUBIC); return true;
-//		}
-//		else
-//		{
-//			return false;
-//		}
-//	}
-//	else
-//	{
-//		return false;
-//	}
-//}
-///// Enable the TTSE for this fluid
-//EXPORT_CODE bool CONVENTION enable_TTSE_LUT(const char *FluidName){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false; };
-//	Fluid *pFluid = get_fluid(iFluid);
-//	pFluid->enable_TTSE_LUT();
-//	return true;
-//};
-///// Check if TTSE is enabled
-//EXPORT_CODE bool CONVENTION isenabled_TTSE_LUT(const char *FluidName){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false; };
-//	Fluid *pFluid = get_fluid(iFluid);
-//	return pFluid->isenabled_TTSE_LUT();
-//}
-///// Disable the TTSE for this fluid
-//EXPORT_CODE bool CONVENTION disable_TTSE_LUT(const char *FluidName){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false; };
-//	Fluid *pFluid = get_fluid(iFluid);
-//	pFluid->disable_TTSE_LUT();
-//	return true;
-//}
-///// Enable the writing of TTSE tables to file for this fluid
-//EXPORT_CODE bool CONVENTION enable_TTSE_LUT_writing(const char *FluidName){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return true;};
-//	Fluid *pFluid = get_fluid(iFluid);
-//	pFluid->enable_TTSE_LUT_writing();
-//	return true;
-//};
-///// Check if the writing of TTSE tables to file is enabled
-//EXPORT_CODE bool CONVENTION isenabled_TTSE_LUT_writing(const char *FluidName){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false;};
-//	Fluid *pFluid = get_fluid(iFluid);
-//	return pFluid->isenabled_TTSE_LUT_writing();
-//}
-///// Disable the writing of TTSE tables to file for this fluid
-//EXPORT_CODE bool CONVENTION disable_TTSE_LUT_writing(const char *FluidName){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false;};
-//	Fluid *pFluid = get_fluid(iFluid);
-//	pFluid->disable_TTSE_LUT_writing();
-//	return true;
-//}
-///// Over-ride the default size of both of the saturation LUT
-//EXPORT_CODE bool CONVENTION set_TTSESat_LUT_size(const char *FluidName, int Nsat){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false; };
-//	Fluid *pFluid = get_fluid(iFluid);
-//	pFluid->set_TTSESat_LUT_size(Nsat);
-//	return true;
-//}
-///// Over-ride the default size of the single-phase LUT
-//EXPORT_CODE bool CONVENTION set_TTSESinglePhase_LUT_size(const char *FluidName, int Np, int Nh){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false;};
-//	Fluid *pFluid = get_fluid(iFluid);
-//	pFluid->set_TTSESinglePhase_LUT_size(Np,Nh);
-//	return true;
-//}
-///// Over-ride the default range of the single-phase LUT
-//EXPORT_CODE bool CONVENTION set_TTSESinglePhase_LUT_range(const char *FluidName, double hmin, double hmax, double pmin, double pmax){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false;};
-//	Fluid *pFluid = get_fluid(iFluid);
-//	pFluid->set_TTSESinglePhase_LUT_range(hmin,hmax,pmin,pmax);
-//	return true;
-//}
-///// Get the current range of the single-phase LUT
-//EXPORT_CODE bool CONVENTION get_TTSESinglePhase_LUT_range(const char *FluidName, double *hmin, double *hmax, double *pmin, double *pmax){
-//	long iFluid = get_Fluid_index(FluidName); if (iFluid<0){ return false;};
-//	Fluid *pFluid = get_fluid(iFluid);
-//	pFluid->get_TTSESinglePhase_LUT_range(hmin,hmax,pmin,pmax);
-//	if (!ValidNumber(*hmin) && !ValidNumber(*hmax) && !ValidNumber(*pmin) && !ValidNumber(*pmax))
-//	{
-//		return false;
-//	}
-//	else
-//	{	
-//		return true;
-//	}
-//}

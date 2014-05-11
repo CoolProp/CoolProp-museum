@@ -279,7 +279,7 @@ public:
     double isothermal_compressibility(void);
     double isobaric_expansion_coefficient(void);
     double fugacity_coefficient(int i);
-    double fundamental_derivative_of_gas_dynamics(void);
+    //double fundamental_derivative_of_gas_dynamics(void);
 
     // ----------------------------------------
     // Transport properties

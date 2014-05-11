@@ -29,16 +29,16 @@ enum parameters{
     iT,  iP, iQ, iTau, iDelta,
 
     // Molar specific thermodynamic properties
-    iDmolar, iHmolar, iSmolar, iCpmolar, iCvmolar, iUmolar, 
+    iDmolar, iHmolar, iSmolar, iCpmolar, iCp0molar, iCvmolar, iUmolar, iGmolar, 
 
     // Mass specific thermodynamic properties
-    iDmass, iHmass, iSmass, iCpmass, iCvmass, iUmass, 
+    iDmass, iHmass, iSmass, iCpmass, iCp0mass, iCvmass, iUmass, iGmass,
 
     // Smoothing functions for density
     idrhodh_constp_smoothed, idrhodp_consth_smoothed, irho_smoothed,
 
     // Transport properties
-    iviscosity, iconductivity, isurface_tension,
+    iviscosity, iconductivity, isurface_tension, iPrandtl,
 
     // Derivative-based terms
     ispeed_sound, iisothermal_compressibility, iisobaric_expansion_coefficient,
