@@ -4,11 +4,15 @@ call "C:\Program Files\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
 
 erase *_wrap.cpp
 
-swig.exe -csharp -dllimport "CoolProp" -c++ -outcurrentdir ../../CoolProp/CoolProp.i
-cl /c /I../../CoolProp /EHsc CoolProp_wrap.cxx
+swig.exe -csharp -dllimport "CoolProp" -c++ -I../../include -outcurrentdir ../../src/CoolProp.i
+cl /c /I../../include /EHsc CoolProp_wrap.cxx
 
-REM ~ REM ******* compile all the sources ***************
-cl /c  /MP3 /I../../CoolProp /EHsc ../../CoolProp/*.cpp
+REM ******* compile all the sources ***************
+cl /c /MP3 /O2 /I../../include /EHsc /DNDEBUG /DCOOLPROP_LIB ../../src/*.cpp
+cl /c /MP3 /O2 /I../../include /EHsc /DNDEBUG /DCOOLPROP_LIB ../../src/Backends/*.cpp
+cl /c /MP3 /O2 /I../../include /EHsc /DNDEBUG /DCOOLPROP_LIB ../../src/Fluids/*.cpp
+cl /c /MP3 /O2 /I../../include /EHsc /DNDEBUG /DCOOLPROP_LIB ../../src/Tests/*.cpp
+
 link /DLL CoolProp_wrap.obj *.obj /OUT:CoolProp.dll
 dumpbin /EXPORTS CoolProp.dll > exports.txt
 erase *.obj
