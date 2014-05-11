@@ -32,8 +32,6 @@ double convert_from_kSI_to_SI(long iInput, double value)
 	case CoolProp::iviscosity:
 	case CoolProp::iT:
 	case CoolProp::iPrandtl:
-	case CoolProp::iODP:
-	case CoolProp::iGWP100:
 	case CoolProp::isurface_tension:
 		return value;
 	default:
@@ -66,8 +64,6 @@ double convert_from_SI_to_kSI(long iInput, double value)
 	case CoolProp::ispeed_sound:
 	case CoolProp::iviscosity:
 	case CoolProp::iT:
-	case CoolProp::iODP:
-	case CoolProp::iGWP100:
 	case CoolProp::isurface_tension:
 		return value;
 	default:
