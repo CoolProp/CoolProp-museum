@@ -16,10 +16,13 @@ void load()
 }
 
 JSONFluidLibrary & get_library(void){
-	if (library.is_empty()){
-		load();
-	}
+	if (library.is_empty()){ load(); }
 	return library;
+}
+
+CoolPropFluid& get_fluid(std::string fluid_string){
+    if (library.is_empty()){ load(); }
+    return library.get(fluid_string);
 }
 
 std::string get_fluid_list(void){

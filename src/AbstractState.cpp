@@ -19,13 +19,10 @@ AbstractState * AbstractState::factory(const std::string &backend, const std::st
     static std::string HEOS_string = "HEOS";
     if (!backend.compare("HEOS"))
     {
-        if (fluid_string.find('&') == -1)
-        {
-            // TODO this call is a hot mess and not obvious at all
-            return new HelmholtzEOSBackend(&(get_library().get(fluid_string)));
+        if (fluid_string.find('&') == -1){
+            return new HelmholtzEOSBackend(&get_fluid(fluid_string));
         }
-        else
-        {
+        else{
             // Split at the '&'
             std::vector<std::string> components = strsplit(fluid_string,'&');
 
@@ -34,12 +31,10 @@ AbstractState * AbstractState::factory(const std::string &backend, const std::st
     }
     else if (!backend.compare("REFPROP"))
     {
-        if (fluid_string.find('&') == -1)
-        {
+        if (fluid_string.find('&') == -1){
             return new REFPROPBackend(fluid_string);
         }
-        else
-        {
+        else{
             // Split at the '&'
             std::vector<std::string> components = strsplit(fluid_string,'&');
 

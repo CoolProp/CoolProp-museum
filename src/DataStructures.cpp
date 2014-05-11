@@ -60,7 +60,7 @@ public:
             description_map.insert(std::pair<int, std::string>(el.key, el.description));
             index_map.insert(std::pair<std::string, int>(el.short_desc, el.key));
         }
-        // Add aliases
+        // Backward compatibility aliases
         index_map.insert(std::pair<std::string, int>("D", iDmass));
         index_map.insert(std::pair<std::string, int>("H", iHmass));
         index_map.insert(std::pair<std::string, int>("S", iSmass));

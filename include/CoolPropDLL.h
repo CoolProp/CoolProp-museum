@@ -94,7 +94,6 @@
     EXPORT_CODE double CONVENTION K2F(double T_K);
     
     EXPORT_CODE long CONVENTION get_param_index(const char *param);
-    EXPORT_CODE long CONVENTION get_Fluid_index(const char *param);
     EXPORT_CODE long CONVENTION redirect_stdout(const char *file);
 
     // ---------------------------------

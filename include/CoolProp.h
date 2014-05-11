@@ -86,8 +86,6 @@ You might want to start by looking at CoolProp.h
 	/// @param FluidName The fluid name as a string
 	/// @returns long element from global type enumeration
 	long getFluidType(std::string FluidName);
-
-	
 	/// Get a string for a value from a fluid (numerical values can be obtained from Props1 function)
 	/// @param FluidName The name of the fluid
 	/// @param ParamName A string, one of "aliases", "CAS", "CAS_number", "ASHRAE34", "REFPROPName","REFPROP_name", "TTSE_mode"		
@@ -104,8 +102,7 @@ You might want to start by looking at CoolProp.h
 	/// @param param The string for an input or output parameter
 	/// @returns index The parameter index (for use in IProps or elsewhere); -1 if not found
 	long get_param_index(std::string param);
-	
-	/*/// Set the reference state for a pointer to a fluid (not exposed)
+	/// Set the reference state for a pointer to a fluid (not exposed)
 	/// @param pFluid A pointer to a Fluid instance
 	/// @param reference_state The reference state to use, one of "IIR" (h=200 kJ/kg, s=1 kJ/kg/K at 0C sat. liq.) "ASHRAE" (h=0,s=0 @ -40C sat liq), "NBP" (h=0,s=0 @ 1.0 bar sat liq.)
 	//int set_reference_stateP(Fluid *pFluid, std::string reference_state);

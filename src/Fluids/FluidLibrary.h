@@ -405,5 +405,8 @@ JSONFluidLibrary & get_library(void);
 /// Get a comma-separated-list of fluids that are included
 std::string get_fluid_list(void);
 
+/// Get the fluid structure returned as a reference
+CoolPropFluid& get_fluid(std::string fluid_string);
+
 } /* namespace CoolProp */
 #endif
