@@ -46,7 +46,6 @@ void set_warning_string(std::string warning){
     warning_string = warning; 
 }
 void set_error_string(std::string error){
-    std::cout << error << std::endl;
 	error_string = error;
 }
 //
