@@ -38,23 +38,23 @@ namespace ConsoleApplication1
             D = CoolProp.PropsSI("D", "P", p, "H", h, "Propane");
             Console.Write("P,H -> T,D " + p + "," + h + " --> " + T + "," + D + "\n");
 
-            Console.Write(" " + "\n");
-            Console.Write("************ USING TTSE ***************" + "\n");
-            Console.Write(" " + "\n");
-            //CoolProp.enable_TTSE_LUT("Propane");
-            Console.Write("TWO PHASE INPUTS (Pressure)" + "\n");
-            Console.Write("Density of saturated liquid Propane at 101325 Pa: " + CoolProp.PropsSI("D", "P", 101325, "Q", 0, "Propane") + " kg/m^3" + "\n");
-            Console.Write("Density of saturated vapor R290 at 101325 Pa: " + CoolProp.PropsSI("D", "P", 101325, "Q", 1, "R290") + " kg/m^3" + "\n");
-            Console.Write("TWO PHASE INPUTS (Temperature)" + "\n");
-            Console.Write("Density of saturated liquid Propane at 300 K: " + CoolProp.PropsSI("D", "T", 300, "Q", 0, "Propane") + " kg/m^3" + "\n");
-            Console.Write("Density of saturated vapor R290 at 300 K: " + CoolProp.PropsSI("D", "T", 300, "Q", 1, "R290") + " kg/m^3" + "\n");
-            Console.Write("SINGLE PHASE CYCLE (propane)" + "\n");
-            p = CoolProp.PropsSI("P", "T", 300, "D", 1, "Propane");
-            h = CoolProp.PropsSI("H", "T", 300, "D", 1, "Propane");
-            Console.Write("T,D -> P,H " + 300 + ","+ 1+ " --> " + p + "," + h + "\n");
-            T = CoolProp.PropsSI("T", "P", p, "H", h, "Propane");
-            D = CoolProp.PropsSI("D", "P", p, "H", h, "Propane");
-            Console.Write("P,H -> T,D " + p + "," + h + " --> " + T + "," + D + "\n");
+            //~ Console.Write(" " + "\n");
+            //~ Console.Write("************ USING TTSE ***************" + "\n");
+            //~ Console.Write(" " + "\n");
+            //~ //CoolProp.enable_TTSE_LUT("Propane");
+            //~ Console.Write("TWO PHASE INPUTS (Pressure)" + "\n");
+            //~ Console.Write("Density of saturated liquid Propane at 101325 Pa: " + CoolProp.PropsSI("D", "P", 101325, "Q", 0, "Propane") + " kg/m^3" + "\n");
+            //~ Console.Write("Density of saturated vapor R290 at 101325 Pa: " + CoolProp.PropsSI("D", "P", 101325, "Q", 1, "R290") + " kg/m^3" + "\n");
+            //~ Console.Write("TWO PHASE INPUTS (Temperature)" + "\n");
+            //~ Console.Write("Density of saturated liquid Propane at 300 K: " + CoolProp.PropsSI("D", "T", 300, "Q", 0, "Propane") + " kg/m^3" + "\n");
+            //~ Console.Write("Density of saturated vapor R290 at 300 K: " + CoolProp.PropsSI("D", "T", 300, "Q", 1, "R290") + " kg/m^3" + "\n");
+            //~ Console.Write("SINGLE PHASE CYCLE (propane)" + "\n");
+            //~ p = CoolProp.PropsSI("P", "T", 300, "D", 1, "Propane");
+            //~ h = CoolProp.PropsSI("H", "T", 300, "D", 1, "Propane");
+            //~ Console.Write("T,D -> P,H " + 300 + ","+ 1+ " --> " + p + "," + h + "\n");
+            //~ T = CoolProp.PropsSI("T", "P", p, "H", h, "Propane");
+            //~ D = CoolProp.PropsSI("D", "P", p, "H", h, "Propane");
+            //~ Console.Write("P,H -> T,D " + p + "," + h + " --> " + T + "," + D + "\n");
             //CoolProp.disable_TTSE_LUT("Propane");
 
             try
@@ -63,17 +63,15 @@ namespace ConsoleApplication1
                 Console.Write("************ USING REFPROP ***************" + "\n");
                 Console.Write(" " + "\n");
                 Console.Write("TWO PHASE INPUTS (Pressure)" + "\n");
-                Console.Write("Density of saturated liquid Propane at 101325 Pa: " + CoolProp.PropsSI("D", "P", 101325, "Q", 0, "Propane") + " kg/m^3" + "\n");
-                Console.Write("Density of saturated vapor R290 at 101325 Pa: " + CoolProp.PropsSI("D", "P", 101325, "Q", 1, "R290") + " kg/m^3" + "\n");
+                Console.Write("Density of saturated liquid Propane at 101325 Pa: " + CoolProp.PropsSI("D", "P", 101325, "Q", 0, "REFPROP::Propane") + " kg/m^3" + "\n");
                 Console.Write("TWO PHASE INPUTS (Temperature)" + "\n");
-                Console.Write("Density of saturated liquid Propane at 300 K: " + CoolProp.PropsSI("D", "T", 300, "Q", 0, "Propane") + " kg/m^3" + "\n");
-                Console.Write("Density of saturated vapor R290 at 300 K: " + CoolProp.PropsSI("D", "T", 300, "Q", 1, "R290") + " kg/m^3" + "\n");
+                Console.Write("Density of saturated liquid Propane at 300 K: " + CoolProp.PropsSI("D", "T", 300, "Q", 0, "REFPROP::Propane") + " kg/m^3" + "\n");
                 Console.Write("SINGLE PHASE CYCLE (propane)" + "\n");
-                p = CoolProp.PropsSI("P","T",300,"D",1,"Propane"); 
-                h = CoolProp.PropsSI("H","T",300,"D",1,"Propane");
+                p = CoolProp.PropsSI("P","T",300,"D",1,"REFPROP::Propane"); 
+                h = CoolProp.PropsSI("H","T",300,"D",1,"REFPROP::Propane");
                 Console.Write("T,D -> P,H " + 300 + "," + 1 + " --> " + p + "," + h + "\n");
-                T = CoolProp.PropsSI("T","P",p,"H",h,"Propane"); 
-                D = CoolProp.PropsSI("D","P",p,"H",h,"Propane");
+                T = CoolProp.PropsSI("T","P",p,"H",h,"REFPROP::Propane"); 
+                D = CoolProp.PropsSI("D","P",p,"H",h,"REFPROP::Propane");
                 Console.Write("P,H -> T,D " + p + "," + h + " --> " + T + "," + D + "\n");
             }
             catch
