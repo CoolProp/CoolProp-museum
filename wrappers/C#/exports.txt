@@ -9,7 +9,7 @@ File Type: DLL
   Section contains the following exports for CoolProp.dll
 
     00000000 characteristics
-    536F8CAC time date stamp Sun May 11 16:43:56 2014
+    536F9ABF time date stamp Sun May 11 17:43:59 2014
         0.00 version
            1 ordinal base
          136 number of functions
@@ -138,21 +138,21 @@ File Type: DLL
         119   76 000095E0 _CSharp_set_debug_level@4
         120   77 000096A0 _CSharp_set_error_string@4
         121   78 000097F0 _CSharp_set_warning_string@4
-        122   79 00015480 _F2K@8
-        123   7A 00015460 _K2F@8
-        124   7B 000161C0 _Props1@8
-        125   7C 00015890 _Props1SI@8
-        126   7D 00015FD0 _Props@32
-        127   7E 00016180 _PropsS@32
-        128   7F 00015650 _PropsSI@32
-        129   80 000159C0 _PropsSIZ@40
+        122   79 000159F0 _F2K@8
+        123   7A 000159D0 _K2F@8
+        124   7B 00016770 _Props1@8
+        125   7C 00015E40 _Props1SI@8
+        126   7D 00016580 _Props@32
+        127   7E 00016730 _PropsS@32
+        128   7F 00015C00 _PropsSI@32
+        129   80 00015F70 _PropsSIZ@40
         130   81 00001070 _SWIGRegisterExceptionArgumentCallbacks_CoolProp@12
         131   82 00001000 _SWIGRegisterExceptionCallbacks_CoolProp@44
         132   83 000010A0 _SWIGRegisterStringCallback_CoolProp@4
-        133   84 000154A0 _get_debug_level@0
-        134   85 00015820 _get_param_index@4
-        135   86 00015440 _redirect_stdout@4
-        136   87 000154B0 _set_debug_level@4
+        133   84 00015A10 _get_debug_level@0
+        134   85 00015DD0 _get_param_index@4
+        135   86 000159B0 _redirect_stdout@4
+        136   87 00015A20 _set_debug_level@4
 
   Summary
 
