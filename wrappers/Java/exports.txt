@@ -9,97 +9,114 @@ File Type: DLL
   Section contains the following exports for CoolProp.dll
 
     00000000 characteristics
-    52FDF508 time date stamp Fri Feb 14 11:50:48 2014
+    536FA972 time date stamp Sun May 11 18:46:42 2014
         0.00 version
            1 ordinal base
-          79 number of functions
-          79 number of names
+          96 number of functions
+          96 number of names
 
     ordinal hint RVA      name
 
-          1    0 0009CF30 _Java_CoolPropJNI_COOLPROP_1OK_1get@8
-          2    1 0009D940 _Java_CoolPropJNI_CubicInterp@80
-          3    2 0009E5A0 _Java_CoolPropJNI_DerivTerms@32
-          4    3 0009E980 _Java_CoolPropJNI_F2K@16
-          5    4 0009FE00 _Java_CoolPropJNI_HAHelp@8
-          6    5 0009FA90 _Java_CoolPropJNI_HAProps@48
-          7    6 0009FC20 _Java_CoolPropJNI_HAProps_1Aux@40
-          8    7 0009E470 _Java_CoolPropJNI_IProps@40
-          9    8 0009FD10 _Java_CoolPropJNI_IceProps@28
-         10    9 0009E4E0 _Java_CoolPropJNI_IsFluidType@16
-         11    A 0009E9C0 _Java_CoolPropJNI_K2F@16
-         12    B 0009DB90 _Java_CoolPropJNI_Kronecker_1delta@16
-         13    C 0009CF00 _Java_CoolPropJNI_M_1PI_1get@8
-         14    D 0009D750 _Java_CoolPropJNI_MatInv_12@24
-         15    E 0009E680 _Java_CoolPropJNI_Phase@32
-         16    F 0009E840 _Java_CoolPropJNI_Phase_1Tp@32
-         17   10 0009E760 _Java_CoolPropJNI_Phase_1Trho@32
-         18   11 0009E3B0 _Java_CoolPropJNI_Props1@16
-         19   12 0009E2F0 _Java_CoolPropJNI_Props1SI@16
-         20   13 0009E080 _Java_CoolPropJNI_Props@40
-         21   14 0009DF00 _Java_CoolPropJNI_PropsS@40
-         22   15 0009E170 _Java_CoolPropJNI_PropsSI@40
-         23   16 0009D8B0 _Java_CoolPropJNI_QuadInterp@64
-         24   17 0009FDE0 _Java_CoolPropJNI_UseIdealGasEnthalpyCorrelations@12
-         25   18 0009FDC0 _Java_CoolPropJNI_UseIsothermCompressCorrelation@12
-         26   19 0009FDA0 _Java_CoolPropJNI_UseVirialCorrelations@12
-         27   1A 0009CF60 _Java_CoolPropJNI_ValidNumber@16
-         28   1B 0009FE80 _Java_CoolPropJNI_cair_1sat@16
-         29   1C 0009F900 _Java_CoolPropJNI_conductivity_1background@28
-         30   1D 0009F870 _Java_CoolPropJNI_conductivity_1critical@28
-         31   1E 0009F990 _Java_CoolPropJNI_conformal_1Trho@48
-         32   1F 0009F0A0 _Java_CoolPropJNI_disable_1TTSE_1LUT@12
-         33   20 0009F1F0 _Java_CoolPropJNI_disable_1TTSE_1LUT_1writing@12
-         34   21 0009DB40 _Java_CoolPropJNI_double_1equal@24
-         35   22 0009EFC0 _Java_CoolPropJNI_enable_1TTSE_1LUT@12
-         36   23 0009F110 _Java_CoolPropJNI_enable_1TTSE_1LUT_1writing@12
-         37   24 0009D220 _Java_CoolPropJNI_format@12
-         38   25 0009EA00 _Java_CoolPropJNI_fromSI@24
-         39   26 0009EC10 _Java_CoolPropJNI_get_1Fluid_1index@12
-         40   27 0009F420 _Java_CoolPropJNI_get_1TTSESinglePhase_1LUT_1range@44
-         41   28 0009ED70 _Java_CoolPropJNI_get_1debug_1level@8
-         42   29 0009D150 _Java_CoolPropJNI_get_1file_1contents@12
-         43   2A 0009DCF0 _Java_CoolPropJNI_get_1fluid_1param_1string@16
-         44   2B 0009DBD0 _Java_CoolPropJNI_get_1global_1param_1string@12
-         45   2C 0009EC80 _Java_CoolPropJNI_get_1index_1units@16
-         46   2D 0009EBA0 _Java_CoolPropJNI_get_1param_1index@12
-         47   2E 0009F710 _Java_CoolPropJNI_get_1standard_1unit_1system@8
-         48   2F 0009D810 _Java_CoolPropJNI_interp1d@32
-         49   30 0009F030 _Java_CoolPropJNI_isenabled_1TTSE_1LUT@12
-         50   31 0009F180 _Java_CoolPropJNI_isenabled_1TTSE_1LUT_1writing@12
-         51   32 0009DAE0 _Java_CoolPropJNI_max3@32
-         52   33 0009DA80 _Java_CoolPropJNI_min3@32
-         53   34 0009D870 _Java_CoolPropJNI_powInt@20
-         54   35 0009EEC0 _Java_CoolPropJNI_psatL_1anc@20
-         55   36 0009EF40 _Java_CoolPropJNI_psatV_1anc@20
-         56   37 0009ED00 _Java_CoolPropJNI_redirect_1stdout@12
-         57   38 0009FE10 _Java_CoolPropJNI_returnHumAirCode@12
-         58   39 0009EDC0 _Java_CoolPropJNI_rhosatL_1anc@20
-         59   3A 0009EE40 _Java_CoolPropJNI_rhosatV_1anc@20
-         60   3B 0009D780 _Java_CoolPropJNI_root_1sum_1square@16
-         61   3C 0009F260 _Java_CoolPropJNI_set_1TTSESat_1LUT_1size@16
-         62   3D 0009F370 _Java_CoolPropJNI_set_1TTSESinglePhase_1LUT_1range@44
-         63   3E 0009F2E0 _Java_CoolPropJNI_set_1TTSESinglePhase_1LUT_1size@20
-         64   3F 0009F4E0 _Java_CoolPropJNI_set_1TTSE_1mode@16
-         65   40 0009EDA0 _Java_CoolPropJNI_set_1debug_1level@12
-         66   41 0009E920 _Java_CoolPropJNI_set_1phase@12
-         67   42 0009F660 _Java_CoolPropJNI_set_1reference_1stateD@44
-         68   43 0009F5A0 _Java_CoolPropJNI_set_1reference_1stateS@16
-         69   44 0009F740 _Java_CoolPropJNI_set_1standard_1unit_1system@12
-         70   45 0009D9F0 _Java_CoolPropJNI_solve_1cubic@64
-         71   46 0009D5A0 _Java_CoolPropJNI_strjoin@20
-         72   47 0009CFA0 _Java_CoolPropJNI_strlstrip@16
-         73   48 0009D070 _Java_CoolPropJNI_strrstrip@16
-         74   49 0009D300 _Java_CoolPropJNI_strsplit@16
-         75   4A 0009D0E0 _Java_CoolPropJNI_strstrip@16
-         76   4B 0009EAD0 _Java_CoolPropJNI_toSI@24
-         77   4C 0009D480 _Java_CoolPropJNI_upper@12
-         78   4D 0009F760 _Java_CoolPropJNI_viscosity_1dilute@20
-         79   4E 0009F7E0 _Java_CoolPropJNI_viscosity_1residual@28
+          1    0 000130A0 _Java_CoolPropJNI_AbstractState_1Q@20
+          2    1 00012DA0 _Java_CoolPropJNI_AbstractState_1T@20
+          3    2 00012BA0 _Java_CoolPropJNI_AbstractState_1Tmax@20
+          4    3 000141B0 _Java_CoolPropJNI_AbstractState_1alpha0@20
+          5    4 00014990 _Java_CoolPropJNI_AbstractState_1alphar@20
+          6    5 00011BF0 _Java_CoolPropJNI_AbstractState_1calc_1melt_1T_1p@28
+          7    6 00011A60 _Java_CoolPropJNI_AbstractState_1calc_1melt_1p_1T@28
+          8    7 00011D80 _Java_CoolPropJNI_AbstractState_1calc_1melt_1rho_1T@28
+          9    8 000122F0 _Java_CoolPropJNI_AbstractState_1clear@20
+         10    9 00013FB0 _Java_CoolPropJNI_AbstractState_1conductivity@20
+         11    A 000138A0 _Java_CoolPropJNI_AbstractState_1cpmolar@20
+         12    B 000139A0 _Java_CoolPropJNI_AbstractState_1cvmolar@20
+         13    C 000145A0 _Java_CoolPropJNI_AbstractState_1d2alpha0_1dDelta2@20
+         14    D 000146F0 _Java_CoolPropJNI_AbstractState_1d2alpha0_1dDelta_1dTau@20
+         15    E 00014840 _Java_CoolPropJNI_AbstractState_1d2alpha0_1dTau2@20
+         16    F 00014D80 _Java_CoolPropJNI_AbstractState_1d2alphar_1dDelta2@20
+         17   10 00014ED0 _Java_CoolPropJNI_AbstractState_1d2alphar_1dDelta_1dTau@20
+         18   11 00015020 _Java_CoolPropJNI_AbstractState_1d2alphar_1dTau2@20
+         19   12 00014300 _Java_CoolPropJNI_AbstractState_1dalpha0_1dDelta@20
+         20   13 00014450 _Java_CoolPropJNI_AbstractState_1dalpha0_1dTau@20
+         21   14 00014AE0 _Java_CoolPropJNI_AbstractState_1dalphar_1dDelta@20
+         22   15 00014C30 _Java_CoolPropJNI_AbstractState_1dalphar_1dTau@20
+         23   16 000132A0 _Java_CoolPropJNI_AbstractState_1delta@20
+         24   17 00012010 _Java_CoolPropJNI_AbstractState_1factory@16
+         25   18 00012A30 _Java_CoolPropJNI_AbstractState_1first_1partial_1deriv@32
+         26   19 00013DA0 _Java_CoolPropJNI_AbstractState_1fugacity_1coefficient@24
+         27   1A 000134A0 _Java_CoolPropJNI_AbstractState_1gas_1constant@20
+         28   1B 000127F0 _Java_CoolPropJNI_AbstractState_1get_1reducing@20
+         29   1C 000135A0 _Java_CoolPropJNI_AbstractState_1hmolar@20
+         30   1D 00013CA0 _Java_CoolPropJNI_AbstractState_1isobaric_1expansion_1coefficient@20
+         31   1E 00013BA0 _Java_CoolPropJNI_AbstractState_1isothermal_1compressibility@20
+         32   1F 00012920 _Java_CoolPropJNI_AbstractState_1keyed_1output@24
+         33   20 000133A0 _Java_CoolPropJNI_AbstractState_1molar_1mass@20
+         34   21 00012FA0 _Java_CoolPropJNI_AbstractState_1p@20
+         35   22 00012CA0 _Java_CoolPropJNI_AbstractState_1pmax@20
+         36   23 00012EA0 _Java_CoolPropJNI_AbstractState_1rhomolar@20
+         37   24 000125F0 _Java_CoolPropJNI_AbstractState_1set_1mass_1fractions@32
+         38   25 000124F0 _Java_CoolPropJNI_AbstractState_1set_1mole_1fractions@32
+         39   26 000136A0 _Java_CoolPropJNI_AbstractState_1smolar@20
+         40   27 00013AA0 _Java_CoolPropJNI_AbstractState_1speed_1sound@20
+         41   28 000140B0 _Java_CoolPropJNI_AbstractState_1surface_1tension@20
+         42   29 000131A0 _Java_CoolPropJNI_AbstractState_1tau@20
+         43   2A 000137A0 _Java_CoolPropJNI_AbstractState_1umolar@20
+         44   2B 000123F0 _Java_CoolPropJNI_AbstractState_1update@40
+         45   2C 000126F0 _Java_CoolPropJNI_AbstractState_1using_1mole_1fractions@20
+         46   2D 00013EB0 _Java_CoolPropJNI_AbstractState_1viscosity@20
+         47   2E 00015200 _Java_CoolPropJNI_CoolProp_1SimpleState_1T_1get@20
+         48   2F 000151D0 _Java_CoolPropJNI_CoolProp_1SimpleState_1T_1set@28
+         49   30 000152C0 _Java_CoolPropJNI_CoolProp_1SimpleState_1hmolar_1get@20
+         50   31 00015290 _Java_CoolPropJNI_CoolProp_1SimpleState_1hmolar_1set@28
+         51   32 00015260 _Java_CoolPropJNI_CoolProp_1SimpleState_1p_1get@20
+         52   33 00015230 _Java_CoolPropJNI_CoolProp_1SimpleState_1p_1set@28
+         53   34 000151A0 _Java_CoolPropJNI_CoolProp_1SimpleState_1rhomolar_1get@20
+         54   35 00015170 _Java_CoolPropJNI_CoolProp_1SimpleState_1rhomolar_1set@28
+         55   36 00015320 _Java_CoolPropJNI_CoolProp_1SimpleState_1smolar_1get@20
+         56   37 000152F0 _Java_CoolPropJNI_CoolProp_1SimpleState_1smolar_1set@28
+         57   38 00015380 _Java_CoolPropJNI_CoolProp_1SimpleState_1umolar_1get@20
+         58   39 00015350 _Java_CoolPropJNI_CoolProp_1SimpleState_1umolar_1set@28
+         59   3A 000116F0 _Java_CoolPropJNI_DoubleVector_1add@28
+         60   3B 00011610 _Java_CoolPropJNI_DoubleVector_1capacity@20
+         61   3C 000116D0 _Java_CoolPropJNI_DoubleVector_1clear@20
+         62   3D 00011730 _Java_CoolPropJNI_DoubleVector_1get@24
+         63   3E 00011690 _Java_CoolPropJNI_DoubleVector_1isEmpty@20
+         64   3F 00011660 _Java_CoolPropJNI_DoubleVector_1reserve@28
+         65   40 00011850 _Java_CoolPropJNI_DoubleVector_1set@32
+         66   41 000115C0 _Java_CoolPropJNI_DoubleVector_1size@20
+         67   42 00011030 _Java_CoolPropJNI_LongDoubleVector_1add@28
+         68   43 00010F50 _Java_CoolPropJNI_LongDoubleVector_1capacity@20
+         69   44 00011010 _Java_CoolPropJNI_LongDoubleVector_1clear@20
+         70   45 000110E0 _Java_CoolPropJNI_LongDoubleVector_1get@24
+         71   46 00010FD0 _Java_CoolPropJNI_LongDoubleVector_1isEmpty@20
+         72   47 00010FA0 _Java_CoolPropJNI_LongDoubleVector_1reserve@28
+         73   48 00011220 _Java_CoolPropJNI_LongDoubleVector_1set@32
+         74   49 00010F00 _Java_CoolPropJNI_LongDoubleVector_1size@20
+         75   4A 00015E80 _Java_CoolPropJNI_PropsSI_1_1SWIG_10@40
+         76   4B 00016350 _Java_CoolPropJNI_PropsSI_1_1SWIG_11@52
+         77   4C 000168D0 _Java_CoolPropJNI_PropsSI_1_1SWIG_12@60
+         78   4D 00011F10 _Java_CoolPropJNI_delete_1AbstractState@16
+         79   4E 00015510 _Java_CoolPropJNI_delete_1CoolProp_1SimpleState@16
+         80   4F 00011970 _Java_CoolPropJNI_delete_1DoubleVector@16
+         81   50 00011350 _Java_CoolPropJNI_delete_1LongDoubleVector@16
+         82   51 00017250 _Java_CoolPropJNI_get_1debug_1level@8
+         83   52 00017760 _Java_CoolPropJNI_get_1global_1param_1string@12
+         84   53 00015D00 _Java_CoolPropJNI_get_1input_1pair_1long_1desc@12
+         85   54 00015B80 _Java_CoolPropJNI_get_1input_1pair_1short_1desc@12
+         86   55 00015880 _Java_CoolPropJNI_get_1parameter_1index@12
+         87   56 000155F0 _Java_CoolPropJNI_get_1parameter_1information@16
+         88   57 00015A30 _Java_CoolPropJNI_match_1pair@32
+         89   58 000153B0 _Java_CoolPropJNI_new_1CoolProp_1SimpleState@8
+         90   59 000114F0 _Java_CoolPropJNI_new_1DoubleVector_1_1SWIG_10@8
+         91   5A 00011550 _Java_CoolPropJNI_new_1DoubleVector_1_1SWIG_11@16
+         92   5B 00010E30 _Java_CoolPropJNI_new_1LongDoubleVector_1_1SWIG_10@8
+         93   5C 00010E90 _Java_CoolPropJNI_new_1LongDoubleVector_1_1SWIG_11@16
+         94   5D 00017350 _Java_CoolPropJNI_set_1debug_1level@12
+         95   5E 00017420 _Java_CoolPropJNI_set_1error_1string@12
+         96   5F 000175C0 _Java_CoolPropJNI_set_1warning_1string@12
 
   Summary
 
-       1F000 .data
-       92000 .rdata
-       23000 .reloc
-      1E1000 .text
+        6000 .data
+       98000 .rdata
+        8000 .reloc
+       97000 .text
