@@ -9,6 +9,7 @@
 #include "AbstractState.h"
 #include "Backends\REFPROPBackend.h"
 #include "Backends\HelmholtzEOSBackend.h"
+#include "Backends\IncompressibleBackend.h"
 #include "Fluids\FluidLibrary.h"
 
 namespace CoolProp {
@@ -47,7 +48,7 @@ AbstractState * AbstractState::factory(const std::string &backend, const std::st
     }
     else if (!backend.compare("INCOMP"))
     {
-        throw ValueError("INCOMP backend not yet implemented");
+        return new IncompressibleBackend(fluid_string);
     }
     else if (!backend.compare("BRINE"))
     {

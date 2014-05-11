@@ -27,7 +27,6 @@
     */
     EXPORT_CODE double CONVENTION PropsSI(const char *Output, const char *Name1, double  Prop1, const char *Name2, double  Prop2, const char *Ref);
 
-
     /**
     \overload 
     \sa Props(std::string, std::string, double, std::string, double, std::string)
