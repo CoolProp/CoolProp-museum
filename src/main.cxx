@@ -76,7 +76,8 @@ int main()
     }
     if (1)
     {
-        double rr = PropsSI("P", "T", 300, "D", 1, "Water");
+        std::string fl = get_global_param_string("FluidsList");
+        double rr = PropsSI("D", "P", 1e5, "Q", 1, "Water");
         AbstractState *AS = AbstractState::factory("HEOS","Nitrogen");
 
         AS->update(DmolarT_INPUTS, 40, 300);

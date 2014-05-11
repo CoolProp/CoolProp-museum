@@ -146,15 +146,15 @@ EXPORT_CODE void CONVENTION set_debug_level(int level){
 EXPORT_CODE long CONVENTION get_param_index(const char * param){
     return CoolProp::get_parameter_index(param);
 }
-//#ifndef SWIG
-//EXPORT_CODE long CONVENTION get_global_param_string(const char *param, char * Output)
-//{
-//	strcpy(Output,get_global_param_string(std::string(param)).c_str());
-//	return 0;
-//}
+#ifndef SWIG
+EXPORT_CODE long CONVENTION get_global_param_string(const char *param, char * Output)
+{
+	strcpy(Output,CoolProp::get_global_param_string(param).c_str());
+	return 0;
+}
 //EXPORT_CODE long CONVENTION get_fluid_param_string(const char *fluid, const char *param, char * Output)
 //{
 //	strcpy(Output, get_fluid_param_string(std::string(fluid), std::string(param)).c_str());
 //	return 0;
 //}
-//#endif
+#endif

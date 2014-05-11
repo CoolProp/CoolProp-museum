@@ -901,8 +901,6 @@ void HelmholtzEOSMixtureBackend::QT_flash()
         
         // Actually call the successive substitution solver
         SaturationSolvers::successive_substitution(this, _Q, _T, pguess, mole_fractions, K, options);
-
-        
     }
 }
 void HelmholtzEOSMixtureBackend::PQ_flash()
@@ -911,7 +909,7 @@ void HelmholtzEOSMixtureBackend::PQ_flash()
     {
         if (!(components[0]->pEOS->pseudo_pure))
         {
-            throw NotImplementedError();
+            throw NotImplementedError("PQ_flash not implemented for pure fluids");
             //// Set some imput options
             //SaturationSolvers::saturation_p_pure_Akasaka_options options;
             //options.omega = 1.0;
@@ -923,7 +921,7 @@ void HelmholtzEOSMixtureBackend::PQ_flash()
             //_rhomolar = 1/(_Q/SatV->rhomolar() + (1-_Q)/SatL->rhomolar());
         }
         else{
-            throw NotImplementedError();
+            throw NotImplementedError("PQ_flash not implemented for pseudo-pure fluids");
         }
     }
     else

@@ -77,15 +77,17 @@ You might want to start by looking at CoolProp.h
 	/// @param warning The string to set as the warning string
 	void set_warning_string(std::string warning);
 
+    /// Get a globally-defined string
+	/// @param ParamName A string, one of "version", "errstring", "warnstring", "gitrevision", "FluidsList", "fluids_list"
+	/// @returns str The string, or an error message if not valid input
+	std::string get_global_param_string(std::string ParamName);
+
 	/*/// Get a long that represents the fluid type
 	/// @param FluidName The fluid name as a string
 	/// @returns long element from global type enumeration
 	long getFluidType(std::string FluidName);
 
-	/// Get a globally-defined string
-	/// @param ParamName A string, one of "version", "errstring", "warnstring", "gitrevision", "FluidsList", "fluids_list"
-	/// @returns str The string, or an error message if not valid input
-	std::string get_global_param_string(std::string ParamName);
+	
 	/// Get a string for a value from a fluid (numerical values can be obtained from Props1 function)
 	/// @param FluidName The name of the fluid
 	/// @param ParamName A string, one of "aliases", "CAS", "CAS_number", "ASHRAE34", "REFPROPName","REFPROP_name", "TTSE_mode"		

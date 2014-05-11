@@ -23,7 +23,7 @@ class JSONFluidLibrary
 {
     /// Map from CAS code to JSON instance.  For pseudo-pure fluids, use name in place of CAS code since no CASE number is defined for mixtures
     std::map<std::size_t, CoolPropFluid> fluid_map;
-
+    std::vector<std::string> name_vector;
     std::map<std::string, std::size_t> string_to_index_map;
     bool _is_empty;
 protected:
@@ -306,7 +306,7 @@ public:
         CoolPropFluid &fluid = fluid_map[index];
 
         // Fluid name
-        fluid.name = fluid_json["NAME"].GetString();
+        fluid.name = fluid_json["NAME"].GetString(); name_vector.push_back(fluid.name);
         // CAS number
         fluid.CAS = fluid_json["CAS"].GetString();
 
@@ -392,10 +392,18 @@ public:
             throw ValueError(format("key [%d] was not found in JSONFluidLibrary",key));
         }
     };
+    /// Return a comma-separated list of fluid names
+    std::string get_fluid_list(void)
+    {
+        return strjoin(name_vector, ",");
+    };
 };
 
 /// Get a reference to the library instance
 JSONFluidLibrary & get_library(void);
+
+/// Get a comma-separated-list of fluids that are included
+std::string get_fluid_list(void);
 
 } /* namespace CoolProp */
 #endif

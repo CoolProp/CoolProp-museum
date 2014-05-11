@@ -22,4 +22,9 @@ JSONFluidLibrary & get_library(void){
 	return library;
 }
 
+std::string get_fluid_list(void){
+    if (library.is_empty()){ load(); }
+    return library.get_fluid_list();
+};
+
 } /* namespace CoolProp */

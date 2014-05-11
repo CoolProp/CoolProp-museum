@@ -24,6 +24,7 @@
 #include <string>
 #include "CoolPropTools.h"
 #include "Solvers.h"
+#include "Fluids\FluidLibrary.h"
 
 namespace CoolProp
 {
@@ -36,8 +37,8 @@ void set_debug_level(int level){debug_level = level;}
 int get_debug_level(void){return debug_level;}
 
 //// This is very hacky, but pull the git revision from the file
-//#include "gitrevision.h" // Contents are like "long gitrevision = "aa121435436ggregrea4t43t433";"
-//#include "version.h" // Contents are like "char version [] = "2.5";"
+#include "gitrevision.h" // Contents are like "std::string gitrevision = "aa121435436ggregrea4t43t433";"
+#include "version.h" // Contents are like "char version [] = "2.5";"
 
 //int global_Phase = -1;
 
@@ -340,9 +341,9 @@ double _PropsSI(const std::string &Output, const std::string &Name1, double Prop
 {
     static std::string unknown_backend = "?";
     double x1, x2;
-    /*if (get_debug_level()>5){
+    if (get_debug_level()>5){
         std::cout << format("%s:%d: _PropsSI(%s,%s,%g,%s,%g,%s)\n",__FILE__,__LINE__,Output.c_str(),Name1.c_str(),Prop1,Name2.c_str(),Prop2,Ref.c_str()).c_str();
-    }*/
+    }
 
     // Convert all the input and output parameters to integers
     long iOutput = get_parameter_index(Output);
@@ -422,7 +423,7 @@ double PropsSI(const std::string &Output, const std::string &Name1, double Prop1
             return _PropsSI(Output, Name1, Prop1, Name2, Prop2, Ref, std::vector<double>(1,1));
         }
     }
-    catch(const std::exception& e){ std::cout << e.what() << std::endl; return _HUGE; }
+    catch(const std::exception& e){ set_error_string(e.what()); return _HUGE; }
     catch(...){ return _HUGE; }
 }
 std::vector<double> PropsSI(const std::string &Output, const std::string &Name1, const std::vector<double> &Prop1, const std::string &Name2, const std::vector<double> Prop2, const std::string &Ref, const std::vector<double> &z)
@@ -795,37 +796,31 @@ double Props1SI(std::string FluidName,std::string Output)
 //		return std::string("");
 //	}
 //}
-//std::string get_global_param_string(std::string ParamName)
-//{
-//	if (!ParamName.compare("version"))
-//	{
-//		return std::string(version);
-//	}
-//	else if (!ParamName.compare("errstring"))
-//	{
-//		std::string temp = err_string;
-//		err_string = std::string("");
-//		return temp;
-//	}
-//	else if (!ParamName.compare("warnstring"))
-//	{
-//		std::string temp = warning_string;
-//		warning_string = std::string("");
-//		return temp;
-//	}
-//	else if (!ParamName.compare("gitrevision"))
-//	{
-//		return gitrevision;
-//	}
-//	else if (!ParamName.compare("FluidsList") || !ParamName.compare("fluids_list"))
-//	{
-//		return Fluids.FluidList();
-//	}
-//	else
-//	{
-//		return format("Input value [%s] is invalid",ParamName.c_str()).c_str();
-//	}
-//};
+std::string get_global_param_string(std::string ParamName)
+{
+	if (!ParamName.compare("version")){
+		return version;
+	}
+	else if (!ParamName.compare("gitrevision")){
+		return gitrevision;
+	}
+    else if (!ParamName.compare("errstring")){
+		std::string temp = error_string;
+		error_string = std::string("");
+		return temp;
+	}
+	else if (!ParamName.compare("warnstring")){
+		std::string temp = warning_string;
+		warning_string = std::string("");
+		return temp;
+	}
+	else if (!ParamName.compare("FluidsList") || !ParamName.compare("fluids_list") || !ParamName.compare("fluidslist")){
+		return get_fluid_list();
+	}
+	else{
+		return format("Input value [%s] is invalid",ParamName.c_str()).c_str();
+	}
+};
 //std::string get_fluid_param_string(std::string FluidName, std::string ParamName)
 //{
 //	try{
