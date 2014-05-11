@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os, json, glob, textwrap
 
 json_options = {'indent' : 2, 'sort_keys' : True}
@@ -86,8 +87,8 @@ Mulero_data = """67-64-1 Acetone 0.0633 1.160
 7732-18-5 Water -0.1306 2.471 0.2151 1.233
 7440-63-3 Xenon -0.11538 1.0512 0.16598 1.098"""
     
-def inject_surface_tension():       
-        
+def inject_surface_tension(root_dir):       
+    print("*** Injecting surface tension curves from Mulero")
     Tc_dict = {'Argon':150.687,
     'Benzene':562.02,
     '1-Butene':419.29, #Butene from Mulero
@@ -194,9 +195,9 @@ def inject_surface_tension():
                     description = 'sigma = sum(a_i*(1-T/Tc)^n_i)'
                     )
         
-        fname = 'fluids/'+name+'.json'
+        fname = os.path.join(root_dir,'dev','fluids',name+'.json')
         if not os.path.exists(fname):
-            print fname+' does not exist'
+            print(fname+' does not exist')
             continue
             
         j = json.load(open(fname,'r'))
@@ -207,60 +208,64 @@ def inject_surface_tension():
         fp.write(json.dumps(j, **json_options))
         fp.close()
 
-def inject_environmental_data():
-    j = json.load(open('environmental_data_from_DTU/DTU_environmental.json','r'))
+def inject_environmental_data(root_dir):
+    print('*** Injecting environmental data from DTU')
+    j = json.load(open(os.path.join(root_dir,'dev','environmental_data_from_DTU','DTU_environmental.json'),'r'))
     
     for CAS, data in j.iteritems():
-        fname = os.path.join('fluids',data['Name']+'.json')
+        fname = os.path.join(root_dir,'dev','fluids',data['Name']+'.json')
         if os.path.isfile(fname):
             fluid = json.load(open(fname,'r'))
             fluid['ENVIRONMENTAL'] = data
             fp = open(fname, 'w')
             fp.write(json.dumps(fluid, **json_options))
         else:
-            print 'Could not inject environmental data for ',data['Name']
+            print('Could not inject environmental data for',data['Name'])
     
-def inject_ancillaries():
+def inject_ancillaries(root_dir):
+    print('*** Injecting saturation ancillary curves')
     master = []
 
-    for file in glob.glob(os.path.join('fluids','*.json')):
+    for file in glob.glob(os.path.join(root_dir,'dev','fluids','*.json')):
         path, file_name = os.path.split(file)
         fluid_name = file_name.split('.')[0]
         # Load the fluid file
-        fluid = json.load(open(os.path.join('fluids', fluid_name+'.json'), 'r'))
+        fluid = json.load(open(os.path.join(root_dir,'dev','fluids', fluid_name+'.json'), 'r'))
         
         # Load the ancillary
-        anc = json.load(open(os.path.join('ancillaries',fluid_name+'_anc.json'),'r'))
+        anc = json.load(open(os.path.join(root_dir,'dev','ancillaries',fluid_name+'_anc.json'),'r'))
         # Apply the ancillary by merging dictionaries
         fluid.update(anc)
         # Write fluid back to file
-        fp = open(os.path.join('fluids', fluid_name+'.json'),'w')
+        fp = open(os.path.join(root_dir,'dev','fluids', fluid_name+'.json'),'w')
         fp.write(json.dumps(fluid, **json_options))
 
-def package_json():
-
+def package_json(root_dir):
+    
     master = []
     
-    for file in glob.glob(os.path.join('fluids','*.json')):
+    inject_ancillaries(root_dir)
+    inject_surface_tension(root_dir)
+    inject_environmental_data(root_dir)
+    
+    print('*** Combining fluid JSON files in JSON format in dev folder...')
+    for file in glob.glob(os.path.join(root_dir,'dev','fluids','*.json')):
         
         path, file_name = os.path.split(file)
         fluid_name = file_name.split('.')[0]
         
         # Load the fluid file
-        fluid = json.load(open(os.path.join('fluids', fluid_name+'.json'), 'r'))
+        fluid = json.load(open(os.path.join(root_dir,'dev','fluids', fluid_name+'.json'), 'r'))
         
         master += [fluid]
 
-    fp = open('all_fluids_verbose.json','w')
+    fp = open(os.path.join(root_dir,'dev','all_fluids_verbose.json'),'w')
     fp.write(json.dumps(master, **json_options))
     fp.close()
     
-    fp = open('all_fluids.json','w')
+    fp = open(os.path.join(root_dir,'dev','all_fluids.json'),'w')
     fp.write(json.dumps(master))
     fp.close()
     
 if __name__=='__main__':
-    inject_ancillaries()
-    inject_surface_tension()
-    inject_environmental_data()
-    package_json()
+    package_json(root_dir = '..')
