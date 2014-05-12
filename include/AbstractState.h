@@ -206,6 +206,15 @@ protected:
     /// Using this backend, calculate the reciprocal reduced temperature (Tc/T)
     virtual long double calc_reciprocal_reduced_temperature(void){throw NotImplementedError("calc_reciprocal_reduced_temperature is not implemented for this backend");};
 
+    /// Using this backend, calculate the second virial coefficient
+    virtual long double calc_Bvirial(void){throw NotImplementedError("calc_Bvirial is not implemented for this backend");};
+    /// Using this backend, calculate the third virial coefficient
+    virtual long double calc_Cvirial(void){throw NotImplementedError("calc_Cvirial is not implemented for this backend");};
+    /// Using this backend, calculate the derivative dB/dT
+    virtual long double calc_dBvirial_dT(void){throw NotImplementedError("calc_dBvirial_dT is not implemented for this backend");};
+    /// Using this backend, calculate the derivative dC/dT
+    virtual long double calc_dCvirial_dT(void){throw NotImplementedError("calc_dCvirial_dT is not implemented for this backend");};
+
 public:
 
     virtual long double calc_melt_p_T(long double T){throw NotImplementedError("calc_melt_p_T is not implemented for this backend");};
@@ -269,6 +278,11 @@ public:
 
     double molar_mass(void);
     double gas_constant(void);
+
+    double Bvirial(void);
+    double dBvirial_dT(void);
+    double Cvirial(void);
+    double dCvirial_dT(void);
 
     double hmolar(void);
     double smolar(void);
@@ -358,6 +372,20 @@ public:
     virtual double d2alphar_dDelta_dTau_lim(void) = 0;
     virtual double d3alphar_dDelta2_dTau_lim(void) = 0;
     */
+};
+
+class AbstractStateWrapper
+{
+protected:
+    AbstractState *p;
+public:
+    AbstractStateWrapper(){this->p = NULL;};
+    AbstractStateWrapper(const std::string &backend, const std::string &fluid_string){
+        this->p = AbstractState::factory(backend, fluid_string);
+    };
+    ~AbstractStateWrapper(){delete this->p;};
+    void update(long input_pair, double Value1, double Value2){ this->p->update(input_pair,Value1,Value2); };
+    double keyed_output(int key) { return this->p->keyed_output(key); }
 };
 
 } /* namespace CoolProp */

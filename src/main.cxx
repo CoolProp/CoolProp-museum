@@ -76,8 +76,12 @@ int main()
     }
     if (1)
     {
+        std::vector<std::string> tags;
+        tags.push_back("[RP1485]");
+        run_user_defined_tests(tags);
+        //run_tests();
         std::string fl = get_global_param_string("FluidsList");
-        double rr = PropsSI("T", "P", 101325, "Q", 1, "HEOS::Water");
+        double rr = PropsSI("D", "P", 3e5, "T", 300, "Nitrogen");
         AbstractState *AS = AbstractState::factory("HEOS","Nitrogen");
 
         AS->update(DmolarT_INPUTS, 40, 300);

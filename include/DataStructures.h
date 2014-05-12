@@ -25,6 +25,10 @@ struct SimpleState
 //
 // !! If you add a parameter, update the map in the corresponding CPP file !!
 enum parameters{
+
+    // General parameters
+    imolar_mass, irhomolar_reducing, irhomolar_critical, iT_reducing, iT_critical,
+
     // Bulk properties
     iT,  iP, iQ, iTau, iDelta,
 
@@ -46,8 +50,14 @@ enum parameters{
     // Fundamental derivative of gas dynamics
     ifundamental_derivative_of_gas_dynamics, id2pdv2_consts,
 
+    // Derivatives of the residual non-dimensionalized Helmholtz energy with respect to the EOS variables
+    ialphar, idalphar_dtau_constdelta, idalphar_ddelta_consttau, 
+    
+    // Derivatives of the ideal-gas non-dimensionalized Helmholtz energy with respect to the EOS variables
+    ialpha0, idalpha0_dtau_constdelta, idalpha0_ddelta_consttau,
+
     // Other functions and derivatives
-    iBvirial, iCvirial, iZ, idBdT, idCdT, idZdDelta, idZdTau,
+    iBvirial, iCvirial, iZ, idBvirial_dT, idCvirial_dT, idZdDelta, idZdTau,
 
     // Environmental parameters
     iGWP20, iGWP100, iGWP500, iFH, iHH, iPH, iODP

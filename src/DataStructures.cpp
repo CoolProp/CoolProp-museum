@@ -41,6 +41,16 @@ parameter_info parameter_info_list[] = {
     parameter_info(iHH, "HH","O","-","Health hazard"),
     parameter_info(iPH, "PH","O","-","Physical hazard"),
     parameter_info(iODP, "ODP","O","-","Ozone depletion potential"),
+    parameter_info(iBvirial, "Bvirial","O","-","Second virial coefficient"),
+    parameter_info(iCvirial, "Cvirial","O","-","Third virial coefficient"),
+    parameter_info(idBvirial_dT, "dBvirial_dT","O","-","Derivative of second virial coefficient with respect to T"),
+    parameter_info(idCvirial_dT, "dCvirial_dT","O","-","Derivative of third virial coefficient with respect to T"),
+    parameter_info(imolar_mass, "molar_mass","O","kg/mol","Molar mass"),
+    parameter_info(irhomolar_reducing, "rhomolar_reducing","O","mol/m^3","Molar density at reducing point"),
+    parameter_info(irhomolar_critical, "rhomolar_critical","O","mol/m^3","Molar density at critical point"),
+    parameter_info(iT_reducing, "T_reducing","O","K","Temperature at the reducing point"),
+    parameter_info(iT_critical, "T_critical","O","K","Temperature at the critical point"),
+    parameter_info(iisothermal_compressibility, "isothermal_compressibility","O","1/Pa","Isothermal compressibility")
 };
 
 class ParameterInformation

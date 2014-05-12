@@ -180,6 +180,32 @@ double AbstractState::keyed_output(int key)
         return umolar();
     case iUmass:
         return umolar()/molar_mass();
+    case imolar_mass:
+        return molar_mass();
+    case iT_reducing:
+        return get_reducing().T;
+    case irhomolar_reducing:
+        return get_reducing().rhomolar;
+    //case iT_critical:
+    //    return get_critical().T;
+    //case irhomolar_critical:
+    //    return get_critical().rhomolar; // TODO
+    case ialpha0:
+        return alpha0();
+    case idalpha0_ddelta_consttau:
+        return dalpha0_dDelta();
+    case idalpha0_dtau_constdelta:
+        return dalpha0_dTau();
+    case iBvirial:
+        return Bvirial();
+    case idBvirial_dT:
+        return dBvirial_dT();
+    case iCvirial:
+        return Cvirial();
+    case idCvirial_dT:
+        return dCvirial_dT();
+    case iisothermal_compressibility:
+        return isothermal_compressibility();
     default:
         throw ValueError(format("This input [%d: \"%s\"] is not valid for keyed_output",key,get_parameter_information(key,"short").c_str()));
     }
@@ -248,13 +274,16 @@ double AbstractState::fugacity_coefficient(int i){
     // TODO: Cache the fug. coeff for each component
     return calc_fugacity_coefficient(i);
 }
-
 double AbstractState::isothermal_compressibility(void){
 	return 1.0/_rhomolar*first_partial_deriv(iDmolar, iP, iT);
 }
 double AbstractState::isobaric_expansion_coefficient(void){
 	return -1.0/pow(_rhomolar,2)*first_partial_deriv(iDmolar, iT, iP);
 }
+double AbstractState::Bvirial(void){ return calc_Bvirial(); }
+double AbstractState::Cvirial(void){ return calc_Cvirial(); }
+double AbstractState::dBvirial_dT(void){ return calc_dBvirial_dT(); }
+double AbstractState::dCvirial_dT(void){ return calc_dCvirial_dT(); }
 
 //	// ----------------------------------------
 //	// Smoothing functions for density

@@ -249,7 +249,7 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
             throw ValueError(format("This pair of inputs [%s] is not yet supported", get_input_pair_short_desc(input_pair).c_str()));
     }
     // Check the values that must always be set
-    if (_p < 0){ throw ValueError("p is less than zero");}
+    //if (_p < 0){ throw ValueError("p is less than zero");}
     if (!ValidNumber(_p)){ throw ValueError("p is not a valid number");}
     if (_T < 0){ throw ValueError("T is less than zero");}
     if (!ValidNumber(_T)){ throw ValueError("T is not a valid number");}
@@ -260,6 +260,25 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
     // Set the reduced variables
     _tau = _reducing.T/_T;
     _delta = _rhomolar/_reducing.rhomolar;
+}
+
+long double HelmholtzEOSMixtureBackend::calc_Bvirial()
+{
+    return 1/get_reducing().rhomolar*calc_alphar_deriv_nocache(0,1,mole_fractions,_tau,1e-14);
+}
+long double HelmholtzEOSMixtureBackend::calc_dBvirial_dT()
+{
+    long double dtau_dT =-get_reducing().T/pow(_T,2);
+    return 1/get_reducing().rhomolar*calc_alphar_deriv_nocache(1,1,mole_fractions,_tau,1e-14)*dtau_dT;
+}
+long double HelmholtzEOSMixtureBackend::calc_Cvirial()
+{
+    return 1/pow(get_reducing().rhomolar,2)*calc_alphar_deriv_nocache(0,2,mole_fractions,_tau,1e-14);
+}
+long double HelmholtzEOSMixtureBackend::calc_dCvirial_dT()
+{
+    long double dtau_dT =-get_reducing().T/pow(_T,2);
+    return 1/pow(get_reducing().rhomolar,2)*calc_alphar_deriv_nocache(1,2,mole_fractions,_tau,1e-14)*dtau_dT;
 }
 void HelmholtzEOSMixtureBackend::p_phase_determination_pure_or_pseudopure(int other, long double value)
 {
@@ -1363,26 +1382,26 @@ long double HelmholtzEOSMixtureBackend::solver_rho_Tp(long double T, long double
         phase = imposed_phase_index;
     else
         phase = _phase;
-    if (rhomolar_guess < 0){
+    if (rhomolar_guess < 0) // Not provided
+    {
         rhomolar_guess = solver_rho_Tp_SRK(T, p, phase);
         
-        _rhoLanc = components[0]->ancillaries.rhoL.evaluate(T);
-        if (phase == iphase_liquid && rhomolar_guess < static_cast<long double>(_rhoLanc))
+        if (phase == iphase_gas && rhomolar_guess < 0)// If the guess is bad, probably high temperature, use ideal gas
         {
-            rhomolar_guess = static_cast<long double>(_rhoLanc);
+            rhomolar_guess = p/(gas_constant()*T);
         }
-        else if (phase == iphase_gas)
+        else
         {
-            // If the guess is bad, probably high temperature, use ideal gas
-            if (rhomolar_guess < 0)
+            _rhoLanc = components[0]->ancillaries.rhoL.evaluate(T);
+            if (phase == iphase_liquid && rhomolar_guess < static_cast<long double>(_rhoLanc))
             {
-                rhomolar_guess = p/(gas_constant()*T);
+                rhomolar_guess = static_cast<long double>(_rhoLanc);
             }
         }
     }
     
     try{
-        double rhomolar = Secant(resid, rhomolar_guess, 0.0001*rhomolar_guess, 1e-12, 100, errstring);
+        double rhomolar = Secant(resid, rhomolar_guess, 0.0001*rhomolar_guess, 1e-10, 100, errstring);
         return rhomolar;
     }
     catch(std::exception &)

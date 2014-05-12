@@ -85,6 +85,11 @@ public:
     long double calc_molar_mass(void);
     long double calc_gas_constant(void);
 
+    long double calc_Bvirial(void);
+    long double calc_Cvirial(void);
+    long double calc_dBvirial_dT(void);
+    long double calc_dCvirial_dT(void);
+
     long double calc_pressure(void);
     long double calc_cvmolar(void);
     long double calc_cpmolar(void);
