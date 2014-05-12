@@ -39,7 +39,7 @@ def get_environment_from_batch_command(env_cmd, opts = None, initial=None):
     # construct a cmd.exe command to do accomplish this
     cmd = 'cmd.exe /s /c "{env_cmd} {opts} && echo "{tag}" && set"'.format(**vars())
     # launch the process
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, env=initial)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell = True, env=initial)
     if proc.returncode == 0:
         return None
     # parse the output sent to stdout
@@ -82,6 +82,8 @@ def find_VS_installations():
                     continue
                 
                 env = get_environment_from_batch_command(bat_path, opts = bitness)
+                
+                if 'LIB' not in env: continue
                 
                 if bitness =='x86':
                     bits = 32

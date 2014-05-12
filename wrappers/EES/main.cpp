@@ -131,7 +131,7 @@ extern "C"
 
 		try
 		{
-			out = Props(Outstr, In1str[0], In1, In2str[0], In2, Fluidstr);
+			out = PropsS(Outstr.c_str(), In1str.c_str(), In1, In2str.c_str(), In2, Fluidstr.c_str());
 		}
 		catch(...)
 		{
@@ -142,7 +142,7 @@ extern "C"
 
 		if (!ValidNumber(out))
 		{
-            std::string err_str = get_global_param_string("errstring");
+            std::string err_str = CoolProp::get_global_param_string("errstring");
             // There was an error
             if (EES_DEBUG)
             {
@@ -157,7 +157,7 @@ extern "C"
 		else
         {
             // Check if there was a warning
-            std::string warn_string = get_global_param_string("warnstring");
+            std::string warn_string = CoolProp::get_global_param_string("warnstring");
             if (!warn_string.empty())
             {
                 if (EES_DEBUG)

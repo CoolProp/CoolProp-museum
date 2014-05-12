@@ -107,4 +107,8 @@
     /// @param level The level of the verbosity for the debugging output (0-10) 0: no debgging output
     EXPORT_CODE void CONVENTION set_debug_level(int level);
 
+    //EXPORT_CODE void CONVENTION F77HAPropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Name3, double * Prop3, double *output);
+
+    EXPORT_CODE void CONVENTION F77PropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Ref, double *output);
+
 #endif

@@ -13,8 +13,7 @@
 <script src="coolprop.js"></script>
 <script>  
     F2K = Module.cwrap('F2K','number',['number'])
-    Props = Module.cwrap('PropsS','number',['string','string','number','string','number','string'])
-    Props1 = Module.cwrap('Props1','number',['string','string'])
+    PropsSI = Module.cwrap('PropsSI','number',['string','string','number','string','number','string'])
 </script>
 </head>
 
@@ -30,7 +29,7 @@
         <label>Input #1: </label>
         <select id="Name1">
             <option value="">Select one...</option>
-            <option value="Pressure">Pressure [kPa]</option>
+            <option value="Pressure">Pressure [Pa]</option>
             <option value="Temperature">Temperature [K]</option>
             <option value="Density">Density [kg/m&#179;]</option>
         </select>
@@ -40,7 +39,7 @@
         <label>Input #2: </label>
         <select id="Name2">
             <option value="">Select one...</option>
-            <option value="Pressure">Pressure [kPa]</option>
+            <option value="Pressure">Pressure [Pa]</option>
             <option value="Temperature">Temperature [K]</option>
             <option value="Density">Density [kg/m&#179;]</option>
         </select>
@@ -58,12 +57,12 @@
     <script>
     function text2key(text)
     {
-        if (text == 'Pressure [kPa]')
+        if (text == 'Pressure [Pa]')
             return 'P';
         else if (text == 'Temperature [K]')
             return 'T';
         else if (text == 'Density [kg/m&#179;]')
-            return 'D';
+            return 'Dmass';
     }
     //using jQuery
     $('#calc').click( function() {
@@ -73,20 +72,20 @@
         var val1 = parseFloat($('#Value1').val())
         var val2 = parseFloat($('#Value2').val())
         
-        var T = Props('T', key1, val1, key2, val2, name)
-        var rho = Props('D', key1, val1, key2, val2, name)
-        var p = Props('P', key1, val1, key2, val2, name)
-        var s = Props('S', key1, val1, key2, val2, name)
-        var h = Props('H', key1, val1, key2, val2, name)
-        var cp = Props('C', key1, val1, key2, val2, name)
+        var T = PropsSI('T', key1, val1, key2, val2, name)
+        var rho = PropsSI('Dmass', key1, val1, key2, val2, name)
+        var p = PropsSI('P', key1, val1, key2, val2, name)
+        var s = PropsSI('Smass', key1, val1, key2, val2, name)
+        var h = PropsSI('Hmass', key1, val1, key2, val2, name)
+        var cp = PropsSI('Dmass', key1, val1, key2, val2, name)
         
         text = ''
         text += 'T = ' + T + ' K\n' + '<br>'
         text += 'rho = ' + rho + ' kg/m&#179; <br>'
-        text += 'p = ' + p + ' kPa<br>'
-        text += 's = ' + s + ' kJ/kg/K<br>'
-        text += 'h = ' + h + ' kJ/kg<br>'
-        text += 'cp = ' + cp + ' kJ/kg/K<br>'
+        text += 'p = ' + p + ' Pa<br>'
+        text += 's = ' + s + ' J/kg/K<br>'
+        text += 'h = ' + h + ' J/kg<br>'
+        text += 'cp = ' + cp + ' J/kg/K<br>'
         
         $( "#output" ).html( text);
         

@@ -7,7 +7,7 @@ import util
 import platform
 
 def stdout_check_call(*args, **kwargs):
-    print('calling: '+args[0])
+    #print('calling: '+args[0])
     subprocess.check_call(*args, shell = True, stdout = sys.stdout, stderr = sys.stdout, **kwargs)
 
 def find_VS_compiler(compilers, bits, ver):
@@ -22,21 +22,29 @@ def newest_VS_compiler(compilers, bits):
     joined.reverse()
     return joined[0][1]
         
-def build_target(target, project_root, cpp_sources, package_name = 'Java'):
+def build_target(target, project_root, cpp_sources, project_name = 'Java'):
     """
     
     """
-    build_name = platform.system() + '-' + target['compiler'] + '-' + str(target['bitness'])+'bit'
-    build_path = os.path.join(package_name, build_name)
+    if 'name_suffix' in target:
+        suffix = '-' + target['name_suffix']
+    else:
+        suffix = ''
+    build_name = platform.system() + '-' + target['compiler'] + '-' + str(target['bitness'])+'bit' + suffix
+    build_path = os.path.join(project_name, build_name)
     try: 
         os.makedirs(build_path) 
     except: 
         pass
-    dist_path = os.path.join(package_name, build_name)
+    dist_path = os.path.join(project_name, build_name)
     
     # Add any other sources needed
     if 'sources' in target:
         cpp_sources += target['sources']
+        
+    # Replace macros in sources
+    for i,source in enumerate(cpp_sources):
+        cpp_sources[i] = source.replace("%PACKAGE_HOME%", project_root)
     
     # Check that the platform agrees with this platform
     if platform.system() not in target['platform']:
@@ -78,7 +86,7 @@ def build_target(target, project_root, cpp_sources, package_name = 'Java'):
             # Get the output file name in the build folder
             call_dict['ofile'] = os.path.join(build_path, ofile.rsplit('.',1)[0]+'.obj')
             # Build the string to be run
-            compile_string = '{bin_path}\cl /nologo /c {c_flags} /Fo{ofile} {file}'.format(**call_dict)
+            compile_string = 'cl /nologo /c {c_flags} /Fo{ofile} {file}'.format(**call_dict)
             # Actually run the build command using the environment for the selected compiler
             stdout_check_call(compile_string, env = selected_compiler['env'])
         
@@ -90,7 +98,7 @@ def build_target(target, project_root, cpp_sources, package_name = 'Java'):
                                  build_path = build_path,
                                  link_fname = target['link_fname']
                                  )
-                link_string = '{bin_path}\link /nologo {build_path}/*.obj {link_flags}/OUT:{build_path}/{link_fname}'.format(**call_dict)
+                link_string = 'link /nologo {build_path}/*.obj {link_flags} /OUT:{build_path}/{link_fname}'.format(**call_dict)
                 # Actually run the link command using the environment for the selected compiler
                 stdout_check_call(link_string, env = selected_compiler['env'])
         
@@ -108,8 +116,8 @@ def build_target(target, project_root, cpp_sources, package_name = 'Java'):
         if target['post'] != '':
             stdout_check_call(target['post'])
 
-def build_all_targets(project_root):
-    json_file_name = os.path.relpath(os.path.join(project_root,'buildconf.json'))
+def build_all_targets(project_root, project_name):
+    json_file_name = os.path.relpath(os.path.join(project_root,'build.json'))
     
     if not os.path.exists(json_file_name): 
         raise OSError('File [{json_file_name}] does not exist'.format(**vars()))
@@ -121,7 +129,10 @@ def build_all_targets(project_root):
     cpp_sources = util.find_cpp_sources(os.path.join('..','..','src'))
     
     for target in project:
-        build_target(target, project_root = project_root, cpp_sources = cpp_sources)
+        build_target(target, project_root = project_root, cpp_sources = cpp_sources, project_name = project_name)
 
 if __name__=='__main__':
-    build_all_targets(project_root = '../../wrappers/Java')
+    build_all_targets(project_root = '../../wrappers/EES', project_name = 'EES')
+#     build_all_targets(project_root = '../../wrappers/C#', project_name = 'Csharp')
+#     build_all_targets(project_root = '../../wrappers/Java', project_name = 'Java')
+#     build_all_targets(project_root = '../../wrappers/SharedLibrary', project_name = 'SharedLibrary')
