@@ -74,12 +74,8 @@ private:
 	 *  Starts with only the first coefficient at T^0 */
 	///Indefinite integral in T-direction
 	long double simplePolynomialInt(const std::vector<long double> &coefficients, long double T);
-	///Definite integral from T0 to T1
-	long double simplePolynomialInt(const std::vector<long double> &coefficients, long double T1, long double T0);
 	///Indefinite integral in T-direction only
 	long double simplePolynomialInt(const std::vector<std::vector<long double> > &coefficients, long double x, long double T);
-	///Definite integral from T0 to T1
-	long double simplePolynomialInt(const std::vector<std::vector<long double> > &coefficients, long double x, long double T1, long double T0);
 
 	/// Simple integrated polynomial function generator divided by independent variable.
 	/** Base function to produce integrals of n-th order
@@ -87,13 +83,8 @@ private:
 	 *  vector. Starts with only the first coefficient at T^0 */
 	///Indefinite integral of a polynomial divided by its independent variable
 	long double simpleFracInt(const std::vector<long double> &coefficients, long double T);
-	///Definite integral from T0 to T1 of a polynomial divided by its independent variable
-	long double simpleFracInt(const std::vector<long double> &coefficients, long double T1, long double T0);
 	///Indefinite integral of a polynomial divided by its 2nd independent variable
 	long double simpleFracInt(const std::vector<std::vector<long double> > &coefficients, long double x, long double T);
-	///Definite integral from T0 to T1 of a polynomial divided by its 2nd independent variable
-	long double simpleFracInt(const std::vector<std::vector<long double> > &coefficients, long double x, long double T1, long double T0);
-
 
 	/** Simple integrated centred(!) polynomial function generator divided by independent variable.
 	 *  We need to rewrite some of the functions in order to
@@ -106,12 +97,8 @@ private:
 	long double factorial(long double nValue);
 	long double binom(long double nValue, long double nValue2);
 	std::vector<long double> fracIntCentralDvector(int m, long double T, long double Tbase);
-	std::vector<long double> fracIntCentralDvector(int m, long double T1, long double T0, long double Tbase);
 	///Indefinite integral of a centred polynomial divided by its independent variable
 	long double fracIntCentral(const std::vector<long double> &coefficients, long double T, long double Tbase);
-	///Definite integral from T0 to T1 of a centred polynomial divided by its independent variable
-	long double fracIntCentral(const std::vector<long double> &coefficients, long double T1, long double T0, long double Tbase);
-
 
 	/// Horner function generator implementations
 	/** Represent polynomials according to Horner's scheme.
@@ -122,46 +109,32 @@ private:
 	long double baseHorner(const std::vector< std::vector<long double> > &coefficients, long double x, long double T);
 	///Indefinite integral in T-direction
 	long double baseHornerInt(const std::vector<long double> &coefficients, long double T);
-	///Definite integral from T0 to T1
-	long double baseHornerInt(const std::vector<long double> &coefficients, long double T1, long double T0);
 	///Indefinite integral in T-direction only
 	long double baseHornerInt(const std::vector<std::vector<long double> > &coefficients, long double x, long double T);
-	///Definite integral from T0 to T1
-	long double baseHornerInt(const std::vector<std::vector<long double> > &coefficients, long double x, long double T1, long double T0);
 	///Indefinite integral of a polynomial divided by its independent variable
 	long double baseHornerFra(const std::vector<long double> &coefficients, long double T);
-	///Definite integral from T0 to T1 of a polynomial divided by its independent variable
-	long double baseHornerFra(const std::vector<long double> &coefficients, long double T1, long double T0);
 	///Indefinite integral of a polynomial divided by its 2nd independent variable
 	long double baseHornerFra(const std::vector<std::vector<long double> > &coefficients, long double x, long double T);
-	///Definite integral from T0 to T1 of a polynomial divided by its 2nd independent variable
-	long double baseHornerFra(const std::vector<std::vector<long double> > &coefficients, long double x, long double T1, long double T0);
 
 	/** Alternatives
 	 *  Simple functions that heavily rely on other parts of this file.
 	 *  We still need to check which combinations yield the best
 	 *  performance.
 	 */
+	///Derivative in T-direction
+	long double deriveIn2Steps(const std::vector<long double> &coefficients, long double T);
+	///Derivative in terms of x(axis=true) or T(axis=false).
+	long double deriveIn2Steps(const std::vector< std::vector<long double> > &coefficients, long double x, long double T, bool axis);
 	///Indefinite integral in T-direction
 	long double integrateIn2Steps(const std::vector<long double> &coefficients, long double T);
-	///Definite integral from T0 to T1
-	long double integrateIn2Steps(const std::vector<long double> &coefficients, long double T1, long double T0);
 	///Indefinite integral in terms of x(axis=true) or T(axis=false).
 	long double integrateIn2Steps(const std::vector< std::vector<long double> > &coefficients, long double x, long double T, bool axis);
-	///Definite integral from T0 to T1
-	long double integrateIn2Steps(const std::vector< std::vector<long double> > &coefficients, long double x, long double T1, long double T0);
 	///Indefinite integral in T-direction of a polynomial divided by its independent variable
 	long double fracIntIn2Steps(const std::vector<long double> &coefficients, long double T);
-	///Definite integral from T0 to T1 of a polynomial divided by its independent variable
-	long double fracIntIn2Steps(const std::vector<long double> &coefficients, long double T1, long double T0);
 	///Indefinite integral in T-direction of a polynomial divided by its 2nd independent variable
 	long double fracIntIn2Steps(const std::vector<std::vector<long double> > &coefficients, long double x, long double T);
-	///Definite integral from T0 to T1 of a polynomial divided by its 2nd independent variable
-	long double fracIntIn2Steps(const std::vector<std::vector<long double> > &coefficients, long double x, long double T1, long double T0);
 	///Indefinite integral of a centred polynomial divided by its 2nd independent variable
 	long double fracIntCentral2Steps(const std::vector<std::vector<long double> > &coefficients, long double x, long double T, long double Tbase);
-	///Definite integral from T0 to T1 of a centred polynomial divided by its 2nd independent variable
-	long double fracIntCentral2Steps(const std::vector<std::vector<long double> > &coefficients, long double x, long double T1, long double T0, long double Tbase);
 
 public:
 	/** Here we define the functions that should be used by the
@@ -174,7 +147,7 @@ public:
 	/// Evaluates a one-dimensional polynomial for the given coefficients
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param x long double value that represents the current input
-	long double polyval(const std::vector<long double> &coefficients, long double x){
+	inline long double polyval(const std::vector<long double> &coefficients, long double x){
 		return baseHorner(coefficients,x);
 	}
 
@@ -182,7 +155,7 @@ public:
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param x long double value that represents the current input in the 1st dimension
 	/// @param y long double value that represents the current input in the 2nd dimension
-	long double polyval(const std::vector< std::vector<long double> > &coefficients, long double x, long double y){
+	inline long double polyval(const std::vector< std::vector<long double> > &coefficients, long double x, long double y){
 		//return simplePolynomial(coefficients,x,y);
 		return baseHorner(coefficients,x,y);
 	}
@@ -190,158 +163,62 @@ public:
 	/// Evaluates the indefinite integral of a one-dimensional polynomial
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param T long double value that represents the current input
-	long double polyint(const std::vector<long double> &coefficients, long double T){
+	inline long double polyint(const std::vector<long double> &coefficients, long double T){
 		//return simplePolynomialInt(coefficients,T);
 		return baseHornerInt(coefficients,T);
 		//return integrateIn2Steps(coefficients,T);
-	}
-
-	/// Evaluates the definite integral of a one-dimensional polynomial
-	/// @param coefficients vector containing the ordered coefficients
-	/// @param T1 long double value that represents the current position
-	/// @param T0 long double value that represents the reference state
-	long double polyint(const std::vector<long double> &coefficients, long double T1, long double T0){
-		//return simplePolynomialInt(coefficients,T1,T0);
-		return baseHornerInt(coefficients,T1,T0);
-		//return integrateIn2Steps(coefficients,T1,T0);
 	}
 
 	/// Evaluates the indefinite integral of a two-dimensional polynomial along the 2nd axis (T)
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param x long double value that represents the current input in the 1st dimension
 	/// @param T long double value that represents the current input in the 2nd dimension
-	long double polyint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T){
+	inline long double polyint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T){
 		//return simplePolynomialInt(coefficients,x,T);
 		return baseHornerInt(coefficients,x,T);
 		//return integrateIn2Steps(coefficients,x,T,false);
 	}
-
-	/// Evaluates the definite integral of a two-dimensional polynomial along the 2nd axis (T)
-	/// @param coefficients vector containing the ordered coefficients
-	/// @param x long double value that represents the current input in the 1st dimension
-	/// @param T1 long double value that represents the current input in the 2nd dimension
-	/// @param T0 long double value that represents the reference state in the 2nd dimension
-	long double polyint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T1, long double T0){
-		//return simplePolynomialInt(coefficients,x,T1,T0);
-		return baseHornerInt(coefficients,x,T1,T0);
-		//return integrateIn2Steps(coefficients,x,T1,T0);
-	}
-
-
-
-
-
-
-
-
 
 	/// Evaluates the derivative of a one-dimensional polynomial
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param T long double value that represents the current input
-	long double polyint(const std::vector<long double> &coefficients, long double T){
-		//return simplePolynomialInt(coefficients,T);
-		return baseHornerInt(coefficients,T);
-		//return integrateIn2Steps(coefficients,T);
+	inline long double polyder(const std::vector<long double> &coefficients, long double T){
+		return deriveIn2Steps(coefficients,T);
 	}
 
-	/// Evaluates the definite integral of a one-dimensional polynomial
-	/// @param coefficients vector containing the ordered coefficients
-	/// @param T1 long double value that represents the current position
-	/// @param T0 long double value that represents the reference state
-	long double polyint(const std::vector<long double> &coefficients, long double T1, long double T0){
-		//return simplePolynomialInt(coefficients,T1,T0);
-		return baseHornerInt(coefficients,T1,T0);
-		//return integrateIn2Steps(coefficients,T1,T0);
-	}
-
-	/// Evaluates the indefinite integral of a two-dimensional polynomial along the 2nd axis (T)
+	/// Evaluates the derivative of a two-dimensional polynomial along the 2nd axis (T)
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param x long double value that represents the current input in the 1st dimension
 	/// @param T long double value that represents the current input in the 2nd dimension
-	long double polyint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T){
-		//return simplePolynomialInt(coefficients,x,T);
-		return baseHornerInt(coefficients,x,T);
-		//return integrateIn2Steps(coefficients,x,T,false);
+	inline long double polyder(const std::vector< std::vector<long double> > &coefficients, long double x, long double T){
+		return deriveIn2Steps(coefficients,x,T,false);
 	}
-
-	/// Evaluates the definite integral of a two-dimensional polynomial along the 2nd axis (T)
-	/// @param coefficients vector containing the ordered coefficients
-	/// @param x long double value that represents the current input in the 1st dimension
-	/// @param T1 long double value that represents the current input in the 2nd dimension
-	/// @param T0 long double value that represents the reference state in the 2nd dimension
-	long double polyint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T1, long double T0){
-		//return simplePolynomialInt(coefficients,x,T1,T0);
-		return baseHornerInt(coefficients,x,T1,T0);
-		//return integrateIn2Steps(coefficients,x,T1,T0);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/// Evaluates the indefinite integral of a one-dimensional polynomial divided by its independent variable
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param T long double value that represents the current position
-	long double polyfracint(const std::vector<long double> &coefficients, long double T){
+	inline long double polyfracint(const std::vector<long double> &coefficients, long double T){
 		//return simpleFracInt(coefficients,T);
 		return baseHornerFra(coefficients,T);
 		//return fracIntIn2Steps(coefficients,T);
-	}
-
-	/// Evaluates the definite integral of a one-dimensional polynomial divided by its independent variable
-	/// @param coefficients vector containing the ordered coefficients
-	/// @param T1 long double value that represents the current position
-	/// @param T0 long double value that represents the reference state
-	long double polyfracint(const std::vector<long double> &coefficients, long double T1, long double T0){
-		//return simpleFracInt(coefficients,T1,T0);
-		//return baseHornerFracInt(coefficients,T1,T0);
-		return fracIntIn2Steps(coefficients,T1,T0);
 	}
 
 	/// Evaluates the indefinite integral of a two-dimensional polynomial divided by its 2nd independent variable
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param x long double value that represents the current input in the 1st dimension
 	/// @param T long double value that represents the current input in the 2nd dimension
-	long double polyfracint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T){
+	inline long double polyfracint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T){
 		//return simpleFracInt(coefficients,x,T);
 		return baseHornerFra(coefficients,x,T);
 		//return fracIntIn2Steps(coefficients,x,T);
-	}
-
-	/// Evaluates the definite integral of a two-dimensional polynomial divided by its 2nd independent variable
-	/// @param coefficients vector containing the ordered coefficients
-	/// @param x long double value that represents the current input in the 1st dimension
-	/// @param T1 long double value that represents the current input in the 2nd dimension
-	/// @param T0 long double value that represents the reference state in the 2nd dimension
-	long double polyfracint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T1, long double T0){ //TODO compare speed
-		//return simpleFracInt(coefficients,x,T1,T0);
-		return baseHornerFra(coefficients,x,T1,T0);
-		//return fracIntIn2Steps(coefficients,x,T1,T0);
 	}
 
 	/// Evaluates the indefinite integral of a centred one-dimensional polynomial divided by its independent variable
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param T long double value that represents the current position
 	/// @param Tbase central temperature for fitted function
-	long double polyfracintcentral(const std::vector<long double> &coefficients, long double T, long double Tbase){
+	inline long double polyfracintcentral(const std::vector<long double> &coefficients, long double T, long double Tbase){
 		return fracIntCentral(coefficients,T,Tbase);
-	}
-
-	/// Evaluates the definite integral of a centred one-dimensional polynomial divided by its independent variable
-	/// @param coefficients vector containing the ordered coefficients
-	/// @param T1 long double value that represents the current position
-	/// @param T0 long double value that represents the reference state
-	/// @param Tbase central temperature for fitted function
-	long double polyfracintcentral(const std::vector<long double> &coefficients, long double T1, long double T0, long double Tbase){
-		return fracIntCentral(coefficients,T1,T0,Tbase);
 	}
 
 	/// Evaluates the indefinite integral of a centred two-dimensional polynomial divided by its 2nd independent variable
@@ -349,18 +226,8 @@ public:
 	/// @param x long double value that represents the current input in the 1st dimension
 	/// @param T long double value that represents the current input in the 2nd dimension
 	/// @param Tbase central temperature for fitted function
-	long double polyfracintcentral(const std::vector< std::vector<long double> > &coefficients, long double x, long double T, long double Tbase){
+	inline long double polyfracintcentral(const std::vector< std::vector<long double> > &coefficients, long double x, long double T, long double Tbase){
 		return fracIntCentral2Steps(coefficients,x,T,Tbase);
-	}
-
-	/// Evaluates the definite integral of a centred two-dimensional polynomial divided by its 2nd independent variable
-	/// @param coefficients vector containing the ordered coefficients
-	/// @param x long double value that represents the current input in the 1st dimension
-	/// @param T1 long double value that represents the current input in the 2nd dimension
-	/// @param T0 long double value that represents the reference state in the 2nd dimension
-	/// @param Tbase central temperature for fitted function
-	long double polyfracintcentral(const std::vector< std::vector<long double> > &coefficients, long double x, long double T1, long double T0, long double Tbase){
-		return fracIntCentral2Steps(coefficients,x,T1,T0,Tbase);
 	}
 
 	/// Evaluates an exponential function for the given coefficients
@@ -386,8 +253,8 @@ public:
 	PolynomialImpl1D(const std::vector<long double> &coefficients);
 	virtual ~PolynomialImpl1D(){};
 	long double eval(long double x);
-	//long double integ(long double x);
-	//long double deriv(long double x);
+	long double integ(long double x);
+	long double deriv(long double x);
 	long double solve(long double y, long double x0);
 	//long double solveInt(long double y);
 };

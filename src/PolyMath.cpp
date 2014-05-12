@@ -112,23 +112,7 @@ long double BasePolynomial::simplePolynomialInt(std::vector<long double> const& 
 	}
 	return result;
 }
-///Definite integral from T0 to T1
-long double BasePolynomial::simplePolynomialInt(std::vector<long double> const& coefficients, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running simplePolynomialInt(std::vector, " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	long double result = 0.;
-	for(unsigned int i=0; i<coefficients.size();i++) {
-		result += 1./(i+1.) * coefficients[i] * ( pow(T1,(int)(i+1.)) - pow(T0,(int)(i+1.)) );
-	}
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
+
 ///Indefinite integral in y-direction only
 long double BasePolynomial::simplePolynomialInt(std::vector<std::vector<long double> > const& coefficients, long double x, long double T){
 	if (this->DEBUG) {
@@ -146,23 +130,7 @@ long double BasePolynomial::simplePolynomialInt(std::vector<std::vector<long dou
 	}
 	return result;
 }
-///Definite integral from T0 to T1
-long double BasePolynomial::simplePolynomialInt(std::vector<std::vector<long double> > const& coefficients, long double x, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running simplePolynomialInt(std::vector, " << x << ", " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	long double result = 0.;
-	for(unsigned int i=0; i<coefficients.size();i++) {
-		result += pow(x,(int)i) * simplePolynomialInt(coefficients[i], T1, T0);
-	}
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
+
 
 /// Simple integrated polynomial function generator divided by independent variable.
 /** Base function to produce integrals of n-th order
@@ -184,21 +152,7 @@ long double BasePolynomial::simpleFracInt(std::vector<long double> const& coeffi
 	}
 	return result;
 }
-long double BasePolynomial::simpleFracInt(std::vector<long double> const& coefficients, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running      simpleFracInt(std::vector, " << T1 << ", " << T0 << "): ";
-	}
-	long double result = coefficients[0] * log(T1/T0);
-	if (coefficients.size() > 1) {
-		for (unsigned int i=1; i<coefficients.size(); i++){
-			result += 1./(i) * coefficients[i] * (pow(T1,(int)(i))-pow(T0,(int)(i)));
-		}
-	}
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
+
 long double BasePolynomial::simpleFracInt(std::vector< std::vector<long double> > const& coefficients, long double x, long double T){
 	if (this->DEBUG) {
 		std::cout << "Running      simpleFracInt(std::vector, " << x << ", " << T << "): ";
@@ -208,22 +162,6 @@ long double BasePolynomial::simpleFracInt(std::vector< std::vector<long double> 
 	long double result = 0;
 	for (unsigned int i=0; i<coefficients.size(); i++){
 		result += pow(x,(int)i) * polyfracint(coefficients[i],T);
-	}
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
-long double BasePolynomial::simpleFracInt(std::vector< std::vector<long double> > const& coefficients, long double x, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running      simpleFracInt(std::vector, " << x << ", " << T1 << ", " << T0 <<"): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	long double result = 0;
-	for (unsigned int i=0; i<coefficients.size(); i++){
-		result += pow(x,(int)i) * polyfracint(coefficients[i],T1,T0);
 	}
 	this->DEBUG = db;
 	if (this->DEBUG) {
@@ -265,6 +203,7 @@ long double BasePolynomial::factorial(long double nValue){
     }
     return value;
 }
+
 long double BasePolynomial::binom(long double nValue, long double nValue2){
    long double result;
    if(nValue2 == 1) return nValue;
@@ -272,6 +211,7 @@ long double BasePolynomial::binom(long double nValue, long double nValue2){
    nValue2 = result;
    return nValue2;
 }
+
 ///Helper functions to calculate the D vector:
 std::vector<long double> BasePolynomial::fracIntCentralDvector(int m, long double T, long double Tbase){
 	std::vector<long double> D;
@@ -286,19 +226,7 @@ std::vector<long double> BasePolynomial::fracIntCentralDvector(int m, long doubl
 	}
 	return D;
 }
-std::vector<long double> BasePolynomial::fracIntCentralDvector(int m, long double T1, long double T0, long double Tbase){
-	std::vector<long double> D;
-	long double tmp;
-	if (m<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",m));
-	for (int j=0; j<m; j++){ // loop through row
-		tmp = pow(-1.0,(int)j) * log(T1/T0) * pow(Tbase,(long double)j);
-		for(int k=0; k<j; k++) { // internal loop for every entry
-			tmp += binom(j,k) * pow(-1.0,(int)k) / (j-k) * (pow(T1,(int)(j-k))-pow(T0,(int)(j-k))) * pow(Tbase,(int)k);
-		}
-		D.push_back(tmp);
-	}
-	return D;
-}
+
 ///Indefinite integral of a centred polynomial divided by its independent variable
 long double BasePolynomial::fracIntCentral(std::vector<long double> const& coefficients, long double T, long double Tbase){
 	if (this->DEBUG) {
@@ -318,25 +246,7 @@ long double BasePolynomial::fracIntCentral(std::vector<long double> const& coeff
 	}
 	return result;
 }
-///Definite integral from T0 to T1 of a centred polynomial divided by its independent variable
-long double BasePolynomial::fracIntCentral(std::vector<long double> const& coefficients, long double T1, long double T0, long double Tbase){
-	if (this->DEBUG) {
-		std::cout << "Running    fracIntCentral(std::vector, " << T1 << ", " << T0 << ", " << Tbase << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	int m = coefficients.size();
-	std::vector<long double> D = fracIntCentralDvector(m, T1, T0, Tbase);
-	long double result = 0;
-	for(int j=0; j<m; j++) {
-		result += coefficients[j] * D[j];
-	}
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
+
 
 /// Horner function generator implementations
 /** Represent polynomials according to Horner's scheme.
@@ -357,6 +267,7 @@ long double BasePolynomial::baseHorner(std::vector<long double> const& coefficie
 	}
 	return result;
 }
+
 long double BasePolynomial::baseHorner(std::vector< std::vector<long double> > const& coefficients, long double x, long double T){
 	if (this->DEBUG) {
 		std::cout << "Running       baseHorner(std::vector, " << x << ", " << T << "): ";
@@ -374,6 +285,7 @@ long double BasePolynomial::baseHorner(std::vector< std::vector<long double> > c
 	}
 	return result;
 }
+
 ///Indefinite integral in T-direction
 long double BasePolynomial::baseHornerInt(std::vector<long double> const& coefficients, long double T){
 	if (this->DEBUG) {
@@ -390,33 +302,7 @@ long double BasePolynomial::baseHornerInt(std::vector<long double> const& coeffi
 	}
 	return result;
 }
-///Definite integral from T0 to T1
-long double BasePolynomial::baseHornerInt(std::vector<long double> const& coefficients, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running       baseHornerInt(std::vector, " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
 
-	long double result1 = 0;
-	long double result0 = 0;
-	for(int i=coefficients.size()-1; i>=0; i--) {
-		result1 *= T1;
-		result1 += coefficients[i]/(i+1.);
-		result0 *= T0;
-		result0 += coefficients[i]/(i+1.);
-	}
-	result1 *= T1;
-	result0 *= T0;
-
-	result1 -= result0;
-
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result1 << std::endl;
-	}
-	return result1;
-}
 ///Indefinite integral in T-direction only
 long double BasePolynomial::baseHornerInt(std::vector<std::vector<long double> > const& coefficients, long double x, long double T){
 	if (this->DEBUG) {
@@ -435,32 +321,6 @@ long double BasePolynomial::baseHornerInt(std::vector<std::vector<long double> >
 	}
 	return result;
 }
-///Definite integral from T0 to T1
-long double BasePolynomial::baseHornerInt(std::vector<std::vector<long double> > const& coefficients, long double x, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running       baseHornerInt(std::vector, " << x << ", " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	long double result = 0;
-	for(int i=coefficients.size()-1; i>=0; i--) {
-		result *= x;
-		result += baseHornerInt(coefficients[i], T1, T0);
-	}
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
-/////Indefinite integral of a polynomial divided by its independent variable
-//long double BasePolynomial::baseHornerFra(std::vector<long double> const& coefficients, long double T);
-/////Definite integral from T0 to T1 of a polynomial divided by its independent variable
-//long double BasePolynomial::baseHornerFra(std::vector<long double> const& coefficients, long double T1, long double T0);
-/////Indefinite integral of a polynomial divided by its 2nd independent variable
-//long double BasePolynomial::baseHornerFra(std::vector<std::vector<long double> > const& coefficients, long double x, long double T);
-/////Definite integral from T0 to T1 of a polynomial divided by its 2nd independent variable
-//long double BasePolynomial::baseHornerFra(std::vector<std::vector<long double> > const& coefficients, long double x, long double T1, long double T0);
 
 ///Indefinite integral in T-direction of a polynomial divided by its independent variable
 long double BasePolynomial::baseHornerFra(std::vector<long double> const& coefficients, long double T){
@@ -484,34 +344,7 @@ long double BasePolynomial::baseHornerFra(std::vector<long double> const& coeffi
 	}
 	return result;
 }
-///Definite integral from T0 to T1 of a polynomial divided by its independent variable
-long double BasePolynomial::baseHornerFra(std::vector<long double> const& coefficients, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running      baseHornerFra(std::vector, " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
 
-	long double result = 0;
-	if (coefficients.size() > 1) {
-		long double result0 = 0;
-		for(int i=coefficients.size()-1; i>=1; i--) {
-			result  *= T1;
-			result  += coefficients[i]/(i);
-			result0 *= T0;
-			result0 += coefficients[i]/(i);
-		}
-		result  *= T1;
-		result0 *= T0;
-		result  -= result0;
-	}
-	result += coefficients[0] * log(T1/T0);
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
 ///Indefinite integral in T-direction of a polynomial divided by its 2nd independent variable
 long double BasePolynomial::baseHornerFra(std::vector<std::vector<long double> > const& coefficients, long double x, long double T){
 	if (this->DEBUG) {
@@ -532,27 +365,6 @@ long double BasePolynomial::baseHornerFra(std::vector<std::vector<long double> >
 	}
 	return result;
 }
-///Definite integral from T0 to T1 of a polynomial divided by its 2nd independent variable
-long double BasePolynomial::baseHornerFra(std::vector<std::vector<long double> > const& coefficients, long double x, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running      baseHornerFra(std::vector, " << x << ", " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-
-	long double result = 0;
-	for(int i=coefficients.size()-1; i>=0; i--) {
-		result *= x;
-		result += baseHornerFra(coefficients[i], T1, T0);
-	}
-
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
-
 
 
 /** Integrating coefficients for polynomials is done by dividing the
@@ -640,6 +452,36 @@ std::vector<long double> BasePolynomial::deriveCoeffs(std::vector<long double> c
  *  We still need to check which combinations yield the best
  *  performance.
  */
+///Derivative in T-direction
+long double BasePolynomial::deriveIn2Steps(std::vector<long double> const& coefficients, long double T){
+	if (this->DEBUG) {
+		std::cout << "Running   deriveIn2Steps(std::vector, " << T << "): ";
+	}
+	bool db = this->DEBUG;
+	this->DEBUG = false;
+	long double result =  polyval(deriveCoeffs(coefficients),T);
+	this->DEBUG = db;
+	if (this->DEBUG) {
+		std::cout << result << std::endl;
+	}
+	return result;
+}
+
+///Derivative in terms of x(axis=true) or T(axis=false).
+long double BasePolynomial::deriveIn2Steps(std::vector< std::vector<long double> > const& coefficients, long double x, long double T, bool axis){
+	if (this->DEBUG) {
+		std::cout << "Running   deriveIn2Steps(std::vector, " << x << ", " << T << "): ";
+	}
+	bool db = this->DEBUG;
+	this->DEBUG = false;
+	long double result = polyval(deriveCoeffs(coefficients,axis),x,T);
+	this->DEBUG = db;
+	if (this->DEBUG) {
+		std::cout << result << std::endl;
+	}
+	return result;
+}
+
 ///Indefinite integral in T-direction
 long double BasePolynomial::integrateIn2Steps(std::vector<long double> const& coefficients, long double T){
 	if (this->DEBUG) {
@@ -654,21 +496,7 @@ long double BasePolynomial::integrateIn2Steps(std::vector<long double> const& co
 	}
 	return result;
 }
-///Definite integral from T0 to T1
-long double BasePolynomial::integrateIn2Steps(std::vector<long double> const& coefficients, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running   integrateIn2Steps(std::vector, " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	std::vector<long double> coefficientsInt(integrateCoeffs(coefficients));
-	long double result = polyval(coefficientsInt,T1)-polyval(coefficientsInt,T0);
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
+
 ///Indefinite integral in terms of x(axis=true) or T(axis=false).
 long double BasePolynomial::integrateIn2Steps(std::vector< std::vector<long double> > const& coefficients, long double x, long double T, bool axis){
 	if (this->DEBUG) {
@@ -683,21 +511,7 @@ long double BasePolynomial::integrateIn2Steps(std::vector< std::vector<long doub
 	}
 	return result;
 }
-///Definite integral from T0 to T1
-long double BasePolynomial::integrateIn2Steps(std::vector< std::vector<long double> > const& coefficients, long double x, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running   integrateIn2Steps(std::vector, " << x << ", " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	std::vector< std::vector<long double> > coefficientsInt(integrateCoeffs(coefficients,false));
-	long double result = polyval(coefficientsInt,x,T1)-polyval(coefficientsInt,x,T0);
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
+
 ///Indefinite integral in T-direction of a polynomial divided by its independent variable
 long double BasePolynomial::fracIntIn2Steps(std::vector<long double> const& coefficients, long double T){
 	if (this->DEBUG) {
@@ -716,24 +530,7 @@ long double BasePolynomial::fracIntIn2Steps(std::vector<long double> const& coef
 	}
 	return result;
 }
-///Definite integral from T0 to T1 of a polynomial divided by its independent variable
-long double BasePolynomial::fracIntIn2Steps(std::vector<long double> const& coefficients, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running    fracIntIn2Steps(std::vector, " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	long double result = coefficients[0] * log(T1/T0);
-	if (coefficients.size() > 1) {
-		std::vector<long double> newCoeffs(coefficients.begin() + 1, coefficients.end());
-		result += polyint(newCoeffs,T1,T0);
-	}
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
+
 ///Indefinite integral in T-direction of a polynomial divided by its 2nd independent variable
 long double BasePolynomial::fracIntIn2Steps(std::vector<std::vector<long double> > const& coefficients, long double x, long double T){
 	if (this->DEBUG) {
@@ -752,25 +549,8 @@ long double BasePolynomial::fracIntIn2Steps(std::vector<std::vector<long double>
 	}
 	return result;
 }
-///Definite integral from T0 to T1 of a polynomial divided by its 2nd independent variable
-long double BasePolynomial::fracIntIn2Steps(std::vector<std::vector<long double> > const& coefficients, long double x, long double T1, long double T0){
-	if (this->DEBUG) {
-		std::cout << "Running    fracIntIn2Steps(std::vector, " << x << ", " << T1 << ", " << T0 << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	std::vector<long double> newCoeffs;
-	for (unsigned int i=0; i<coefficients.size(); i++){
-		newCoeffs.push_back(polyfracint(coefficients[i],T1,T0));
-	}
-	long double result = polyval(newCoeffs,x);
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
 
+///Indefinite integral in T-direction of a centred polynomial divided by its 2nd independent variable
 long double BasePolynomial::fracIntCentral2Steps(std::vector<std::vector<long double> > const& coefficients, long double x, long double T, long double Tbase){
 	if (this->DEBUG) {
 		std::cout << "Running    fracIntCentral2Steps(std::vector, " << x << ", " << T << ", " << Tbase << "): ";
@@ -780,24 +560,6 @@ long double BasePolynomial::fracIntCentral2Steps(std::vector<std::vector<long do
 	std::vector<long double> newCoeffs;
 	for (unsigned int i=0; i<coefficients.size(); i++){
 		newCoeffs.push_back(fracIntCentral(coefficients[i], T, Tbase));
-	}
-	long double result = polyval(newCoeffs,x);
-	this->DEBUG = db;
-	if (this->DEBUG) {
-		std::cout << result << std::endl;
-	}
-	return result;
-}
-///Definite integral from T0 to T1 of a centred polynomial divided by its 2nd independent variable
-long double BasePolynomial::fracIntCentral2Steps(std::vector<std::vector<long double> > const& coefficients, long double x, long double T1, long double T0, long double Tbase){
-	if (this->DEBUG) {
-		std::cout << "Running    fracIntCentral2Steps(std::vector, " << x << ", " << T1 << ", " << T0 << ", " << Tbase << "): ";
-	}
-	bool db = this->DEBUG;
-	this->DEBUG = false;
-	std::vector<long double> newCoeffs;
-	for (unsigned int i=0; i<coefficients.size(); i++){
-		newCoeffs.push_back(fracIntCentral(coefficients[i], T1, T0, Tbase));
 	}
 	long double result = polyval(newCoeffs,x);
 	this->DEBUG = db;
@@ -864,13 +626,20 @@ long double PolynomialImpl1D::eval(long double x){
 	return this->polyval(this->coefficients, x);
 }
 
+long double PolynomialImpl1D::integ(long double x){
+	return this->polyint(this->coefficients, x);
+}
+
+long double PolynomialImpl1D::deriv(long double x){
+	return this->polyder(this->coefficients, x);
+}
+
 long double PolynomialImpl1D::solve(long double y, long double x0){
 
 	class Residual : public FuncWrapper1D {
 	public:
-		int other;
 		PolynomialImpl1D *poly;
-		long double x, y, r, cur;
+		long double x, y;
 
 		Residual(PolynomialImpl1D *poly, long double y){
 			this->poly=poly;
@@ -879,9 +648,12 @@ long double PolynomialImpl1D::solve(long double y, long double x0){
 
 		double call(double x){
 			this->x = x;
-			cur = poly->eval(x);
-			r = cur - y;
-			return r;
+			return poly->eval(x) - y;
+		};
+
+		double deriv(double x){
+			this->x = x;
+			return poly->deriv(x);
 		};
 	};
 	Residual resid(this, y);
