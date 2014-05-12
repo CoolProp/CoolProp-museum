@@ -264,21 +264,21 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
 
 long double HelmholtzEOSMixtureBackend::calc_Bvirial()
 {
-    return 1/get_reducing().rhomolar*calc_alphar_deriv_nocache(0,1,mole_fractions,_tau,1e-14);
+    return 1/get_reducing().rhomolar*calc_alphar_deriv_nocache(0,1,mole_fractions,_tau,1e-12);
 }
 long double HelmholtzEOSMixtureBackend::calc_dBvirial_dT()
 {
     long double dtau_dT =-get_reducing().T/pow(_T,2);
-    return 1/get_reducing().rhomolar*calc_alphar_deriv_nocache(1,1,mole_fractions,_tau,1e-14)*dtau_dT;
+    return 1/get_reducing().rhomolar*calc_alphar_deriv_nocache(1,1,mole_fractions,_tau,1e-12)*dtau_dT;
 }
 long double HelmholtzEOSMixtureBackend::calc_Cvirial()
 {
-    return 1/pow(get_reducing().rhomolar,2)*calc_alphar_deriv_nocache(0,2,mole_fractions,_tau,1e-14);
+    return 1/pow(get_reducing().rhomolar,2)*calc_alphar_deriv_nocache(0,2,mole_fractions,_tau,1e-12);
 }
 long double HelmholtzEOSMixtureBackend::calc_dCvirial_dT()
 {
     long double dtau_dT =-get_reducing().T/pow(_T,2);
-    return 1/pow(get_reducing().rhomolar,2)*calc_alphar_deriv_nocache(1,2,mole_fractions,_tau,1e-14)*dtau_dT;
+    return 1/pow(get_reducing().rhomolar,2)*calc_alphar_deriv_nocache(1,2,mole_fractions,_tau,1e-12)*dtau_dT;
 }
 void HelmholtzEOSMixtureBackend::p_phase_determination_pure_or_pseudopure(int other, long double value)
 {

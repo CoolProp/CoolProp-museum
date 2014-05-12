@@ -1632,8 +1632,8 @@ TEST_CASE("Check HA Virials from Table A.2.1","[RP1485]")
     }
     SECTION("C_www")
     {
-        //CHECK(fabs(HumidAir::C_Water(-60+273.15)/(-1.5162999202e-04)-1) < 1e-2); // Relaxed criterion for this parameter
-        //CHECK(fabs(HumidAir::C_Water(0+273.15)/(-10981960/1e12)-1) < 1e-3);
+        CHECK(fabs(HumidAir::C_Water(-60+273.15)/(-1.5162999202e-04)-1) < 1e-3); // Relaxed criterion for this parameter
+        CHECK(fabs(HumidAir::C_Water(0+273.15)/(-10981960/1e12)-1) < 1e-3);
         CHECK(fabs(HumidAir::C_Water(200+273.15)/(-0.00000003713759442)-1) < 1e-3);
         CHECK(fabs(HumidAir::C_Water(350+273.15)/(-0.000000001198914198)-1) < 1e-3);
     }
