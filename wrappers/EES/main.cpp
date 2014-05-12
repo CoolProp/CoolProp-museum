@@ -35,15 +35,13 @@
 //============================================================================================//
 
 #define _CRT_SECURE_NO_WARNINGS
-
+#include <algorithm>
+#include <string>
 #include <stdio.h> 
 #include <string.h>
 #include <vector>
 #include "CoolProp.h"
 #include "CoolPropTools.h"
-        
-#include <algorithm>
-#include <string>
 
 static const bool EES_DEBUG = false;
 
@@ -72,8 +70,8 @@ extern "C"
 			return 0;
 		}
 
-		// Split the string that is passed in at the | delimiter that was used to join it
-		fluid_split = strsplit(fluid_string,'|');
+		// Split the string that is passed in at the '~' delimiter that was used to join it
+		fluid_split = strsplit(fluid_string,'~');
 		if (fluid_split.size() != 4) 
 		{
 			sprintf(err_str,"fluid[%s] length[%d] not 4 elements long",fluid_string.c_str(),fluid_split.size()); 
@@ -142,7 +140,7 @@ extern "C"
 			return 0.0;
 		}
 
-		if (fabs(out)>1e90)
+		if (!ValidNumber(out))
 		{
             std::string err_str = get_global_param_string("errstring");
             // There was an error
