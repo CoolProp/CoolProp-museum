@@ -593,6 +593,8 @@ public:
     //Destructor
     ~IdealHelmholtzLead(){};
 
+    bool is_enabled(){return enabled;};
+
     void to_json(rapidjson::Value &el, rapidjson::Document &doc){
         el.AddMember("type","IdealHelmholtzLead",doc.GetAllocator());
         el.AddMember("a1", static_cast<double>(a1), doc.GetAllocator());
@@ -646,6 +648,8 @@ public:
     //Destructor
     ~IdealHelmholtzEnthalpyEntropyOffset(){};
 
+    bool is_enabled(){return enabled;};
+
     void to_json(rapidjson::Value &el, rapidjson::Document &doc){
         el.AddMember("type","IdealHelmholtzEnthalpyEntropyOffset",doc.GetAllocator());
         el.AddMember("a1", static_cast<double>(a1), doc.GetAllocator());
@@ -689,6 +693,8 @@ public:
 
     // Constructor
     IdealHelmholtzLogTau(long double a1){this->a1=a1; enabled = true;};
+
+    bool is_enabled(){return enabled;};
 
     //Destructor
     ~IdealHelmholtzLogTau(){};
@@ -747,6 +753,8 @@ public:
     //Destructor
     ~IdealHelmholtzPower(){};
 
+    bool is_enabled(){return enabled;};
+
     void to_json(rapidjson::Value &el, rapidjson::Document &doc)
     {
         el.AddMember("type","IdealHelmholtzPower",doc.GetAllocator());
@@ -802,6 +810,8 @@ public:
 
     //Destructor
     ~IdealHelmholtzPlanckEinstein(){};
+
+    bool is_enabled(){return enabled;};
   
     void to_json(rapidjson::Value &el, rapidjson::Document &doc)
     {
@@ -860,6 +870,8 @@ public:
 
     //Destructor
     ~IdealHelmholtzPlanckEinstein2(){};
+
+    bool is_enabled(){return enabled;};
   
     void to_json(rapidjson::Value &el, rapidjson::Document &doc)
     {
@@ -880,7 +892,7 @@ public:
     };
     long double dTau2(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
-        long double s=0; for (std::size_t i=0; i < N; ++i){s -= n[i]*pow(theta[i],2)*c[i]*exp(tau*theta[i])/pow(c[i]+exp(tau*theta[i]),2);} return s;
+        long double s=0; for (std::size_t i=0; i < N; ++i){s += n[i]*pow(theta[i],2)*c[i]*exp(tau*theta[i])/pow(c[i]+exp(tau*theta[i]),2);} return s;
     };
     long double dTau3(const long double &tau, const long double &delta) throw(){
         if (!enabled){return 0.0;}
@@ -912,6 +924,8 @@ public:
 
     /// Destructor
     ~IdealHelmholtzCP0Constant(){};
+
+    bool is_enabled(){return enabled;};
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc)
     {
@@ -966,6 +980,8 @@ public:
 
     /// Destructor
     ~IdealHelmholtzCP0PolyT(){};
+
+    bool is_enabled(){return enabled;};
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
@@ -1041,6 +1057,8 @@ public:
 
     /// Destructor
     ~IdealHelmholtzCP0AlyLee(){};
+
+    bool is_enabled(){return enabled;};
 
     void to_json(rapidjson::Value &el, rapidjson::Document &doc);
 
@@ -1220,5 +1238,7 @@ public:
 };
 
 };
+
+
 
 #endif

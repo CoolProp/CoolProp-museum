@@ -1692,3 +1692,135 @@ long double IdealHelmholtzCP0AlyLee::dTau3(const long double &tau, const long do
 }
 
 }; /* namespace CoolProp */
+
+
+/*
+IdealHelmholtzEnthalpyEntropyOffset EnthalpyEntropyOffset;
+IdealHelmholtzPlanckEinstein PlanckEinstein;
+IdealHelmholtzPlanckEinstein2 PlanckEinstein2;
+
+IdealHelmholtzCP0Constant CP0Constant;
+IdealHelmholtzCP0PolyT CP0PolyT;
+IdealHelmholtzCP0AlyLee CP0AlyLee;
+*/
+
+#ifndef CATCH_ENABLED
+#include <math.h>
+#include "catch.hpp"
+
+class HelmholtzConsistencyFixture
+{
+public:
+    long double numerical, analytic;
+    CoolProp::BaseHelmholtzTerm *Lead, *LogTau, *IGPower, *PlanckEinstein, *PlanckEinstein2;
+
+    HelmholtzConsistencyFixture(){
+        Lead = new CoolProp::IdealHelmholtzLead(1,3);
+        LogTau = new CoolProp::IdealHelmholtzLogTau(1.5);
+        {
+            std::vector<long double> n(4,0), t(4,1); n[0] = -0.1; n[2] = 0.1; t[1] = -1; t[2] = -2; t[3] = 2;
+            IGPower = new CoolProp::IdealHelmholtzPower(n,t);
+        }
+        {
+            std::vector<long double> n(4,0), t(4,1); n[0] = -0.1; n[2] = 0.1; t[1] = -1; t[2] = -2; t[3] = 2;
+            PlanckEinstein = new CoolProp::IdealHelmholtzPlanckEinstein(n, t);
+        }
+        {
+            std::vector<long double> n(4,0), t(4,1), c(4,1); n[0] = -0.1; n[2] = 0.1; t[1] = -1; t[2] = -2; t[3] = 2;
+            PlanckEinstein2 = new CoolProp::IdealHelmholtzPlanckEinstein2(n, t, c);
+        }
+    }
+    void call(std::string d, CoolProp::BaseHelmholtzTerm * term, long double tau, long double delta, long double ddelta)
+    {
+              if (!d.compare("dTau")){return dTau(term,tau,delta,ddelta);}
+        else if (!d.compare("dTau2")){return dTau2(term,tau,delta,ddelta);}
+        else if (!d.compare("dTau3")){return dTau3(term,tau,delta,ddelta);}
+        else if (!d.compare("dDelta")){ return dDelta(term,tau,delta,ddelta);}
+        else if (!d.compare("dDelta2")){return dDelta2(term,tau,delta,ddelta);}
+        else if (!d.compare("dDelta3")){return dDelta3(term,tau,delta,ddelta);}
+        else{
+            throw CoolProp::ValueError("don't understand deriv type");
+        }
+    }
+    CoolProp::BaseHelmholtzTerm * get(std::string t)
+    {
+        if (!t.compare("Lead")){return Lead;}
+        else if (!t.compare("LogTau")){return LogTau;}
+        else if (!t.compare("IGPower")){return IGPower;}
+        else if (!t.compare("PlanckEinstein")){return PlanckEinstein;}
+        else if (!t.compare("PlanckEinstein2")){return PlanckEinstein2;}
+        else{
+            throw CoolProp::ValueError("don't understand helmholtz type");
+        }
+    }
+    void dTau(CoolProp::BaseHelmholtzTerm * term, long double tau, long double delta, long double dtau){
+        long double term_plus = term->base(tau + dtau, delta);
+        long double term_minus = term->base(tau - dtau, delta);
+        numerical = (term_plus - term_minus)/(2*dtau);
+        analytic = term->dTau(tau, delta);
+    };
+    void dTau2(CoolProp::BaseHelmholtzTerm * term, long double tau, long double delta, long double dtau){
+        long double term_plus = term->dTau(tau + dtau, delta);
+        long double term_minus = term->dTau(tau - dtau, delta);
+        numerical = (term_plus - term_minus)/(2*dtau);
+        analytic = term->dTau2(tau, delta);
+    };
+    void dTau3(CoolProp::BaseHelmholtzTerm * term, long double tau, long double delta, long double dtau){
+        long double term_plus = term->dTau2(tau + dtau, delta);
+        long double term_minus = term->dTau2(tau - dtau, delta);
+        numerical = (term_plus - term_minus)/(2*dtau);
+        analytic = term->dTau3(tau, delta);
+    };
+    void dDelta(CoolProp::BaseHelmholtzTerm * term, long double tau, long double delta, long double ddelta){
+        long double term_plus = term->base(tau, delta + ddelta);
+        long double term_minus = term->base(tau, delta - ddelta);
+        numerical = (term_plus - term_minus)/(2*ddelta);
+        analytic = term->dDelta(tau, delta);
+    };
+    void dDelta2(CoolProp::BaseHelmholtzTerm * term, long double tau, long double delta, long double ddelta){
+        long double term_plus = term->dDelta(tau, delta + ddelta);
+        long double term_minus = term->dDelta(tau, delta - ddelta);
+        numerical = (term_plus - term_minus)/(2*ddelta);
+        analytic = term->dDelta2(tau, delta);
+    };
+    void dDelta3(CoolProp::BaseHelmholtzTerm * term, long double tau, long double delta, long double ddelta){
+        long double term_plus = term->dDelta2(tau, delta + ddelta);
+        long double term_minus = term->dDelta2(tau, delta - ddelta);
+        numerical = (term_plus - term_minus)/(2*ddelta);
+        analytic = term->dDelta3(tau, delta);
+    };
+    double err(double v1, double v2)
+    {
+        if (fabs(v2) > 1e-15){
+            return fabs((v1-v2)/v2);
+        }
+        else{
+            return fabs(v1-v2);
+        }
+    }
+};
+
+std::string terms[] = {"Lead","LogTau","IGPower","PlanckEinstein","PlanckEinstein2"};
+std::string derivs[] = {"dTau","dTau2","dTau3","dDelta","dDelta2","dDelta3"};
+
+TEST_CASE_METHOD(HelmholtzConsistencyFixture, "Helmholtz energy derivatives", "[helmholtz]")
+{
+    CoolProp::BaseHelmholtzTerm * term;
+    std::size_t n = sizeof(terms)/sizeof(terms[0]);
+    for (std::size_t i = 0; i < n; ++i)
+    {
+        term = get(terms[i]);
+        for (std::size_t j = 0; j < sizeof(derivs)/sizeof(derivs[0]); ++j)
+        {
+            call(derivs[j], term, 1.3, 0.7, 1e-6);
+            CAPTURE(derivs[j]);
+            CAPTURE(numerical);
+            CAPTURE(analytic);
+            CAPTURE(terms[i]);
+            CHECK(err(analytic, numerical) < 1e-8);
+        }
+    }
+}
+
+#endif
+

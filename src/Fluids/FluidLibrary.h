@@ -41,6 +41,7 @@ protected:
 
             if (!type.compare("ResidualHelmholtzPower"))
             {
+                if (EOS.alphar.Power.N > 0){throw ValueError("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> d = cpjson::get_long_double_array(contribution["d"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
@@ -49,6 +50,7 @@ protected:
             }
             else if (!type.compare("ResidualHelmholtzGaussian"))
             {
+                if (EOS.alphar.Gaussian.N > 0){throw ValueError("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> d = cpjson::get_long_double_array(contribution["d"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
@@ -60,6 +62,7 @@ protected:
             }
             else if (!type.compare("ResidualHelmholtzNonAnalytic"))
             {
+                if (EOS.alphar.NonAnalytic.N > 0){throw ValueError("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> a = cpjson::get_long_double_array(contribution["a"]);
                 std::vector<long double> b = cpjson::get_long_double_array(contribution["b"]);
@@ -72,6 +75,7 @@ protected:
             }
             else if (!type.compare("ResidualHelmholtzLemmon2005"))
             {
+                if (EOS.alphar.Lemmon2005.N > 0){throw ValueError("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> d = cpjson::get_long_double_array(contribution["d"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
@@ -81,6 +85,7 @@ protected:
             }
             else if (!type.compare("ResidualHelmholtzExponential"))
             {
+                if (EOS.alphar.Exponential.N > 0){throw ValueError("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> d = cpjson::get_long_double_array(contribution["d"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
@@ -90,6 +95,7 @@ protected:
             }
             else if (!type.compare("ResidualHelmholtzAssociating"))
             {
+                if (EOS.alphar.SAFT.disabled == false){throw ValueError("Cannot add ");}
                 long double a = cpjson::get_double(contribution,"a");
                 long double m = cpjson::get_double(contribution,"m");
                 long double epsilonbar = cpjson::get_double(contribution,"epsilonbar");
@@ -118,29 +124,34 @@ protected:
 
             if (!type.compare("IdealGasHelmholtzLead"))
             {
+                if (EOS.alpha0.Lead.is_enabled() == true){throw ValueError("Cannot add ");}
                 long double a1 = cpjson::get_double(contribution,"a1");
                 long double a2 = cpjson::get_double(contribution,"a2");
                 EOS.alpha0.Lead = IdealHelmholtzLead(a1, a2);
             }
             else if (!type.compare("IdealGasHelmholtzPower"))
             {
+                if (EOS.alpha0.Power.is_enabled() == true){std::cout << ("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
                 EOS.alpha0.Power = IdealHelmholtzPower(n, t);
             }
             else if (!type.compare("IdealGasHelmholtzLogTau"))
             {
+                if (EOS.alpha0.LogTau.is_enabled() == true){throw ValueError("Cannot add ");}
                 long double a = cpjson::get_double(contribution,"a");
                 EOS.alpha0.LogTau = IdealHelmholtzLogTau(a);
             }
             else if (!type.compare("IdealGasHelmholtzPlanckEinstein"))
             {
+                if (EOS.alpha0.PlanckEinstein.is_enabled() == true){throw ValueError("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
                 EOS.alpha0.PlanckEinstein = IdealHelmholtzPlanckEinstein(n, t);
             }
             else if (!type.compare("IdealGasHelmholtzPlanckEinstein2"))
             {
+                if (EOS.alpha0.PlanckEinstein2.is_enabled() == true){throw ValueError("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
                 std::vector<long double> c = cpjson::get_long_double_array(contribution["c"]);
@@ -148,12 +159,14 @@ protected:
             }
             else if (!type.compare("IdealGasHelmholtzEnthalpyEntropyOffset"))
             {
+                if (EOS.alpha0.EnthalpyEntropyOffset.is_enabled() == true){throw ValueError("Cannot add ");}
                 long double a1 = cpjson::get_double(contribution, "a1");
                 long double a2 = cpjson::get_double(contribution, "a2");
                 EOS.alpha0.EnthalpyEntropyOffset = IdealHelmholtzEnthalpyEntropyOffset(a1, a2);
             }
             else if (!type.compare("IdealGasHelmholtzCP0Constant"))
             {
+                if (EOS.alpha0.CP0Constant.is_enabled() == true){throw ValueError("Cannot add ");}
                 long double cp_over_R = cpjson::get_double(contribution, "cp_over_R");
                 long double Tc = cpjson::get_double(contribution, "Tc");
                 long double T0 = cpjson::get_double(contribution, "T0");
@@ -161,6 +174,7 @@ protected:
             }
             else if (!type.compare("IdealGasHelmholtzCP0PolyT"))
             {
+                if (EOS.alpha0.CP0PolyT.is_enabled() == true){std::cout << ("Cannot add ");}
                 std::vector<long double> c = cpjson::get_long_double_array(contribution["c"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
                 long double Tc = cpjson::get_double(contribution, "Tc");
@@ -169,6 +183,7 @@ protected:
             }
             else if (!type.compare("IdealGasHelmholtzCP0AlyLee"))
             {
+                if (EOS.alpha0.CP0AlyLee.is_enabled() == true){std::cout << ("Cannot add ");}
                 std::vector<long double> c = cpjson::get_long_double_array(contribution["c"]);
                 long double Tc = cpjson::get_double(contribution, "Tc");
                 long double T0 = cpjson::get_double(contribution, "T0");
