@@ -76,6 +76,10 @@ int main()
     }
     if (1)
     {
+
+        AbstractStateWrapper wat("HEOS","Water");
+        wat.update(PQ_INPUTS, 101325, 1);
+
         std::vector<std::string> tags;
         tags.push_back("[RP1485]");
         run_user_defined_tests(tags);

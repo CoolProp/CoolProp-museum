@@ -928,6 +928,14 @@ void HelmholtzEOSMixtureBackend::PQ_flash()
     {
         if (!(components[0]->pEOS->pseudo_pure))
         {
+            // It's a pure fluid
+            
+            double pc = components[0]->pEOS->reduce.p;
+            double Tc = components[0]->pEOS->reduce.T;
+            double Tt = components[0]->pEOS->Ttriple;
+            double pt = components[0]->pEOS->ptriple;
+            double Tsat_guess = 1/(1/Tc-(1/Tt-1/Tc)/log(pc/pt)*log(_p/pc));
+
             throw NotImplementedError("PQ_flash not implemented for pure fluids");
             //// Set some imput options
             //SaturationSolvers::saturation_p_pure_Akasaka_options options;

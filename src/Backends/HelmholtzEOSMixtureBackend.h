@@ -560,7 +560,7 @@ namespace SaturationSolvers
         }
         else if (input_type == imposed_p)
         {
-            return (Tcrit-Ttriple)/log(pcrit/ptriple)*log(input_value/ptriple)+Ttriple;
+            return 1/(1/Tcrit-(1/Ttriple-1/Tcrit)/log(pcrit/ptriple)*log(input_value/pcrit));
         }
         else{ throw ValueError();}
     }
