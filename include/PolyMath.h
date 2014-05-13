@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include "Solvers.h"
 //#include <numeric> // inner_product
 //#include <sstream>
 //#include "float.h"
@@ -112,9 +113,9 @@ private:
 	///Indefinite integral in T-direction only
 	long double baseHornerInt(const std::vector<std::vector<long double> > &coefficients, long double x, long double T);
 	///Indefinite integral of a polynomial divided by its independent variable
-	long double baseHornerFra(const std::vector<long double> &coefficients, long double T);
+	long double baseHornerFracInt(const std::vector<long double> &coefficients, long double T);
 	///Indefinite integral of a polynomial divided by its 2nd independent variable
-	long double baseHornerFra(const std::vector<std::vector<long double> > &coefficients, long double x, long double T);
+	long double baseHornerFracInt(const std::vector<std::vector<long double> > &coefficients, long double x, long double T);
 
 	/** Alternatives
 	 *  Simple functions that heavily rely on other parts of this file.
@@ -136,7 +137,7 @@ private:
 	///Indefinite integral of a centred polynomial divided by its 2nd independent variable
 	long double fracIntCentral2Steps(const std::vector<std::vector<long double> > &coefficients, long double x, long double T, long double Tbase);
 
-public:
+protected:
 	/** Here we define the functions that should be used by the
 	 *  respective implementations. Please do no use any other
 	 *  method since this would break the purpose of this interface.
@@ -156,7 +157,6 @@ public:
 	/// @param x long double value that represents the current input in the 1st dimension
 	/// @param y long double value that represents the current input in the 2nd dimension
 	inline long double polyval(const std::vector< std::vector<long double> > &coefficients, long double x, long double y){
-		//return simplePolynomial(coefficients,x,y);
 		return baseHorner(coefficients,x,y);
 	}
 
@@ -164,9 +164,7 @@ public:
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param T long double value that represents the current input
 	inline long double polyint(const std::vector<long double> &coefficients, long double T){
-		//return simplePolynomialInt(coefficients,T);
 		return baseHornerInt(coefficients,T);
-		//return integrateIn2Steps(coefficients,T);
 	}
 
 	/// Evaluates the indefinite integral of a two-dimensional polynomial along the 2nd axis (T)
@@ -174,9 +172,7 @@ public:
 	/// @param x long double value that represents the current input in the 1st dimension
 	/// @param T long double value that represents the current input in the 2nd dimension
 	inline long double polyint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T){
-		//return simplePolynomialInt(coefficients,x,T);
 		return baseHornerInt(coefficients,x,T);
-		//return integrateIn2Steps(coefficients,x,T,false);
 	}
 
 	/// Evaluates the derivative of a one-dimensional polynomial
@@ -198,9 +194,7 @@ public:
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param T long double value that represents the current position
 	inline long double polyfracint(const std::vector<long double> &coefficients, long double T){
-		//return simpleFracInt(coefficients,T);
-		return baseHornerFra(coefficients,T);
-		//return fracIntIn2Steps(coefficients,T);
+		return baseHornerFracInt(coefficients,T);
 	}
 
 	/// Evaluates the indefinite integral of a two-dimensional polynomial divided by its 2nd independent variable
@@ -208,9 +202,7 @@ public:
 	/// @param x long double value that represents the current input in the 1st dimension
 	/// @param T long double value that represents the current input in the 2nd dimension
 	inline long double polyfracint(const std::vector< std::vector<long double> > &coefficients, long double x, long double T){
-		//return simpleFracInt(coefficients,x,T);
-		return baseHornerFra(coefficients,x,T);
-		//return fracIntIn2Steps(coefficients,x,T);
+		return baseHornerFracInt(coefficients,x,T);
 	}
 
 	/// Evaluates the indefinite integral of a centred one-dimensional polynomial divided by its independent variable
@@ -230,6 +222,7 @@ public:
 		return fracIntCentral2Steps(coefficients,x,T,Tbase);
 	}
 
+public:
 	/// Evaluates an exponential function for the given coefficients
 	/// @param coefficients vector containing the ordered coefficients
 	/// @param T long double value that represents the current input
@@ -248,103 +241,270 @@ public:
 class PolynomialImpl1D : public BasePolynomial{
 protected:
 	std::vector<long double> coefficients;
-public:
+	/// A nested class that is used by the solvers to calculate
+	/// residuals and derivatives during the solution process.
+	class Residual : public FuncWrapper1D {
+	private:
+		PolynomialImpl1D *poly;
+		long double y;
+		Residual();
+	public:
+		Residual(PolynomialImpl1D *poly, long double y);
+		virtual double call(double x);
+		virtual double deriv(double x);
+	};
+	class ResidualInt : public Residual {
+	public:
+		virtual double call(double x);
+		virtual double deriv(double x);
+	};
+	class ResidualDer : public Residual {
+	public:
+		virtual double call(double x);
+		virtual double deriv(double x);
+	};
+private:
 	PolynomialImpl1D();
+public:
 	PolynomialImpl1D(const std::vector<long double> &coefficients);
 	virtual ~PolynomialImpl1D(){};
-	long double eval(long double x);
-	long double integ(long double x);
-	long double deriv(long double x);
-	long double solve(long double y, long double x0);
-	//long double solveInt(long double y);
+	/// Evaluates a one-dimensional polynomial for the given coefficients
+	/// @param x long double value that represents the current input
+	virtual long double eval(long double x);
+	/// Evaluates the indefinite integral of a one-dimensional polynomial
+	/// @param x long double value that represents the current input
+	virtual long double integ(long double x);
+	/// Evaluates the derivative of a one-dimensional polynomial
+	/// @param x long double value that represents the current input
+	virtual long double deriv(long double x);
+	/// Solves a one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param x0 long double value that represents the first guess for x
+	virtual long double solve(long double y, long double x0);
+	/// Solves a one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param xmin long double value that represents the lower limit for x
+	/// @param xmax long double value that represents the upper limit for x
+	virtual long double solve(long double y, long double xmin, long double xmax);
+	/// Solves an integrated one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param x0 long double value that represents the first guess for x
+	virtual long double solveInt(long double y, long double x0);
+	/// Solves an integrated one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param xmin long double value that represents the lower limit for x
+	/// @param xmax long double value that represents the upper limit for x
+	virtual long double solveInt(long double y, long double xmin, long double xmax);
+	/// Solves the derivative of a one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param x0 long double value that represents the first guess for x
+	virtual long double solveDer(long double y, long double x0);
+	/// Solves the derivative of a one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param xmin long double value that represents the lower limit for x
+	/// @param xmax long double value that represents the upper limit for x
+	virtual long double solveDer(long double y, long double xmin, long double xmax);
 };
 
 class PolynomialImpl2D : public BasePolynomial{
 protected:
 	std::vector< std::vector<long double> > coefficients;
-public:
+	/// A nested class that is used by the solvers to calculate
+	/// residuals and derivatives during the solution process.
+	class Residual : public FuncWrapper1D {
+	private:
+		PolynomialImpl2D *poly;
+		long double x, y;
+		Residual();
+	public:
+		Residual(PolynomialImpl2D *poly, long double y, long double x);
+		virtual double call(double z);
+		virtual double deriv(double z);
+	};
+	class ResidualInt : public Residual {
+	public:
+		virtual double call(double z);
+		virtual double deriv(double z);
+	};
+	class ResidualDer : public Residual {
+	public:
+		virtual double call(double z);
+		virtual double deriv(double z);
+	};
+private:
 	PolynomialImpl2D();
+public:
 	PolynomialImpl2D(const std::vector< std::vector<long double> > &coefficients);
 	virtual ~PolynomialImpl2D(){};
-	long double eval(long double x, long double z);
-	long double solve(long double y, long double z);
+	/// Evaluates a two-dimensional polynomial for the given coefficients
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z long double value that represents the current input in the 2nd dimension
+	virtual long double eval(long double x, long double z);
+	/// Evaluates the indefinite integral of a two-dimensional polynomial along the 2nd axis (z)
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z long double value that represents the current input in the 2nd dimension
+	virtual long double integ(long double x, long double z);
+	/// Evaluates the derivative of a two-dimensional polynomial along the 2nd axis (z)
+	/// @param coefficients vector containing the ordered coefficients
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z long double value that represents the current input in the 2nd dimension
+	virtual long double deriv(long double x, long double z);
+	/// Solves a two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z0 long double value that represents the first guess for z
+	virtual long double solve(long double y, long double x, long double z0);
+	/// Solves a two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param zmin long double value that represents the lower limit for z
+	/// @param zmax long double value that represents the upper limit for z
+	virtual long double solve(long double y, long double x, long double zmin, long double zmax);
+	/// Solves an integrated two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z0 long double value that represents the first guess for z
+	virtual long double solveInt(long double y, long double x, long double z0);
+	/// Solves an integrated two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param zmin long double value that represents the lower limit for z
+	/// @param zmax long double value that represents the upper limit for z
+	virtual long double solveInt(long double y, long double x, long double zmin, long double zmax);
+	/// Solves the derivative of a two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z0 long double value that represents the first guess for z
+	virtual long double solveDer(long double y, long double x, long double z0);
+	/// Solves the derivative of a two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param zmin long double value that represents the lower limit for z
+	/// @param zmax long double value that represents the upper limit for z
+	virtual long double solveDer(long double y, long double x, long double zmin, long double zmax);
 };
 
-class PolynomialInt1D : public BasePolynomial{
-protected:
-	std::vector<long double> coefficients;
+class PolynomialFrac1D : public PolynomialImpl1D{
+private:
+	PolynomialFrac1D();
 public:
-	PolynomialInt1D();
-	PolynomialInt1D(const std::vector<long double> &coefficients);
-	virtual ~PolynomialImpl1D(){};
-	long double eval(long double x);
-	//long double integ(long double x);
-	//long double deriv(long double x);
-	long double solve(long double y);
-	//long double solveInt(long double y);
+	PolynomialFrac1D(const std::vector<long double> &coefficients);
+	virtual ~PolynomialFrac1D(){};
+	/// Evaluates a one-dimensional polynomial for the given coefficients
+	/// @param x long double value that represents the current input
+	virtual long double eval(long double x);
+	/// Evaluates the indefinite integral of a one-dimensional polynomial
+	/// @param x long double value that represents the current input
+	virtual long double integ(long double x);
+	/// Evaluates the derivative of a one-dimensional polynomial
+	/// @param x long double value that represents the current input
+	virtual long double deriv(long double x);
+	/// Solves a one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param x0 long double value that represents the first guess for x
+	virtual long double solve(long double y, long double x0);
+	/// Solves a one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param xmin long double value that represents the lower limit for x
+	/// @param xmax long double value that represents the upper limit for x
+	virtual long double solve(long double y, long double xmin, long double xmax);
+	/// Solves an integrated one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param x0 long double value that represents the first guess for x
+	virtual long double solveInt(long double y, long double x0);
+	/// Solves an integrated one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param xmin long double value that represents the lower limit for x
+	/// @param xmax long double value that represents the upper limit for x
+	virtual long double solveInt(long double y, long double xmin, long double xmax);
+	// virtual long double solveIntCentral(long double y, long double xBase, long double x0); // TODO: implement solveIntCentral with x0
+	/// Solves an integrated one-dimensional polynomial
+	/// @param y long double value that represents the current function output
+	/// @param xBase long double value that represents the central value for x
+	/// @param xmin long double value that represents the lower limit for x
+	/// @param xmax long double value that represents the upper limit for x
+	virtual long double solveIntCentral(long double y, long double xBase, long double xmin, long double xmax);
+	/// Solves the derivative of a one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param x0 long double value that represents the first guess for x
+	virtual long double solveDer(long double y, long double x0);
+	/// Solves the derivative of a one-dimensional polynomial for the given coefficients
+	/// @param y long double value that represents the current function output
+	/// @param xmin long double value that represents the lower limit for x
+	/// @param xmax long double value that represents the upper limit for x
+	virtual long double solveDer(long double y, long double xmin, long double xmax);
+	// virtual long double solveDerCentral(long double y, long double xBase, long double x0); // TODO: implement solveDerCentral with x0
+	// virtual long double solveDerCentral(long double y, long double xBase, long double xmin, long double xmax); // TODO: implement solveDerCentral with xmin, xmax
 };
 
-class PolynomialInt2D : public BasePolynomial{
-protected:
-	std::vector< std::vector<long double> > coefficients;
+class PolynomialFrac2D : public PolynomialImpl2D{
+private:
+	PolynomialFrac2D();
 public:
-	PolynomialInt2D();
-	PolynomialInt2D(const std::vector< std::vector<long double> > &coefficients);
-	virtual ~PolynomialImpl2D(){};
-	long double eval(long double x, long double z);
-	long double solve(long double y, long double z);
+	PolynomialFrac2D(const std::vector< std::vector<long double> > &coefficients);
+	virtual ~PolynomialFrac2D(){};
+	/// Evaluates a two-dimensional polynomial for the given coefficients
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z long double value that represents the current input in the 2nd dimension
+	virtual long double eval(long double x, long double z);
+	/// Evaluates the indefinite integral of a two-dimensional polynomial along the 2nd axis (z)
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z long double value that represents the current input in the 2nd dimension
+	virtual long double integ(long double x, long double z);
+	/// Evaluates the indefinite integral of a two-dimensional polynomial along the 2nd axis (z)
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z long double value that represents the current input in the 2nd dimension
+	/// @param zBase long double value that represents the central value for z
+	virtual long double integCentral(long double x, long double z, long double zBase);
+	/// Evaluates the derivative of a two-dimensional polynomial along the 2nd axis (z)
+	/// @param coefficients vector containing the ordered coefficients
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z long double value that represents the current input in the 2nd dimension
+	virtual long double deriv(long double x, long double z);
+	/// Solves a two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z0 long double value that represents the first guess for z
+	virtual long double solve(long double y, long double x, long double z0);
+	/// Solves a two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param zmin long double value that represents the lower limit for z
+	/// @param zmax long double value that represents the upper limit for z
+	virtual long double solve(long double y, long double x, long double zmin, long double zmax);
+	/// Solves an integrated two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z0 long double value that represents the first guess for z
+	virtual long double solveInt(long double y, long double x, long double z0);
+	/// Solves an integrated two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param zmin long double value that represents the lower limit for z
+	/// @param zmax long double value that represents the upper limit for z
+	virtual long double solveInt(long double y, long double x, long double zmin, long double zmax);
+	// virtual long double solveIntCentral(long double y, long double x, long double zBase, long double z0); // TODO: implement solveIntCentral with z0
+	/// Solves an integrated two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param zBase long double value that represents the central value for z
+	/// @param zmin long double value that represents the lower limit for z
+	/// @param zmax long double value that represents the upper limit for z
+	virtual long double solveIntCentral(long double y, long double x, long double zBase, long double zmin, long double zmax);
+	/// Solves the derivative of a two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param z0 long double value that represents the first guess for z
+	virtual long double solveDer(long double y, long double x, long double z0);
+	/// Solves the derivative of a two-dimensional polynomial for the 2nd input (z)
+	/// @param y long double value that represents the current function output
+	/// @param x long double value that represents the current input in the 1st dimension
+	/// @param zmin long double value that represents the lower limit for z
+	/// @param zmax long double value that represents the upper limit for z
+	virtual long double solveDer(long double y, long double x, long double zmin, long double zmax);
+	// virtual long double solveDerCentral(long double y, long double x, long double zBase, long double z0); // TODO: implement solveDerCentral with z0
+	// virtual long double solveDerCentral(long double y, long double x, long double zBase, long double zmin, long double zmax); // TODO: implement solveDerCentral with zmin, zmax
 };
-
-class PolynomialFracInt1D : public BasePolynomial{
-protected:
-	std::vector<long double> coefficients;
-public:
-	PolynomialFracInt1D();
-	PolynomialFracInt1D(const std::vector<long double> &coefficients);
-	virtual ~PolynomialFracInt1D(){};
-	long double eval(long double x);
-	long double solve(long double y);
-};
-
-class PolynomialFracInt2D : public BasePolynomial{
-protected:
-	std::vector< std::vector<long double> > coefficients;
-public:
-	PolynomialFracInt2D();
-	PolynomialFracInt2D(const std::vector< std::vector<long double> > &coefficients);
-	virtual ~PolynomialFracInt2D(){};
-	long double eval(long double x, long double z);
-	long double solve(long double y, long double z);
-};
-
-
-
-///// The classes for Polynomials
-//class PolynomialImpl1D : public BasePolynomial{
-//protected:
-//	std::vector<long double> coefficients;
-//public:
-//	PolynomialImpl1D(const std::vector<long double> &coefficients);
-//	virtual ~PolynomialImpl1D(){};
-//	long double eval(long double x);
-//	long double integ(long double x);
-//	long double deriv(long double x);
-//	long double solve(long double y);
-//	long double solveInt(long double y);
-//};
-//
-//class PolynomialImpl2D : public BasePolynomial{
-//private:
-//	std::vector< std::vector<long double> > coefficients;
-//public:
-//	PolynomialImpl2D(const std::vector< std::vector<long double> > &coefficients);
-//	virtual ~PolynomialImpl2D(){};
-//	long double eval(long double x, long double z);
-//	long double integ(long double x, long double z);
-//	long double deriv(long double x, long double z);
-//	long double solve(long double y, long double z);
-//	long double solveInt(long double y, long double z);
-//};
 
 
 }; /* namespace CoolProp */
