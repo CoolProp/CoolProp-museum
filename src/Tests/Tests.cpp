@@ -1,5 +1,5 @@
 
-#include "Tests.h"
+
 
 #include "AbstractState.h"
 #include "DataStructures.h"
@@ -7,6 +7,8 @@
 #include <assert.h>
 
 #if defined ENABLE_CATCH
+
+    #include "Tests.h"
 
     #define CATCH_CONFIG_RUNNER
     #include "Catch.hpp"

@@ -607,7 +607,7 @@ double MolarVolume(double T, double p, double psi_w)
 }
 double IdealGasMolarEnthalpy_Water(double T, double vmolar)
 {
-    double hbar_w_0,tau,rhomolar,hbar_w;
+    double hbar_w_0, tau, rhomolar, hbar_w;
     // Ideal-Gas contribution to enthalpy of water
     hbar_w_0 = -0.01102303806;//[J/mol]
     tau = Water.keyed_output(CoolProp::iT_reducing)/T;
@@ -618,7 +618,7 @@ double IdealGasMolarEnthalpy_Water(double T, double vmolar)
 }
 double IdealGasMolarEntropy_Water(double T, double p)
 {
-    double sbar_w,tau,R_bar,rho;
+    double sbar_w, tau, R_bar;
     R_bar = 8.314371; //[J/mol/K]
     tau = Water.keyed_output(CoolProp::iT_reducing)/T;
     Water.update(CoolProp::DmolarT_INPUTS,p/(R_bar*T),T);
@@ -627,7 +627,7 @@ double IdealGasMolarEntropy_Water(double T, double p)
 }
 double IdealGasMolarEnthalpy_Air(double T, double vmolar)
 {
-    double hbar_a_0,tau,rhomolar,hbar_a,R_bar_Lemmon, rho;
+    double hbar_a_0, tau, rhomolar, hbar_a, R_bar_Lemmon;
     // Ideal-Gas contribution to enthalpy of air
     hbar_a_0 = -7914.149298; //[J/mol]
     // Tj is given by 132.6312 K
@@ -664,7 +664,7 @@ double MolarEnthalpy(double T, double p, double psi_w, double vmolar)
     
     // vbar (molar volume) in m^3/kg
     
-    double hbar_0,hbar_a,hbar_w,hbar,R_bar=8.314472;
+    double hbar_0, hbar_a, hbar_w, hbar, R_bar=8.314472;
     // ----------------------------------------
     //      Enthalpy
     // ----------------------------------------
