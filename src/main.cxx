@@ -77,8 +77,18 @@ int main()
     if (1)
     {
 
-        AbstractStateWrapper wat("HEOS","Water");
-        wat.update(PQ_INPUTS, 612, 1);
+        AbstractStateWrapper wat("HEOS","Propane");
+        wat.update(QT_INPUTS, 1, 85.6);
+        double _p0 = wat.keyed_output(CoolProp::iP);
+        double rhoL0 = wat.keyed_output(CoolProp::iDmolar);
+
+        wat.update(PQ_INPUTS, 1.8e-4, 1);
+
+        double _p1 = wat.keyed_output(CoolProp::iP);
+        double rhoL = wat.keyed_output(CoolProp::iDmolar);
+
+        wat.update(QT_INPUTS, wat.keyed_output(CoolProp::iQ), wat.keyed_output(CoolProp::iT));
+        double _p2 = wat.keyed_output(CoolProp::iP);
 
         std::vector<std::string> tags;
         tags.push_back("[RP1485]");

@@ -160,6 +160,8 @@ double AbstractState::keyed_output(int key)
 {
     switch (key)
     {
+    case iQ:
+        return Q();
     case iT:
         return T();
     case iP:

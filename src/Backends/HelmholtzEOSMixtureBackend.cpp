@@ -251,7 +251,7 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
     // Check the values that must always be set
     //if (_p < 0){ throw ValueError("p is less than zero");}
     if (!ValidNumber(_p)){ throw ValueError("p is not a valid number");}
-    if (_T < 0){ throw ValueError("T is less than zero");}
+    //if (_T < 0){ throw ValueError("T is less than zero");}
     if (!ValidNumber(_T)){ throw ValueError("T is not a valid number");}
     if (_rhomolar < 0){ throw ValueError("rhomolar is less than zero");}
     if (!ValidNumber(_rhomolar)){ throw ValueError("rhomolar is not a valid number");}
@@ -942,7 +942,8 @@ void HelmholtzEOSMixtureBackend::PQ_flash()
             // Set some imput options
             SaturationSolvers::saturation_PHSU_pure_options options;
             // Specified variable is pressure
-            options.specified_variable = SaturationSolvers::saturation_PHSU_pure_options::IMPOSED_PL;
+            options.specified_variable = SaturationSolvers::saturation_PHSU_pure_options::IMPOSED_PV;
+            // Use logarithm of delta as independent variables
             options.use_logdelta = false;
             // Actually call the solver
             SaturationSolvers::saturation_PHSU_pure(this, _p, options);
@@ -950,6 +951,7 @@ void HelmholtzEOSMixtureBackend::PQ_flash()
             // Load the outputs
             _p = _Q*SatV->p() + (1-_Q)*SatL->p();
             _rhomolar = 1/(_Q/SatV->rhomolar() + (1-_Q)/SatL->rhomolar());
+            _T = SatL->T();
         }
     }
     else
@@ -2191,7 +2193,7 @@ void SaturationSolvers::saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, l
     }
     catch(NotImplementedError &e)
     {
-        throw e;
+        throw;
     }
 
     do{
@@ -2207,12 +2209,12 @@ void SaturationSolvers::saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, l
         double pV = SatV->p();
         
         // These derivatives are needed for both cases
+        double alpharL = SatL->alphar();
+        double alpharV = SatV->alphar();
         double dalphar_dtauL = SatL->dalphar_dTau();
         double dalphar_dtauV = SatV->dalphar_dTau();
         double d2alphar_ddelta_dtauL = SatL->d2alphar_dDelta_dTau();
         double d2alphar_ddelta_dtauV = SatV->d2alphar_dDelta_dTau();
-        double alpharL = SatL->alphar();
-        double alpharV = SatV->alphar();
         double dalphar_ddeltaL = SatL->dalphar_dDelta();
         double dalphar_ddeltaV = SatV->dalphar_dDelta();
         double d2alphar_ddelta2L = SatL->d2alphar_dDelta2();
@@ -2221,14 +2223,14 @@ void SaturationSolvers::saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, l
         // -r_1
         negativer[0] = -(deltaV*(1+deltaV*dalphar_ddeltaV)-deltaL*(1+deltaL*dalphar_ddeltaL));
         // -r_2
-        negativer[1] =  -(deltaV*dalphar_ddeltaV+alpharV+log(deltaV)-deltaL*dalphar_ddeltaL-alpharL-log(deltaL));
+        negativer[1] = -(deltaV*dalphar_ddeltaV+alpharV+log(deltaV)-deltaL*dalphar_ddeltaL-alpharL-log(deltaL));
         switch (options.specified_variable){
             case saturation_PHSU_pure_options::IMPOSED_PL:
                 // -r_3
-                negativer[2] = -(pL - specified_value)/specified_value; break;
+                negativer[2] = -(pL/specified_value - 1); break;
             case saturation_PHSU_pure_options::IMPOSED_PV:
                 // -r_3
-                negativer[2] = -(pV - specified_value)/specified_value; break;
+                negativer[2] = -(pV/specified_value - 1); break;
             default:
                 throw ValueError(format("options.specified_variable to saturation_PHSU_pure [%d] is invalid",options.specified_variable));
         }
@@ -2248,14 +2250,14 @@ void SaturationSolvers::saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, l
             // dr_1/ddelta''
             J[0][1] = -1-2*deltaL*dalphar_ddeltaL-pow(deltaL,2)*d2alphar_ddelta2L;
             // dr_2/ddelta''
-            J[1][1] = -deltaL*d2alphar_ddelta2L-2*dalphar_ddeltaL-1/deltaL;
+            J[1][1] = -1/deltaL-2*dalphar_ddeltaL-deltaL*d2alphar_ddelta2L;
         }
 
         if (options.use_logdelta){
             // dr_1/d_log(delta'')
             J[0][2] = deltaV+2*pow(deltaV,2)*dalphar_ddeltaV+pow(deltaV,3)*d2alphar_ddelta2V;
             // dr_2/d_log(delta'')
-            J[1][2] = pow(deltaV,2)*d2alphar_ddelta2V+2*deltaV*dalphar_ddeltaV+1;
+            J[1][2] = 1+2*deltaV*dalphar_ddeltaV+1+pow(deltaV,2)*d2alphar_ddelta2V;
         }
         else{
             // dr_1/ddelta''
@@ -2306,8 +2308,8 @@ void SaturationSolvers::saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, l
             deltaV = exp(log(deltaV)+options.omega*v[2]);
         }
         else{
-            deltaL += v[1];
-            deltaV += v[2];
+            deltaL += options.omega*v[1];
+            deltaV += options.omega*v[2];
         }
 
         rhoL = deltaL*reduce.rhomolar;
