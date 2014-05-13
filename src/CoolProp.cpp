@@ -219,57 +219,6 @@ void set_error_string(std::string error){
 //	return Phase(Fluid,T,p);
 //}
 //
-///*
-// * Start with the internal functions to handle different inputs
-// * First we handle the constants: Props1
-// */
-//double _Props1(std::string FluidName, std::string Output)
-//{
-//    double val = _Props1SI(FluidName, Output);
-//    if (ValidNumber(val))
-//    {
-//        long iOutput = get_param_index(Output);
-//        return convert_from_SI_to_unit_system(iOutput,val,get_standard_unit_system());
-//    }
-//    else
-//    {
-//        return _HUGE;
-//    }
-//}
-//// Define the functions from the header file
-//double Props1SI(std::string FluidName,std::string Output){
-//    // Redirect to the Props() function that takes const char *
-//	// In this function the error catching happens;
-//	try{
-//		return _Props1SI(FluidName, Output);
-//	}
-//	catch(const std::exception& e){
-//			err_string = std::string("CoolProp error: ").append(e.what());
-//			return _HUGE;
-//		}
-//	catch(...){
-//		err_string = std::string("CoolProp error: Indeterminate error");
-//		return _HUGE;
-//	}
-//	return _HUGE;
-//}
-//double Props1(std::string FluidName, std::string Output){
-//
-//    // Redirect to the Props() function that takes const char *
-//	// In this function the error catching happens;
-//	try{
-//		return _Props1(FluidName, Output);
-//	}
-//	catch(const std::exception& e){
-//			err_string = std::string("CoolProp error: ").append(e.what());
-//			return _HUGE;
-//		}
-//	catch(...){
-//		err_string = std::string("CoolProp error: Indeterminate error");
-//		return _HUGE;
-//	}
-//	return _HUGE;
-//}
 
 bool has_fractions_in_string(const std::string &fluid_string)
 {
