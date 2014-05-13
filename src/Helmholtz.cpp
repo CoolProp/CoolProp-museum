@@ -1704,7 +1704,7 @@ IdealHelmholtzCP0PolyT CP0PolyT;
 IdealHelmholtzCP0AlyLee CP0AlyLee;
 */
 
-#ifndef CATCH_ENABLED
+#ifdef ENABLE_CATCH
 #include <math.h>
 #include "catch.hpp"
 

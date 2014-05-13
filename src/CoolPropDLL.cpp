@@ -159,10 +159,10 @@ EXPORT_CODE long CONVENTION get_global_param_string(const char *param, char * Ou
 //}
 #endif
 
-//EXPORT_CODE void CONVENTION F77HAPropsSI(char *Output, char *Name1, double *Prop1, char *Name2, double *Prop2, char * Name3, double * Prop3, double *output)
-//{
-//	*output = HAProps(Output,Name1,*Prop1,Name2,*Prop2,Name3,*Prop3);
-//}
+EXPORT_CODE void CONVENTION F77HAPropsSI(char *Output, char *Name1, double *Prop1, char *Name2, double *Prop2, char * Name3, double * Prop3, double *output)
+{
+	*output = HumidAir::HAProps(Output,Name1,*Prop1,Name2,*Prop2,Name3,*Prop3);
+}
 EXPORT_CODE void CONVENTION F77PropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Ref, double *output)
 {
 	*output = PropsSI(Output, Name1, *Prop1, Name2, *Prop2, Ref);

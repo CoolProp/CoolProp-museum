@@ -10,12 +10,12 @@ namespace HumidAir
 // -----------------------
 // Standard I/O function
 // -----------------------
-EXPORT_CODE double CONVENTION HAPropsSI(const char *OutputName, const char *Input1Name, double Input1, const char *Input2Name, double Input2, const char *Input3Name, double Input3);
+double HAPropsSI(const char *OutputName, const char *Input1Name, double Input1, const char *Input2Name, double Input2, const char *Input3Name, double Input3);
 
 // -----------------------
 // Extra I/O function
 // -----------------------
-EXPORT_CODE double CONVENTION HAProps_Aux(const char* OutputName, double T, double p, double W, char *units);
+double HAProps_Aux(const char* OutputName, double T, double p, double W, char *units);
 
 // Properties for Ice Ih at temperatures below 273.16 K
 double IceProps(const char* Name, double T, double p);

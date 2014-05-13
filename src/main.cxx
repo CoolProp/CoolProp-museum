@@ -76,10 +76,10 @@ int main()
     }
     if (1)
     {
+        double rwr = PropsSI("T", "P", 101325,  "Q", 1, "Water");
+        AbstractStateWrapper wat("HEOS", "Water");
 
-        AbstractStateWrapper wat("HEOS","Water");
-
-        wat.update(PQ_INPUTS, 62193.56549, 1);
+        wat.update(PQ_INPUTS, 611.66, 1);
 
         double _p1 = wat.keyed_output(CoolProp::iP);
         double rhoL = wat.keyed_output(CoolProp::iDmolar);

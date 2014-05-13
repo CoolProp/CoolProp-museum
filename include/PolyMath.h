@@ -276,7 +276,7 @@ protected:
 public:
 	PolynomialInt1D();
 	PolynomialInt1D(const std::vector<long double> &coefficients);
-	virtual ~PolynomialImpl1D(){};
+	virtual ~PolynomialInt1D(){};
 	long double eval(long double x);
 	//long double integ(long double x);
 	//long double deriv(long double x);
@@ -290,7 +290,7 @@ protected:
 public:
 	PolynomialInt2D();
 	PolynomialInt2D(const std::vector< std::vector<long double> > &coefficients);
-	virtual ~PolynomialImpl2D(){};
+	virtual ~PolynomialInt2D(){};
 	long double eval(long double x, long double z);
 	long double solve(long double y, long double z);
 };

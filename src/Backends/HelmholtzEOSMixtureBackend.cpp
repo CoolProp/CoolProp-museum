@@ -2544,7 +2544,15 @@ void SaturationSolvers::saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HE
                 rhoL = HEOS->get_components()[0]->ancillaries.rhoL.evaluate(T);
                 rhoV = HEOS->get_components()[0]->ancillaries.rhoV.evaluate(T);
             }
-        }        
+        }    
+
+        // Apply a single step of Newton's method to improve guess value for liquid
+        // based on the error between the gas pressure (which is usually very close already)
+        // and the liquid pressure, which can sometimes (especially at low pressure),
+        // be way off, and often times negative
+        SatL->update(DmolarT_INPUTS, rhoL, T);
+        SatV->update(DmolarT_INPUTS, rhoV, T);
+        rhoL += -(SatL->p()-SatV->p())/SatL->first_partial_deriv(iP, iDmolar, iT);
 
         deltaL = rhoL/reduce.rhomolar;
         deltaV = rhoV/reduce.rhomolar;

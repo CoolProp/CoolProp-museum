@@ -25,18 +25,17 @@
     \overload 
     \sa PropsSI(std::string, std::string, double, std::string, double, std::string)
     */
-    EXPORT_CODE double CONVENTION PropsSI(const char *Output, const char *Name1, double  Prop1, const char *Name2, double  Prop2, const char *Ref);
-
+    EXPORT_CODE double CONVENTION PropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char *Ref);
     /**
     \overload 
     \sa Props(std::string, std::string, double, std::string, double, std::string)
     */
-    EXPORT_CODE double CONVENTION PropsS(const char *Output, const char *Name1, double  Prop1, const char *Name2, double  Prop2, const char *Ref);
+    EXPORT_CODE double CONVENTION PropsS(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char *Ref);
     /**
     \overload 
     \sa Props(std::string, std::string, double, std::string, double, std::string)
     */
-    EXPORT_CODE double CONVENTION Props(const char *Output,const char  Name1, double  Prop1, const char  Name2, double  Prop2, const char *Ref);
+    EXPORT_CODE double CONVENTION Props(const char *Output, const char Name1, double Prop1, const char Name2, double Prop2, const char *Ref);
     /**
     \overload 
     \sa Props1(std::string, std::string)
@@ -47,7 +46,6 @@
     \sa IsFluidType(std::string, std::string)
     */
     EXPORT_CODE int CONVENTION IsFluidType(const char *Ref, const char *Type);
-
     
     // When using SWIG, it is extremely difficult to deal with char* for output strings, so just use 
     // the std::string version since SWIG can handle std::string just fine
@@ -107,7 +105,7 @@
     /// @param level The level of the verbosity for the debugging output (0-10) 0: no debgging output
     EXPORT_CODE void CONVENTION set_debug_level(int level);
 
-    //EXPORT_CODE void CONVENTION F77HAPropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Name3, double * Prop3, double *output);
+    EXPORT_CODE void CONVENTION F77HAPropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Name3, double * Prop3, double *output);
 
     EXPORT_CODE void CONVENTION F77PropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Ref, double *output);
 

@@ -16,8 +16,8 @@
 #include <string.h>
 #include <iostream>
 
-CoolProp::AbstractStateWrapper Water("HEOS","Water");
-CoolProp::AbstractStateWrapper Air("HEOS","Air");
+CoolProp::AbstractStateWrapper Water("HEOS", "Water");
+CoolProp::AbstractStateWrapper Air("HEOS", "Air");
 
 namespace HumidAir
 {
@@ -1359,7 +1359,7 @@ double HAPropsSI(const char *OutputName, const char *Input1Name, double Input1, 
     }
 }
 
-EXPORT_CODE double CONVENTION HAProps_Aux(const char* Name,double T, double p, double W, char *units)
+double HAProps_Aux(const char* Name,double T, double p, double W, char *units)
 {
     // This function provides some things that are not usually needed, but could be interesting for debug purposes.
     
@@ -1586,7 +1586,7 @@ double IceProps(const char* Name, double T, double p)
 
 } /* namespace HumidAir */
 
-#ifndef CATCH_ENABLED
+#ifdef ENABLE_CATCH
 #include <math.h>
 #include "catch.hpp"
 
