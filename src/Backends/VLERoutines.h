@@ -1,4 +1,7 @@
 
+#ifndef VLEROUTINES_H
+#define VLEROUTINES_H
+
 #include "HelmholtzEOSMixtureBackend.h"
 
 namespace CoolProp{
@@ -258,3 +261,5 @@ namespace PhaseEnvelope
 };
 
 } /* namespace CoolProp*/
+
+#endif

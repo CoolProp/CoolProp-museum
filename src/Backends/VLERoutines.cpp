@@ -1,5 +1,6 @@
-#include "VLERoutines.h"
+
 #include "HelmholtzEOSMixtureBackend.h"
+#include "VLERoutines.h"
 #include "MatrixMath.h"
 
 namespace CoolProp {
@@ -58,7 +59,7 @@ void SaturationSolvers::saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, l
         deltaV = rhoV/reduce.rhomolar;
         tau = reduce.T/T;
     }
-    catch(NotImplementedError &e)
+    catch(NotImplementedError &)
     {
         throw;
     }

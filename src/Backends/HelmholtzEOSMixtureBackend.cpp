@@ -22,6 +22,7 @@
 #include "Solvers.h"
 #include "MatrixMath.h"
 #include "VLERoutines.h"
+#include "FlashRoutines.h"
 
 namespace CoolProp {
 
@@ -126,6 +127,23 @@ long double HelmholtzEOSMixtureBackend::calc_surface_tension(void)
         throw NotImplementedError(format("surface tension not implemented for mixtures"));
     }
 }
+long double HelmholtzEOSMixtureBackend::calc_Ttriple(void)
+{
+    double summer = 0;
+    for (unsigned int i = 0; i < components.size(); ++i){
+        summer += mole_fractions[i]*components[i]->pEOS->Ttriple;
+    }
+    return summer;
+}
+std::string HelmholtzEOSMixtureBackend::calc_name(void)
+{
+    if (components.size() != 1){
+        throw ValueError(format("calc_name is only valid for pure and pseudo-pure fluids, %d components", components.size()));
+    }
+    else{
+        return components[0]->name;
+    }
+}
 long double HelmholtzEOSMixtureBackend::calc_Tmax(void)
 {
     double summer = 0;
@@ -219,33 +237,33 @@ void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double v
     switch(input_pair)
     {
         case PT_INPUTS:
-            _p = value1; _T = value2; PT_flash(); break;
+            _p = value1; _T = value2; FlashRoutines::PT_flash(*this); break;
         case DmolarT_INPUTS:
-            _rhomolar = value1; _T = value2; DHSU_T_flash(iDmolar); break;
+            _rhomolar = value1; _T = value2; FlashRoutines::DHSU_T_flash(*this, iDmolar); break;
         case SmolarT_INPUTS:
-            _smolar = value1; _T = value2; DHSU_T_flash(iSmolar); break;
+            _smolar = value1; _T = value2; FlashRoutines::DHSU_T_flash(*this, iSmolar); break;
         case HmolarT_INPUTS:
-            _hmolar = value1; _T = value2; DHSU_T_flash(iHmolar); break;
+            _hmolar = value1; _T = value2; FlashRoutines::DHSU_T_flash(*this, iHmolar); break;
         case TUmolar_INPUTS:
-            _T = value1; _umolar = value2; DHSU_T_flash(iUmolar); break;
+            _T = value1; _umolar = value2; FlashRoutines::DHSU_T_flash(*this, iUmolar); break;
         case DmolarP_INPUTS:
-            _rhomolar = value1; _p = value2; PHSU_D_flash(iP); break;
+            _rhomolar = value1; _p = value2; FlashRoutines::PHSU_D_flash(*this, iP); break;
         case DmolarHmolar_INPUTS:
-            _rhomolar = value1; _hmolar = value2; PHSU_D_flash(iHmolar); break;
+            _rhomolar = value1; _hmolar = value2; FlashRoutines::PHSU_D_flash(*this, iHmolar); break;
         case DmolarSmolar_INPUTS:
-            _rhomolar = value1; _smolar = value2; PHSU_D_flash(iSmolar); break;
+            _rhomolar = value1; _smolar = value2; FlashRoutines::PHSU_D_flash(*this, iSmolar); break;
         case DmolarUmolar_INPUTS:
-            _rhomolar = value1; _umolar = value2; PHSU_D_flash(iUmolar); break;
+            _rhomolar = value1; _umolar = value2; FlashRoutines::PHSU_D_flash(*this, iUmolar); break;
         case HmolarP_INPUTS:
-            _hmolar = value1; _p = value2; HSU_P_flash(iHmolar); break;
+            _hmolar = value1; _p = value2; FlashRoutines::HSU_P_flash(*this, iHmolar); break;
         case PSmolar_INPUTS:
-            _p = value1; _smolar = value2; HSU_P_flash(iSmolar); break;
+            _p = value1; _smolar = value2; FlashRoutines::HSU_P_flash(*this, iSmolar); break;
         case PUmolar_INPUTS:
-            _p = value1; _umolar = value2; HSU_P_flash(iUmolar); break;
+            _p = value1; _umolar = value2; FlashRoutines::HSU_P_flash(*this, iUmolar); break;
         case QT_INPUTS:
-            _Q = value1; _T = value2; QT_flash(); break;
+            _Q = value1; _T = value2; FlashRoutines::QT_flash(*this); break;
         case PQ_INPUTS:
-            _p = value1; _Q = value2; PQ_flash(); break;
+            _p = value1; _Q = value2; FlashRoutines::PQ_flash(*this); break;
         default:
             throw ValueError(format("This pair of inputs [%s] is not yet supported", get_input_pair_short_desc(input_pair).c_str()));
     }
@@ -859,360 +877,6 @@ long double HelmholtzEOSMixtureBackend::calc_first_partial_deriv(int Of, int Wrt
     return (dOf_dtau*dConstant_ddelta-dOf_ddelta*dConstant_dtau)/(dWrt_dtau*dConstant_ddelta-dWrt_ddelta*dConstant_dtau);
 }
 
-void HelmholtzEOSMixtureBackend::QT_flash()
-{
-    if (is_pure_or_pseudopure)
-    {
-        if (!(components[0]->pEOS->pseudo_pure))
-        {
-            // Set some imput options
-            SaturationSolvers::saturation_T_pure_options options;
-            options.omega = 1.0;
-            options.use_guesses = false;
-            // Actually call the solver
-            SaturationSolvers::saturation_T_pure(this, _T, options);
-            // Load the outputs
-            _p = _Q*SatV->p() + (1-_Q)*SatL->p();
-            _rhomolar = 1/(_Q/SatV->rhomolar() + (1-_Q)/SatL->rhomolar());
-        }
-        else{
-            // Pseudo-pure fluid
-            long double rhoLanc, rhoVanc, rhoLsat, rhoVsat;
-            long double psatLanc = components[0]->ancillaries.pL.evaluate(_T); // These ancillaries are used explicitly
-            long double psatVanc = components[0]->ancillaries.pV.evaluate(_T); // These ancillaries are used explicitly
-            try{
-                rhoLanc = components[0]->ancillaries.rhoL.evaluate(_T);
-                rhoVanc = components[0]->ancillaries.rhoV.evaluate(_T);
-
-                if (!ValidNumber(rhoLanc) || !ValidNumber(rhoVanc))
-                {
-                    throw ValueError("pseudo-pure failed");
-                }
-
-                rhoLsat = solver_rho_Tp(_T, psatLanc, rhoLanc);
-                rhoVsat = solver_rho_Tp(_T, psatVanc, rhoLanc);
-                if (!ValidNumber(rhoLsat) || !ValidNumber(rhoVsat) || 
-                     fabs(rhoLsat/rhoLanc-1) > 0.1 || fabs(rhoVanc/rhoVsat-1) > 0.1)
-                {
-                    throw ValueError("pseudo-pure failed");
-                }
-            }
-            catch (std::exception &){
-                // Near the critical point, the behavior is not very nice, so we will just use the ancillary near the critical point
-                rhoLsat = rhoLanc;
-                rhoVsat = rhoVanc;
-            }
-            _p = _Q*psatVanc + (1-_Q)*psatLanc;
-            _rhomolar = 1/(_Q/rhoVsat + (1-_Q)/rhoLsat);
-        }
-    }
-    else
-    {
-        // Set some imput options
-        SaturationSolvers::mixture_VLE_IO options;
-        options.sstype = SaturationSolvers::imposed_T;
-        options.Nstep_max = 5;
-
-        // Get an extremely rough guess by interpolation of ln(p) v. T curve where the limits are mole-fraction-weighted
-        long double pguess = SaturationSolvers::saturation_preconditioner(this, _T, SaturationSolvers::imposed_T, mole_fractions);
-
-        // Use Wilson iteration to obtain updated guess for pressure
-        pguess = SaturationSolvers::saturation_Wilson(this, _Q, _T, SaturationSolvers::imposed_T, mole_fractions, pguess);
-        
-        // Actually call the successive substitution solver
-        SaturationSolvers::successive_substitution(this, _Q, _T, pguess, mole_fractions, K, options);
-    }
-}
-void HelmholtzEOSMixtureBackend::PQ_flash()
-{
-    if (is_pure_or_pseudopure)
-    {
-        double pc = components[0]->pEOS->reduce.p;
-        double Tc = components[0]->pEOS->reduce.T;
-        double Tt = components[0]->pEOS->Ttriple;
-        double pt = components[0]->pEOS->ptriple;
-        double Tsat_guess = 1/(1/Tc-(1/Tt-1/Tc)/log(pc/pt)*log(_p/pc));
-
-        if (components[0]->pEOS->pseudo_pure){
-            // It is a psedo-pure mixture
-            throw NotImplementedError("PQ_flash not implemented for pseudo-pure fluids");
-        }
-        else{
-            // It is a pure fluid
-
-            // Set some imput options
-            SaturationSolvers::saturation_PHSU_pure_options options;
-            // Specified variable is pressure
-            options.specified_variable = SaturationSolvers::saturation_PHSU_pure_options::IMPOSED_PV;
-            // Use logarithm of delta as independent variables
-            options.use_logdelta = false;
-            // Actually call the solver
-            SaturationSolvers::saturation_PHSU_pure(this, _p, options);
-            
-            // Load the outputs
-            _p = _Q*SatV->p() + (1-_Q)*SatL->p();
-            _rhomolar = 1/(_Q/SatV->rhomolar() + (1-_Q)/SatL->rhomolar());
-            _T = SatL->T();
-        }
-    }
-    else
-    {
-        // Set some imput options
-        SaturationSolvers::mixture_VLE_IO io;
-        io.sstype = SaturationSolvers::imposed_p;
-        io.Nstep_max = 20;
-
-        // Get an extremely rough guess by interpolation of ln(p) v. T curve where the limits are mole-fraction-weighted
-        long double Tguess = SaturationSolvers::saturation_preconditioner(this, _p, SaturationSolvers::imposed_p, mole_fractions);
-
-        // Use Wilson iteration to obtain updated guess for temperature
-        Tguess = SaturationSolvers::saturation_Wilson(this, _Q, _p, SaturationSolvers::imposed_p, mole_fractions, Tguess);
-        
-        // Actually call the successive substitution solver
-        SaturationSolvers::successive_substitution(this, _Q, Tguess, _p, mole_fractions, K, io);
-        
-        PhaseEnvelope::PhaseEnvelope_GV ENV_GV;
-        ENV_GV.build(this,mole_fractions,K,io);
-    }
-}
-// D given and one of P,H,S,U
-void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
-{
-    // Define the residual to be driven to zero
-    class solver_resid : public FuncWrapper1D
-    {
-    public:
-        
-        HelmholtzEOSMixtureBackend *HEOS;
-        long double r, eos, rhomolar, value, T;
-        int other;
-
-        solver_resid(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, long double value, int other) : HEOS(HEOS), rhomolar(rhomolar), value(value), other(other){};
-        double call(double T){
-            this->T = T;
-            switch(other)
-            {
-            case iP:
-                eos = HEOS->calc_pressure_nocache(T, rhomolar); break;
-            case iSmolar:
-                eos = HEOS->calc_smolar_nocache(T, rhomolar); break;
-            case iHmolar:
-                eos = HEOS->calc_hmolar_nocache(T, rhomolar); break;
-            case iUmolar:
-                eos = HEOS->calc_umolar_nocache(T, rhomolar); break;
-            default:
-                throw ValueError(format("Input not supported"));
-            }
-            
-            r = eos - value;
-            return r;
-        };
-    };
-    
-    std::string errstring;
-
-    if (imposed_phase_index > -1) 
-    {
-        // Use the phase defined by the imposed phase
-        _phase = imposed_phase_index;
-    }
-    else
-    {
-        if (is_pure_or_pseudopure)
-        {
-            CoolPropFluid * component = components[0];
-            HelmholtzEOSMixtureBackend *Sat;
-            long double rhoLtriple = component->pEOS->rhoLtriple;
-            long double rhoVtriple = component->pEOS->rhoVtriple;
-            // Check if in the "normal" region
-            if (_rhomolar >= rhoVtriple && _rhomolar <= rhoLtriple)
-            {
-                long double yL, yV, value, y_solid;
-                long double TLtriple = component->pEOS->Ttriple; //TODO: separate TL and TV for ppure
-                long double TVtriple = component->pEOS->Ttriple; //TODO: separate TL and TV for ppure
-                
-                // First check if solid (below the line connecting the triple point values) - this is an error for now
-                switch (other)
-                {
-                    case iSmolar:
-                        yL = calc_smolar_nocache(TLtriple, rhoLtriple); yV = calc_smolar_nocache(TVtriple, rhoVtriple); value = _smolar; break;
-                    case iHmolar:
-                        yL = calc_hmolar_nocache(TLtriple, rhoLtriple); yV = calc_hmolar_nocache(TVtriple, rhoVtriple); value = _hmolar; break;
-                    case iUmolar:
-                        yL = calc_umolar_nocache(TLtriple, rhoLtriple); yV = calc_umolar_nocache(TVtriple, rhoVtriple); value = _umolar; break;
-                    case iP:
-                        yL = calc_pressure_nocache(TLtriple, rhoLtriple); yV = calc_pressure_nocache(TVtriple, rhoVtriple); value = _p; break;
-                    default:
-                        throw ValueError(format("Input is invalid"));
-                }
-                y_solid = (yV-yL)/(1/rhoVtriple-1/rhoLtriple)*(1/_rhomolar-1/rhoLtriple) + yL;
-
-                if (value < y_solid){ throw ValueError(format("Other input [%d:%g] is solid", other, value));}
-
-                // Check if other is above the saturation value.
-                SaturationSolvers::saturation_D_pure_options options;
-                options.omega = 1;
-                options.use_logdelta = false;
-                if (_rhomolar > _crit.rhomolar)
-                {
-                    options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOL;
-                    SaturationSolvers::saturation_D_pure(this, _rhomolar, options);
-                    // SatL and SatV have the saturation values
-                    Sat = SatL;
-                }
-                else
-                {
-                    options.imposed_rho = SaturationSolvers::saturation_D_pure_options::IMPOSED_RHOV;
-                    SaturationSolvers::saturation_D_pure(this, _rhomolar, options);
-                    // SatL and SatV have the saturation values
-                    Sat = SatV;
-                }
-
-                // If it is above, it is not two-phase and either liquid, vapor or supercritical
-                if (value > Sat->keyed_output(other))
-                {
-                    solver_resid resid(this, _rhomolar, value, other);
-
-                    _T = Brent(resid, Sat->keyed_output(iT), this->Tmax(), DBL_EPSILON, 1e-12, 100, errstring);
-                    _Q = 10000;
-                    calc_pressure();
-                }
-                else
-                {
-                    throw NotImplementedError("Two-phase for PHSU_D_flash not supported yet");
-                }
-
-            }
-            // Check if vapor/solid region below triple point vapor density
-            else if (_rhomolar < component->pEOS->rhoVtriple)
-            {
-                long double y, value;
-                long double TVtriple = component->pEOS->Ttriple; //TODO: separate TL and TV for ppure
-
-                // If value is above the value calculated from X(Ttriple, _rhomolar), it is vapor
-                switch (other)
-                {
-                    case iSmolar:
-                        y = calc_smolar_nocache(TVtriple, _rhomolar); value = _smolar; break;
-                    case iHmolar:
-                        y = calc_hmolar_nocache(TVtriple, _rhomolar); value = _hmolar; break;
-                    case iUmolar:
-                        y = calc_umolar_nocache(TVtriple, _rhomolar); value = _umolar; break;
-                    case iP:
-                        y = calc_pressure_nocache(TVtriple, _rhomolar); value = _p; break;
-                    default:
-                        throw ValueError(format("Input is invalid"));
-                }
-                if (value > y)
-                {
-                    solver_resid resid(this, _rhomolar, value, other);
-
-                    _T = Brent(resid, TVtriple, this->Tmax(), DBL_EPSILON, 1e-12, 100, errstring);
-                    _Q = 10000;
-                    calc_pressure();
-                }
-                else
-                {
-                    throw ValueError(format("D < DLtriple"));
-                }
-
-            }
-            // Check in the liquid/solid region above the triple point density
-            else 
-            {
-                long double y, value;
-                long double TLtriple = component->pEOS->Ttriple; //TODO: separate TL and TV for ppure
-
-                // If value is above the value calculated from X(Ttriple, _rhomolar), it is vapor
-                switch (other)
-                {
-                    case iSmolar:
-                        y = calc_smolar_nocache(TLtriple, _rhomolar); value = _smolar; break;
-                    case iHmolar:
-                        y = calc_hmolar_nocache(TLtriple, _rhomolar); value = _hmolar; break;
-                    case iUmolar:
-                        y = calc_umolar_nocache(TLtriple, _rhomolar); value = _umolar; break;
-                    case iP:
-                        y = calc_pressure_nocache(TLtriple, _rhomolar); value = _p; break;
-                    default:
-                        throw ValueError(format("Input is invalid"));
-                }
-                if (value > y)
-                {
-                    solver_resid resid(this, _rhomolar, value, other);
-
-                    _T = Brent(resid, TLtriple, this->Tmax(), DBL_EPSILON, 1e-12, 100, errstring);
-                    _Q = 10000;
-                    calc_pressure();
-                }
-                else
-                {
-                    throw ValueError(format("D < DLtriple"));
-                }
-            }
-        }
-        else 
-            throw NotImplementedError("PHSU_D_flash not ready for mixtures");
-    }
-}
-void HelmholtzEOSMixtureBackend::HSU_P_flash(int other)
-{
-    throw NotImplementedError("HSU_P_flash Not implemented yet");
-}
-void HelmholtzEOSMixtureBackend::DHSU_T_flash(int other)
-{
-    if (imposed_phase_index > -1) 
-    {
-        // Use the phase defined by the imposed phase
-        _phase = imposed_phase_index;
-    }
-    else
-    {
-        if (is_pure_or_pseudopure)
-        {
-            // Find the phase, while updating all internal variables possible
-            switch (other)
-            {
-                case iDmolar:
-                    T_phase_determination_pure_or_pseudopure(iDmolar, _rhomolar); break;
-                case iSmolar:
-                    T_phase_determination_pure_or_pseudopure(iSmolar, _smolar); break;
-                case iHmolar:
-                    T_phase_determination_pure_or_pseudopure(iHmolar, _hmolar); break;
-                case iUmolar:
-                    T_phase_determination_pure_or_pseudopure(iUmolar, _umolar); break;
-                default:
-                    throw ValueError(format("Input is invalid"));
-            }
-        }
-        else
-        {
-            _phase = iphase_gas;
-            throw NotImplementedError("DHSU_T_flash does not support mixtures (yet)");
-            // Find the phase, while updating all internal variables possible
-        }
-    }
-
-    if (isHomogeneousPhase() && !ValidNumber(_p))
-    {
-        switch (other)
-        {
-            case iDmolar:
-                break;
-            case iHmolar:
-                _rhomolar = solver_for_rho_given_T_oneof_HSU(_T, _hmolar, iHmolar); break;
-            case iSmolar:
-                _rhomolar = solver_for_rho_given_T_oneof_HSU(_T, _smolar, iSmolar); break;
-            case iUmolar:
-                _rhomolar = solver_for_rho_given_T_oneof_HSU(_T, _umolar, iUmolar); break;
-            default:
-                break;
-        }
-        calc_pressure(); 
-        _Q = -1;
-    }
-}
-
 long double HelmholtzEOSMixtureBackend::calc_pressure_nocache(long double T, long double rhomolar)
 {
     SimpleState reducing = calc_reducing_state_nocache(mole_fractions);
@@ -1485,21 +1149,7 @@ long double HelmholtzEOSMixtureBackend::solver_rho_Tp_SRK(long double T, long do
     }
     return rhomolar;
 }
-void HelmholtzEOSMixtureBackend::PT_flash()
-{
-    // Find the phase, while updating all internal variables possible
-    T_phase_determination_pure_or_pseudopure(iP,_p);
 
-    if (!isHomogeneousPhase())
-    {
-        throw ValueError("twophase not implemented yet");
-    }
-    else
-    {
-        // Find density
-        _rhomolar = solver_rho_Tp(_T, _p);
-    }
-}
 long double HelmholtzEOSMixtureBackend::calc_pressure(void)
 {    
     // Calculate the reducing parameters

@@ -1,9 +1,3 @@
-/*
- * AbstractBackend.h
- *
- *  Created on: 20 Dec 2013
- *      Author: jowr
- */
 
 #ifndef HELMHOLTZEOSMIXTUREBACKEND_H_
 #define HELMHOLTZEOSMIXTUREBACKEND_H_
@@ -17,6 +11,8 @@
 #include <vector>
 
 namespace CoolProp {
+
+class FlashRoutines;
 
 class HelmholtzEOSMixtureBackend : public AbstractState {
 protected:
@@ -38,6 +34,8 @@ public:
     virtual ~HelmholtzEOSMixtureBackend(){};
     ReducingFunctionContainer Reducing;
     ExcessTerm Excess;
+
+    friend class FlashRoutines; // Allows the routines in the FlashRoutines class to have access to all the protected members and methods of this class
 
     // Helmholtz EOS backend uses mole fractions
     bool using_mole_fractions(){return true;}
@@ -121,6 +119,9 @@ public:
 
     long double calc_Tmax(void);
     long double calc_pmax(void);
+    long double calc_Ttriple(void);
+
+    std::string calc_name(void);
 
     long double calc_alphar_deriv_nocache(const int nTau, const int nDelta, const std::vector<long double> & mole_fractions, const long double &tau, const long double &delta);
     
@@ -173,40 +174,6 @@ public:
     void DmolarP_phase_determination();
 
 
-
-    // *************************************************************** 
-    // ***************************************************************
-    // *******************  FLASH ROUTINES  **************************
-    // ***************************************************************
-    // *************************************************************** 
-    
-    /// Flash for given pressure and (molar) quality
-    void PQ_flash();
-    /// Flash for given temperature and (molar) quality
-    void QT_flash();
-    /// Flash for given temperature and pressure
-    void PT_flash();
-    /// A generic flash routine for the pairs (T,D), (T,H), (T,S), and (T,U).  Similar analysis is needed
-    /// @param other The index for the other input, see CoolProp::parameters; allowed values are iDmolar, iHmolar, iSmolar, iUmolar
-    void DHSU_T_flash(int other);
-    /// A generic flash routine for the pairs (P,H), (P,S), and (P,U).  Similar analysis is needed
-    /// @param other The index for the other input, see CoolProp::parameters; allowed values are iHmolar, iSmolar, iUmolar
-    void HSU_P_flash(int other);
-    /// A generic flash routine for the pairs (D,P), (D,H), (D,S) and (D,U).  Similar analysis is needed
-    /// @param other The index for the other input, see CoolProp::parameters; allowed values are iP, iHmolar, iSmolar, iUmolar
-    void PHSU_D_flash(int other);
-
-
-
-
-
-
-
-
-
-
-
-
     // ***************************************************************
     // ***************************************************************
     // *******************  SOLVER ROUTINES  *************************
@@ -215,15 +182,7 @@ public:
     
     long double solver_rho_Tp(long double T, long double p, long double rho_guess = -1);
     long double solver_rho_Tp_SRK(long double T, long double p, int phase);
-
-
     long double solver_for_rho_given_T_oneof_HSU(long double T, long double value, int other);
-
-
-
-
-
-
 
 
 
