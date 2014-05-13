@@ -78,7 +78,7 @@ int main()
     {
 
         AbstractStateWrapper wat("HEOS","Water");
-        wat.update(PQ_INPUTS, 101325, 1);
+        wat.update(PQ_INPUTS, 612, 1);
 
         std::vector<std::string> tags;
         tags.push_back("[RP1485]");

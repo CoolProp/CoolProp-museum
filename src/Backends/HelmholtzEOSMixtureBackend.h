@@ -460,10 +460,7 @@ namespace SaturationSolvers
         bool use_guesses; ///< true to start off at the values specified by rhoL, rhoV
         long double omega, rhoL, rhoV, pL, pV;
     };
-    struct saturation_p_pure_options{
-        bool use_guesses;
-        long double omega, rhoL, rhoV, pL, pV;
-    };
+    
     struct saturation_D_pure_options{
         enum imposed_rho_options{IMPOSED_RHOL, IMPOSED_RHOV};
         bool use_guesses, ///< True to start off at the values specified by rhoL, rhoV, T
@@ -498,7 +495,22 @@ namespace SaturationSolvers
     void saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, saturation_D_pure_options &options);
     void saturation_T_pure(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_options &options);
     void saturation_T_pure_Akasaka(HelmholtzEOSMixtureBackend *HEOS, long double T, saturation_T_pure_Akasaka_options &options);
-    void saturation_p_pure(HelmholtzEOSMixtureBackend *HEOS, long double p, saturation_p_pure_options &options);
+    
+    /**
+    */
+    struct saturation_PHSU_pure_options{
+        enum specified_variable_options{IMPOSED_HL, IMPOSED_HV, IMPOSED_PL, IMPOSED_PV, IMPOSED_SL, IMPOSED_SV, IMPOSED_UL, IMPOSED_UV, IMPOSED_INVALID_INPUT};
+        bool use_guesses, ///< True to start off at the values specified by rhoL, rhoV, T
+             use_logdelta; ///< True to use partials with respect to log(delta) rather than delta
+        int specified_variable;
+        long double omega, rhoL, rhoV, pL, pV;
+        saturation_PHSU_pure_options(){ specified_variable = IMPOSED_INVALID_INPUT; use_guesses = true; omega = 1.0; }
+    };
+    /**
+
+    */
+    void saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, long double specified_value, saturation_PHSU_pure_options &options);
+
     long double successive_substitution(HelmholtzEOSMixtureBackend *HEOS, const long double beta, long double T, long double p, const std::vector<long double> &z, std::vector<long double> &K, mixture_VLE_IO &options);
     void x_and_y_from_K(long double beta, const std::vector<long double> &K, const std::vector<long double> &z, std::vector<long double> &x, std::vector<long double> &y);
 
