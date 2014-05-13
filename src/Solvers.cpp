@@ -68,7 +68,7 @@ double Newton(FuncWrapper1D &f, double x0, double ftol, int maxiter, std::string
     int iter=1;
     errstring.clear();
 	x = x0;
-    while ((iter < 2 || fabs(fval) > ftol) && iter < maxiter)
+    while (iter < 2 || fabs(fval) > ftol)
     {
 		fval = f.call(x);
 		dx = -fval/f.deriv(x);
@@ -107,7 +107,7 @@ double Secant(FuncWrapper1D &f, double x0, double dx, double tol, int maxiter, s
 	errstring = "";
 	
 	if (fabs(dx)==0){ errstring="dx cannot be zero"; return _HUGE;}
-    while ((iter<=2 || fabs(fval)>tol) && iter<maxiter)
+    while (iter<=2 || fabs(fval)>tol)
     {
         if (iter==1){x1=x0; x=x1;}
         if (iter==2){x2=x0+dx; x=x2;}
@@ -164,7 +164,7 @@ double BoundedSecant(FuncWrapper1D &f, double x0, double xmin, double xmax, doub
 	errstring = "";
 	
 	if (fabs(dx)==0){ errstring = "dx cannot be zero"; return _HUGE;}
-    while ((iter<=3 || fabs(fval)>tol) && iter<100)
+    while (iter<=3 || fabs(fval)>tol)
     {
         if (iter==1){x1=x0; x=x1;}
         if (iter==2){x2=x0+dx; x=x2;}
