@@ -7,7 +7,7 @@ import util
 import platform
 
 def stdout_check_call(*args, **kwargs):
-    #print('calling: '+args[0])
+    print('calling: '+args[0])
     subprocess.check_call(*args, shell = True, stdout = sys.stdout, stderr = sys.stdout, **kwargs)
 
 def find_VS_compiler(compilers, bits, ver):
@@ -92,13 +92,13 @@ def build_target(target, project_root, cpp_sources, project_name = 'Java'):
         
         if 'link_type' in target:
             if target['link_type'] == 'DLL':
-                ### *************** LINK ********************
+                ### *************************** LINK ***************************
                 call_dict = dict(link_flags = target['link_flags'], 
                                  bin_path = '"' + selected_compiler['bin_path'] + '"',
                                  build_path = build_path,
                                  link_fname = target['link_fname']
                                  )
-                link_string = 'link /nologo {build_path}/*.obj {link_flags} /OUT:{build_path}/{link_fname}'.format(**call_dict)
+                link_string = 'link /DLL /nologo {build_path}/*.obj {link_flags} /OUT:{build_path}/{link_fname}'.format(**call_dict)
                 # Actually run the link command using the environment for the selected compiler
                 stdout_check_call(link_string, env = selected_compiler['env'])
         
