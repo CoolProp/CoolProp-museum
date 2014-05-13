@@ -10,7 +10,6 @@
 #include <algorithm>
 
 
-
 namespace CoolProp{
 
 /// A container for the fluid parameters for the CoolProp fluids
@@ -131,7 +130,7 @@ protected:
             }
             else if (!type.compare("IdealGasHelmholtzPower"))
             {
-                if (EOS.alpha0.Power.is_enabled() == true){std::cout << ("Cannot add ");}
+                if (EOS.alpha0.Power.is_enabled() == true){throw ValueError("Cannot add ");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
                 EOS.alpha0.Power = IdealHelmholtzPower(n, t);
@@ -151,7 +150,7 @@ protected:
             }
             else if (!type.compare("IdealGasHelmholtzPlanckEinstein2"))
             {
-                if (EOS.alpha0.PlanckEinstein2.is_enabled() == true){throw ValueError("Cannot add ");}
+                if (EOS.alpha0.PlanckEinstein2.is_enabled() == true){throw ValueError("Cannot add");}
                 std::vector<long double> n = cpjson::get_long_double_array(contribution["n"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
                 std::vector<long double> c = cpjson::get_long_double_array(contribution["c"]);
@@ -174,7 +173,7 @@ protected:
             }
             else if (!type.compare("IdealGasHelmholtzCP0PolyT"))
             {
-                if (EOS.alpha0.CP0PolyT.is_enabled() == true){std::cout << ("Cannot add ");}
+                if (EOS.alpha0.CP0PolyT.is_enabled() == true){throw ValueError("Cannot add ");}
                 std::vector<long double> c = cpjson::get_long_double_array(contribution["c"]);
                 std::vector<long double> t = cpjson::get_long_double_array(contribution["t"]);
                 long double Tc = cpjson::get_double(contribution, "Tc");
@@ -183,7 +182,7 @@ protected:
             }
             else if (!type.compare("IdealGasHelmholtzCP0AlyLee"))
             {
-                if (EOS.alpha0.CP0AlyLee.is_enabled() == true){std::cout << ("Cannot add ");}
+                if (EOS.alpha0.CP0AlyLee.is_enabled() == true){std::cout << "Cannot add IdealGasHelmholtzCP0AlyLee\n";}
                 std::vector<long double> c = cpjson::get_long_double_array(contribution["c"]);
                 long double Tc = cpjson::get_double(contribution, "Tc");
                 long double T0 = cpjson::get_double(contribution, "T0");
@@ -339,22 +338,18 @@ public:
         parse_ancillaries(fluid_json["ANCILLARIES"],fluid);
 
         // Surface tension
-        if (!(fluid_json["ANCILLARIES"].HasMember("surface_tension")))
-        {
+        if (!(fluid_json["ANCILLARIES"].HasMember("surface_tension"))){
             std::cout << format("Surface tension curves are missing for fluid [%s]\n", fluid.name.c_str()) ;
         }
-        else
-        {
+        else{
             parse_surface_tension(fluid_json["ANCILLARIES"]["surface_tension"], fluid);
         }
 
         // Parse the environmental parameters
-        if (!(fluid_json.HasMember("ENVIRONMENTAL")))
-        {
+        if (!(fluid_json.HasMember("ENVIRONMENTAL"))){
             std::cout << format("Environmental data are missing for fluid [%s]\n", fluid.name.c_str()) ;
         }
-        else
-        {
+        else{
             parse_environmental(fluid_json["ENVIRONMENTAL"], fluid);
         }
         

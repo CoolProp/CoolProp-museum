@@ -584,15 +584,15 @@ double MolarVolume(double T, double p, double psi_w)
     Bm=B_m(T,psi_w);
     Cm=C_m(T,psi_w);
 
-    iter=1; eps=1e-8; resid=999;
+    iter=1; eps=1e-11; resid=999;
     while ((iter<=3 || fabs(resid)>eps) && iter<100)
     {
         if (iter==1){x1=v_bar0; v_bar=x1;}
         if (iter==2){x2=v_bar0+0.000001; v_bar=x2;}
         if (iter>2) {v_bar=x2;}
         
-            // want v_bar in m^3/mol and R_bar in kJ/mol-K
-            resid=p-(R_bar)*T/v_bar*(1+Bm/v_bar+Cm/(v_bar*v_bar));
+            // want v_bar in m^3/mol and R_bar in J/mol-K
+            resid = (p-(R_bar)*T/v_bar*(1+Bm/v_bar+Cm/(v_bar*v_bar)))/p;
         
         if (iter==1){y1=resid;}
         if (iter>1)
@@ -621,8 +621,7 @@ double IdealGasMolarEntropy_Water(double T, double p)
     double sbar_w,tau,R_bar,rho;
     R_bar = 8.314371; //[J/mol/K]
     tau = Water.keyed_output(CoolProp::iT_reducing)/T;
-    rho = p/(R_bar*T); //[mol/m^3]
-    Water.update(CoolProp::DmassT_INPUTS,rho,T);
+    Water.update(CoolProp::DmolarT_INPUTS,p/(R_bar*T),T);
     sbar_w = R_bar*(tau*Water.keyed_output(CoolProp::idalpha0_dtau_constdelta)-Water.keyed_output(CoolProp::ialpha0)); //[kJ/kmol/K]
     return sbar_w; 
 }
@@ -640,22 +639,22 @@ double IdealGasMolarEnthalpy_Air(double T, double vmolar)
     hbar_a = hbar_a_0 + R_bar_Lemmon*T*(1+tau*Air.keyed_output(CoolProp::idalpha0_dtau_constdelta)); //[J/mol]
     return hbar_a;
 }
-double IdealGasMolarEntropy_Air(double T, double v_bar_a)
+double IdealGasMolarEntropy_Air(double T, double vmolar_a)
 {
-    double sbar_0_Lem,tau,sbar_a,R_bar_Lemmon,T0=273.15,p0=101.325,v_0,v_bar_0, rho_a,rho_bar_a, rho_bar_0,rho_0;
-    R_bar_Lemmon=8.314510; //[kJ/kmol/K]
+    double sbar_0_Lem, tau, sbar_a, R_bar_Lemmon = 8.314510, T0=273.15, p0=101325, vmolar_a_0;
+    
     // Ideal-Gas contribution to entropy of air
-    sbar_0_Lem=-196.1375815; //[kJ/kmol/K]
+    sbar_0_Lem=-196.1375815; //[J/mol/K]
+    
     // Tj and rhoj are given by 132.6312 and 302.5507652 respectively
     tau = 132.6312/T; //[no units]
-    v_0 = R_bar_Lemmon/MM_Air()*T0/p0; //[m^3/kg]
-    rho_bar_a = 1/v_bar_a;
-    rho_a = rho_bar_a * MM_Air();
-    v_bar_0 = R_bar_Lemmon*T0/p0; //[m^3/kmol]
-    rho_bar_0 = 1/v_bar_0;
-    rho_0 = rho_bar_0 * MM_Air();
-    Air.update(CoolProp::DmassT_INPUTS,rho_0,T);
-    sbar_a=sbar_0_Lem+R_bar_Lemmon*(tau*Air.keyed_output(CoolProp::idalpha0_dtau_constdelta)-Air.keyed_output(CoolProp::ialpha0))+R_bar_Lemmon*log(v_bar_a/v_bar_0); //[kJ/kmol/K]
+
+    vmolar_a_0 = R_bar_Lemmon*T0/p0; //[m^3/mol]
+    
+    Air.update(CoolProp::DmolarT_INPUTS,1/vmolar_a_0,T);
+
+    sbar_a=sbar_0_Lem+R_bar_Lemmon*(tau*Air.keyed_output(CoolProp::idalpha0_dtau_constdelta)-Air.keyed_output(CoolProp::ialpha0))+R_bar_Lemmon*log(vmolar_a/vmolar_a_0); //[J/mol/K]
+
     return sbar_a; //[J/mol/K]
 }
 
@@ -697,18 +696,18 @@ double MassEnthalpy(double T, double p, double psi_w)
 
 double MolarEntropy(double T, double p, double psi_w, double v_bar)
 {
-    // In units of kJ/kmol/K
+    // In units of J/mol/K
 
     // Serious typo in RP-1485 - should use total pressure rather than
     // reference pressure in density calculation for water vapor molar entropy
     
-    // vbar (molar volume) in m^3/kmol
+    // vbar (molar volume) in m^3/mol
     double x1=0,x2=0,x3=0,y1=0,y2=0,eps=1e-8,f=999,R_bar_Lem=8.314510;
     int iter=1;
     double sbar_0,sbar_a=0,sbar_w=0,sbar,R_bar=8.314472,vbar_a_guess, Baa, Caaa,vbar_a=0;
     double B,dBdT,C,dCdT;
     // Constant for entropy
-    sbar_0=0.02366427495;  //[kJ/kmol/K]
+    sbar_0=0.02366427495;  //[J/mol/K]
 
     // Calculate vbar_a, the molar volume of dry air
     // B_m, C_m, etc. functions take care of the units
@@ -719,7 +718,7 @@ double MolarEntropy(double T, double p, double psi_w, double v_bar)
     C = C_m(T,psi_w);
     dCdT = dC_m_dT(T,psi_w);
 
-    vbar_a_guess = R_bar_Lem*T/p; //[m^3/mol] since p in [kPa]
+    vbar_a_guess = R_bar_Lem*T/p; //[m^3/mol] since p in [Pa]
     
     while ((iter<=3 || fabs(f)>eps) && iter<100)
     {
@@ -738,23 +737,18 @@ double MolarEntropy(double T, double p, double psi_w, double v_bar)
         if (iter>100){ return _HUGE; }
     }
     
-    if (FlagUseIdealGasEnthalpyCorrelations)
-    {
+    if (FlagUseIdealGasEnthalpyCorrelations){
         std::cout << "Not implemented" << std::endl;
     }
-    else
-    {
+    else{
         sbar_w=IdealGasMolarEntropy_Water(T,p);
         sbar_a=IdealGasMolarEntropy_Air(T,vbar_a);
     }
-    if (psi_w!=0)
-    {
-        sbar=sbar_0+(1-psi_w)*sbar_a+psi_w*sbar_w-R_bar*(
-        (B+T*dBdT)/v_bar+(C+T*dCdT)/(2*pow(v_bar,2))+
-        (1-psi_w)*log(1-psi_w)+psi_w*log(psi_w));
+    if (psi_w!=0){
+        sbar = sbar_0+(1-psi_w)*sbar_a+psi_w*sbar_w-R_bar*( (B+T*dBdT)/v_bar+(C+T*dCdT)/(2*pow(v_bar,2))+(1-psi_w)*log(1-psi_w)+psi_w*log(psi_w));
     }
     else{
-        sbar=sbar_0+sbar_a;
+        sbar = sbar_0+sbar_a;
     }
     return sbar; //[kJ/kmol/K]
 }
@@ -1276,13 +1270,13 @@ double HAPropsSI(const char *OutputName, const char *Input1Name, double Input1, 
         // -----------------------------------------------------------------
         if (!strcmp(OutputName,"Vda") || !strcmp(OutputName,"V"))
         {
-            v_bar=MolarVolume(T,p,psi_w); //[m^3/mol_ha]
-            W=HumidityRatio(psi_w); //[kg_w/kg_a]
+            v_bar = MolarVolume(T,p,psi_w); //[m^3/mol_ha]
+            W = HumidityRatio(psi_w); //[kg_w/kg_a]
             return v_bar*(1+W)/M_ha; //[m^3/kg_da]
         }
         else if (!strcmp(OutputName,"Vha"))
         {
-            v_bar=MolarVolume(T,p,psi_w); //[m^3/mol_ha]
+            v_bar = MolarVolume(T,p,psi_w); //[m^3/mol_ha]
             return v_bar/M_ha; //[m^3/kg_ha]
         }
         else if (!strcmp(OutputName,"Y"))
@@ -1295,15 +1289,15 @@ double HAPropsSI(const char *OutputName, const char *Input1Name, double Input1, 
         }
         else if (!strcmp(OutputName,"Hha"))
         {
-            v_bar=MolarVolume(T,p,psi_w); //[m^3/mol_ha]
-            h_bar=MolarEnthalpy(T,p,psi_w,v_bar); //[J/mol_ha]
+            v_bar = MolarVolume(T, p, psi_w); //[m^3/mol_ha]
+            h_bar = MolarEnthalpy(T, p, psi_w,v_bar); //[J/mol_ha]
             return h_bar/M_ha; //[kJ/kg_ha]
         }
         else if (!strcmp(OutputName,"S") || !strcmp(OutputName,"Entropy"))
         {
-            v_bar=MolarVolume(T,p,psi_w); //[m^3/mol_ha]
-            s_bar=MolarEntropy(T,p,psi_w,v_bar); //[kJ/kmol_ha]
-            W=HumidityRatio(psi_w); //[kg_w/kg_da]
+            v_bar = MolarVolume(T, p, psi_w); //[m^3/mol_ha]
+            s_bar = MolarEntropy(T, p, psi_w, v_bar); //[kJ/kmol_ha]
+            W = HumidityRatio(psi_w); //[kg_w/kg_da]
             return s_bar*(1+W)/M_ha; //[kJ/kg_da]
         }
         else if (!strcmp(OutputName,"C") || !strcmp(OutputName,"cp"))
@@ -1384,85 +1378,85 @@ EXPORT_CODE double CONVENTION HAProps_Aux(const char* Name,double T, double p, d
     try{
     if (!strcmp(Name,"Baa"))
     {
-        B_aa=B_Air(T)*MM_Air()/1e3; //[m^3/kg] to [m^3/mol]
+        B_aa=B_Air(T); // [m^3/mol]
         strcpy(units,"m^3/mol");
         return B_aa;
     }
     else if (!strcmp(Name,"Caaa"))
     {
-        C_aaa=C_Air(T)*MM_Air()*MM_Air()/1e6; //[m^6/kg^2] to [m^6/mol^2]
+        C_aaa=C_Air(T); // [m^6/mol^2]
         strcpy(units,"m^6/mol^2");
         return C_aaa;
     }
     else if (!strcmp(Name,"Bww"))
     {
-        B_ww=B_Water(T)*MM_Water()/1e3; //[m^3/kg] to [m^3/mol]
+        B_ww=B_Water(T); // [m^3/mol]
         strcpy(units,"m^3/mol");
         return B_ww;
     }
     else if (!strcmp(Name,"Cwww"))
     {
-        C_www=C_Water(T)*MM_Water()*MM_Water()/1e6; //[m^6/kg^2] to [m^6/mol^2]
+        C_www=C_Water(T); // [m^6/mol^2]
         strcpy(units,"m^6/mol^2");
         return C_www;
     }
     else if (!strcmp(Name,"dBaa"))
     {
-        B_aa=dBdT_Air(T)*MM_Air()/1e3; //[m^3/kg] to [m^3/mol]
+        B_aa=dBdT_Air(T); // [m^3/mol]
         strcpy(units,"m^3/mol");
         return B_aa;
     }
     else if (!strcmp(Name,"dCaaa"))
     {
-        C_aaa=dCdT_Air(T)*MM_Air()*MM_Air()/1e6; //[m^6/kg^2] to [m^6/mol^2]
+        C_aaa=dCdT_Air(T); // [m^6/mol^2]
         strcpy(units,"m^6/mol^2");
         return C_aaa;
     }
     else if (!strcmp(Name,"dBww"))
     {
-        B_ww=dBdT_Water(T)*MM_Water()/1e3; //[m^3/kg] to [m^3/mol]
+        B_ww=dBdT_Water(T); // [m^3/mol]
         strcpy(units,"m^3/mol");
         return B_ww;
     }
     else if (!strcmp(Name,"dCwww"))
     {
-        C_www=dCdT_Water(T)*MM_Water()*MM_Water()/1e6; //[m^6/kg^2] to [m^6/mol^2]
+        C_www=dCdT_Water(T); // [m^6/mol^2]
         strcpy(units,"m^6/mol^2");
         return C_www;
     }
     else if (!strcmp(Name,"Baw"))
     {
-        B_aw=_B_aw(T)/1e3; //[dm^3/mol] to [m^3/mol]
+        B_aw=_B_aw(T); // [m^3/mol]
         strcpy(units,"m^3/mol");
         return B_aw;
     }
     else if (!strcmp(Name,"Caww"))
     {
-        C_aww=_C_aww(T)/1e6; //[dm^6/mol] to [m^6/mol^2]
+        C_aww=_C_aww(T); // [m^6/mol^2]
         strcpy(units,"m^6/mol^2");
         return C_aww;
     }
     else if (!strcmp(Name,"Caaw"))
     {
-        C_aaw=_C_aaw(T)/1e6; //[dm^6/mol] to [m^6/mol^2]
+        C_aaw=_C_aaw(T); // [m^6/mol^2]
         strcpy(units,"m^6/mol^2");
         return C_aaw;
     }
     else if (!strcmp(Name,"dBaw"))
     {
-        double dB_aw=_dB_aw_dT(T)/1e3; //[dm^3/mol] to [m^3/mol]
+        double dB_aw=_dB_aw_dT(T); // [m^3/mol]
         strcpy(units,"m^3/mol");
         return dB_aw;
     }
     else if (!strcmp(Name,"dCaww"))
     {
-        double dC_aww=_dC_aww_dT(T)/1e6; //[dm^6/mol] to [m^6/mol^2]
+        double dC_aww=_dC_aww_dT(T); // [m^6/mol^2]
         strcpy(units,"m^6/mol^2");
         return dC_aww;
     }
     else if (!strcmp(Name,"dCaaw"))
     {
-        double dC_aaw=_dC_aaw_dT(T)/1e6; //[dm^6/mol] to [m^6/mol^2]
+        double dC_aaw=_dC_aaw_dT(T); // [m^6/mol^2]
         strcpy(units,"m^6/mol^2");
         return dC_aaw;
     }
@@ -1676,65 +1670,107 @@ TEST_CASE("Henry constant from Table A.6","[RP1485]")
 struct hel
 {
 public:
-    std::string in1,in2,in3,out,expected;
-    double v1, v2, v3;
-    std::string fmt;
-    hel(std::string in1, double v1, std::string in2, double v2, std::string in3, double v3, std::string out, std::string fmt, std::string expected)
+    std::string in1,in2,in3,out;
+    double v1, v2, v3, expected;
+    hel(std::string in1, double v1, std::string in2, double v2, std::string in3, double v3, std::string out, double expected)
     {
         this->in1 = in1; this->in2 = in2; this->in3 = in3;
         this->v1 = v1; this->v2 = v2; this->v3 = v3;
-        this->fmt = fmt; this->expected = expected; this->out = out;
+        this->expected = expected; this->out = out;
     };
 };
-hel table_A81[] ={hel("T",473.15,"W",0.00,"P",101325,"B","%0.4f","45.07"),
-                  hel("T",473.15,"W",0.00,"P",101325,"V","%0.3f","1.341"),
-                  hel("T",473.15,"W",0.00,"P",101325,"H","%0.0f","202520"),
-                  hel("T",473.15,"W",0.00,"P",101325,"S","%0.1f","555.8")};
+hel table_A11[] ={hel("T",473.15,"W",0.00,"P",101325,"B",45.07+273.15),
+                  hel("T",473.15,"W",0.00,"P",101325,"V",1.341),
+                  hel("T",473.15,"W",0.00,"P",101325,"H",202520),
+                  hel("T",473.15,"W",0.00,"P",101325,"S",555.8),
+                  hel("T",473.15,"W",0.50,"P",101325,"B",81.12+273.15),
+                  hel("T",473.15,"W",0.50,"P",101325,"V",2.416),
+                  hel("T",473.15,"W",0.50,"P",101325,"H",1641400),
+                  hel("T",473.15,"W",0.50,"P",101325,"S",4829.5),
+                  hel("T",473.15,"W",1.00,"P",101325,"B",88.15+273.15),
+                  hel("T",473.15,"W",1.00,"P",101325,"V",3.489),
+                  hel("T",473.15,"W",1.00,"P",101325,"H",3079550),
+                  hel("T",473.15,"W",1.00,"P",101325,"S",8889.0)};
 
-                               /* "0.05 55.38 1.448 346.49 1.0299",
-                               "0.10 61.85 1.556 490.43 1.4736",
-                               "0.20 69.95 1.771 778.24 2.3336",
-                               "0.30 75.00 1.986 1066.00 3.1751",
-                               "0.40 78.51 2.201 1353.71 4.0059",
-                               "0.50 81.12 2.416 1641.40 4.8295",
-                               "0.60 83.14 2.630 1929.06 5.6479",
-                               "0.70 84.76 2.845 2216.70 6.4623",
-                               "0.80 86.09 3.060 2504.32 7.2736",
-                               "0.90 87.20 3.274 2791.94 8.0824",
-                               "1.00 88.15 3.489 3079.55 8.8890"};*/
+hel table_A12[] ={hel("T",473.15,"W",0.00,"P",1e6,"B",90.47+273.15),
+                  hel("T",473.15,"W",0.00,"P",1e6,"V",0.136),
+                  hel("T",473.15,"W",0.00,"P",1e6,"H",201940),
+                  hel("T",473.15,"W",0.00,"P",1e6,"S",-103.3),
+                  hel("T",473.15,"W",0.50,"P",1e6,"B",148.49+273.15),
+                  hel("T",473.15,"W",0.50,"P",1e6,"V",0.243),
+                  hel("T",473.15,"W",0.50,"P",1e6,"H",1630140),
+                  hel("T",473.15,"W",0.50,"P",1e6,"S",3630.2),
+                  hel("T",473.15,"W",1.00,"P",1e6,"B",159.92+273.15),
+                  hel("T",473.15,"W",1.00,"P",1e6,"V",0.347),
+                  hel("T",473.15,"W",1.00,"P",1e6,"H",3050210),
+                  hel("T",473.15,"W",1.00,"P",1e6,"S",7141.3)};
+
+hel table_A15[] ={hel("T",473.15,"W",0.10,"P",1e7,"B",188.92+273.15),
+                  hel("T",473.15,"W",0.10,"P",1e7,"V",0.016),
+                  hel("T",473.15,"W",0.10,"P",1e7,"H",473920),
+                  hel("T",473.15,"W",0.10,"P",1e7,"S",-90.1),
+                  hel("T",473.15,"W",0.10,"P",1e7,"R",0.734594),
+                  };
 
 class HAPropsConsistencyFixture
 {
 public:
     std::vector<hel> inputs;
-    std::string in1,in2,in3,out,expected,sactual;
-    double v1, v2, v3, actual;
-    std::string fmt;
-    void set_table(hel h[]){
-        inputs = std::vector<hel>(h, h+sizeof(h));
+    std::string in1,in2,in3,out;
+    double v1, v2, v3, expected, actual;
+    void set_table(hel h[], int nrow){
+        int h1 = sizeof(h), h2 = sizeof(h[0]);
+        inputs = std::vector<hel>(h, h + nrow);
     };
     void set_values(hel &h){
         this->in1 = h.in1; this->in2 = h.in2; this->in3 = h.in3;
         this->v1 = h.v1; this->v2 = h.v2; this->v3 = h.v3;
-        this->fmt = h.fmt; this->expected = h.expected;
-        this->out = h.out;
+        this->expected = h.expected; this->out = h.out;
     };
     void call(){
         actual = HumidAir::HAPropsSI(out.c_str(), in1.c_str(), v1, in2.c_str(), v2, in3.c_str(), v3);
-        sactual = format(fmt.c_str(), actual);
     }
 };
 
-TEST_CASE_METHOD(HAPropsConsistencyFixture, "ASHRAE RP1485 Table A.8.1", "[RP1485]")
+TEST_CASE_METHOD(HAPropsConsistencyFixture, "ASHRAE RP1485 Tables", "[RP1485]")
 {
-    set_table(table_A81);
-    for (std::size_t i = 0; i < inputs.size(); ++i){
-        set_values(inputs[i]);
-        call();
-        CAPTURE(sactual);
-        CAPTURE(expected);
-        CHECK(sactual == expected);
+    SECTION("Table A.15")
+    {
+        set_table(table_A15, 5);
+        for (std::size_t i = 0; i < inputs.size(); ++i){
+            set_values(inputs[i]);
+            call();
+            CAPTURE(out);
+            CAPTURE(actual);
+            CAPTURE(expected);
+            CHECK(fabs(actual/expected-1) < 0.01);
+        }
     }
+    SECTION("Table A.11")
+    {
+        set_table(table_A11, 12);
+        for (std::size_t i = 0; i < inputs.size(); ++i){
+            set_values(inputs[i]);
+            call();
+            CAPTURE(out);
+            CAPTURE(actual);
+            CAPTURE(expected);
+            CHECK(fabs(actual/expected-1) < 0.01);
+        }
+    }
+    SECTION("Table A.12")
+    {
+        set_table(table_A12, 12);
+        for (std::size_t i = 0; i < inputs.size(); ++i){
+            set_values(inputs[i]);
+            call();
+            CAPTURE(out);
+            CAPTURE(actual);
+            CAPTURE(expected);
+            CHECK(fabs(actual/expected-1) < 0.01);
+        }
+    }
+    
 }
 #endif /* CATCH_ENABLED */
 
