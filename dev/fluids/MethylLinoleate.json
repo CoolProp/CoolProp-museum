@@ -259,7 +259,7 @@
       "p_max": 50000000, 
       "p_max_units": "Pa", 
       "pseudo_pure": false, 
-      "ptriple": 7.719884128826784e-06, 
+      "ptriple": 7.719884129e-09, 
       "ptriple_units": "Pa", 
       "reducing_state": {
         "T": 799, 
