@@ -77,12 +77,9 @@ int main()
     if (1)
     {
 
-        AbstractStateWrapper wat("HEOS","Propane");
-        wat.update(QT_INPUTS, 1, 85.6);
-        double _p0 = wat.keyed_output(CoolProp::iP);
-        double rhoL0 = wat.keyed_output(CoolProp::iDmolar);
+        AbstractStateWrapper wat("HEOS","Water");
 
-        wat.update(PQ_INPUTS, 1.8e-4, 1);
+        wat.update(PQ_INPUTS, 62193.56549, 1);
 
         double _p1 = wat.keyed_output(CoolProp::iP);
         double rhoL = wat.keyed_output(CoolProp::iDmolar);
@@ -111,7 +108,6 @@ int main()
         double dpdT_constrho2 = (p2-p1)/(T2-T1);
 
         AS->update(PT_INPUTS, 101000, 300);
-
 
         std::vector<double> T(2,300), P(2,101325), o, z(1,1);
         std::string in1 = "Dmass", in2 = "T", in3 = "P", Ref = "Nitrogen";

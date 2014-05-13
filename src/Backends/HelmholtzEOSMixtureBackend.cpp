@@ -1003,7 +1003,7 @@ void HelmholtzEOSMixtureBackend::PHSU_D_flash(int other)
                 throw ValueError(format("Input not supported"));
             }
             
-            r = eos-value;
+            r = eos - value;
             return r;
         };
     };
@@ -2184,8 +2184,18 @@ void SaturationSolvers::saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, l
         {
             throw ValueError(format("options.specified_variable to saturation_PHSU_pure [%d] is invalid",options.specified_variable));
         }
+
+        // Evaluate densities from the ancillary equations
         rhoV = HEOS->get_components()[0]->ancillaries.rhoV.evaluate(T);
         rhoL = HEOS->get_components()[0]->ancillaries.rhoL.evaluate(T);
+
+        // Apply a single step of Newton's method to improve guess value for liquid
+        // based on the error between the gas pressure (which is usually very close already)
+        // and the liquid pressure, which can sometimes (especially at low pressure),
+        // be way off, and often times negative
+        SatL->update(DmolarT_INPUTS, rhoL, T);
+        SatV->update(DmolarT_INPUTS, rhoV, T);
+        rhoL += -(SatL->p()-SatV->p())/SatL->first_partial_deriv(iP, iDmolar, iT);
 
         deltaL = rhoL/reduce.rhomolar;
         deltaV = rhoV/reduce.rhomolar;
@@ -2326,7 +2336,7 @@ void SaturationSolvers::saturation_PHSU_pure(HelmholtzEOSMixtureBackend *HEOS, l
             throw SolutionError(format("saturation_PHSU_pure solver did not converge after 100 iterations with specified value: %g with index %d",specified_value, options.specified_variable));
         }
     }
-    while (error > 1e-6);
+    while (error > 1e-11);
 }
 void SaturationSolvers::saturation_D_pure(HelmholtzEOSMixtureBackend *HEOS, long double rhomolar, saturation_D_pure_options &options)
 {
