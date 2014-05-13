@@ -77,6 +77,11 @@
     */
 
     /**
+    \brief FORTRAN 77 style wrapper of the PropsSI function
+    \sa PropsSI(std::string, std::string, double, std::string, double, std::string)
+    */
+    EXPORT_CODE void CONVENTION F77PropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Ref, double *output);
+    /**
     
     */
     EXPORT_CODE double CONVENTION PropsSIZ(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char *FluidName, const double *z, int n);
@@ -105,8 +110,18 @@
     /// @param level The level of the verbosity for the debugging output (0-10) 0: no debgging output
     EXPORT_CODE void CONVENTION set_debug_level(int level);
 
-    EXPORT_CODE void CONVENTION F77HAPropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Name3, double * Prop3, double *output);
+    // ---------------------------------
+    //        Humid Air Properties
+    // ---------------------------------
 
-    EXPORT_CODE void CONVENTION F77PropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Ref, double *output);
+    
+    EXPORT_CODE double CONVENTION HAPropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char *Name3, double Prop3);
+
+    /** 
+    \brief FORTRAN 77 style wrapper of the HAPropsSI function
+    */
+    EXPORT_CODE void CONVENTION F77HAPropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char *Name3, double *Prop3, double *output);
+
+    
 
 #endif

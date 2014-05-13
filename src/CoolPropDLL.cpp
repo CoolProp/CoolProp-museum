@@ -5,6 +5,7 @@
 #endif
 
 #include "CoolProp.h"
+#include "HumidAirProp.h"
 #include "DataStructures.h"
 #include "Exceptions.h"
 
@@ -119,7 +120,8 @@ EXPORT_CODE double CONVENTION Props(const char *Output, char Name1, double Prop1
 }
 EXPORT_CODE double CONVENTION Props1SI(const char *FluidName, const char *Output)
 {
-    return PropsSI(Output, "", 0, "", 0, FluidName);
+    std::string _Output = Output, _FluidName = FluidName;
+    return CoolProp::PropsSI(_Output, "", 0, "", 0, _FluidName);
 }
 EXPORT_CODE double CONVENTION PropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char * FluidName)
 {
@@ -131,6 +133,12 @@ EXPORT_CODE double CONVENTION PropsSIZ(const char *Output, const char *Name1, do
     std::string _Output = Output, _Name1 = Name1, _Name2 = Name2, _FluidName = FluidName;
     return CoolProp::PropsSI(_Output, _Name1, Prop1, _Name2, Prop2, _FluidName, std::vector<double>(z, z+n));
 }
+EXPORT_CODE void CONVENTION F77PropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * FluidName, double *output)
+{
+    std::string _Output = Output, _Name1 = Name1, _Name2 = Name2, _FluidName = FluidName;
+    *output = CoolProp::PropsSI(_Output, _Name1, *Prop1, _Name2, *Prop2, _FluidName);
+}
+
 EXPORT_CODE double CONVENTION K2F(double T){ 
     return T * 9 / 5 - 459.67; 
 }
@@ -159,11 +167,12 @@ EXPORT_CODE long CONVENTION get_global_param_string(const char *param, char * Ou
 //}
 #endif
 
-EXPORT_CODE void CONVENTION F77HAPropsSI(char *Output, char *Name1, double *Prop1, char *Name2, double *Prop2, char * Name3, double * Prop3, double *output)
+
+EXPORT_CODE double CONVENTION HAPropsSI(const char *Output, const char *Name1, double Prop1, const char *Name2, double Prop2, const char * Name3, double Prop3)
 {
-	*output = HumidAir::HAProps(Output,Name1,*Prop1,Name2,*Prop2,Name3,*Prop3);
+	return HumidAir::HAPropsSI(Output, Name1, Prop1, Name2, Prop2, Name3, Prop3);
 }
-EXPORT_CODE void CONVENTION F77PropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Ref, double *output)
+EXPORT_CODE void CONVENTION F77HAPropsSI(const char *Output, const char *Name1, double *Prop1, const char *Name2, double *Prop2, const char * Name3, double * Prop3, double *output)
 {
-	*output = PropsSI(Output, Name1, *Prop1, Name2, *Prop2, Ref);
+	*output = HumidAir::HAPropsSI(Output, Name1, *Prop1, Name2, *Prop2, Name3, *Prop3);
 }
