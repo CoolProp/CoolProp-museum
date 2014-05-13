@@ -215,6 +215,12 @@ protected:
     /// Using this backend, calculate the derivative dC/dT
     virtual long double calc_dCvirial_dT(void){throw NotImplementedError("calc_dCvirial_dT is not implemented for this backend");};
 
+    /// Using this backend, get the name of the fluid
+    virtual std::string calc_name(void){throw NotImplementedError("calc_name is not implemented for this backend");};
+    
+    /// Using this backend, get the triple point temperature in K
+    virtual long double calc_Ttriple(void){throw NotImplementedError("calc_Ttriple is not implemented for this backend");};
+
 public:
 
     virtual long double calc_melt_p_T(long double T){throw NotImplementedError("calc_melt_p_T is not implemented for this backend");};
@@ -263,6 +269,9 @@ public:
     // Limits
     double Tmax(void);
     double pmax(void);
+    double Ttriple(void);
+
+    std::string name(){return calc_name();};
 
     // ----------------------------------------
     // Bulk properties - temperature and density are directly calculated every time
