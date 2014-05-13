@@ -131,27 +131,13 @@
         }, 
         {
           "n": [
-            -0.210687796
-          ], 
-          "t": [
-            -1
-          ], 
-          "type": "IdealGasHelmholtzPower"
-        }, 
-        {
-          "n": [
-            -0.781330239
-          ], 
-          "t": [
-            -2
-          ], 
-          "type": "IdealGasHelmholtzPower"
-        }, 
-        {
-          "n": [
+            -0.210687796, 
+            -0.781330239, 
             0.130979005
           ], 
           "t": [
+            -1, 
+            -2, 
             -3
           ], 
           "type": "IdealGasHelmholtzPower"

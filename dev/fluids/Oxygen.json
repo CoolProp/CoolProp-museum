@@ -157,10 +157,12 @@
           "T0": 298.15, 
           "Tc": 154.581, 
           "c": [
-            1.06778
+            1.06778, 
+            1.66961e-08
           ], 
           "t": [
-            -1.5
+            -1.5, 
+            2
           ], 
           "type": "IdealGasHelmholtzCP0PolyT"
         }, 
@@ -169,17 +171,6 @@
           "Tc": 154.581, 
           "cp_over_R": 3.50042, 
           "type": "IdealGasHelmholtzCP0Constant"
-        }, 
-        {
-          "T0": 298.15, 
-          "Tc": 154.581, 
-          "c": [
-            1.66961e-08
-          ], 
-          "t": [
-            2
-          ], 
-          "type": "IdealGasHelmholtzCP0PolyT"
         }, 
         {
           "n": [

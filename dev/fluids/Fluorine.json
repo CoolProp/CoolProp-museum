@@ -148,13 +148,15 @@
             3.0717001e-06, 
             -5.2985762e-05, 
             -16.372517, 
-            3.6884682e-05
+            3.6884682e-05, 
+            4.3887271
           ], 
           "t": [
             -4, 
             -3, 
             1, 
-            2
+            2, 
+            0
           ], 
           "type": "IdealGasHelmholtzPower"
         }, 
@@ -173,15 +175,6 @@
             8.9057501
           ], 
           "type": "IdealGasHelmholtzPlanckEinstein2"
-        }, 
-        {
-          "n": [
-            4.3887271
-          ], 
-          "t": [
-            0
-          ], 
-          "type": "IdealGasHelmholtzPower"
         }, 
         {
           "a1": 0, 
