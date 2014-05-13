@@ -43,6 +43,84 @@ bool BasePolynomial::checkCoefficients(std::vector< std::vector<long double> > c
 	return false;
 }
 
+/** Integrating coefficients for polynomials is done by dividing the
+ *  original coefficients by (i+1) and elevating the order by 1.
+ *  Some reslicing needs to be applied to integrate along the x-axis.
+ */
+std::vector<long double> BasePolynomial::integrateCoeffs(std::vector<long double> const& coefficients){
+	std::vector<long double> newCoefficients;
+	unsigned int sizeX = coefficients.size();
+	if (sizeX<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",sizeX));
+	// pushing a zero elevates the order by 1
+	newCoefficients.push_back(0.0);
+	for(unsigned int i=0; i<coefficients.size(); i++) {
+		newCoefficients.push_back(coefficients[i]/(i+1.));
+	}
+	return newCoefficients;
+}
+
+///Integrating coefficients for polynomial in terms of x(axis=true) or y(axis=false).
+std::vector< std::vector<long double> > BasePolynomial::integrateCoeffs(std::vector< std::vector<long double> > const& coefficients, bool axis){
+	std::vector< std::vector<long double> > newCoefficients;
+	unsigned int sizeX = coefficients.size();
+	if (sizeX<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",sizeX));
+
+	if (axis==true){
+		std::vector< std::vector<long double> > tmpCoefficients;
+		tmpCoefficients = transpose(coefficients);
+		unsigned int sizeY = tmpCoefficients.size();
+		for(unsigned int i=0; i<sizeY; i++) {
+			newCoefficients.push_back(integrateCoeffs(tmpCoefficients[i]));
+		}
+		return transpose(newCoefficients);
+	} else if (axis==false){
+		for(unsigned int i=0; i<sizeX; i++) {
+			newCoefficients.push_back(integrateCoeffs(coefficients[i]));
+		}
+		return newCoefficients;
+	} else {
+		throw ValueError(format("You can only use x-axis (0) and y-axis (1) for integration. %d is not a valid input. ",axis));
+	}
+	return newCoefficients;
+}
+
+/** Deriving coefficients for polynomials is done by multiplying the
+ *  original coefficients with i and lowering the order by 1.
+ */
+std::vector<long double> BasePolynomial::deriveCoeffs(std::vector<long double> const& coefficients){
+	std::vector<long double> newCoefficients;
+	unsigned int sizeX = coefficients.size();
+	if (sizeX<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",sizeX));
+	// skipping the first element lowers the order
+	for(unsigned int i=1; i<coefficients.size(); i++) {
+		newCoefficients.push_back(coefficients[i]*i);
+	}
+	return newCoefficients;
+}
+
+std::vector< std::vector<long double> > BasePolynomial::deriveCoeffs(const std::vector< std::vector<long double> > &coefficients, unsigned int axis){
+	std::vector< std::vector<long double> > newCoefficients;
+	unsigned int sizeX = coefficients.size();
+	if (sizeX<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",sizeX));
+
+	if (axis==0){
+		std::vector< std::vector<long double> > tmpCoefficients;
+		tmpCoefficients = transpose(coefficients);
+		unsigned int sizeY = tmpCoefficients.size();
+		for(unsigned int i=0; i<sizeY; i++) {
+			newCoefficients.push_back(deriveCoeffs(tmpCoefficients[i]));
+		}
+		return transpose(newCoefficients);
+	} else if (axis==1){
+		for(unsigned int i=0; i<sizeX; i++) {
+			newCoefficients.push_back(deriveCoeffs(coefficients[i]));
+		}
+		return newCoefficients;
+	} else {
+		throw ValueError(format("You can only use x-axis (0) and y-axis (1) for derivation. %d is not a valid input. ",axis));
+	}
+	return newCoefficients;
+}
 
 /** The core of the polynomial wrappers are the different
  *  implementations that follow below. In case there are
@@ -89,6 +167,7 @@ long double BasePolynomial::simplePolynomial(std::vector<std::vector<long double
 	}
 	return result;
 }
+
 
 /// Simple integrated polynomial function generator.
 /** Base function to produce integrals of n-th order
@@ -323,7 +402,7 @@ long double BasePolynomial::baseHornerInt(std::vector<std::vector<long double> >
 }
 
 ///Indefinite integral in T-direction of a polynomial divided by its independent variable
-long double BasePolynomial::baseHornerFra(std::vector<long double> const& coefficients, long double T){
+long double BasePolynomial::baseHornerFracInt(std::vector<long double> const& coefficients, long double T){
 	if (this->DEBUG) {
 		std::cout << "Running      baseHornerFra(std::vector, " << T << "): ";
 	}
@@ -346,7 +425,7 @@ long double BasePolynomial::baseHornerFra(std::vector<long double> const& coeffi
 }
 
 ///Indefinite integral in T-direction of a polynomial divided by its 2nd independent variable
-long double BasePolynomial::baseHornerFra(std::vector<std::vector<long double> > const& coefficients, long double x, long double T){
+long double BasePolynomial::baseHornerFracInt(std::vector<std::vector<long double> > const& coefficients, long double x, long double T){
 	if (this->DEBUG) {
 		std::cout << "Running      baseHornerFra(std::vector, " << x << ", " << T << "): ";
 	}
@@ -356,7 +435,7 @@ long double BasePolynomial::baseHornerFra(std::vector<std::vector<long double> >
 	long double result = 0;
 	for(int i=coefficients.size()-1; i>=0; i--) {
 		result *= x;
-		result += baseHornerFra(coefficients[i], T);
+		result += baseHornerFracInt(coefficients[i], T);
 	}
 
 	this->DEBUG = db;
@@ -365,86 +444,6 @@ long double BasePolynomial::baseHornerFra(std::vector<std::vector<long double> >
 	}
 	return result;
 }
-
-
-/** Integrating coefficients for polynomials is done by dividing the
- *  original coefficients by (i+1) and elevating the order by 1.
- *  Some reslicing needs to be applied to integrate along the x-axis.
- */
-std::vector<long double> BasePolynomial::integrateCoeffs(std::vector<long double> const& coefficients){
-	std::vector<long double> newCoefficients;
-	unsigned int sizeX = coefficients.size();
-	if (sizeX<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",sizeX));
-	// pushing a zero elevates the order by 1
-	newCoefficients.push_back(0.0);
-	for(unsigned int i=0; i<coefficients.size(); i++) {
-		newCoefficients.push_back(coefficients[i]/(i+1.));
-	}
-	return newCoefficients;
-}
-
-///Integrating coefficients for polynomial in terms of x(axis=true) or y(axis=false).
-std::vector< std::vector<long double> > BasePolynomial::integrateCoeffs(std::vector< std::vector<long double> > const& coefficients, bool axis){
-	std::vector< std::vector<long double> > newCoefficients;
-	unsigned int sizeX = coefficients.size();
-	if (sizeX<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",sizeX));
-
-	if (axis==true){
-		std::vector< std::vector<long double> > tmpCoefficients;
-		tmpCoefficients = transpose(coefficients);
-		unsigned int sizeY = tmpCoefficients.size();
-		for(unsigned int i=0; i<sizeY; i++) {
-			newCoefficients.push_back(integrateCoeffs(tmpCoefficients[i]));
-		}
-		return transpose(newCoefficients);
-	} else if (axis==false){
-		for(unsigned int i=0; i<sizeX; i++) {
-			newCoefficients.push_back(integrateCoeffs(coefficients[i]));
-		}
-		return newCoefficients;
-	} else {
-		throw ValueError(format("You can only use x-axis (0) and y-axis (1) for integration. %d is not a valid input. ",axis));
-	}
-	return newCoefficients;
-}
-
-/** Deriving coefficients for polynomials is done by multiplying the
- *  original coefficients with i and lowering the order by 1.
- */
-std::vector<long double> BasePolynomial::deriveCoeffs(std::vector<long double> const& coefficients){
-	std::vector<long double> newCoefficients;
-	unsigned int sizeX = coefficients.size();
-	if (sizeX<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",sizeX));
-	// skipping the first element lowers the order
-	for(unsigned int i=1; i<coefficients.size(); i++) {
-		newCoefficients.push_back(coefficients[i]*i);
-	}
-	return newCoefficients;
-}
-
-//std::vector< std::vector<long double> > BasePolynomial::deriveCoeffs(std::vector< std::vector<long double> > coefficients, unsigned int axis){
-//	std::vector< std::vector<long double> > newCoefficients;
-//	unsigned int sizeX = coefficients.size();
-//	if (sizeX<1) throw ValueError(format("You have to provide coefficients, a vector length of %d is not a valid. ",sizeX));
-//
-//	if (axis==0){
-//		std::vector< std::vector<long double> > tmpCoefficients;
-//		tmpCoefficients = transpose(coefficients);
-//		unsigned int sizeY = tmpCoefficients.size();
-//		for(unsigned int i=0; i<sizeY; i++) {
-//			newCoefficients.push_back(deriveCoeffs(tmpCoefficients[i]));
-//		}
-//		return transpose(newCoefficients);
-//	} else if (axis==1){
-//		for(unsigned int i=0; i<sizeX; i++) {
-//			newCoefficients.push_back(deriveCoeffs(coefficients[i]));
-//		}
-//		return newCoefficients;
-//	} else {
-//		throw ValueError(format("You can only use x-axis (0) and y-axis (1) for derivation. %d is not a valid input. ",axis));
-//	}
-//	return newCoefficients;
-//}
 
 
 /** Alternatives
@@ -612,117 +611,177 @@ long double BasePolynomial::expval(std::vector< std::vector<long double> > const
 
 
 
+/** Here are the real implementations, use these classes if possible.
+ *  It is not the most flexible way, but the classes below include
+ *  the polynomial solvers and should be easy to use.
+ */
+PolynomialImpl1D::Residual::Residual(PolynomialImpl1D *poly, long double y) {
+	this->poly=poly;
+	this->y=y;
+}
 
+virtual double PolynomialImpl1D::Residual::call(double x) {
+	return poly->eval(x) - y;
+}
 
+virtual double PolynomialImpl1D::Residual::deriv(double x) {
+	return poly->deriv(x);
+}
 
+virtual double PolynomialImpl1D::ResidualInt::call(double x) {
+	return poly->integ(x) - y;
+}
 
+virtual double PolynomialImpl1D::ResidualInt::deriv(double x) {
+	return poly->eval(x);
+}
 
+virtual double PolynomialImpl1D::ResidualDer::call(double x) {
+	return poly->deriv(x) - y;
+}
+
+virtual double PolynomialImpl1D::ResidualDer::deriv(double x) {
+	throw CoolProp::NotImplementedError("Second derivatives have not been implemented.");
+	// TODO: implement call of derivative function
+	return 0.0;
+}
 
 PolynomialImpl1D::PolynomialImpl1D(const std::vector<long double> &coefficients){
 	this->coefficients=coefficients;
 }
 
-long double PolynomialImpl1D::eval(long double x){
+virtual long double PolynomialImpl1D::eval(long double x){
 	return this->polyval(this->coefficients, x);
 }
 
-long double PolynomialImpl1D::integ(long double x){
+virtual long double PolynomialImpl1D::integ(long double x){
 	return this->polyint(this->coefficients, x);
 }
 
-long double PolynomialImpl1D::deriv(long double x){
+virtual long double PolynomialImpl1D::deriv(long double x){
 	return this->polyder(this->coefficients, x);
 }
 
-long double PolynomialImpl1D::solve(long double y, long double x0){
-
-	class Residual : public FuncWrapper1D {
-	public:
-		PolynomialImpl1D *poly;
-		long double x, y;
-
-		Residual(PolynomialImpl1D *poly, long double y){
-			this->poly=poly;
-			this->y=y;
-		}
-
-		double call(double x){
-			this->x = x;
-			return poly->eval(x) - y;
-		};
-
-		double deriv(double x){
-			this->x = x;
-			return poly->deriv(x);
-		};
-	};
+virtual long double PolynomialImpl1D::solve(long double y, long double x0){
 	Residual resid(this, y);
 	std::string errstring;
 	return Newton(resid, x0, DBL_EPSILON*1e3, 100, errstring);
+}
 
-	//return Brent(resid,Tmin,Tmax,DBL_EPSILON,1e-12,100,errstring);
+virtual long double PolynomialImpl1D::solve(long double y, long double xmin, long double xmax){
+	Residual resid(this, y);
+	std::string errstring;
+	return Brent(resid,xmin,xmax,DBL_EPSILON, DBL_EPSILON*1e3,100,errstring);
+}
+
+virtual long double PolynomialImpl1D::solveInt(long double y, long double x0){
+	ResidualInt resid(this, y);
+	std::string errstring;
+	return Newton(resid, x0, DBL_EPSILON*1e3, 100, errstring);
+}
+
+virtual long double PolynomialImpl1D::solveInt(long double y, long double xmin, long double xmax){
+	ResidualInt resid(this, y);
+	std::string errstring;
+	return Brent(resid,xmin,xmax,DBL_EPSILON, DBL_EPSILON*1e3,100,errstring);
+}
+
+virtual long double PolynomialImpl1D::solveDer(long double y, long double x0){
+	ResidualDer resid(this, y);
+	std::string errstring;
+	return Newton(resid, x0, DBL_EPSILON*1e3, 100, errstring);
+}
+
+virtual long double PolynomialImpl1D::solveDer(long double y, long double xmin, long double xmax){
+	ResidualDer resid(this, y);
+	std::string errstring;
+	return Brent(resid,xmin,xmax,DBL_EPSILON, DBL_EPSILON*1e3,100,errstring);
 }
 
 
-//
-//class PolynomialImpl2D : public BasePolynomial{
-//protected:
-//	std::vector< std::vector<long double> > coefficients;
-//public:
-//	PolynomialImpl2D();
-//	PolynomialImpl2D(const std::vector< std::vector<long double> > &coefficients);
-//	virtual ~PolynomialImpl2D(){};
-//	long double eval(long double x, long double z);
-//	long double solve(long double y, long double z);
-//};
-//
-//class PolynomialInt1D : public BasePolynomial{
-//protected:
-//	std::vector<long double> coefficients;
-//public:
-//	PolynomialInt1D();
-//	PolynomialInt1D(const std::vector<long double> &coefficients);
-//	virtual ~PolynomialImpl1D(){};
-//	long double eval(long double x);
-//	//long double integ(long double x);
-//	//long double deriv(long double x);
-//	long double solve(long double y);
-//	//long double solveInt(long double y);
-//};
-//
-//class PolynomialInt2D : public BasePolynomial{
-//protected:
-//	std::vector< std::vector<long double> > coefficients;
-//public:
-//	PolynomialInt2D();
-//	PolynomialInt2D(const std::vector< std::vector<long double> > &coefficients);
-//	virtual ~PolynomialImpl2D(){};
-//	long double eval(long double x, long double z);
-//	long double solve(long double y, long double z);
-//};
-//
-//class PolynomialFracInt1D : public BasePolynomial{
-//protected:
-//	std::vector<long double> coefficients;
-//public:
-//	PolynomialFracInt1D();
-//	PolynomialFracInt1D(const std::vector<long double> &coefficients);
-//	virtual ~PolynomialFracInt1D(){};
-//	long double eval(long double x);
-//	long double solve(long double y);
-//};
-//
-//class PolynomialFracInt2D : public BasePolynomial{
-//protected:
-//	std::vector< std::vector<long double> > coefficients;
-//public:
-//	PolynomialFracInt2D();
-//	PolynomialFracInt2D(const std::vector< std::vector<long double> > &coefficients);
-//	virtual ~PolynomialFracInt2D(){};
-//	long double eval(long double x, long double z);
-//	long double solve(long double y, long double z);
-//};
-//
+PolynomialImpl2D::Residual::Residual(PolynomialImpl2D *poly, long double y, long double x) {
+	this->poly=poly;
+	this->y=y;
+	this->x=x;
+}
+
+virtual double PolynomialImpl2D::Residual::call(double z) {
+	return poly->eval(x,z) - y;
+}
+
+virtual double PolynomialImpl2D::Residual::deriv(double z) {
+	return poly->deriv(x,z);
+}
+
+virtual double PolynomialImpl2D::ResidualInt::call(double z) {
+	return poly->integ(x,z) - y;
+}
+
+virtual double PolynomialImpl2D::ResidualInt::deriv(double z) {
+	return poly->eval(x,z);
+}
+
+virtual double PolynomialImpl2D::ResidualDer::call(double z) {
+	return poly->deriv(x,z) - y;
+}
+
+virtual double PolynomialImpl2D::ResidualDer::deriv(double z) {
+	throw CoolProp::NotImplementedError("Second derivatives have not been implemented.");
+	// TODO: implement call of derivative function
+	return 0.0;
+}
+
+PolynomialImpl2D::PolynomialImpl2D(const std::vector< std::vector<long double> > &coefficients){
+	this->coefficients=coefficients;
+}
+
+virtual long double PolynomialImpl2D::eval(long double x, long double z){
+	return this->polyval(this->coefficients, x, z);
+}
+
+virtual long double PolynomialImpl2D::integ(long double x, long double z){
+	return this->polyint(this->coefficients, x, z);
+}
+
+virtual long double PolynomialImpl2D::deriv(long double x, long double z){
+	return this->polyder(this->coefficients, x, z);
+}
+
+virtual long double PolynomialImpl2D::solve(long double y, long double x, long double z0){
+	Residual resid(this, y, x);
+	std::string errstring;
+	return Newton(resid, z0, DBL_EPSILON*1e3, 100, errstring);
+}
+
+virtual long double PolynomialImpl2D::solve(long double y, long double x, long double zmin, long double zmax){
+	Residual resid(this, y, x);
+	std::string errstring;
+	return Brent(resid,zmin,zmax,DBL_EPSILON, DBL_EPSILON*1e3,100,errstring);
+}
+
+virtual long double PolynomialImpl2D::solveInt(long double y, long double x, long double z0){
+	ResidualInt resid(this, y, x);
+	std::string errstring;
+	return Newton(resid, z0, DBL_EPSILON*1e3, 100, errstring);
+}
+
+virtual long double PolynomialImpl2D::solveInt(long double y, long double x, long double zmin, long double zmax){
+	ResidualInt resid(this, y, x);
+	std::string errstring;
+	return Brent(resid,zmin,zmax,DBL_EPSILON, DBL_EPSILON*1e3,100,errstring);
+}
+
+virtual long double PolynomialImpl2D::solveDer(long double y, long double x, long double z0){
+	ResidualDer resid(this, y, x);
+	std::string errstring;
+	return Newton(resid, z0, DBL_EPSILON*1e3, 100, errstring);
+}
+
+virtual long double PolynomialImpl2D::solveDer(long double y, long double x, long double zmin, long double zmax){
+	ResidualDer resid(this, y, x);
+	std::string errstring;
+	return Brent(resid,zmin,zmax,DBL_EPSILON, DBL_EPSILON*1e3,100,errstring);
+}
 
 
 
@@ -734,60 +793,6 @@ long double PolynomialImpl1D::solve(long double y, long double x0){
 
 
 
-
-
-
-
-
-
-
-
-
-//
-///// The classes for Polynomials
-//class PolynomialImpl : public BasePolynomial{
-//protected:
-//	std::vector<long double> coefficients1D;
-//	std::vector< std::vector<long double> > coefficients2D;
-//	int dim; ///< Is it a 1D (true) or 2D (false) polynomial
-//
-//public:
-//	PolynomialImpl();
-//	PolynomialImpl(const std::vector<long double> &coefficients);
-//	PolynomialImpl(const std::vector< std::vector<long double> > &coefficients);
-//	virtual ~PolynomialImpl(){};
-//	long double eval(long double x);
-//	long double integ(long double x);
-//	long double deriv(long double x);
-//	long double solve(long double y);
-//	long double solveInt(long double y);
-//};
-//
-//PolynomialImpl::PolynomialImpl() {
-//	this->dim = 0;
-//}
-//PolynomialImpl::PolynomialImpl(const std::vector<long double> &coefficients){
-//	this->dim = 1;
-//	this->coefficients1D = coefficients;
-//}
-//PolynomialImpl::PolynomialImpl(const std::vector< std::vector<long double> > &coefficients){
-//	this->dim = 2;
-//	this->coefficients2D = coefficients;
-//}
-//long double PolynomialImpl::eval(long double x){
-//	if (dim == 1) {
-//		return baseHorner(coefficients1D,x);
-//	} else if (dim == 2) {
-//		return baseHorner(coefficients2D,x);
-//	}
-//}
-//long double PolynomialImpl::integ(long double x);
-//long double PolynomialImpl::deriv(long double x);
-//long double PolynomialImpl::solve(long double y);
-//long double PolynomialImpl::solveInt(long double y);
-//
-//
-//
 
 }
 
