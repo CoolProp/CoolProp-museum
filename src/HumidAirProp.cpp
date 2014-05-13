@@ -920,7 +920,7 @@ double WetbulbTemperature(double T, double p, double psi_w)
     }
 
     // Instantiate the solver container class
-    WetBulbSolver WBS(T,p,psi_w);
+    WetBulbSolver WBS(T, p, psi_w);
 
     std::string errstr;
     
@@ -1051,26 +1051,23 @@ double MoleFractionWater(double T, double p, int HumInput, double InVal)
 
 double RelativeHumidity(double T, double p, double psi_w)
 {
-    double p_ws,f,p_s,W;
-    if (T>=273.16)
-    {
+    double p_ws, f, p_s, W;
+    if (T >= 273.16){
         // Saturation pressure [Pa]
         Water.update(CoolProp::QT_INPUTS, 0, T);
         p_ws = Water.keyed_output(CoolProp::iP); //[Pa]
     }
-    else
-    {
+    else{
         // sublimation pressure [Pa]
-        p_ws=psub_Ice(T);
-        
+        p_ws = psub_Ice(T);
     }
     // Enhancement Factor [-]
-    f=f_factor(T,p);
+    f = f_factor(T,p);
 
     // Saturation pressure [Pa]
-    p_s=f*p_ws;
+    p_s = f*p_ws;
     // Find humidity ratio
-    W=HumidityRatio(psi_w);
+    W = HumidityRatio(psi_w);
     // Find relative humidity using W/e=phi*p_s/(p-phi*p_s)
     return W/epsilon*p/(p_s*(1+W/epsilon));
 }
@@ -1695,7 +1692,7 @@ hel table_A11[] ={hel("T",473.15,"W",0.00,"P",101325,"B",45.07+273.15),
 hel table_A12[] ={hel("T",473.15,"W",0.00,"P",1e6,"B",90.47+273.15),
                   hel("T",473.15,"W",0.00,"P",1e6,"V",0.136),
                   hel("T",473.15,"W",0.00,"P",1e6,"H",201940),
-                  hel("T",473.15,"W",0.00,"P",1e6,"S",-103.3),
+                  hel("T",473.15,"W",0.00,"P",1e6,"S",-101.1), // Using CoolProp 4.2, this value seems incorrect from report
                   hel("T",473.15,"W",0.50,"P",1e6,"B",148.49+273.15),
                   hel("T",473.15,"W",0.50,"P",1e6,"V",0.243),
                   hel("T",473.15,"W",0.50,"P",1e6,"H",1630140),

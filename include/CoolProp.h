@@ -54,8 +54,8 @@ You might want to start by looking at CoolProp.h
 	/// @param Name2 The second state variable name, one of "T","D","H",etc.
 	/// @param Prop2 The second state variable value
 	/// @param FluidName The fluid name
-    /// @param x The mole or mass fractions depending on the requirements of the backend
-    std::vector<double> PropsSI(const std::string &Output, const std::string &Name1, const std::vector<double> &Prop1, const std::string &Name2, const std::vector<double> Prop2, const std::string &Ref, const std::vector<double> &z);
+    /// @param z The mole or mass fractions depending on the requirements of the backend
+    std::vector<double> PropsSI(const std::string &Output, const std::string &Name1, const std::vector<double> &Prop1, const std::string &Name2, const std::vector<double> Prop2, const std::string &FluidName, const std::vector<double> &z);
 
     /**
     \overload 

@@ -125,6 +125,7 @@ public:
         using_tau_r = cpjson::get_bool(json_code,"using_tau_r");
         T_r = cpjson::get_double(json_code,"T_r");
         std::string type = cpjson::get_string(json_code,"type");
+
         if (!type.compare("rhoLnoexp"))
             this->type = TYPE_NOT_EXPONENTIAL;
         else
