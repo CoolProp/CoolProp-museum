@@ -19,8 +19,6 @@ namespace CoolProp{
 class FlashRoutines{
 public:
 
-    friend class HelmholtzEOSMixtureBackend; // Allows HelmholtzEOSMixtureBackend to have access to all the protected methods and members of this class
-
     /// Flash for given pressure and (molar) quality
     static void PQ_flash(HelmholtzEOSMixtureBackend &HEOS);
     
