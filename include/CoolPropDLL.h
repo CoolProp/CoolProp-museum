@@ -1,7 +1,37 @@
 #ifndef COOLPROPDLL_H
 #define COOLPROPDLL_H
 
-    #include "CoolPropTools.h"
+    #include "PlatformDetermination.h"
+
+    #if defined(COOLPROP_LIB)
+    #  ifndef EXPORT_CODE
+    #    if defined(__ISWINDOWS__)
+    #      define EXPORT_CODE extern "C" __declspec(dllexport)
+    #    else
+    #      define EXPORT_CODE extern "C"
+    #    endif
+    #  endif
+    #  ifndef CONVENTION
+    #    if defined(__ISWINDOWS__)
+    #      define CONVENTION __stdcall
+    #    else
+    #      define CONVENTION
+    #    endif
+    #  endif
+    #else
+    #  ifndef EXPORT_CODE
+    #    define EXPORT_CODE
+    #  endif
+    #  ifndef CONVENTION
+    #    define CONVENTION
+    #  endif
+    #endif
+
+    // Hack for PowerPC compilation to only use extern "C"
+    #if defined(__powerpc__) || defined(EXTERNC)
+    #  undef EXPORT_CODE
+    #  define EXPORT_CODE extern "C"
+    #endif
     
     // Functions with the call type like
     // EXPORT_CODE void CONVENTION AFunction(double, double);

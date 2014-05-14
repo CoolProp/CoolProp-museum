@@ -20,7 +20,8 @@ You might want to start by looking at CoolProp.h
 #ifndef CoolProp_H
 #define CoolProp_H
 
-	#include "CoolPropDLL.h"
+    #include <string>
+    #include <vector>
 
     namespace CoolProp {
 

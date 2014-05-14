@@ -4,10 +4,12 @@
 #include <crtdbg.h>
 #endif
 
+#include "CoolPropDLL.h"
 #include "CoolProp.h"
 #include "HumidAirProp.h"
 #include "DataStructures.h"
 #include "Exceptions.h"
+
 
 double convert_from_kSI_to_SI(long iInput, double value)
 {

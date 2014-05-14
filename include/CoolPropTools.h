@@ -1,75 +1,31 @@
 #ifndef COOLPROPTOOLS_H
 #define COOLPROPTOOLS_H
 
-#define _CRT_SECURE_NO_WARNINGS
+    #define _CRT_SECURE_NO_WARNINGS
 
-#if defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__WIN64__)
-#  define __ISWINDOWS__
-#elif __APPLE__
-#  define __ISAPPLE__
-#elif __linux
-#  define __ISLINUX__
-#endif
+    #include "PlatformDetermination.h"
 
-#if defined(COOLPROP_LIB)
-#  ifndef EXPORT_CODE
-#    if defined(__ISWINDOWS__)
-#      define EXPORT_CODE extern "C" __declspec(dllexport)
-#    else
-#      define EXPORT_CODE extern "C"
-#    endif
-#  endif
-#  ifndef CONVENTION
-#    if defined(__ISWINDOWS__)
-#      define CONVENTION __stdcall
-#    else
-#      define CONVENTION
-#    endif
-#  endif
-#else
-#  ifndef EXPORT_CODE
-#    define EXPORT_CODE
-#  endif
-#  ifndef CONVENTION
-#    define CONVENTION
-#  endif
-#endif
+    #include <string>
+    #include <vector>
+    #include <cmath>
+    #include "float.h"
 
-// Hack for PowerPC compilation to only use extern "C"
-#if defined(__powerpc__) || defined(EXTERNC)
-#  undef EXPORT_CODE
-#  define EXPORT_CODE extern "C"
-#endif
+    #ifndef M_PI
+    #  define M_PI 3.14159265358979323846
+    #endif
 
-// Fall-back solutions
-#ifndef CONVENTION
-#  define CONVENTION
-#endif
-#ifndef EXPORT_CODE
-#  define EXPORT_CODE
-#endif
+    #ifndef COOLPROP_OK
+    #define COOLPROP_OK 1
+    #endif
 
-#include <string>
-#include <vector>
-#include <cmath>
-#include "float.h"
-
-#ifndef M_PI
-#  define M_PI 3.14159265358979323846
-#endif
-
-#ifndef COOLPROP_OK
-#define COOLPROP_OK 1
-#endif
-
-#ifdef HUGE_VAL
-#  define _HUGE HUGE_VAL
-#else
-// GCC Version of huge value macro
-#ifdef HUGE 
-#  define _HUGE HUGE
-#endif
-#endif
+    #ifdef HUGE_VAL
+    #  define _HUGE HUGE_VAL
+    #else
+    // GCC Version of huge value macro
+    #ifdef HUGE 
+    #  define _HUGE HUGE
+    #endif
+    #endif
 
 	#if defined(_MSC_VER)
 	// Microsoft version of math.h doesn't include acosh or asinh, so we just define them here.
@@ -221,7 +177,6 @@
     {
         return CubicInterp(x[i0],x[i1],x[i2],x[i3],y[i0],y[i1],y[i2],y[i3],val);
     };
-	
 
     template<class T> T is_in_closed_range( T x1, T x2, T x)
     {
