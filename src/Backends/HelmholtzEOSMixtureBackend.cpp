@@ -219,7 +219,7 @@ void HelmholtzEOSMixtureBackend::mass_to_molar_inputs(long &input_pair, double &
 }
 void HelmholtzEOSMixtureBackend::update(long input_pair, double value1, double value2 )
 {
-    clear();
+    clear();   
 
     if (is_pure_or_pseudopure == false && mole_fractions.size() == 0) { 
         throw ValueError("Mole fractions must be set"); 

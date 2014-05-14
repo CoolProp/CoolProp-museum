@@ -13,6 +13,8 @@ using namespace CoolProp;
 #include "rapidjson/rapidjson_include.h"
 #include "Fluids\FluidLibrary.h"
 #include "Tests.h"
+#include "CoolPropDLL.h"
+#include "SpeedTest.h"
 
 void generate_melting_curve_data(const char* file_name, const char *fluid_name, double Tmin, double Tmax)
 {
@@ -76,16 +78,22 @@ int main()
     }
     if (1)
     {
-        double rwr = PropsSI("T", "P", 101325,  "Q", 1, "Water");
-        AbstractStateWrapper wat("HEOS", "Water");
+        CoolProp::compare_REFPROP_and_CoolProp("Water",QT_INPUTS,1,350,100000);
+    }
+    if (0)
+    {
+        std::vector<std::string> ss = strsplit(get_global_param_string("FluidsList"),',');
+        
+        for (std::vector<std::string>::iterator it = ss.begin(); it != ss.end(); ++it)
+        {
+            AbstractState *S = AbstractState::factory("HEOS", (*it));
+            S->update(QT_INPUTS, 0, S->Ttriple());
+            std::cout << format("%s %17.15g\n", S->name(), S->p());
+        }
+    }
+    if (1)
+    {
 
-        wat.update(PQ_INPUTS, 611.66, 1);
-
-        double _p1 = wat.keyed_output(CoolProp::iP);
-        double rhoL = wat.keyed_output(CoolProp::iDmolar);
-
-        wat.update(QT_INPUTS, wat.keyed_output(CoolProp::iQ), wat.keyed_output(CoolProp::iT));
-        double _p2 = wat.keyed_output(CoolProp::iP);
 
         std::vector<std::string> tags;
         tags.push_back("[RP1485]");
